@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme",
   "devDependencies": {
-    "git-commit-msg-linter": "^3.2.8"
+    "@types/node": "^16.9.2",
+    "git-commit-msg-linter": "^3.2.8",
+    "typescript": "^4.4.3"
   }
 }
