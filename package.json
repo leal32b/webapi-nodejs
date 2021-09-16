@@ -1,0 +1,19 @@
+{
+  "name": "webapi-t-nodejs",
+  "version": "1.0.0",
+  "description": "Nodejs Webapi template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leal32b/webapi-t-nodejs.git"
+  },
+  "author": "leal32b",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leal32b/webapi-t-nodejs/issues"
+  },
+  "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme"
+}
