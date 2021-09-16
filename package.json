@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/leal32b/webapi-t-nodejs/issues"
   },
-  "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme"
+  "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.2.8"
+  }
 }
