@@ -4,8 +4,12 @@
   "description": "Nodejs Webapi template",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests --watch",
-    "test:staged": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests --runInBand --silent --noStackTrace ",
+    "test:verbose": "jest --passWithNoTests --runInBand",
+    "test:unit": "npm test -- -c jest-unit.config.js --watch",
+    "test:e2e": "npm test -- -c jest-e2e.config.js --watch",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverage"
   },
   "repository": {
     "type": "git",
