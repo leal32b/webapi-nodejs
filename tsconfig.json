@@ -9,9 +9,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "~/*": ["tests/*"]
+      "~/*": ["test/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules"]
 }

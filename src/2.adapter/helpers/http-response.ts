@@ -1,5 +1,5 @@
-import { ServerError } from '@/presentation/errors/server-error'
-import { HttpResponse } from '@/presentation/protocols/http'
+import { ServerError } from '@/2.adapter/errors/server-error'
+import { HttpResponse } from '@/2.adapter/interfaces/http'
 
 export const success = {
   ok: (data: any): HttpResponse => ({
