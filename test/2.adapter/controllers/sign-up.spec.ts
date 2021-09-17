@@ -1,5 +1,5 @@
 import { AccountModel } from '@/0.domain/models/account'
-import { AddAccount, AddAccountModel } from '@/1.application/interfaces/add-account'
+import { AddAccount, AddAccountModel } from '@/0.domain/interfaces/add-account'
 import { SignUpController } from '@/2.adapter/controllers/sign-up'
 import { InvalidParamError } from '@/2.adapter/errors/invalid-param-error'
 import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
