@@ -4,19 +4,23 @@ import { ServerError } from '../errors/server-error'
 import { EmailValidator } from '../protocols/email-validator'
 import { SignUpController } from './sign-up'
 
-interface SutTypes {
-  sut: SignUpController
-  emailValidatorStub: EmailValidator
-}
-
-const makeSut = (): SutTypes => {
+const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
       return true
     }
   }
 
-  const emailValidatorStub = new EmailValidatorStub()
+  return new EmailValidatorStub()
+}
+
+interface SutTypes {
+  sut: SignUpController
+  emailValidatorStub: EmailValidator
+}
+
+const makeSut = (): SutTypes => {
+  const emailValidatorStub = makeEmailValidator()
   const sut = new SignUpController(emailValidatorStub)
 
   return {
@@ -116,7 +120,7 @@ describe('SignUp Controller', () => {
       }
     }
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new ServerError()
+      throw new Error()
     })
     const httpResponse = sut.handle(httpRequest)
 
