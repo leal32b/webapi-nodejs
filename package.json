@@ -4,7 +4,8 @@
   "description": "Nodejs Webapi template",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:staged": "jest"
   },
   "repository": {
     "type": "git",
