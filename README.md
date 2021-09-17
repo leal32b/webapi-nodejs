@@ -6,3 +6,6 @@ Nodejs Template Webapi
 
 ## Nodejs ES support
 [node.green](https://node.green/)
+
+## Javascript Standard Style
+[Standard JS](https://standardjs.com/)
