@@ -1,4 +1,4 @@
-import { AddAccount } from '@/1.application/interfaces/add-account'
+import { AddAccount } from '@/0.domain/interfaces/add-account'
 import { InvalidParamError } from '@/2.adapter/errors/invalid-param-error'
 import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
 import {
