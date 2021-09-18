@@ -18,6 +18,10 @@ describe('Account Mongodb Repository', () => {
     await MongodbHelper.connect(global.__MONGO_URI__)
   })
 
+  beforeEach(async () => {
+    await MongodbHelper.getCollection('accounts').deleteMany({})
+  })
+
   afterAll(async () => {
     await MongodbHelper.close()
   })

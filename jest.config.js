@@ -5,6 +5,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
   // testEnvironment: 'jest-environment-node',
+  watchPathIgnorePatterns: ['globalConfig'],
   preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
