@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.0.1",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^16.9.2",
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
@@ -41,6 +43,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "mongodb": "^4.1.2",
     "validator": "^13.6.0"
   }
 }

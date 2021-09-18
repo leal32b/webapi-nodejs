@@ -4,7 +4,8 @@ module.exports = {
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
-  testEnvironment: 'jest-environment-node',
+  // testEnvironment: 'jest-environment-node',
+  preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
   },
