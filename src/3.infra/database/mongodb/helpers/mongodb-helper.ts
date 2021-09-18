@@ -8,10 +8,16 @@ export const MongodbHelper = {
   },
 
   async close (): Promise<void> {
-    await this.mongoClient.close()
+    await (this.mongoClient as MongoClient).close()
   },
 
   getCollection (name: string): Collection {
-    return this.mongoClient.db().collection(name)
+    return (this.mongoClient as MongoClient).db().collection(name)
+  },
+
+  map (collection: any): any {
+    const { _id: id, ...collectionWithoutId } = collection
+
+    return { id, ...collectionWithoutId }
   }
 }
