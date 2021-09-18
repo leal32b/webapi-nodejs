@@ -1,3 +1,6 @@
+import { AddAccountModel } from '@/0.domain/interfaces/add-account'
+import { AccountModel } from '@/0.domain/models/account'
+import { AddAccountRepository } from '@/1.application/interfaces/add-account-repository'
 import { Encrypter } from '@/1.application/interfaces/encryter'
 import { DbAddAccount } from '@/1.application/usecases/db-add-account'
 
@@ -11,18 +14,37 @@ const makeEncrypterStub = (): Encrypter => {
   return new EncrypterStub()
 }
 
+const makeAddAccountRepositoryStub = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (accountData: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'hashed_password'
+      }
+      return await Promise.resolve(fakeAccount)
+    }
+  }
+
+  return new AddAccountRepositoryStub()
+}
+
 interface SutTypes {
   sut: DbAddAccount
   encrypterStub: Encrypter
+  addAccountRepositoryStub: AddAccountRepository
 }
 
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypterStub()
-  const sut = new DbAddAccount(encrypterStub)
+  const addAccountRepositoryStub = makeAddAccountRepositoryStub()
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
 
   return {
     sut,
-    encrypterStub
+    encrypterStub,
+    addAccountRepositoryStub
   }
 }
 
@@ -51,5 +73,22 @@ describe('DbAddAccount Usecase', () => {
     const promise = sut.add(accountData)
 
     await expect(promise).rejects.toThrowError()
+  })
+
+  it('should call AddAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+    await sut.add(accountData)
+
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password'
+    })
   })
 })
