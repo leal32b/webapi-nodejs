@@ -1,4 +1,9 @@
+# folders
 coverage
-node_modules
+data
 dist
+node_modules
+
+# files
+.env
 globalConfig.json
