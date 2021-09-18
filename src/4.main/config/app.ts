@@ -1,4 +1,4 @@
-import setupMiddlewares from '@/4.main/config/setup-middlewares'
+import setupMiddlewares from '@/4.main/config/middlewares'
 import express from 'express'
 
 const app = express()
