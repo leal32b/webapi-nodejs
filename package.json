@@ -49,6 +49,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
+    "fast-glob": "^3.2.7",
     "module-alias": "^2.2.2",
     "mongodb": "^4.1.2",
     "validator": "^13.6.0"
