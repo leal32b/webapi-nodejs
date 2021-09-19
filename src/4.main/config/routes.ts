@@ -1,18 +1,20 @@
 import { Express, Router } from 'express'
-import fs from 'fs'
-import path from 'path'
+import { join } from 'path'
+import { readdirSync } from 'fs'
 
-export default (app: Express): void => {
+export default async (app: Express): Promise<void> => {
   const router = Router()
-  const rootPath = path.join(__dirname, '..', 'routes')
-  const folders = fs.readdirSync(rootPath)
+  const rootPath = join(__dirname, '..', 'routes')
+  const folders = readdirSync(rootPath)
 
   for (const folder of folders) {
-    fs.readdirSync(path.join(rootPath, folder)).map(async file => {
+    readdirSync(join(rootPath, folder)).map(async file => {
       try {
-        const route = await import(path.join(rootPath, folder, file))
-        app.use(`/api/${folder}`, router)
-        route.default(router)
+        if (!file.endsWith('.map')) {
+          const route = await import(join(rootPath, folder, file))
+          app.use(`/api/${folder}`, router)
+          route.default(router)
+        }
       } catch (error) {
         console.log(error)
       }

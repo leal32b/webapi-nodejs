@@ -8,6 +8,7 @@ services:
       - ./data:/data/db
     ports:
       - "27017:27017"
+
   webapi:
     container_name: webapi-container
     image: node:14
@@ -23,3 +24,11 @@ services:
       - "9222:9222"     
     links:
       - mongodb
+
+  start_dependencies:
+    container_name: wait-for-dependencies
+    image: dadarek/wait-for-dependencies
+    command: mongodb:27017 webapi:3000
+    depends_on:
+      - mongodb
+      - webapi
