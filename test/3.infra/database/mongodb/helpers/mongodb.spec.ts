@@ -3,7 +3,7 @@ import { MongodbHelper as sut } from '@/3.infra/database/mongodb/helpers/mongodb
 
 describe('Mongodb Helper', () => {
   beforeAll(async () => {
-    await sut.connect(process.env.DATABASE_MONGODB_HOST)
+    await sut.connect(global.__MONGO_URI__)
   })
 
   afterAll(async () => {
