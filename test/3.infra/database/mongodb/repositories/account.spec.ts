@@ -1,4 +1,4 @@
-import { MongodbHelper } from '@/3.infra/database/mongodb/helpers/mongodb-helper'
+import { MongodbHelper } from '@/3.infra/database/mongodb/helpers/mongodb'
 import { AccountMongodbRepository } from '@/3.infra/database/mongodb/repositories/account'
 
 interface SutTypes {

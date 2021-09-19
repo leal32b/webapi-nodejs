@@ -5,6 +5,7 @@ export const MongodbHelper = {
 
   async connect (url: string): Promise<void> {
     this.mongoClient = await MongoClient.connect(url)
+    console.log('Mongodb connected at ' + url)
   },
 
   async close (): Promise<void> {
