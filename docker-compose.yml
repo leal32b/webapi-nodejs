@@ -2,9 +2,25 @@ version: "3"
 services:
   mongodb:
     container_name: mongodb-container
-    image: mongo:4
+    image: mongo:4.4
     restart: always
     volumes:
       - ./data:/data/db
     ports:
       - "27017:27017"
+  webapi:
+    container_name: webapi-container
+    image: node:14
+    working_dir: /usr/src/webapi-t-nodejs
+    restart: always
+    # command: bash -c "npm install --only=prod && npm run debug"
+    command: npm start
+    env_file: .env
+    volumes:
+      - ./dist:/usr/src/webapi-t-nodejs/dist
+      - ./package.json:/usr/src/webapi-t-nodejs/package.json     
+    ports:
+      - "${PORT}:${PORT}"
+      - "9222:9222"     
+    links:
+      - mongodb

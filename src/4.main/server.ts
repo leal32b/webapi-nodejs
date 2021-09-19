@@ -1,5 +1,5 @@
-import 'dotenv/config'
 import 'module-alias/register'
+import 'dotenv/config'
 import app from '@/4.main/config/app'
 import { MongodbHelper } from '@/3.infra/database/mongodb/helpers/mongodb'
 
