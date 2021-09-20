@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/4.main/server.js",
+    "debug": "nodemon -L --watch dist --inspect=0.0.0.0:9222 --nolazy dist/4.main/server.js",
     "build": "rimraf dist && tsc -b tsconfig.build.json",
     "build:watch": "npm run build -- -w",
-    "debug": "nodemon -L --watch dist --inspect=0.0.0.0:9222 --nolazy dist/4.main/server.js",
     "up": "docker-compose run --rm start_dependencies",
     "down": "docker-compose down",
     "test": "jest --passWithNoTests --runInBand --silent --noStackTrace",
