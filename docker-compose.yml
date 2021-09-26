@@ -1,13 +1,13 @@
-version: "3"
+version: '3'
 services:
   mongodb:
     container_name: mongodb-container
     image: mongo:4.4
     restart: always
     volumes:
-      - ./data:/data/db
+      - ./mongodb-data:/data/db
     ports:
-      - "27017:27017"
+      - 27017:27017
 
   webapi:
     container_name: webapi-container
@@ -18,10 +18,10 @@ services:
     env_file: .env
     volumes:
       - ./dist:/usr/src/webapi-t-nodejs/dist
-      - ./package.json:/usr/src/webapi-t-nodejs/package.json     
+      - ./package.json:/usr/src/webapi-t-nodejs/package.json
     ports:
-      - "${PORT}:${PORT}"
-      - "9222:9222"     
+      - '${PORT}:${PORT}'
+      - 9222:9222
     links:
       - mongodb
 

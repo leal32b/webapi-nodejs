@@ -1,6 +1,6 @@
 # folders
 coverage
-data
+mongodb-data
 dist
 node_modules
 
