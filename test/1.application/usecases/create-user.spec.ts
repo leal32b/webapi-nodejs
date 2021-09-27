@@ -1,8 +1,8 @@
-import { AddAccountModel } from '@/0.domain/interfaces/add-account'
-import { AccountModel } from '@/0.domain/models/account'
-import { AddAccountRepository } from '@/1.application/interfaces/add-account-repository'
+import { CreateUserModel } from '@/0.domain/interfaces/create-user'
+import { UserModel } from '@/0.domain/models/user'
+import { CreateUserRepository } from '@/1.application/interfaces/create-user-repository'
 import { Encrypter } from '@/1.application/interfaces/encryter'
-import { DbAddAccount } from '@/1.application/usecases/db-add-account'
+import { CreateUserUsecase } from '@/1.application/usecases/create-user'
 
 const makeEncrypterStub = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -14,50 +14,50 @@ const makeEncrypterStub = (): Encrypter => {
   return new EncrypterStub()
 }
 
-const makeAddAccountRepositoryStub = (): AddAccountRepository => {
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (accountData: AddAccountModel): Promise<AccountModel> {
-      const fakeAccount = {
+const makeCreateUserRepositoryStub = (): CreateUserRepository => {
+  class CreateUserRepositoryStub implements CreateUserRepository {
+    async create (userData: CreateUserModel): Promise<UserModel> {
+      const fakeUser = {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email',
         password: 'hashed_password'
       }
-      return await Promise.resolve(fakeAccount)
+      return await Promise.resolve(fakeUser)
     }
   }
 
-  return new AddAccountRepositoryStub()
+  return new CreateUserRepositoryStub()
 }
 
 interface SutTypes {
-  sut: DbAddAccount
+  sut: CreateUserUsecase
   encrypterStub: Encrypter
-  addAccountRepositoryStub: AddAccountRepository
+  createUserRepositoryStub: CreateUserRepository
 }
 
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypterStub()
-  const addAccountRepositoryStub = makeAddAccountRepositoryStub()
-  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
+  const createUserRepositoryStub = makeCreateUserRepositoryStub()
+  const sut = new CreateUserUsecase(encrypterStub, createUserRepositoryStub)
 
   return {
     sut,
     encrypterStub,
-    addAccountRepositoryStub
+    createUserRepositoryStub
   }
 }
 
-describe('DbAddAccount Usecase', () => {
+describe('CreateUser Usecase', () => {
   it('should call Encrypter with correct password', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
-    const accountData = {
+    const userData = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
     }
-    await sut.add(accountData)
+    await sut.create(userData)
 
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
   })
@@ -65,25 +65,25 @@ describe('DbAddAccount Usecase', () => {
   it('should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error())
-    const accountData = {
+    const userData = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
     }
-    const promise = sut.add(accountData)
+    const promise = sut.create(userData)
 
     await expect(promise).rejects.toThrowError()
   })
 
-  it('should call AddAccountRepository with correct values', async () => {
-    const { sut, addAccountRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
-    const accountData = {
+  it('should call AddUserRepository with correct values', async () => {
+    const { sut, createUserRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(createUserRepositoryStub, 'create')
+    const userData = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
     }
-    await sut.add(accountData)
+    await sut.create(userData)
 
     expect(addSpy).toHaveBeenCalledWith({
       name: 'valid_name',
@@ -92,31 +92,29 @@ describe('DbAddAccount Usecase', () => {
     })
   })
 
-  it('should throw if AddAccountRepository throws', async () => {
-    const { sut, addAccountRepositoryStub } = makeSut()
-    jest
-      .spyOn(addAccountRepositoryStub, 'add')
-      .mockRejectedValueOnce(new Error())
-    const accountData = {
+  it('should throw if AddUserRepository throws', async () => {
+    const { sut, createUserRepositoryStub } = makeSut()
+    jest.spyOn(createUserRepositoryStub, 'create').mockRejectedValueOnce(new Error())
+    const userData = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
     }
-    const promise = sut.add(accountData)
+    const promise = sut.create(userData)
 
     await expect(promise).rejects.toThrowError()
   })
 
-  it('should return an account on success', async () => {
+  it('should return an user on success', async () => {
     const { sut } = makeSut()
-    const accountData = {
+    const userData = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
     }
-    const account = await sut.add(accountData)
+    const user = await sut.create(userData)
 
-    await expect(account).toEqual({
+    await expect(user).toEqual({
       id: 'valid_id',
       name: 'valid_name',
       email: 'valid_email',

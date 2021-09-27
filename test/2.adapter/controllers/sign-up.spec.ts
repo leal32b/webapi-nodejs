@@ -1,5 +1,5 @@
-import { AccountModel } from '@/0.domain/models/account'
-import { AddAccount, AddAccountModel } from '@/0.domain/interfaces/add-account'
+import { CreateUser, CreateUserModel } from '@/0.domain/interfaces/create-user'
+import { UserModel } from '@/0.domain/models/user'
 import { SignUpController } from '@/2.adapter/controllers/sign-up'
 import { InvalidParamError } from '@/2.adapter/errors/invalid-param-error'
 import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
@@ -16,38 +16,38 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-const makeAddAccountStub = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
-      const fakeAccount: AccountModel = {
+const makeCreateUserStub = (): CreateUser => {
+  class CreateUserStub implements CreateUser {
+    async create (user: CreateUserModel): Promise<UserModel> {
+      const fakeUser: UserModel = {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email@mail.com',
         password: 'valid_password'
       }
 
-      return await Promise.resolve(fakeAccount)
+      return await Promise.resolve(fakeUser)
     }
   }
 
-  return new AddAccountStub()
+  return new CreateUserStub()
 }
 
 interface SutTypes {
   sut: SignUpController
   emailValidatorStub: EmailValidator
-  addAccountStub: AddAccount
+  createUserStub: CreateUser
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const addAccountStub = makeAddAccountStub()
-  const sut = new SignUpController(emailValidatorStub, addAccountStub)
+  const createUserStub = makeCreateUserStub()
+  const sut = new SignUpController(emailValidatorStub, createUserStub)
 
   return {
     sut,
     emailValidatorStub,
-    addAccountStub
+    createUserStub
   }
 }
 
@@ -110,9 +110,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(
-      new InvalidParamError('passwordConfirmation')
-    )
+    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
   })
 
   it('should return 400 if no passwordConfirmation is provided', async () => {
@@ -127,9 +125,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(
-      new MissingParamError('passwordConfirmation')
-    )
+    expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
   })
 
   it('should return 400 if an invalid email is provided', async () => {
@@ -184,8 +180,8 @@ describe('SignUp Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  it('should return 500 if AddAccount throws', async () => {
-    const { sut, addAccountStub } = makeSut()
+  it('should return 500 if CreateUser throws', async () => {
+    const { sut, createUserStub } = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -194,15 +190,15 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'any_password'
       }
     }
-    jest.spyOn(addAccountStub, 'add').mockRejectedValueOnce(new Error())
+    jest.spyOn(createUserStub, 'create').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  it('should call AddAccount with correct values', async () => {
-    const { sut, addAccountStub } = makeSut()
+  it('should call CreateUser with correct values', async () => {
+    const { sut, createUserStub } = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -211,7 +207,7 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'any_password'
       }
     }
-    const addSpy = jest.spyOn(addAccountStub, 'add')
+    const addSpy = jest.spyOn(createUserStub, 'create')
     await sut.handle(httpRequest)
 
     expect(addSpy).toHaveBeenCalledWith({

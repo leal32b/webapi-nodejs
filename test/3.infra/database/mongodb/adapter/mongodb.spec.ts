@@ -1,7 +1,7 @@
 import 'dotenv/config'
-import { MongodbHelper as sut } from '@/3.infra/database/mongodb/helpers/mongodb'
+import { MongodbAdapter as sut } from '@/3.infra/database/mongodb/adapter/mongodb'
 
-describe('Mongodb Helper', () => {
+describe('Mongodb Adapter', () => {
   beforeAll(async () => {
     await sut.connect(global.__MONGO_URI__)
   })

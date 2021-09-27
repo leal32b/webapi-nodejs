@@ -1,23 +1,23 @@
-import { MongodbHelper } from '@/3.infra/database/mongodb/helpers/mongodb'
+import { MongodbAdapter } from '@/3.infra/database/mongodb/adapter/mongodb'
 import app from '@/4.main/config/app'
 import request from 'supertest'
 
 describe('SignUp Routes', () => {
   beforeAll(async () => {
-    await MongodbHelper.connect(global.__MONGO_URI__)
+    await MongodbAdapter.connect(global.__MONGO_URI__)
   })
 
   beforeEach(async () => {
-    await MongodbHelper.getCollection('accounts').deleteMany({})
+    await MongodbAdapter.getCollection('users').deleteMany({})
   })
 
   afterAll(async () => {
-    await MongodbHelper.close()
+    await MongodbAdapter.close()
   })
 
-  it('should return as account on success', async () => {
+  it('should return as user on success', async () => {
     await request(app)
-      .post('/api/account/signup')
+      .post('/api/user/signup')
       .send({
         name: 'any_name',
         email: 'any_email@mail.com',

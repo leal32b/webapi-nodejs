@@ -1,0 +1,43 @@
+import { MongodbAdapter } from '@/3.infra/database/mongodb/adapter/mongodb'
+import { UserMongodbRepository } from '@/3.infra/database/mongodb/repositories/user'
+
+interface SutTypes {
+  sut: UserMongodbRepository
+}
+
+const makeSut = (): SutTypes => {
+  const sut = new UserMongodbRepository()
+
+  return {
+    sut
+  }
+}
+
+describe('User Mongodb Repository', () => {
+  beforeAll(async () => {
+    await MongodbAdapter.connect(global.__MONGO_URI__)
+  })
+
+  beforeEach(async () => {
+    await MongodbAdapter.getCollection('users').deleteMany({})
+  })
+
+  afterAll(async () => {
+    await MongodbAdapter.close()
+  })
+
+  it('should return an user on success', async () => {
+    const { sut } = makeSut()
+    const user = await sut.create({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+
+    expect(user).toBeTruthy()
+    expect(user.id).toBeTruthy()
+    expect(user.name).toBe('any_name')
+    expect(user.email).toBe('any_email@mail.com')
+    expect(user.password).toBe('any_password')
+  })
+})
