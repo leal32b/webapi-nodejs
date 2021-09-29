@@ -1,15 +1,18 @@
 import { CreateUserUsecase } from '@/1.application/usecases/create-user'
 import { SignUpController } from '@/2.adapter/controllers/sign-up'
+import { LogControllerDecorator } from '@/2.adapter/decorators/log-controller'
+import { Controller } from '@/2.adapter/interfaces/controller'
 import { BcryptAdapter } from '@/3.infra/cryptography/bcrypt'
 import { UserMongodbRepository } from '@/3.infra/database/mongodb/repositories/user'
 import { EmailValidatorAdapter } from '@/3.infra/validators/email-validator'
 
-export const makeSignUpController = (): SignUpController => {
+export const makeSignUpController = (): Controller => {
   const salt = 12
   const emailValidatorAdapter = new EmailValidatorAdapter()
   const bcryptAdapter = new BcryptAdapter(salt)
   const userMongodbRepository = new UserMongodbRepository()
   const dbCreateUser = new CreateUserUsecase(bcryptAdapter, userMongodbRepository)
+  const signUpController = new SignUpController(emailValidatorAdapter, dbCreateUser)
 
-  return new SignUpController(emailValidatorAdapter, dbCreateUser)
+  return new LogControllerDecorator(signUpController)
 }
