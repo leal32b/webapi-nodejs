@@ -7,7 +7,7 @@
     "allowJs": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "rootDir": "src",
+    "rootDir": ".",
     "paths": {
       "@/*": ["src/*"],
       "~/*": ["test/*"]
