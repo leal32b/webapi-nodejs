@@ -42,7 +42,7 @@ export class SignUpController implements Controller {
 
       return success.ok(user)
     } catch (error) {
-      return serverError.internalServerError()
+      return serverError.internalServerError(error)
     }
   }
 }

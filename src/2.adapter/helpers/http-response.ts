@@ -16,8 +16,8 @@ export const clientError = {
 }
 
 export const serverError = {
-  internalServerError: (): HttpResponse => ({
+  internalServerError: (error: Error): HttpResponse => ({
     statusCode: 500,
-    body: new ServerError()
+    body: new ServerError(error.stack)
   })
 }
