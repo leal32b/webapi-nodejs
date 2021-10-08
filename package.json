@@ -15,7 +15,8 @@
     "test:unit": "npm test -- -c jest-unit.config.js --watch",
     "test:e2e": "npm test -- -c jest-e2e.config.js --watch",
     "test:staged": "npm test -- --findRelatedTests",
-    "test:ci": "npm test -- --coverage"
+    "test:ci": "npm test -- --coverage",
+    "postinstall": "husky install"
   },
   "repository": {
     "type": "git",
