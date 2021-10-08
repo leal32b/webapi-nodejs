@@ -1,5 +1,5 @@
 {
-  "name": "webapi-t-nodejs",
+  "name": "webapi-nodejs",
   "version": "1.0.0",
   "description": "Nodejs Webapi template",
   "main": "index.js",
@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leal32b/webapi-t-nodejs.git"
+    "url": "git+https://github.com/leal32b/webapi-nodejs.git"
   },
   "author": "leal32b",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/leal32b/webapi-t-nodejs/issues"
+    "url": "https://github.com/leal32b/webapi-nodejs/issues"
   },
-  "homepage": "https://github.com/leal32b/webapi-t-nodejs#readme",
+  "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
   "_moduleAliases": {
     "@": "dist"
   },
