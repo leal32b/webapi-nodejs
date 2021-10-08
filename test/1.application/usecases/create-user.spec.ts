@@ -37,8 +37,7 @@ describe('CreateUser Usecase', () => {
   it('should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error())
-    const userData = mockUserData()
-    const promise = sut.create(userData)
+    const promise = sut.create(mockUserData())
 
     await expect(promise).rejects.toThrowError()
   })
