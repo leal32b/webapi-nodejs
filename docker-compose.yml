@@ -14,11 +14,12 @@ services:
     image: node:14
     working_dir: /usr/src/webapi-nodejs
     restart: always
-    command: bash -c "npm install --only=prod && npm run debug"
+    command: bash -c "npm ci --only=prod && npm run debug"
     env_file: .env
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
       - ./package.json:/usr/src/webapi-nodejs/package.json
+      - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
     ports:
       - '${PORT}:${PORT}'
       - 9222:9222
