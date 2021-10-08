@@ -1,53 +1,53 @@
 import { CreateUserRepository } from '@/1.application/interfaces/create-user-repository'
-import { Encrypter } from '@/1.application/interfaces/encryter'
+import { Hasher } from '@/1.application/interfaces/hasher'
 import { CreateUserUsecase } from '@/1.application/usecases/create-user'
 import { CreateUserRepositoryStub } from '~/1.application/mocks/create-user-repository.mock'
-import { EncrypterStub } from '~/1.application/mocks/encrypter.mock'
+import { HasherStub } from '~/1.application/mocks/hasher.mock'
 import { mockUserData } from '~/1.application/mocks/user-data.mock'
 import faker from 'faker'
 
 interface SutTypes {
   sut: CreateUserUsecase
-  encrypterStub: Encrypter
+  hasherStub: Hasher
   createUserRepositoryStub: CreateUserRepository
 }
 
 const makeSut = (): SutTypes => {
-  const encrypterStub = new EncrypterStub()
+  const hasherStub = new HasherStub()
   const createUserRepositoryStub = new CreateUserRepositoryStub()
-  const sut = new CreateUserUsecase(encrypterStub, createUserRepositoryStub)
+  const sut = new CreateUserUsecase(hasherStub, createUserRepositoryStub)
 
   return {
     sut,
-    encrypterStub,
+    hasherStub,
     createUserRepositoryStub
   }
 }
 
 describe('CreateUser Usecase', () => {
-  it('should call Encrypter with correct password', async () => {
-    const { sut, encrypterStub } = makeSut()
-    const encrypterSpy = jest.spyOn(encrypterStub, 'encrypt')
+  it('should call Hasher with correct password', async () => {
+    const { sut, hasherStub } = makeSut()
+    const hasherSpy = jest.spyOn(hasherStub, 'hash')
     const userData = mockUserData()
     await sut.create(userData)
 
-    expect(encrypterSpy).toHaveBeenCalledWith(userData.password)
+    expect(hasherSpy).toHaveBeenCalledWith(userData.password)
   })
 
-  it('should throw if Encrypter throws', async () => {
-    const { sut, encrypterStub } = makeSut()
-    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error())
+  it('should throw if Hasher throws', async () => {
+    const { sut, hasherStub } = makeSut()
+    jest.spyOn(hasherStub, 'hash').mockRejectedValueOnce(new Error())
     const promise = sut.create(mockUserData())
 
     await expect(promise).rejects.toThrowError()
   })
 
   it('should call AddUserRepository with correct values', async () => {
-    const { sut, encrypterStub, createUserRepositoryStub } = makeSut()
+    const { sut, hasherStub, createUserRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(createUserRepositoryStub, 'create')
     const userData = mockUserData()
     const hashedPassword = faker.random.alphaNumeric(32)
-    jest.spyOn(encrypterStub, 'encrypt').mockResolvedValueOnce(hashedPassword)
+    jest.spyOn(hasherStub, 'hash').mockResolvedValueOnce(hashedPassword)
     const userDataWithHashedPassoword = { ...userData, password: hashedPassword }
     await sut.create(userData)
 
@@ -63,10 +63,10 @@ describe('CreateUser Usecase', () => {
   })
 
   it('should return an user on success', async () => {
-    const { sut, encrypterStub, createUserRepositoryStub } = makeSut()
+    const { sut, hasherStub, createUserRepositoryStub } = makeSut()
     const userData = mockUserData()
     const hashedPassword = faker.random.alphaNumeric(32)
-    jest.spyOn(encrypterStub, 'encrypt').mockResolvedValueOnce(hashedPassword)
+    jest.spyOn(hasherStub, 'hash').mockResolvedValueOnce(hashedPassword)
     const id = faker.datatype.uuid()
     const createdUser = { ...userData, password: hashedPassword, id }
     jest.spyOn(createUserRepositoryStub, 'create').mockResolvedValueOnce(createdUser)
