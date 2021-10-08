@@ -12,13 +12,13 @@ services:
   webapi:
     container_name: webapi-container
     image: node:14
-    working_dir: /usr/src/webapi-t-nodejs
+    working_dir: /usr/src/webapi-nodejs
     restart: always
     command: bash -c "npm install --only=prod && npm run debug"
     env_file: .env
     volumes:
-      - ./dist:/usr/src/webapi-t-nodejs/dist
-      - ./package.json:/usr/src/webapi-t-nodejs/package.json
+      - ./dist:/usr/src/webapi-nodejs/dist
+      - ./package.json:/usr/src/webapi-nodejs/package.json
     ports:
       - '${PORT}:${PORT}'
       - 9222:9222
