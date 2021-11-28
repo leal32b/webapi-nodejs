@@ -3,6 +3,19 @@
   "version": "1.0.0",
   "description": "Nodejs Webapi template",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leal32b/webapi-nodejs.git"
+  },
+  "author": "leal32b",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leal32b/webapi-nodejs/issues"
+  },
+  "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
+  "_moduleAliases": {
+    "@": "dist"
+  },
   "scripts": {
     "start": "node dist/4.main/server.js",
     "debug": "nodemon dist/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
@@ -17,18 +30,15 @@
     "test:staged": "npm test -- --findRelatedTests test",
     "test:ci": "npm test -- --coverage"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leal32b/webapi-nodejs.git"
-  },
-  "author": "leal32b",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/leal32b/webapi-nodejs/issues"
-  },
-  "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
-  "_moduleAliases": {
-    "@": "dist"
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "husky": "^4.3.8",
+    "module-alias": "^2.2.2",
+    "mongodb": "^4.2.0",
+    "nodemon": "^2.0.15",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.1.0",
@@ -53,15 +63,5 @@
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.7",
     "typescript": "^4.5.2"
-  },
-  "dependencies": {
-    "bcrypt": "^5.0.1",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "husky": "^4.3.8",
-    "module-alias": "^2.2.2",
-    "mongodb": "^4.2.0",
-    "nodemon": "^2.0.15",
-    "validator": "^13.7.0"
   }
 }
