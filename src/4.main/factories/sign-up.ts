@@ -4,7 +4,7 @@ import { LogControllerDecorator } from '@/2.adapter/decorators/log-controller'
 import { Controller } from '@/2.adapter/interfaces/controller'
 import { LogErrorRepository } from '@/2.adapter/interfaces/log-error-repository'
 import { BcryptAdapter } from '@/3.infra/cryptography/bcrypt'
-import { UserMongodbRepository } from '@/3.infra/database/mongodb/repositories/user'
+import { UserMongodbRepository } from '@/3.infra/databases/mongodb/repositories/user'
 import { EmailValidatorAdapter } from '@/3.infra/validators/email-validator'
 
 const makeLogErrorRepositoryStub = (): LogErrorRepository => {

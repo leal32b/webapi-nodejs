@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { MongodbAdapter } from '@/3.infra/database/mongodb/adapter/mongodb'
+import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
 import app from '@/4.main/config/app'
 
 describe('SignUp Routes', () => {

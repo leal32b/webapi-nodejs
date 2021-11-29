@@ -1,5 +1,5 @@
-import { MongodbAdapter } from '@/3.infra/database/mongodb/adapter/mongodb'
-import { UserMongodbRepository } from '@/3.infra/database/mongodb/repositories/user'
+import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
+import { UserMongodbRepository } from '@/3.infra/databases/mongodb/repositories/user'
 
 interface SutTypes {
   sut: UserMongodbRepository
