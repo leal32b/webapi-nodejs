@@ -1,6 +1,7 @@
-import { Express, Router } from 'express'
-import { join } from 'path'
 import { readdirSync } from 'fs'
+import { join } from 'path'
+
+import { Express, Router } from 'express'
 
 export default async (app: Express): Promise<void> => {
   const router = Router()

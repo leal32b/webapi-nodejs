@@ -1,6 +1,7 @@
+import request from 'supertest'
+
 import { MongodbAdapter } from '@/3.infra/database/mongodb/adapter/mongodb'
 import app from '@/4.main/config/app'
-import request from 'supertest'
 
 describe('SignUp Routes', () => {
   beforeAll(async () => {
