@@ -57,7 +57,7 @@
     "eslint-plugin-promise": "^5.2.0",
     "faker": "^5.5.3",
     "git-commit-msg-linter": "^3.2.8",
-    "jest": "^27.4.3",
+    "jest": "^27.4.4",
     "lint-staged": "^12.1.2",
     "rimraf": "^3.0.2",
     "supertest": "^6.1.6",
