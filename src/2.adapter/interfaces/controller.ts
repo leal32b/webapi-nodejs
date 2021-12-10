@@ -1,4 +1,4 @@
-import { HttpRequest, HttpResponse } from '@/2.adapter/interfaces/http'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 export interface Controller {
   handle: (httpRequest: HttpRequest) => Promise<HttpResponse>

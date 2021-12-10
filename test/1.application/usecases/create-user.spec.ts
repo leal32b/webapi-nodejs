@@ -7,7 +7,7 @@ import { CreateUserRepositoryStub } from '~/1.application/mocks/create-user-repo
 import { HasherStub } from '~/1.application/mocks/hasher.mock'
 import { mockUserData } from '~/1.application/mocks/user-data.mock'
 
-interface SutTypes {
+type SutTypes = {
   sut: CreateUserUsecase
   hasherStub: Hasher
   createUserRepositoryStub: CreateUserRepository

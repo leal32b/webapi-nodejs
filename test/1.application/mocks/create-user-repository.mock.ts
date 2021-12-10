@@ -1,11 +1,10 @@
 import faker from 'faker'
 
-import { CreateUserModel } from '@/0.domain/interfaces/create-user'
-import { UserModel } from '@/0.domain/models/user'
+import { User, UserData } from '@/0.domain/types/user'
 import { CreateUserRepository } from '@/1.application/interfaces/create-user-repository'
 
 export class CreateUserRepositoryStub implements CreateUserRepository {
-  async create (userData: CreateUserModel): Promise<UserModel> {
+  async create (userData: UserData): Promise<User> {
     const fakeUser = {
       id: faker.datatype.uuid(),
       name: userData.name,

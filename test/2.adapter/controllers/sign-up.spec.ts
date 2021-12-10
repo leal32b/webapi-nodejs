@@ -1,5 +1,5 @@
-import { CreateUser, CreateUserModel } from '@/0.domain/interfaces/create-user'
-import { UserModel } from '@/0.domain/models/user'
+import { CreateUser } from '@/0.domain/interfaces/create-user'
+import { User, UserData } from '@/0.domain/types/user'
 import { SignUpController } from '@/2.adapter/controllers/sign-up'
 import { InvalidParamError } from '@/2.adapter/errors/invalid-param-error'
 import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
@@ -18,8 +18,8 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeCreateUserStub = (): CreateUser => {
   class CreateUserStub implements CreateUser {
-    async create (user: CreateUserModel): Promise<UserModel> {
-      const fakeUser: UserModel = {
+    async create (userData: UserData): Promise<User> {
+      const fakeUser: User = {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email@mail.com',
@@ -33,7 +33,7 @@ const makeCreateUserStub = (): CreateUser => {
   return new CreateUserStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: SignUpController
   emailValidatorStub: EmailValidator
   createUserStub: CreateUser

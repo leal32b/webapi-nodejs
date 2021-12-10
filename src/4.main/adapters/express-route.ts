@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { Controller } from '@/2.adapter/interfaces/controller'
-import { HttpRequest } from '@/2.adapter/interfaces/http'
+import { HttpRequest } from '@/2.adapter/types/http'
 
 export const adaptExpressRoute = (controller: Controller): Function => {
   return async (req: Request, res: Response): Promise<void> => {

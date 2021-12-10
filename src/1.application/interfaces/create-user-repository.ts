@@ -1,6 +1,5 @@
-import { CreateUserModel } from '@/0.domain/interfaces/create-user'
-import { UserModel } from '@/0.domain/models/user'
+import { User, UserData } from '@/0.domain/types/user'
 
 export interface CreateUserRepository {
-  create: (userData: CreateUserModel) => Promise<UserModel>
+  create: (userData: UserData) => Promise<User>
 }

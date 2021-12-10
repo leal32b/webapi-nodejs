@@ -1,7 +1,7 @@
 import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
 import { UserMongodbRepository } from '@/3.infra/databases/mongodb/repositories/user'
 
-interface SutTypes {
+type SutTypes = {
   sut: UserMongodbRepository
 }
 

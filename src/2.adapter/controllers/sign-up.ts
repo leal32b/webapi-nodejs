@@ -4,7 +4,7 @@ import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
 import { Controller } from '@/2.adapter/interfaces/controller'
 import { EmailValidator } from '@/2.adapter/interfaces/email-validator'
-import { HttpRequest, HttpResponse } from '@/2.adapter/interfaces/http'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 export class SignUpController implements Controller {
   constructor (

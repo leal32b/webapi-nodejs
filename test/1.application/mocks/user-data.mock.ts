@@ -1,8 +1,8 @@
 import faker from 'faker'
 
-import { CreateUserModel } from '@/0.domain/interfaces/create-user'
+import { UserData } from '@/0.domain/types/user'
 
-export const mockUserData = (): CreateUserModel => ({
+export const mockUserData = (): UserData => ({
   name: faker.internet.userName(),
   email: faker.internet.email(),
   password: faker.internet.password()

@@ -1,8 +1,8 @@
 import { LogControllerDecorator } from '@/2.adapter/decorators/log-controller'
 import { serverError } from '@/2.adapter/helpers/http-response'
 import { Controller } from '@/2.adapter/interfaces/controller'
-import { HttpRequest, HttpResponse } from '@/2.adapter/interfaces/http'
 import { LogErrorRepository } from '@/2.adapter/interfaces/log-error-repository'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 const makeLogErrorRepositoryStub = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {
@@ -31,7 +31,7 @@ const makeControllerStub = (): Controller => {
   return new ControllerStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: LogControllerDecorator
   controllerStub: Controller
   logErrorRepositoryStub: LogErrorRepository
