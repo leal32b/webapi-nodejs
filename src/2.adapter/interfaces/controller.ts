@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
-export interface Controller {
+export default interface Controller {
   handle: (httpRequest: HttpRequest) => Promise<HttpResponse>
 }

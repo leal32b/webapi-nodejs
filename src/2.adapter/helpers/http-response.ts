@@ -1,4 +1,4 @@
-import { ServerError } from '@/2.adapter/errors/server-error'
+import ServerError from '@/2.adapter/errors/server-error'
 import { HttpResponse } from '@/2.adapter/types/http'
 
 export const success = {

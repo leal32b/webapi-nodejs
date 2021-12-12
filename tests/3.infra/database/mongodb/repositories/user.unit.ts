@@ -1,5 +1,5 @@
-import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
-import { UserMongodbRepository } from '@/3.infra/databases/mongodb/repositories/user'
+import MongodbAdapter from '@/3.infra/databases/mongodb/adapter/mongodb'
+import UserMongodbRepository from '@/3.infra/databases/mongodb/repositories/user'
 
 type SutTypes = {
   sut: UserMongodbRepository
@@ -35,9 +35,9 @@ describe('User Mongodb Repository', () => {
     })
 
     expect(user).toBeTruthy()
-    expect(user.id).toBeTruthy()
-    expect(user.name).toBe('any_name')
-    expect(user.email).toBe('any_email@mail.com')
-    expect(user.password).toBe('any_password')
+    expect(user.props.id).toBeTruthy()
+    expect(user.props.name).toBe('any_name')
+    expect(user.props.email).toBe('any_email@mail.com')
+    expect(user.props.password).toBe('any_password')
   })
 })

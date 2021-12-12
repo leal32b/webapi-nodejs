@@ -1,8 +1,8 @@
-import { Controller } from '@/2.adapter/interfaces/controller'
-import { LogErrorRepository } from '@/2.adapter/interfaces/log-error-repository'
+import Controller from '@/2.adapter/interfaces/controller'
+import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
-export class LogControllerDecorator implements Controller {
+export default class LogControllerDecorator implements Controller {
   constructor (
     private readonly controller: Controller,
     private readonly logErrorRepository: LogErrorRepository

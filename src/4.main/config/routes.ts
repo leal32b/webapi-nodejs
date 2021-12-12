@@ -3,7 +3,7 @@ import { join } from 'path'
 
 import { Express, Router } from 'express'
 
-export default async (app: Express): Promise<void> => {
+const setupRoutes = async (app: Express): Promise<void> => {
   const router = Router()
   const rootPath = join(__dirname, '..', 'routes')
   const folders = readdirSync(rootPath)
@@ -22,3 +22,5 @@ export default async (app: Express): Promise<void> => {
     })
   }
 }
+
+export default setupRoutes

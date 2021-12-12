@@ -1,7 +1,7 @@
-import { LogControllerDecorator } from '@/2.adapter/decorators/log-controller'
+import LogControllerDecorator from '@/2.adapter/decorators/log-controller'
 import { serverError } from '@/2.adapter/helpers/http-response'
-import { Controller } from '@/2.adapter/interfaces/controller'
-import { LogErrorRepository } from '@/2.adapter/interfaces/log-error-repository'
+import Controller from '@/2.adapter/interfaces/controller'
+import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 const makeLogErrorRepositoryStub = (): LogErrorRepository => {

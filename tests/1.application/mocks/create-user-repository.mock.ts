@@ -1,7 +1,8 @@
 import faker from 'faker'
 
-import { User, UserData } from '@/0.domain/types/user'
-import { CreateUserRepository } from '@/1.application/interfaces/create-user-repository'
+import User from '@/0.domain/entities/user'
+import { UserData } from '@/0.domain/types/user'
+import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 
 export class CreateUserRepositoryStub implements CreateUserRepository {
   async create (userData: UserData): Promise<User> {
@@ -12,6 +13,6 @@ export class CreateUserRepositoryStub implements CreateUserRepository {
       password: userData.password
     }
 
-    return await Promise.resolve(fakeUser)
+    return new User(fakeUser)
   }
 }

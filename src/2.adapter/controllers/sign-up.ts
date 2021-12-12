@@ -1,16 +1,16 @@
-import { CreateUser } from '@/0.domain/interfaces/create-user'
-import { InvalidParamError } from '@/2.adapter/errors/invalid-param-error'
-import { MissingParamError } from '@/2.adapter/errors/missing-param-error'
+import CreateUser from '@/0.domain/interfaces/create-user'
+import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
+import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
-import { Controller } from '@/2.adapter/interfaces/controller'
-import { EmailValidator } from '@/2.adapter/interfaces/email-validator'
+import Controller from '@/2.adapter/interfaces/controller'
+import EmailValidator from '@/2.adapter/interfaces/email-validator'
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
-export class SignUpController implements Controller {
-  constructor (
-    private readonly emailValidator: EmailValidator,
-    private readonly createUser: CreateUser
-  ) {}
+export default class SignUpController implements Controller {
+  constructor (private readonly props: {
+    emailValidator: EmailValidator
+    createUserUsecase: CreateUser
+  }) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -28,13 +28,13 @@ export class SignUpController implements Controller {
         return clientError.badRequest(new InvalidParamError('passwordConfirmation'))
       }
 
-      const isValid = this.emailValidator.isValid(email)
+      const isValid = this.props.emailValidator.isValid(email)
 
       if (!isValid) {
         return clientError.badRequest(new InvalidParamError('email'))
       }
 
-      const user = await this.createUser.create({
+      const user = await this.props.createUserUsecase.create({
         name,
         email,
         password
