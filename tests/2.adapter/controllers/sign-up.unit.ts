@@ -1,37 +1,11 @@
-import User from '@/0.domain/entities/user'
 import CreateUser from '@/0.domain/interfaces/create-user'
 import SignUpController from '@/2.adapter/controllers/sign-up'
 import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import ServerError from '@/2.adapter/errors/server-error'
 import EmailValidator from '@/2.adapter/interfaces/email-validator'
-
-const makeEmailValidatorStub = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-
-  return new EmailValidatorStub()
-}
-
-const makeCreateUserUsecaseStub = (): CreateUser => {
-  class CreateUserUsecaseStub implements CreateUser {
-    async create (): Promise<User> {
-      const fakeUser = new User({
-        id: 'valid_id',
-        name: 'valid_name',
-        email: 'valid_email@mail.com',
-        password: 'valid_password'
-      })
-
-      return await Promise.resolve(fakeUser)
-    }
-  }
-
-  return new CreateUserUsecaseStub()
-}
+import CreateUserUsecaseStub from '~/2.adapter/mocks/create-user-usecase.mock'
+import EmailValidatorStub from '~/2.adapter/mocks/email-validator.mock'
 
 type SutTypes = {
   sut: SignUpController
@@ -41,8 +15,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const injection = {
-    emailValidator: makeEmailValidatorStub(),
-    createUserUsecase: makeCreateUserUsecaseStub()
+    emailValidator: new EmailValidatorStub(),
+    createUserUsecase: new CreateUserUsecaseStub()
   }
   const sut = new SignUpController(injection)
 

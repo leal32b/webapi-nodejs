@@ -2,34 +2,8 @@ import LogControllerDecorator from '@/2.adapter/decorators/log-controller'
 import { serverError } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
 import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
-import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
-
-const makeLogErrorRepositoryStub = (): LogErrorRepository => {
-  class LogErrorRepositoryStub implements LogErrorRepository {
-    async log (stack: string): Promise<void> {
-      return await Promise.resolve()
-    }
-  }
-
-  return new LogErrorRepositoryStub()
-}
-
-const makeControllerStub = (): Controller => {
-  class ControllerStub implements Controller {
-    async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-      const httpResponse: HttpResponse = {
-        statusCode: 200,
-        body: {
-          name: 'any_name'
-        }
-      }
-
-      return await Promise.resolve(httpResponse)
-    }
-  }
-
-  return new ControllerStub()
-}
+import ControllerStub from '~/2.adapter/mocks/controller.mock'
+import LogErrorRepositoryStub from '~/2.adapter/mocks/log-error-repository.mock'
 
 type SutTypes = {
   sut: LogControllerDecorator
@@ -38,8 +12,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const controllerStub = makeControllerStub()
-  const logErrorRepositoryStub = makeLogErrorRepositoryStub()
+  const controllerStub = new ControllerStub()
+  const logErrorRepositoryStub = new LogErrorRepositoryStub()
   const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
 
   return {

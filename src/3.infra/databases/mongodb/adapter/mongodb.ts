@@ -1,6 +1,6 @@
 import { Collection, MongoClient } from 'mongodb'
 
-const MongodbAdapter = {
+export const MongodbAdapter = {
   mongoClient: null as MongoClient,
 
   async connect (url: string): Promise<void> {
@@ -22,5 +22,3 @@ const MongodbAdapter = {
     return { id, ...collectionWithoutId }
   }
 }
-
-export default MongodbAdapter

@@ -17,7 +17,7 @@ const makeLogErrorRepositoryStub = (): LogErrorRepository => {
   return new LogErrorRepositoryStub()
 }
 
-const makeSignUpController = (): Controller => {
+export const makeSignUpController = (): Controller => {
   const salt = 12
   const emailValidator = new EmailValidatorAdapter()
   const bcryptAdapter = new BcryptAdapter(salt)
@@ -33,5 +33,3 @@ const makeSignUpController = (): Controller => {
 
   return new LogControllerDecorator(signUpController, makeLogErrorRepositoryStub())
 }
-
-export default makeSignUpController

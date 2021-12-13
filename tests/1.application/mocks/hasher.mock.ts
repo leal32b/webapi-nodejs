@@ -1,6 +1,6 @@
 import faker from 'faker'
 
-import { Hasher } from '@/1.application/interfaces/hasher'
+import Hasher from '@/1.application/interfaces/hasher'
 
 export default class HasherStub implements Hasher {
   async hash (value: string): Promise<string> {

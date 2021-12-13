@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import sut from '@/3.infra/databases/mongodb/adapter/mongodb'
+import { MongodbAdapter as sut } from '@/3.infra/databases/mongodb/adapter/mongodb'
 
 describe('Mongodb Adapter', () => {
   beforeAll(async () => {

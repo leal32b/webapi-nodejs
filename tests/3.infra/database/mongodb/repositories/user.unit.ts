@@ -1,4 +1,4 @@
-import MongodbAdapter from '@/3.infra/databases/mongodb/adapter/mongodb'
+import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
 import UserMongodbRepository from '@/3.infra/databases/mongodb/repositories/user'
 
 type SutTypes = {

@@ -2,9 +2,9 @@ import faker from 'faker'
 
 import User from '@/0.domain/entities/user'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
-import { Hasher } from '@/1.application/interfaces/hasher'
+import Hasher from '@/1.application/interfaces/hasher'
 import CreateUserUsecase from '@/1.application/usecases/create-user'
-import { CreateUserRepositoryStub } from '~/1.application/mocks/create-user-repository.mock'
+import CreateUserRepositoryStub from '~/1.application/mocks/create-user-repository.mock'
 import HasherStub from '~/1.application/mocks/hasher.mock'
 import mockUserData from '~/1.application/mocks/user-data.mock'
 
