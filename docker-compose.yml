@@ -1,25 +1,29 @@
 version: '3'
 services:
+  mongodb:
+    container_name: mongodb-container
+    image: mongo:4.4
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGODB_PASSWORD}
+    volumes:
+      - ./data-mongodb:/data/db
+    ports:
+      - 27017:27017
+  
   postgres:
     container_name: postgres-container
     image: postgres:14.1
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DB_POSTGRES_DATABASE}
+      - POSTGRES_USER=${DB_POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
     volumes:
       - ./data-postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  mongodb:
-    container_name: mongodb-container
-    image: mongo:4.4
-    restart: always
-    volumes:
-      - ./data-mongodb:/data/db
-    ports:
-      - 27017:27017
 
   webapi:
     container_name: webapi-container
@@ -33,17 +37,17 @@ services:
       - ./package.json:/usr/src/webapi-nodejs/package.json
       - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
     ports:
-      - '${PORT}:${PORT}'
+      - ${PORT}:${PORT}
       - 9222:9222
     links:
-      - postgres
       - mongodb
+      - postgres
 
   start_dependencies:
     container_name: wait-for-dependencies
     image: dadarek/wait-for-dependencies
-    command: postgres:5432 mongodb:27017 webapi:3000
+    command: mongodb:27017 postgres:5432 webapi:3000
     depends_on:
-      - postgres
       - mongodb
+      - postgres
       - webapi
