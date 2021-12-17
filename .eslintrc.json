@@ -1,8 +1,6 @@
 {
   "extends": [
-    "standard-with-typescript",
-    "plugin:import/recommended",
-    "plugin:import/typescript"
+    "standard-with-typescript"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"

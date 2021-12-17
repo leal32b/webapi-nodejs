@@ -1,11 +1,23 @@
 version: '3'
 services:
+  postgres:
+    container_name: postgres-container
+    image: postgres:14.1
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./data-postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
   mongodb:
     container_name: mongodb-container
     image: mongo:4.4
     restart: always
     volumes:
-      - ./mongodb-data:/data/db
+      - ./data-mongodb:/data/db
     ports:
       - 27017:27017
 
@@ -24,12 +36,14 @@ services:
       - '${PORT}:${PORT}'
       - 9222:9222
     links:
+      - postgres
       - mongodb
 
   start_dependencies:
     container_name: wait-for-dependencies
     image: dadarek/wait-for-dependencies
-    command: mongodb:27017 webapi:3000
+    command: postgres:5432 mongodb:27017 webapi:3000
     depends_on:
+      - postgres
       - mongodb
       - webapi

@@ -1,6 +1,7 @@
 # folders
 coverage
-mongodb-data
+data-postgres
+data-mongodb
 dist
 node_modules
 
