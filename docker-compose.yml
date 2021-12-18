@@ -32,8 +32,12 @@ services:
     restart: always
     command: bash -c "npm ci --only=prod && npm run debug"
     env_file: .env
+    environment:
+      - DB_MONGODB_HOST=mongodb
+      - DB_POSTGRES_HOST=postgres
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
+      - ./ormconfig.js:/usr/src/webapi-nodejs/ormconfig.js
       - ./package.json:/usr/src/webapi-nodejs/package.json
       - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
     ports:
