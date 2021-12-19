@@ -21,10 +21,10 @@ export const makeSignUpController = (): Controller => {
   const salt = 12
   const emailValidator = new EmailValidatorAdapter()
   const bcryptAdapter = new BcryptAdapter(salt)
-  const userMongodbRepository = new UserMongodbRepository()
+  const userRepository = new UserMongodbRepository()
   const createUserUsecase = new CreateUserUsecase({
     hasher: bcryptAdapter,
-    createUserRepository: userMongodbRepository
+    createUserRepository: userRepository
   })
   const signUpController = new SignUpController({
     createUserUsecase,

@@ -12,7 +12,7 @@ export const MongodbAdapter = {
 
   async connect (uri: string = CONNECTION_STRING): Promise<void> {
     this.mongoClient = await MongoClient.connect(uri)
-    console.log(`Mongodb connected at ${uri}`)
+    console.log(`mongodb connected at ${uri}`)
   },
 
   async close (): Promise<void> {
