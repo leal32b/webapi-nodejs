@@ -1,7 +1,7 @@
 import faker from 'faker'
 
 import User from '@/0.domain/entities/user'
-import { UserData } from '@/0.domain/types/user'
+import { UserData } from '@/0.domain/types/user-types'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 
 export default class CreateUserRepositoryStub implements CreateUserRepository {

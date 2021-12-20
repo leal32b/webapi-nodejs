@@ -1,5 +1,5 @@
 import User from '@/0.domain/entities/user'
-import { UserData } from '@/0.domain/types/user'
+import { UserData } from '@/0.domain/types/user-types'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
 

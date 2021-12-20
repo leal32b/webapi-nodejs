@@ -1,5 +1,5 @@
 import User from '@/0.domain/entities/user'
-import { UserData } from '@/0.domain/types/user'
+import { UserData } from '@/0.domain/types/user-types'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import { PostgresAdapter } from '@/3.infra/databases/postgres/adapter/postgres'
 import { PgUser } from '@/3.infra/databases/postgres/entities/user'
