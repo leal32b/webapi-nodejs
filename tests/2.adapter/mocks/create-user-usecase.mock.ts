@@ -2,7 +2,7 @@ import User from '@/0.domain/entities/user'
 import CreateUser from '@/0.domain/interfaces/create-user'
 
 export default class CreateUserUsecaseStub implements CreateUser {
-  async create (): Promise<User> {
+  async execute (): Promise<User> {
     const fakeUser = new User({
       id: 'valid_id',
       name: 'valid_name',

@@ -9,7 +9,7 @@ export default class CreateUserUsecase implements CreateUser {
     createUserRepository: CreateUserRepository
   }) {}
 
-  async create (userData: UserData): Promise<User> {
+  async execute (userData: UserData): Promise<User> {
     const hashedPassword = await this.props.hasher.hash(userData.password)
 
     const user = await this.props.createUserRepository.create({

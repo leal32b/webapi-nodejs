@@ -162,7 +162,7 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'any_password'
       }
     }
-    jest.spyOn(createUserUsecase, 'create').mockRejectedValueOnce(new Error())
+    jest.spyOn(createUserUsecase, 'execute').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
@@ -179,7 +179,7 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'any_password'
       }
     }
-    const addSpy = jest.spyOn(createUserUsecase, 'create')
+    const addSpy = jest.spyOn(createUserUsecase, 'execute')
     await sut.handle(httpRequest)
 
     expect(addSpy).toHaveBeenCalledWith({

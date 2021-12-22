@@ -29,7 +29,7 @@ describe('CreateUser Usecase', () => {
     const { sut, hasher } = makeSut()
     const hasherSpy = jest.spyOn(hasher, 'hash')
     const userData = mockUserData()
-    await sut.create(userData)
+    await sut.execute(userData)
 
     expect(hasherSpy).toHaveBeenCalledWith(userData.password)
   })
@@ -37,7 +37,7 @@ describe('CreateUser Usecase', () => {
   it('should throw if Hasher throws', async () => {
     const { sut, hasher } = makeSut()
     jest.spyOn(hasher, 'hash').mockRejectedValueOnce(new Error())
-    const promise = sut.create(mockUserData())
+    const promise = sut.execute(mockUserData())
 
     await expect(promise).rejects.toThrowError()
   })
@@ -49,7 +49,7 @@ describe('CreateUser Usecase', () => {
     const hashedPassword = faker.random.alphaNumeric(32)
     jest.spyOn(hasher, 'hash').mockResolvedValueOnce(hashedPassword)
     const userDataWithHashedPassoword = { ...userData, password: hashedPassword }
-    await sut.create(userData)
+    await sut.execute(userData)
 
     expect(addSpy).toHaveBeenCalledWith(userDataWithHashedPassoword)
   })
@@ -57,7 +57,7 @@ describe('CreateUser Usecase', () => {
   it('should throw if AddUserRepository throws', async () => {
     const { sut, createUserRepository } = makeSut()
     jest.spyOn(createUserRepository, 'create').mockRejectedValueOnce(new Error())
-    const promise = sut.create(mockUserData())
+    const promise = sut.execute(mockUserData())
 
     await expect(promise).rejects.toThrowError()
   })
@@ -70,7 +70,7 @@ describe('CreateUser Usecase', () => {
     const id = faker.datatype.uuid()
     const createdUser = { ...userData, password: hashedPassword, id }
     jest.spyOn(createUserRepository, 'create').mockResolvedValueOnce(new User(createdUser))
-    const user = await sut.create(userData)
+    const user = await sut.execute(userData)
 
     await expect(user.props).toEqual(createdUser)
   })

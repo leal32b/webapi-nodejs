@@ -34,7 +34,7 @@ export default class SignUpController implements Controller {
         return clientError.badRequest(new InvalidParamError('email'))
       }
 
-      const user = await this.props.createUserUsecase.create({
+      const user = await this.props.createUserUsecase.execute({
         name,
         email,
         password
