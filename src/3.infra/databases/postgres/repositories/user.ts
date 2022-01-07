@@ -6,7 +6,8 @@ import { PgUser } from '@/3.infra/databases/postgres/entities/user'
 
 export default class UserPostgresRepository implements CreateUserRepository {
   async create (userData: UserData): Promise<User> {
-    const user = PostgresAdapter.getRepository(PgUser).create(userData)
+    const repository = await PostgresAdapter.getRepository(PgUser)
+    const user = repository.create(userData)
     const savedUser = await PostgresAdapter.getManager().save(user)
 
     return new User({ ...savedUser, id: savedUser.id.toString() })

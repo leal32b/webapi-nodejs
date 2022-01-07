@@ -3,6 +3,7 @@ import CreateUser from '@/0.domain/interfaces/create-user'
 import { UserData } from '@/0.domain/types/user-types'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import Hasher from '@/1.application/interfaces/hasher'
+
 export default class CreateUserUsecase implements CreateUser {
   constructor (private readonly props: {
     hasher: Hasher

@@ -4,7 +4,8 @@ import LogControllerDecorator from '@/2.adapter/decorators/log-controller'
 import Controller from '@/2.adapter/interfaces/controller'
 import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
 import BcryptAdapter from '@/3.infra/cryptography/bcrypt'
-import UserMongodbRepository from '@/3.infra/databases/mongodb/repositories/user'
+// import UserMongodbRepository from '@/3.infra/databases/mongodb/repositories/user'
+import UserPostgresRepository from '@/3.infra/databases/postgres/repositories/user'
 import EmailValidatorAdapter from '@/3.infra/validators/email-validator'
 
 const makeLogErrorRepositoryStub = (): LogErrorRepository => {
@@ -21,7 +22,7 @@ export const makeSignUpController = (): Controller => {
   const salt = 12
   const emailValidator = new EmailValidatorAdapter()
   const bcryptAdapter = new BcryptAdapter(salt)
-  const userRepository = new UserMongodbRepository()
+  const userRepository = new UserPostgresRepository()
   const createUserUsecase = new CreateUserUsecase({
     hasher: bcryptAdapter,
     createUserRepository: userRepository
