@@ -1,4 +1,4 @@
-import CreateUser from '@/0.domain/interfaces/create-user'
+import CreateUserUsecase from '@/1.application/usecases/create-user'
 import SignUpController from '@/2.adapter/controllers/sign-up'
 import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import MissingParamError from '@/2.adapter/errors/missing-param-error'
@@ -10,13 +10,13 @@ import EmailValidatorStub from '~/2.adapter/mocks/email-validator.mock'
 type SutTypes = {
   sut: SignUpController
   emailValidator: EmailValidator
-  createUserUsecase: CreateUser
+  createUserUsecase: CreateUserUsecase
 }
 
 const makeSut = (): SutTypes => {
   const injection = {
     emailValidator: new EmailValidatorStub(),
-    createUserUsecase: new CreateUserUsecaseStub()
+    createUserUsecase: new CreateUserUsecaseStub() as unknown as CreateUserUsecase
   }
   const sut = new SignUpController(injection)
 

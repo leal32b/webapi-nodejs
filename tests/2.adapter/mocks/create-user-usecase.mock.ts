@@ -1,7 +1,7 @@
 import User from '@/0.domain/entities/user'
-import CreateUser from '@/0.domain/interfaces/create-user'
+import Usecase from '@/1.application/interfaces/usecase'
 
-export default class CreateUserUsecaseStub implements CreateUser {
+export default class CreateUserUsecaseStub implements Usecase<null, User> {
   async execute (): Promise<User> {
     const fakeUser = new User({
       id: 'valid_id',

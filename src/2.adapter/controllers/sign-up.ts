@@ -1,4 +1,4 @@
-import CreateUser from '@/0.domain/interfaces/create-user'
+import CreateUserUsecase from '@/1.application/usecases/create-user'
 import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
@@ -9,7 +9,7 @@ import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 export default class SignUpController implements Controller {
   constructor (private readonly props: {
     emailValidator: EmailValidator
-    createUserUsecase: CreateUser
+    createUserUsecase: CreateUserUsecase
   }) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {

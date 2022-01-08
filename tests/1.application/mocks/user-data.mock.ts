@@ -1,6 +1,6 @@
 import faker from 'faker'
 
-import { UserData } from '@/0.domain/types/user-types'
+import { UserData } from '@/1.application/types/user-types'
 
 const mockUserData = (): UserData => ({
   name: faker.internet.userName(),
