@@ -3,3 +3,8 @@ export type UserData = {
   email: string
   password: string
 }
+
+export type AuthenticationData = {
+  email: string
+  password: string
+}
