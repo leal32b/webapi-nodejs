@@ -1,8 +1,8 @@
 import validator from 'validator'
 
-import EmailValidator from '@/2.adapter/interfaces/email-validator'
+import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
 
-export default class EmailValidatorAdapter implements EmailValidator {
+export default class EmailValidatorAdapter implements ExtEmailValidator {
   isValid (email: string): boolean {
     return validator.isEmail(email)
   }

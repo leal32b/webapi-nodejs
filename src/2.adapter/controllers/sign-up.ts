@@ -1,38 +1,24 @@
 import CreateUserUsecase from '@/1.application/usecases/create-user'
-import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
-import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
-import EmailValidator from '@/2.adapter/interfaces/email-validator'
+import Validator from '@/2.adapter/interfaces/validator'
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 export default class SignUpController implements Controller {
   constructor (private readonly props: {
-    emailValidator: EmailValidator
+    validator: Validator
     createUserUsecase: CreateUserUsecase
   }) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
+      const error = this.props.validator.validate(httpRequest.body)
 
-      for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
-          return clientError.badRequest(new MissingParamError(field))
-        }
+      if (error) {
+        return clientError.badRequest(error)
       }
 
-      const { name, email, password, passwordConfirmation } = httpRequest.body
-
-      if (password !== passwordConfirmation) {
-        return clientError.badRequest(new InvalidParamError('passwordConfirmation'))
-      }
-
-      const isValid = this.props.emailValidator.isValid(email)
-
-      if (!isValid) {
-        return clientError.badRequest(new InvalidParamError('email'))
-      }
+      const { name, email, password } = httpRequest.body
 
       const user = await this.props.createUserUsecase.execute({
         name,
@@ -40,7 +26,7 @@ export default class SignUpController implements Controller {
         password
       })
 
-      return success.ok(user)
+      return success.ok({ ...user.props })
     } catch (error) {
       return serverError.internalServerError(error)
     }

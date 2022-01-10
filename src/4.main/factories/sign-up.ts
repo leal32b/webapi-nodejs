@@ -6,7 +6,7 @@ import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
 import BcryptAdapter from '@/3.infra/cryptography/bcrypt'
 // import UserMongodbRepository from '@/3.infra/databases/mongodb/repositories/user'
 import UserPostgresRepository from '@/3.infra/databases/postgres/repositories/user'
-import EmailValidatorAdapter from '@/3.infra/validators/email-validator'
+import { makeSignUpValidators } from '@/4.main/factories/sign-up-validators'
 
 const makeLogErrorRepositoryStub = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {
@@ -20,16 +20,16 @@ const makeLogErrorRepositoryStub = (): LogErrorRepository => {
 
 export const makeSignUpController = (): Controller => {
   const salt = 12
-  const emailValidator = new EmailValidatorAdapter()
   const bcryptAdapter = new BcryptAdapter(salt)
   const userRepository = new UserPostgresRepository()
   const createUserUsecase = new CreateUserUsecase({
     hasher: bcryptAdapter,
     createUserRepository: userRepository
   })
+  const validator = makeSignUpValidators()
   const signUpController = new SignUpController({
-    createUserUsecase,
-    emailValidator
+    validator,
+    createUserUsecase
   })
 
   return new LogControllerDecorator(signUpController, makeLogErrorRepositoryStub())
