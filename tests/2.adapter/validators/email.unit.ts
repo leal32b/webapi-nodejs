@@ -1,7 +1,7 @@
 import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
 import EmailValidator from '@/2.adapter/validators/email'
-import ExtEmailValidatorStub from '~/2.adapter/mocks/email-validator.mock'
+import { makeExtEmailValidatorStub } from '~/2.adapter/mocks/email-validator.mock'
 
 type SutTypes = {
   sut: EmailValidator
@@ -10,7 +10,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const injection = {
-    extEmailValidator: new ExtEmailValidatorStub(),
+    extEmailValidator: makeExtEmailValidatorStub(),
     fieldName: 'email'
   }
   const sut = new EmailValidator(injection)
@@ -37,9 +37,7 @@ describe('EmailValidator', () => {
 
   it('should throw if EmailValidator throws', () => {
     const { sut, extEmailValidator } = makeSut()
-    jest.spyOn(extEmailValidator, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    jest.spyOn(extEmailValidator, 'isValid').mockImplementationOnce(() => { throw new Error() })
 
     expect(sut.validate).toThrow()
   })

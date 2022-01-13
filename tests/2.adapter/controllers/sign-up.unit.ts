@@ -4,7 +4,7 @@ import ServerError from '@/2.adapter/errors/server-error'
 import { clientError } from '@/2.adapter/helpers/http-response'
 import Validator from '@/2.adapter/interfaces/validator'
 import { HttpRequest } from '@/2.adapter/types/http'
-import CreateUserUsecaseStub from '~/2.adapter/mocks/create-user-usecase.mock'
+import { makeCreateUserUsecaseStub } from '~/2.adapter/mocks/create-user-usecase.mock'
 import { makeValidatorStub } from '~/2.adapter/mocks/validator.mock'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -25,7 +25,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const injection = {
     validator: makeValidatorStub(),
-    createUserUsecase: new CreateUserUsecaseStub() as unknown as CreateUserUsecase
+    createUserUsecase: makeCreateUserUsecaseStub() as unknown as CreateUserUsecase
   }
   const sut = new SignUpController(injection)
 

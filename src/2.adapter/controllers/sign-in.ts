@@ -3,12 +3,12 @@ import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
-import EmailValidator from '@/2.adapter/interfaces/email-validator'
+import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
 import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
 
 export default class SignInController implements Controller {
   constructor (private readonly props: {
-    emailValidator: EmailValidator
+    emailValidator: ExtEmailValidator
     authenticateUserUsecase: AuthenticateUserUsecase
   }) {}
 

@@ -2,8 +2,8 @@ import LogControllerDecorator from '@/2.adapter/decorators/log-controller'
 import { serverError } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
 import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
-import ControllerStub from '~/2.adapter/mocks/controller.mock'
-import LogErrorRepositoryStub from '~/2.adapter/mocks/log-error-repository.mock'
+import { makeControllerStub } from '~/2.adapter/mocks/controller.mock'
+import { makeLogErrorRepositoryStub } from '~/2.adapter/mocks/log-error-repository.mock'
 
 type SutTypes = {
   sut: LogControllerDecorator
@@ -12,8 +12,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const controllerStub = new ControllerStub()
-  const logErrorRepositoryStub = new LogErrorRepositoryStub()
+  const controllerStub = makeControllerStub()
+  const logErrorRepositoryStub = makeLogErrorRepositoryStub()
   const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
 
   return {
@@ -76,7 +76,6 @@ describe('LogController decorator', () => {
         passwordConfirmation: 'ane_password'
       }
     }
-
     await sut.handle(httpRequest)
 
     expect(logSpy).toHaveBeenCalledWith('any_stack')

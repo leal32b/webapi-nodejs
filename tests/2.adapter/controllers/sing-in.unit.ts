@@ -3,10 +3,10 @@ import SignInController from '@/2.adapter/controllers/sign-in'
 import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
 import MissingParamError from '@/2.adapter/errors/missing-param-error'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
-import EmailValidator from '@/2.adapter/interfaces/email-validator'
+import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
 import { HttpRequest } from '@/2.adapter/types/http'
-import AuthenticateUserUsecaseStub from '~/2.adapter/mocks/authenticate-user.mock'
-import EmailValidatorStub from '~/2.adapter/mocks/email-validator.mock'
+import { makeAuthenticateUserUsecaseStub } from '~/2.adapter/mocks/authenticate-user.mock'
+import { makeExtEmailValidatorStub } from '~/2.adapter/mocks/email-validator.mock'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -17,14 +17,14 @@ const makeFakeRequest = (): HttpRequest => ({
 
 type SutTypes = {
   sut: SignInController
-  emailValidator: EmailValidator
+  emailValidator: ExtEmailValidator
   authenticateUserUsecase: AuthenticateUserUsecase
 }
 
 const makeSut = (): SutTypes => {
   const injection = {
-    emailValidator: new EmailValidatorStub(),
-    authenticateUserUsecase: new AuthenticateUserUsecaseStub()
+    emailValidator: makeExtEmailValidatorStub(),
+    authenticateUserUsecase: makeAuthenticateUserUsecaseStub()
   }
   const sut = new SignInController(injection)
 
@@ -77,9 +77,7 @@ describe('SignIn Controller', () => {
 
     it('should return 500 if EmailValidator throws', async () => {
       const { sut, emailValidator } = makeSut()
-      jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => {
-        throw new Error()
-      })
+      jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => { throw new Error() })
       const httpResponse = await sut.handle(makeFakeRequest())
 
       expect(httpResponse).toEqual(serverError.internalServerError(new Error()))
