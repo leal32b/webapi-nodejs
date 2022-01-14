@@ -3,13 +3,13 @@ import Validator from '@/2.adapter/interfaces/validator'
 
 export default class CompareFieldsValidator implements Validator {
   constructor (
-    private readonly fieldName: string,
-    private readonly fieldToCompareName: string
+    private readonly field: string,
+    private readonly fieldToCompare: string
   ) {}
 
   validate (input: any): Error {
-    if (input[this.fieldName] !== input[this.fieldToCompareName]) {
-      return new InvalidParamError(this.fieldName)
+    if (input[this.field] !== input[this.fieldToCompare]) {
+      return new InvalidParamError(this.fieldToCompare)
     }
   }
 }
