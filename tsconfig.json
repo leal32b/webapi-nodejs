@@ -4,7 +4,7 @@
     "emitDecoratorMetadata": true,
     "outDir": "dist",
     "module": "commonjs",
-    "target": "es2019",
+    "target": "esnext",
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,

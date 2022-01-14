@@ -9,9 +9,12 @@ const CONNECTION_STRING = `mongodb://${USERNAME}:${PASSWORD}@${HOST}:${PORT}`
 
 export const MongodbAdapter = {
   mongoClient: null as MongoClient,
+  connectionString: null as string,
 
   async connect (uri: string = CONNECTION_STRING): Promise<void> {
     this.mongoClient = await MongoClient.connect(uri)
+    this.connectionString = uri
+
     console.log(`mongodb connected at ${uri}`)
   },
 

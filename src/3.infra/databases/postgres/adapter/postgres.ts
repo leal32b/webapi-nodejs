@@ -7,6 +7,7 @@ export const PostgresAdapter = {
   async connect (connectionName: string = this.connectionName): Promise<void> {
     this.connectionName = connectionName
     this.postgresClient = await createConnection(connectionName)
+
     console.log('postgres connected')
   },
 
@@ -17,6 +18,7 @@ export const PostgresAdapter = {
   async reconnect (): Promise<void> {
     if (!(this.postgresClient as Connection).isConnected) {
       await this.connect()
+
       console.log('postgres reconnected')
     }
   },
