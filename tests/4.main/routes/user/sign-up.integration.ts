@@ -1,23 +1,19 @@
 import request from 'supertest'
 
-// import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
-import { PostgresAdapter } from '@/3.infra/databases/postgres/adapter/postgres'
+import { MongodbAdapter } from '@/3.infra/databases/mongodb/adapter/mongodb'
 import app from '@/4.main/config/app'
 
 describe('SignUp Routes', () => {
   beforeAll(async () => {
-    // await MongodbAdapter.connect(global.__MONGO_URI__)
-    await PostgresAdapter.connect('test')
+    await MongodbAdapter.connect(global.__MONGO_URI__)
   })
 
   beforeEach(async () => {
-    // await MongodbAdapter.getCollection('users').deleteMany({})
+    await MongodbAdapter.getCollection('users').deleteMany({})
   })
 
   afterAll(async () => {
-    // await MongodbAdapter.close()
-    await PostgresAdapter.postgresClient.dropDatabase()
-    await PostgresAdapter.close()
+    await MongodbAdapter.close()
   })
 
   it('should return an user on success', async () => {

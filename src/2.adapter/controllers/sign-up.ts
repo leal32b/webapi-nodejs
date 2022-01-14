@@ -19,7 +19,6 @@ export default class SignUpController implements Controller {
       }
 
       const { name, email, password } = httpRequest.body
-
       const user = await this.props.createUserUsecase.execute({
         name,
         email,
