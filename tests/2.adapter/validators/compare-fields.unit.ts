@@ -1,4 +1,4 @@
-import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
+import InvalidParamError from '@/2.adapter/errors/invalid-param'
 import Validator from '@/2.adapter/interfaces/validator'
 import CompareFieldsValidator from '@/2.adapter/validators/compare-fields'
 

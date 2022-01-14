@@ -1,4 +1,4 @@
-import MissingParamError from '@/2.adapter/errors/missing-param-error'
+import MissingParamError from '@/2.adapter/errors/missing-param'
 import Validator from '@/2.adapter/interfaces/validator'
 import ValidatorComposite from '@/2.adapter/validators/validator-composite'
 import { makeValidatorStub } from '~/2.adapter/stubs/validator.stub'

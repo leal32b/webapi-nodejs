@@ -1,4 +1,4 @@
-import InvalidParamError from '@/2.adapter/errors/invalid-param-error'
+import InvalidParamError from '@/2.adapter/errors/invalid-param'
 import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
 import Validator from '@/2.adapter/interfaces/validator'
 

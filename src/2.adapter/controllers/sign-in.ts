@@ -2,7 +2,7 @@ import AuthenticateUserUsecase from '@/1.application/usecases/authenticate-user'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
 import Validator from '@/2.adapter/interfaces/validator'
-import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http-types'
 
 export default class SignInController implements Controller {
   constructor (private readonly props: {

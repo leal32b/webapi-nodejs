@@ -1,5 +1,5 @@
 import Controller from '@/2.adapter/interfaces/controller'
-import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http-types'
 
 export const makeControllerStub = (): Controller => {
   class ControllerStub implements Controller {

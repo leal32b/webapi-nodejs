@@ -1,6 +1,6 @@
-import ServerError from '@/2.adapter/errors/server-error'
-import UnauthorizedError from '@/2.adapter/errors/unauthorized-error'
-import { HttpResponse } from '@/2.adapter/types/http'
+import ServerError from '@/2.adapter/errors/server'
+import UnauthorizedError from '@/2.adapter/errors/unauthorized'
+import { HttpResponse } from '@/2.adapter/types/http-types'
 
 export const success = {
   ok: (data: any): HttpResponse => ({

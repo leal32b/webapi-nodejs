@@ -1,6 +1,6 @@
 import Controller from '@/2.adapter/interfaces/controller'
 import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
-import { HttpRequest, HttpResponse } from '@/2.adapter/types/http'
+import { HttpRequest, HttpResponse } from '@/2.adapter/types/http-types'
 
 export default class LogControllerDecorator implements Controller {
   constructor (
