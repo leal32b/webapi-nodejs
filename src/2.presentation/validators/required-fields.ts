@@ -1,5 +1,5 @@
-import MissingParamError from '@/2.adapter/errors/missing-param'
-import Validator from '@/2.adapter/interfaces/validator'
+import MissingParamError from '@/2.presentation/errors/missing-param'
+import Validator from '@/2.presentation/interfaces/validator'
 
 export default class RequiredFieldValidator implements Validator {
   constructor (private readonly fieldName: string) {}

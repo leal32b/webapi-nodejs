@@ -1,7 +1,7 @@
-import MissingParamError from '@/2.adapter/errors/missing-param'
-import Validator from '@/2.adapter/interfaces/validator'
-import ValidatorComposite from '@/2.adapter/validators/validator-composite'
-import { makeValidatorStub } from '~/2.adapter/stubs/validator.stub'
+import MissingParamError from '@/2.presentation/errors/missing-param'
+import Validator from '@/2.presentation/interfaces/validator'
+import ValidatorComposite from '@/2.presentation/validators/validator-composite'
+import { makeValidatorStub } from '~/2.presentation/stubs/validator.stub'
 
 type SutTypes = {
   sut: Validator

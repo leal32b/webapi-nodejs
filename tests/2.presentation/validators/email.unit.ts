@@ -1,7 +1,7 @@
-import InvalidParamError from '@/2.adapter/errors/invalid-param'
-import ExtEmailValidator from '@/2.adapter/interfaces/ext-email-validator'
-import EmailValidator from '@/2.adapter/validators/email'
-import { makeExtEmailValidatorStub } from '~/2.adapter/stubs/email-validator.stub'
+import InvalidParamError from '@/2.presentation/errors/invalid-param'
+import ExtEmailValidator from '@/2.presentation/interfaces/ext-email-validator'
+import EmailValidator from '@/2.presentation/validators/email'
+import { makeExtEmailValidatorStub } from '~/2.presentation/stubs/email-validator.stub'
 
 type SutTypes = {
   sut: EmailValidator

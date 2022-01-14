@@ -1,6 +1,6 @@
-import InvalidParamError from '@/2.adapter/errors/invalid-param'
-import Validator from '@/2.adapter/interfaces/validator'
-import CompareFieldsValidator from '@/2.adapter/validators/compare-fields'
+import InvalidParamError from '@/2.presentation/errors/invalid-param'
+import Validator from '@/2.presentation/interfaces/validator'
+import CompareFieldsValidator from '@/2.presentation/validators/compare-fields'
 
 type SutTypes = {
   sut: Validator

@@ -1,4 +1,4 @@
-import Validator from '@/2.adapter/interfaces/validator'
+import Validator from '@/2.presentation/interfaces/validator'
 
 export default class ValidatorComposite implements Validator {
   constructor (private readonly validators: Validator[]) {}

@@ -1,4 +1,4 @@
-import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
+import LogErrorRepository from '@/2.presentation/interfaces/log-error-repository'
 
 export const makeLogErrorRepositoryStub = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {

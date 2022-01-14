@@ -1,11 +1,11 @@
 import CreateUserUsecase from '@/1.application/usecases/create-user'
-import SignUpController from '@/2.adapter/controllers/sign-up'
-import ServerError from '@/2.adapter/errors/server'
-import { clientError } from '@/2.adapter/helpers/http-response'
-import Validator from '@/2.adapter/interfaces/validator'
-import { HttpRequest } from '@/2.adapter/types/http-types'
-import { makeCreateUserUsecaseStub } from '~/2.adapter/stubs/create-user-usecase.stub'
-import { makeValidatorStub } from '~/2.adapter/stubs/validator.stub'
+import SignUpController from '@/2.presentation/controllers/sign-up'
+import ServerError from '@/2.presentation/errors/server'
+import { clientError } from '@/2.presentation/helpers/http-response'
+import Validator from '@/2.presentation/interfaces/validator'
+import { HttpRequest } from '@/2.presentation/types/http-types'
+import { makeCreateUserUsecaseStub } from '~/2.presentation/stubs/create-user-usecase.stub'
+import { makeValidatorStub } from '~/2.presentation/stubs/validator.stub'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

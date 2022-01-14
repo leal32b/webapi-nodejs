@@ -1,6 +1,6 @@
-import MissingParamError from '@/2.adapter/errors/missing-param'
-import Validator from '@/2.adapter/interfaces/validator'
-import RequiredFieldValidator from '@/2.adapter/validators/required-fields'
+import MissingParamError from '@/2.presentation/errors/missing-param'
+import Validator from '@/2.presentation/interfaces/validator'
+import RequiredFieldValidator from '@/2.presentation/validators/required-fields'
 
 type SutTypes = {
   sut: Validator

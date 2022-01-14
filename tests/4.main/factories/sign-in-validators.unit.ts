@@ -1,11 +1,11 @@
-import Validator from '@/2.adapter/interfaces/validator'
-import EmailValidator from '@/2.adapter/validators/email'
-import RequiredFieldValidator from '@/2.adapter/validators/required-fields'
-import ValidatorComposite from '@/2.adapter/validators/validator-composite'
+import Validator from '@/2.presentation/interfaces/validator'
+import EmailValidator from '@/2.presentation/validators/email'
+import RequiredFieldValidator from '@/2.presentation/validators/required-fields'
+import ValidatorComposite from '@/2.presentation/validators/validator-composite'
 import { makeSignInValidators } from '@/4.main/factories/sign-in-validators'
-import { makeExtEmailValidatorStub } from '~/2.adapter/stubs/email-validator.stub'
+import { makeExtEmailValidatorStub } from '~/2.presentation/stubs/email-validator.stub'
 
-jest.mock('@/2.adapter/validators/validator-composite')
+jest.mock('@/2.presentation/validators/validator-composite')
 
 describe('SignInValidators Factory', () => {
   it('should call ValidatorComposite with all validators', () => {

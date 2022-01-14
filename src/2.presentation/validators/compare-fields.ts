@@ -1,5 +1,5 @@
-import InvalidParamError from '@/2.adapter/errors/invalid-param'
-import Validator from '@/2.adapter/interfaces/validator'
+import InvalidParamError from '@/2.presentation/errors/invalid-param'
+import Validator from '@/2.presentation/interfaces/validator'
 
 export default class CompareFieldsValidator implements Validator {
   constructor (

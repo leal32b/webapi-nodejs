@@ -1,4 +1,4 @@
-import Validator from '@/2.adapter/interfaces/validator'
+import Validator from '@/2.presentation/interfaces/validator'
 
 export const makeValidatorStub = (): Validator => {
   class ValidatorStub implements Validator {
