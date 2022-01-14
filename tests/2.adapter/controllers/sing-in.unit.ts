@@ -3,8 +3,8 @@ import SignInController from '@/2.adapter/controllers/sign-in'
 import { clientError, serverError, success } from '@/2.adapter/helpers/http-response'
 import Validator from '@/2.adapter/interfaces/validator'
 import { HttpRequest } from '@/2.adapter/types/http'
-import { makeAuthenticateUserUsecaseStub } from '~/2.adapter/mocks/authenticate-user.mock'
-import { makeValidatorStub } from '~/2.adapter/mocks/validator.mock'
+import { makeAuthenticateUserUsecaseStub } from '~/2.adapter/stubs/authenticate-user.stub'
+import { makeValidatorStub } from '~/2.adapter/stubs/validator.stub'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

@@ -3,7 +3,7 @@ import EmailValidator from '@/2.adapter/validators/email'
 import RequiredFieldValidator from '@/2.adapter/validators/required-fields'
 import ValidatorComposite from '@/2.adapter/validators/validator-composite'
 import { makeSignInValidators } from '@/4.main/factories/sign-in-validators'
-import { makeExtEmailValidatorStub } from '~/2.adapter/mocks/email-validator.mock'
+import { makeExtEmailValidatorStub } from '~/2.adapter/stubs/email-validator.stub'
 
 jest.mock('@/2.adapter/validators/validator-composite')
 

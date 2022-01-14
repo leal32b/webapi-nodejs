@@ -5,8 +5,8 @@ import CreateUserRepository from '@/1.application/interfaces/create-user-reposit
 import Hasher from '@/1.application/interfaces/hasher'
 import { UserData } from '@/1.application/types/user-types'
 import CreateUserUsecase from '@/1.application/usecases/create-user'
-import { makeCreateUserRepositoryStub } from '~/1.application/mocks/create-user-repository.mock'
-import { makeHasherStub } from '~/1.application/mocks/hasher.mock'
+import { makeCreateUserRepositoryStub } from '~/1.application/stubs/create-user-repository.stub'
+import { makeHasherStub } from '~/1.application/stubs/hasher.stub'
 
 const makeFakeUserData = (): UserData => ({
   name: faker.internet.userName(),

@@ -4,8 +4,8 @@ import ServerError from '@/2.adapter/errors/server-error'
 import { clientError } from '@/2.adapter/helpers/http-response'
 import Validator from '@/2.adapter/interfaces/validator'
 import { HttpRequest } from '@/2.adapter/types/http'
-import { makeCreateUserUsecaseStub } from '~/2.adapter/mocks/create-user-usecase.mock'
-import { makeValidatorStub } from '~/2.adapter/mocks/validator.mock'
+import { makeCreateUserUsecaseStub } from '~/2.adapter/stubs/create-user-usecase.stub'
+import { makeValidatorStub } from '~/2.adapter/stubs/validator.stub'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

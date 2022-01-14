@@ -2,8 +2,8 @@ import LogControllerDecorator from '@/2.adapter/decorators/log-controller'
 import { serverError } from '@/2.adapter/helpers/http-response'
 import Controller from '@/2.adapter/interfaces/controller'
 import LogErrorRepository from '@/2.adapter/interfaces/log-error-repository'
-import { makeControllerStub } from '~/2.adapter/mocks/controller.mock'
-import { makeLogErrorRepositoryStub } from '~/2.adapter/mocks/log-error-repository.mock'
+import { makeControllerStub } from '~/2.adapter/stubs/controller.stub'
+import { makeLogErrorRepositoryStub } from '~/2.adapter/stubs/log-error-repository.stub'
 
 type SutTypes = {
   sut: LogControllerDecorator
