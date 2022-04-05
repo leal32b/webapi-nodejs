@@ -22,7 +22,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const injection = {
     validator: makeValidatorStub(),
-    authenticateUserUsecase: makeAuthenticateUserUsecaseStub()
+    authenticateUserUsecase: makeAuthenticateUserUsecaseStub() as any
   }
   const sut = new SignInController(injection)
 

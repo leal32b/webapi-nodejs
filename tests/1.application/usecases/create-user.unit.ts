@@ -30,7 +30,7 @@ const makeSut = (): SutTypes => {
   return { sut, ...injection }
 }
 
-describe('CreateUser Usecase', () => {
+describe('CreateUserUsecase', () => {
   it('should call Hasher with correct password', async () => {
     const { sut, hasher } = makeSut()
     const hasherSpy = jest.spyOn(hasher, 'hash')
