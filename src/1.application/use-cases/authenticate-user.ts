@@ -2,10 +2,10 @@ import HashComparer from '@/1.application/interfaces/hash-comparer'
 import ReadUserByEmailRepository from '@/1.application/interfaces/read-user-by-email-repository'
 import TokenGenerator from '@/1.application/interfaces/token-generator'
 import UpdateUserAccessTokenRepository from '@/1.application/interfaces/update-user-access-token-repository'
-import Usecase from '@/1.application/interfaces/usecase'
+import UseCase from '@/1.application/interfaces/use-case'
 import { AuthenticationData } from '@/1.application/types/user-types'
 
-export default class AuthenticateUserUsecase implements Usecase<AuthenticationData, string> {
+export default class AuthenticateUserUseCase implements UseCase<AuthenticationData, string> {
   constructor (private readonly props: {
     readUserByEmailRepository: ReadUserByEmailRepository
     hashComparer: HashComparer

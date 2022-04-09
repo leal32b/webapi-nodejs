@@ -1,9 +1,9 @@
-import AuthenticateUserUsecase from '@/1.application/usecases/authenticate-user'
+import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
 import SignInController from '@/2.presentation/controllers/sign-in'
 import { clientError, serverError, success } from '@/2.presentation/helpers/http-response'
 import Validator from '@/2.presentation/interfaces/validator'
 import { HttpRequest } from '@/2.presentation/types/http-types'
-import { makeAuthenticateUserUsecaseStub } from '~/2.presentation/stubs/authenticate-user.stub'
+import { makeAuthenticateUserUseCaseStub } from '~/2.presentation/stubs/authenticate-user.stub'
 import { makeValidatorStub } from '~/2.presentation/stubs/validator.stub'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -16,13 +16,13 @@ const makeFakeRequest = (): HttpRequest => ({
 type SutTypes = {
   sut: SignInController
   validator: Validator
-  authenticateUserUsecase: AuthenticateUserUsecase
+  authenticateUserUseCase: AuthenticateUserUseCase
 }
 
 const makeSut = (): SutTypes => {
   const injection = {
     validator: makeValidatorStub(),
-    authenticateUserUsecase: makeAuthenticateUserUsecaseStub() as any
+    authenticateUserUseCase: makeAuthenticateUserUseCaseStub() as any
   }
   const sut = new SignInController(injection)
 
@@ -32,8 +32,8 @@ const makeSut = (): SutTypes => {
 describe('SignIn Controller', () => {
   describe('exceptions', () => {
     it('should return 401 if invalid credentials are provided', async () => {
-      const { sut, authenticateUserUsecase } = makeSut()
-      jest.spyOn(authenticateUserUsecase, 'execute').mockReturnValueOnce(Promise.resolve(null))
+      const { sut, authenticateUserUseCase } = makeSut()
+      jest.spyOn(authenticateUserUseCase, 'execute').mockReturnValueOnce(Promise.resolve(null))
       const httpResponse = await sut.handle(makeFakeRequest())
 
       expect(httpResponse).toEqual(clientError.unauthorized())
@@ -47,9 +47,9 @@ describe('SignIn Controller', () => {
       expect(httpResponse).toEqual(clientError.badRequest(new Error()))
     })
 
-    it('should return 500 if AuthenticateUserUsecase throws', async () => {
-      const { sut, authenticateUserUsecase } = makeSut()
-      jest.spyOn(authenticateUserUsecase, 'execute').mockReturnValueOnce(Promise.reject(new Error()))
+    it('should return 500 if AuthenticateUserUseCase throws', async () => {
+      const { sut, authenticateUserUseCase } = makeSut()
+      jest.spyOn(authenticateUserUseCase, 'execute').mockReturnValueOnce(Promise.reject(new Error()))
       const httpResponse = await sut.handle(makeFakeRequest())
 
       expect(httpResponse).toEqual(serverError.internalServerError(new Error()))
@@ -66,9 +66,9 @@ describe('SignIn Controller', () => {
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
     })
 
-    it('should call AuthenticateUserUsecase with correct values', async () => {
-      const { sut, authenticateUserUsecase } = makeSut()
-      const authSpy = jest.spyOn(authenticateUserUsecase, 'execute')
+    it('should call AuthenticateUserUseCase with correct values', async () => {
+      const { sut, authenticateUserUseCase } = makeSut()
+      const authSpy = jest.spyOn(authenticateUserUseCase, 'execute')
       await sut.handle(makeFakeRequest())
 
       expect(authSpy).toHaveBeenCalledWith({

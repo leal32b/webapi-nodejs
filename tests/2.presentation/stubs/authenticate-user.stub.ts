@@ -1,11 +1,11 @@
-import Usecase from '@/1.application/interfaces/usecase'
+import UseCase from '@/1.application/interfaces/use-case'
 
-export const makeAuthenticateUserUsecaseStub = (): Usecase<null, string> => {
-  class AuthenticateUserUsecaseStub implements Usecase<null, string> {
+export const makeAuthenticateUserUseCaseStub = (): UseCase<null, string> => {
+  class AuthenticateUserUseCaseStub implements UseCase<null, string> {
     async execute (): Promise<string> {
       return 'any_token'
     }
   }
 
-  return new AuthenticateUserUsecaseStub()
+  return new AuthenticateUserUseCaseStub()
 }

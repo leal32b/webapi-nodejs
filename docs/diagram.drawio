@@ -131,7 +131,7 @@
                 <mxCell id="205" value="usecases" style="text;html=1;strokeColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#2a2a2a;" parent="117" vertex="1">
                     <mxGeometry x="30" y="31" width="60" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="120" value="create-user&lt;br&gt;CreateUserUsecase" style="rounded=0;whiteSpace=wrap;html=1;" parent="117" vertex="1">
+                <mxCell id="120" value="create-user&lt;br&gt;CreateUserUseCase" style="rounded=0;whiteSpace=wrap;html=1;" parent="117" vertex="1">
                     <mxGeometry x="40" y="51" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="139" style="edgeStyle=orthogonalEdgeStyle;rounded=0;jumpStyle=none;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="120" target="92" edge="1">

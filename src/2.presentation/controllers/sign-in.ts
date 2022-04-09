@@ -1,4 +1,4 @@
-import AuthenticateUserUsecase from '@/1.application/usecases/authenticate-user'
+import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
 import { clientError, serverError, success } from '@/2.presentation/helpers/http-response'
 import Controller from '@/2.presentation/interfaces/controller'
 import Validator from '@/2.presentation/interfaces/validator'
@@ -7,7 +7,7 @@ import { HttpRequest, HttpResponse } from '@/2.presentation/types/http-types'
 export default class SignInController implements Controller {
   constructor (private readonly props: {
     validator: Validator
-    authenticateUserUsecase: AuthenticateUserUsecase
+    authenticateUserUseCase: AuthenticateUserUseCase
   }) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -19,7 +19,7 @@ export default class SignInController implements Controller {
       }
 
       const { email, password } = httpRequest.body
-      const accessToken = await this.props.authenticateUserUsecase.execute({ email, password })
+      const accessToken = await this.props.authenticateUserUseCase.execute({ email, password })
 
       if (!accessToken) {
         return clientError.unauthorized()

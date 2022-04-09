@@ -1,10 +1,10 @@
 import User from '@/0.domain/entities/user'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import Hasher from '@/1.application/interfaces/hasher'
-import Usecase from '@/1.application/interfaces/usecase'
+import UseCase from '@/1.application/interfaces/use-case'
 import { UserData } from '@/1.application/types/user-types'
 
-export default class CreateUserUsecase implements Usecase<UserData, User> {
+export default class CreateUserUseCase implements UseCase<UserData, User> {
   constructor (private readonly props: {
     hasher: Hasher
     createUserRepository: CreateUserRepository

@@ -22,7 +22,7 @@
   ```
 
 ## interfaces
-(usecases to be implemented in 1.application layer)
+(use cases to be implemented in 1.application layer)
 - `create-user.ts`
 - ```typescript
   import User from '@/0.domain/entities/user'
@@ -36,13 +36,13 @@
 ## tests
 ## mocks
 (classes)
-- `create-user-usecase.mock.ts`
+- `create-user-use-case.mock.ts`
 - ```typescript
   import User from '@/0.domain/entities/user'
-  import Usecase from '@/1.application/interfaces/usecase'
+  import UseCase from '@/1.application/interfaces/use-case'
 
-  export const makeCreateUserUsecaseStub = (): Usecase<null, User> => {
-    class CreateUserUsecaseStub implements Usecase<null, User> {
+  export const makeCreateUserUseCaseStub = (): UseCase<null, User> => {
+    class CreateUserUseCaseStub implements UseCase<null, User> {
       async execute (): Promise<User> {
         const fakeUser = new User({
           id: 'valid_id',
@@ -55,6 +55,6 @@
       }
     }
 
-    return new CreateUserUsecaseStub()
+    return new CreateUserUseCaseStub()
   }
 ```

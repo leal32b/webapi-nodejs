@@ -4,7 +4,7 @@ import User from '@/0.domain/entities/user'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import Hasher from '@/1.application/interfaces/hasher'
 import { UserData } from '@/1.application/types/user-types'
-import CreateUserUsecase from '@/1.application/usecases/create-user'
+import CreateUserUseCase from '@/1.application/use-cases/create-user'
 import { makeCreateUserRepositoryStub } from '~/1.application/stubs/create-user-repository.stub'
 import { makeHasherStub } from '~/1.application/stubs/hasher.stub'
 
@@ -15,7 +15,7 @@ const makeFakeUserData = (): UserData => ({
 })
 
 type SutTypes = {
-  sut: CreateUserUsecase
+  sut: CreateUserUseCase
   hasher: Hasher
   createUserRepository: CreateUserRepository
 }
@@ -25,12 +25,12 @@ const makeSut = (): SutTypes => {
     hasher: makeHasherStub(),
     createUserRepository: makeCreateUserRepositoryStub()
   }
-  const sut = new CreateUserUsecase(injection)
+  const sut = new CreateUserUseCase(injection)
 
   return { sut, ...injection }
 }
 
-describe('CreateUserUsecase', () => {
+describe('CreateUserUseCase', () => {
   it('should call Hasher with correct password', async () => {
     const { sut, hasher } = makeSut()
     const hasherSpy = jest.spyOn(hasher, 'hash')

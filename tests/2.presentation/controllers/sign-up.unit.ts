@@ -1,10 +1,10 @@
-import CreateUserUsecase from '@/1.application/usecases/create-user'
+import CreateUserUseCase from '@/1.application/use-cases/create-user'
 import SignUpController from '@/2.presentation/controllers/sign-up'
 import ServerError from '@/2.presentation/errors/server'
 import { clientError } from '@/2.presentation/helpers/http-response'
 import Validator from '@/2.presentation/interfaces/validator'
 import { HttpRequest } from '@/2.presentation/types/http-types'
-import { makeCreateUserUsecaseStub } from '~/2.presentation/stubs/create-user-usecase.stub'
+import { makeCreateUserUseCaseStub } from '~/2.presentation/stubs/create-user-use-case.stub'
 import { makeValidatorStub } from '~/2.presentation/stubs/validator.stub'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -19,13 +19,13 @@ const makeFakeRequest = (): HttpRequest => ({
 type SutTypes = {
   sut: SignUpController
   validator: Validator
-  createUserUsecase: CreateUserUsecase
+  createUserUseCase: CreateUserUseCase
 }
 
 const makeSut = (): SutTypes => {
   const injection = {
     validator: makeValidatorStub(),
-    createUserUsecase: makeCreateUserUsecaseStub() as unknown as CreateUserUsecase
+    createUserUseCase: makeCreateUserUseCaseStub() as unknown as CreateUserUseCase
   }
   const sut = new SignUpController(injection)
 
@@ -34,8 +34,8 @@ const makeSut = (): SutTypes => {
 
 describe('SignUp Controller', () => {
   it('should call CreateUser with correct values', async () => {
-    const { sut, createUserUsecase } = makeSut()
-    const addSpy = jest.spyOn(createUserUsecase, 'execute')
+    const { sut, createUserUseCase } = makeSut()
+    const addSpy = jest.spyOn(createUserUseCase, 'execute')
     await sut.handle(makeFakeRequest())
 
     expect(addSpy).toHaveBeenCalledWith({
@@ -46,8 +46,8 @@ describe('SignUp Controller', () => {
   })
 
   it('should return 500 if CreateUser throws', async () => {
-    const { sut, createUserUsecase } = makeSut()
-    jest.spyOn(createUserUsecase, 'execute').mockRejectedValueOnce(new Error())
+    const { sut, createUserUseCase } = makeSut()
+    jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse.statusCode).toBe(500)

@@ -3,7 +3,7 @@ import ReadUserByEmailRepository from '@/1.application/interfaces/read-user-by-e
 import TokenGenerator from '@/1.application/interfaces/token-generator'
 import UpdateUserAccessTokenRepository from '@/1.application/interfaces/update-user-access-token-repository'
 import { AuthenticationData } from '@/1.application/types/user-types'
-import AuthenticateUserUsecase from '@/1.application/usecases/authenticate-user'
+import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
 import { makeHashComparerStub } from '~/1.application/stubs/makeHashComparer.stub'
 import { makeReadUserByEmailRepositoryStub } from '~/1.application/stubs/read-user-by-email-repository.stub'
 import { makeTokenGeneratorStub } from '~/1.application/stubs/token-generator.stub'
@@ -15,7 +15,7 @@ const makeFakeAuthenticationData = (): AuthenticationData => ({
 })
 
 type SutTypes = {
-  sut: AuthenticateUserUsecase
+  sut: AuthenticateUserUseCase
   readUserByEmailRepository: ReadUserByEmailRepository
   hashComparer: HashComparer
   tokenGenerator: TokenGenerator
@@ -29,7 +29,7 @@ const makeSut = (): SutTypes => {
     tokenGenerator: makeTokenGeneratorStub(),
     updateUserAccessTokenRepository: makeUpdateUserAccessTokenRepositoryStub()
   }
-  const sut = new AuthenticateUserUsecase(injection)
+  const sut = new AuthenticateUserUseCase(injection)
 
   return { sut, ...injection }
 }

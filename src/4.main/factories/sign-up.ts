@@ -1,4 +1,4 @@
-import CreateUserUsecase from '@/1.application/usecases/create-user'
+import CreateUserUseCase from '@/1.application/use-cases/create-user'
 import SignUpController from '@/2.presentation/controllers/sign-up'
 import LogControllerDecorator from '@/2.presentation/decorators/log-controller'
 import Controller from '@/2.presentation/interfaces/controller'
@@ -21,14 +21,14 @@ export const makeSignUpController = (): Controller => {
   const salt = 12
   const bcryptAdapter = new BcryptAdapter(salt)
   const userRepository = new UserMongodbRepository()
-  const createUserUsecase = new CreateUserUsecase({
+  const createUserUseCase = new CreateUserUseCase({
     hasher: bcryptAdapter,
     createUserRepository: userRepository
   })
   const validator = makeSignUpValidators()
   const signUpController = new SignUpController({
     validator,
-    createUserUsecase
+    createUserUseCase
   })
 
   return new LogControllerDecorator(signUpController, makeLogErrorRepositoryStub())
