@@ -3,7 +3,6 @@ services:
   mongodb:
     container_name: mongodb-container
     image: mongo:4.4
-    restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${DB_MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGODB_PASSWORD}
@@ -15,7 +14,6 @@ services:
   postgres:
     container_name: postgres-container
     image: postgres:14.1
-    restart: always
     environment:
       - POSTGRES_DB=${DB_POSTGRES_DATABASE}
       - POSTGRES_USER=${DB_POSTGRES_USERNAME}
@@ -30,7 +28,6 @@ services:
     container_name: webapi-container
     image: node:14
     working_dir: /usr/src/webapi-nodejs
-    restart: always
     command: bash -c "npm ci --only=prod && npm run debug"
     env_file: .env
     environment:
