@@ -27,11 +27,11 @@
     "migration:generate": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:generate -n",
     "migration:run": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:run",
     "eslint": "eslint 'src/**' --fix",
-    "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace --collectCoverage=false",
+    "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:unit": "npm test -- -c jest-unit.config.js --watch",
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
-    "test:staged": "npm test -- --findRelatedTests tests",
+    "test:staged": "npm test -- --findRelatedTests test",
     "test:ci": "npm test -- --coverage"
   },
   "dependencies": {

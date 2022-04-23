@@ -1,10 +1,9 @@
 module.exports = {
   roots: ['<rootDir>'],
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/4.main/**'
-    // '!<rootDir>/src/3.infra/**/entities/**'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
@@ -20,6 +19,6 @@ module.exports = {
   testMatch: ['**/*.unit.ts', '**/*.integration.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^~/(.*)$': '<rootDir>/tests/$1'
+    '^~/(.*)$': '<rootDir>/test/$1'
   }
 }

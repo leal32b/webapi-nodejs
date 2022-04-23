@@ -33,7 +33,7 @@
   }
   ```
 
-## tests
+## test
 ## mocks
 (classes)
 - `create-user-use-case.mock.ts`
