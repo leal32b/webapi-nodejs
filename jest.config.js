@@ -7,7 +7,6 @@ module.exports = {
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
-  // testEnvironment: 'jest-environment-node',
   watchPathIgnorePatterns: [
     '<rootDir>/globalConfig',
     '<rootDir>/data-.*'
@@ -16,7 +15,10 @@ module.exports = {
   transform: {
     '.+\\.ts$': 'ts-jest'
   },
-  testMatch: ['**/*.unit.ts', '**/*.integration.ts'],
+  testMatch: [
+    '**/*.unit.ts',
+    '**/*.integration.ts'
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
