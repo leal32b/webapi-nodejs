@@ -15,7 +15,7 @@ const makeSut = (): SutTypes => {
 
 describe('MinLengthValidator', () => {
   describe('success', () => {
-    it('returns null when input.length is equal to MinLengthValidator.length', () => {
+    it('returns null when input.length is equal to minLength', () => {
       const { sut } = makeSut()
       const input = 'minimum'
 
@@ -24,7 +24,7 @@ describe('MinLengthValidator', () => {
       expect(result.value).toBeNull()
     })
 
-    it('returns null when input.length is greater than MinLengthValidator.length', () => {
+    it('returns null when input.length is greater than minLength', () => {
       const { sut } = makeSut()
       const input = 'long_string'
 
@@ -35,7 +35,7 @@ describe('MinLengthValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns InvalidParamError when input.length is lower than MinLengthValidator.length', () => {
+    it('returns InvalidParamError when input.length is lower than minLength', () => {
       const { sut, minLength } = makeSut()
       const input = 'short'
 
