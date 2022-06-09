@@ -1,7 +1,8 @@
 import ValueObject from '@/0.domain/base/value-object'
+import Validator from '@/0.domain/interfaces/validator'
 import MinLengthValidator from '@/0.domain/validators/min-length'
 
-const minLengthValidator = [
+const makeMinLengthValidatorStub = (): Validator[] => [
   new MinLengthValidator({ minLength: 6 })
 ]
 
@@ -21,7 +22,7 @@ describe('ValueObject', () => {
       const { sut } = makeSut()
       const value = 'any_value'
 
-      const result = sut.validate(value, minLengthValidator)
+      const result = sut.validate(value, makeMinLengthValidatorStub())
 
       expect(result.isRight()).toBeTruthy()
     })
@@ -32,7 +33,7 @@ describe('ValueObject', () => {
       const { sut } = makeSut()
       const value = 'short'
 
-      const result = sut.validate(value, minLengthValidator)
+      const result = sut.validate(value, makeMinLengthValidatorStub())
 
       expect(result.value[0]).toBeInstanceOf(Error)
     })

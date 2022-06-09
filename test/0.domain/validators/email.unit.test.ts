@@ -26,7 +26,7 @@ describe('EmailValidator', () => {
   describe('failure', () => {
     it('returns InvalidParamError when input has no @', () => {
       const { sut } = makeSut()
-      const input = 'without_at_email.com'
+      const input = 'without_at.com'
 
       const result = sut.validate(input)
 

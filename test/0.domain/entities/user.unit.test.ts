@@ -1,11 +1,11 @@
-import User from '@/0.domain/entities/user'
+import User, { CreateParams } from '@/0.domain/entities/user'
 
-const fakeParams = {
+const makeParamsFake = (): CreateParams => ({
   id: 'any_id',
-  email: 'any@mail.com',
   name: 'any_name',
-  password: 'any_password'
-}
+  email: 'any@mail.com',
+  password: 'password'
+})
 
 type SutTypes = {
   sut: typeof User
@@ -22,7 +22,7 @@ describe('User', () => {
     it('returns an User if params are valid', () => {
       const { sut } = makeSut()
 
-      const result = sut.create(fakeParams)
+      const result = sut.create(makeParamsFake())
 
       expect(result.value).toBeInstanceOf(User)
     })
@@ -33,7 +33,7 @@ describe('User', () => {
       const { sut } = makeSut()
       const id = null
 
-      const result = sut.create({ ...fakeParams, id })
+      const result = sut.create({ ...makeParamsFake(), id })
 
       expect(result.isLeft()).toBeTruthy()
     })
@@ -43,7 +43,7 @@ describe('User', () => {
       const id = null
       const name = null
 
-      const result = sut.create({ ...fakeParams, id, name })
+      const result = sut.create({ ...makeParamsFake(), id, name })
 
       expect(Object.keys(result.value)).toEqual(
         expect.arrayContaining(['id', 'name'])

@@ -13,7 +13,7 @@ export default class Id extends ValueObject {
     const result = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 6 }),
-      new MaxLengthValidator({ maxLength: 12 })
+      new MaxLengthValidator({ maxLength: 36 })
     ])
 
     return result.applyOnRight(() => new Id(input))

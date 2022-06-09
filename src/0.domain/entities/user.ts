@@ -12,7 +12,7 @@ type ConstructParams = {
   password: Password
 }
 
-type CreateParams = {
+export type CreateParams = {
   id: string
   name: string
   email: string
