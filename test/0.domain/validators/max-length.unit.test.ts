@@ -1,4 +1,4 @@
-import InvalidParamError from '@/0.domain/errors/invalid-param'
+import MaxLengthError from '@/0.domain/errors/max-length'
 import MaxLengthValidator from '@/0.domain/validators/max-length'
 
 type SutTypes = {
@@ -15,60 +15,76 @@ const makeSut = (): SutTypes => {
 
 describe('MaxLengthValidator', () => {
   describe('success', () => {
-    it('returns null when input.length is equal to maxLength', () => {
+    it('returns Right when input.length is equal to maxLength', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'exact_length____'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
 
-    it('returns null when input.length is lower than maxLength', () => {
+    it('returns Right when input.length is lower than maxLength', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'short_string'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
 
-    it('returns null when input is an empty string', () => {
+    it('returns Right when input is an empty string', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = ''
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
 
-    it('returns null when input is null', () => {
+    it('returns Right when input is null', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = null
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
+    })
+
+    it('returns Right when input is undefined', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
+      const input = undefined
+
+      const result = sut.validate(field, input)
+
+      expect(result.isRight()).toBeTruthy()
     })
   })
 
   describe('failure', () => {
-    it('returns InvalidParamError when input.length is greater than maxLength', () => {
-      const { sut, maxLength } = makeSut()
+    it('returns Left when input.length is greater than maxLength', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'exceeding_max_length_string'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError(`maxLength: ${maxLength}`))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is undefined', () => {
+    it('returns MaxLengthError when validation fails', () => {
       const { sut } = makeSut()
-      const input = undefined
+      const field = 'any_field'
+      const input = 'exceeding_max_length_string'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.value).toBeInstanceOf(MaxLengthError)
     })
   })
 })

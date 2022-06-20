@@ -1,4 +1,4 @@
-import InvalidParamError from '@/0.domain/errors/invalid-param'
+import InvalidEmailError from '@/0.domain/errors/invalid-email'
 import EmailValidator from '@/0.domain/validators/email'
 
 type SutTypes = {
@@ -13,60 +13,76 @@ const makeSut = (): SutTypes => {
 
 describe('EmailValidator', () => {
   describe('success', () => {
-    it('returns null when input is a valid email', () => {
+    it('returns Right when input is a valid email', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'any@mail.com'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
   })
 
   describe('failure', () => {
-    it('returns InvalidParamError when input has no @', () => {
+    it('returns Left when input has no @', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'without_at.com'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError('invalid email format'))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input has no domain', () => {
+    it('returns Left when input has no domain', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'any@mail'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError('invalid email format'))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is an empty string', () => {
+    it('returns Left when input is an empty string', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = ''
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError('invalid email format'))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is null', () => {
+    it('returns Left when input is null', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = null
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError('invalid email format'))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is undefined', () => {
+    it('returns Left when input is undefined', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = undefined
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError('invalid email format'))
+      expect(result.isLeft()).toBeTruthy()
+    })
+
+    it('returns InvalidEmailError when validation fails', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
+      const input = undefined
+
+      const result = sut.validate(field, input)
+
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
   })
 })

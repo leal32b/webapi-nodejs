@@ -1,4 +1,4 @@
-import InvalidParamError from '@/0.domain/errors/invalid-param'
+import MinLengthError from '@/0.domain/errors/min-length'
 import MinLengthValidator from '@/0.domain/validators/min-length'
 
 type SutTypes = {
@@ -15,60 +15,76 @@ const makeSut = (): SutTypes => {
 
 describe('MinLengthValidator', () => {
   describe('success', () => {
-    it('returns null when input.length is equal to minLength', () => {
+    it('returns Right when input.length is equal to minLength', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'minimum'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
 
-    it('returns null when input.length is greater than minLength', () => {
+    it('returns Right when input.length is greater than minLength', () => {
       const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'long_string'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toBeNull()
+      expect(result.isRight()).toBeTruthy()
     })
   })
 
   describe('failure', () => {
-    it('returns InvalidParamError when input.length is lower than minLength', () => {
-      const { sut, minLength } = makeSut()
+    it('returns Left when input.length is lower than minLength', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
       const input = 'short'
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError(`minLength: ${minLength}`))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is an empty string', () => {
-      const { sut, minLength } = makeSut()
+    it('returns Left when input is an empty string', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
       const input = ''
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError(`minLength: ${minLength}`))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is null', () => {
-      const { sut, minLength } = makeSut()
+    it('returns Left when input is null', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
       const input = null
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError(`minLength: ${minLength}`))
+      expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidParamError when input is undefined', () => {
-      const { sut, minLength } = makeSut()
+    it('returns Left when input is undefined', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
       const input = undefined
 
-      const result = sut.validate(input)
+      const result = sut.validate(field, input)
 
-      expect(result.value).toEqual(new InvalidParamError(`minLength: ${minLength}`))
+      expect(result.isLeft()).toBeTruthy()
+    })
+
+    it('returns MinLengthError when validation fails', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
+      const input = undefined
+
+      const result = sut.validate(field, input)
+
+      expect(result.value).toBeInstanceOf(MinLengthError)
     })
   })
 })

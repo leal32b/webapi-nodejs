@@ -1,21 +1,23 @@
-import InvalidParamError from '@/0.domain/errors/invalid-param'
-import Validator from '@/0.domain/interfaces/validator'
+import Validator from '@/0.domain/base/validator'
+import MaxLengthError from '@/0.domain/errors/max-length'
 import { Either, left, right } from '@/0.domain/utils/either'
 
 type Props = {
   maxLength: number
 }
 
-export default class MaxLengthValidator implements Validator {
-  constructor (private readonly props: Props) {}
+export default class MaxLengthValidator extends Validator {
+  constructor (private readonly props: Props) {
+    super()
+  }
 
-  validate (input: string): Either<InvalidParamError, null> {
+  validate (field: string, input: string): Either<MaxLengthError, true> {
     const { maxLength } = this.props
 
     if (input?.length > maxLength) {
-      return left(new InvalidParamError(`maxLength: ${maxLength}`))
+      return left(new MaxLengthError(field, maxLength, input))
     }
 
-    return right(null)
+    return right(true)
   }
 }
