@@ -1,7 +1,10 @@
-export default class InvalidPasswordError extends Error {
-  constructor (message?: string) {
-    super(message)
+import DomainError from '@/0.domain/base/domain-error'
 
-    this.name = 'InvalidPasswordError'
+export default class InvalidPasswordError extends DomainError {
+  constructor (field: string) {
+    super({
+      message: 'passwords should match',
+      field
+    })
   }
 }

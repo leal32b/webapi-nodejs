@@ -12,31 +12,22 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidPasswordError', () => {
   describe('success', () => {
-    it('returns a InvalidPasswordError', () => {
+    it('returns an InvalidPasswordError', () => {
       const { sut } = makeSut()
-      const message = 'any_message'
+      const field = 'any_field'
 
-      const result = new sut(message)
+      const result = new sut(field)
 
       expect(result).toBeInstanceOf(InvalidPasswordError)
     })
 
-    it('returns a InvalidPasswordError with correct name', () => {
-      const { sut } = makeSut()
-      const message = 'any_message'
-
-      const result = new sut(message)
-
-      expect(result.name).toBe('InvalidPasswordError')
-    })
-
     it('returns a InvalidPasswordError with passed message', () => {
       const { sut } = makeSut()
-      const message = 'any_message'
+      const field = 'any_field'
 
-      const result = new sut(message)
+      const result = new sut(field)
 
-      expect(result.message).toBe(message)
+      expect(result.props.message).toBe('passwords should match')
     })
   })
 })
