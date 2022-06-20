@@ -1,4 +1,4 @@
-import InvalidParamError from '@/0.domain/errors/invalid-param'
+import DomainError from '@/0.domain/base/domain-error'
 import Name from '@/0.domain/value-objects/name'
 
 type SutTypes = {
@@ -30,7 +30,7 @@ describe('Name', () => {
 
       const result = sut.create(input)
 
-      expect(result.value[0]).toBeInstanceOf(InvalidParamError)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an array with errors if validators fail more than once', () => {
@@ -39,7 +39,7 @@ describe('Name', () => {
 
       const result = sut.create(input)
 
-      expect(Array.isArray(result.value)).toBeTruthy()
+      expect((result.value as any).length).toBeGreaterThan(1)
     })
   })
 })

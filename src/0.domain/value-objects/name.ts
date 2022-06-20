@@ -1,3 +1,4 @@
+import DomainError from '@/0.domain/base/domain-error'
 import ValueObject from '@/0.domain/base/value-object'
 import { Either } from '@/0.domain/utils/either'
 import MaxLengthValidator from '@/0.domain/validators/max-length'
@@ -9,7 +10,7 @@ export default class Name extends ValueObject {
     super()
   }
 
-  static create (input: string): Either<Error[], Name> {
+  static create (input: string): Either<DomainError[], Name> {
     const result = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 6 }),
