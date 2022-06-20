@@ -26,12 +26,12 @@ export default class User extends Entity<ConstructParams> {
   static create (params: CreateParams): Either<DomainError[], User> {
     const { email, name, password, id } = params
 
-    const result = this.validateParams<ConstructParams>({
+    const constructParamsOrError = this.validateParams<ConstructParams>({
       email: Email.create(email),
       name: Name.create(name),
       password: Password.create(password)
     })
 
-    return result.applyOnRight(value => new User(value, id))
+    return constructParamsOrError.applyOnRight(value => new User(value, id))
   }
 }

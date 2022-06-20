@@ -12,13 +12,13 @@ export default class Email extends ValueObject {
   }
 
   static create (input: string): Either<DomainError[], Email> {
-    const result = this.validate(input, [
+    const trueOrError = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 12 }),
       new MaxLengthValidator({ maxLength: 64 }),
       new EmailValidator()
     ])
 
-    return result.applyOnRight(() => new Email(input))
+    return trueOrError.applyOnRight(() => new Email(input))
   }
 }

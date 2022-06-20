@@ -11,12 +11,12 @@ export default class Password extends ValueObject {
   }
 
   static create (input: string): Either<DomainError[], Password> {
-    const result = this.validate(input, [
+    const trueOrError = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 6 }),
       new MaxLengthValidator({ maxLength: 64 })
     ])
 
-    return result.applyOnRight(() => new Password(input))
+    return trueOrError.applyOnRight(() => new Password(input))
   }
 }

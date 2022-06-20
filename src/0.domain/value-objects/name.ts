@@ -11,12 +11,12 @@ export default class Name extends ValueObject {
   }
 
   static create (input: string): Either<DomainError[], Name> {
-    const result = this.validate(input, [
+    const trueOrError = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 6 }),
       new MaxLengthValidator({ maxLength: 32 })
     ])
 
-    return result.applyOnRight(() => new Name(input))
+    return trueOrError.applyOnRight(() => new Name(input))
   }
 }
