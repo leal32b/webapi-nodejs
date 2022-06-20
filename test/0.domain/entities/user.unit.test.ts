@@ -1,3 +1,4 @@
+import DomainError from '@/0.domain/base/domain-error'
 import User, { CreateParams } from '@/0.domain/entities/user'
 
 const makeParamsFake = (): CreateParams => ({
@@ -29,24 +30,33 @@ describe('User', () => {
   })
 
   describe('failure', () => {
-    it('returns left with params errors when any param is invalid', () => {
+    it('returns Left if any param is invalid', () => {
       const { sut } = makeSut()
-      const id = null
+      const email = null
 
-      const result = sut.create({ ...makeParamsFake(), id })
+      const result = sut.create({ ...makeParamsFake(), email })
 
       expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns an object with param errors for all invalid params', () => {
+    it('returns Errors if any param is invalid', () => {
       const { sut } = makeSut()
-      const id = null
+      const email = null
+
+      const result = sut.create({ ...makeParamsFake(), email })
+
+      expect(result.value[0]).toBeInstanceOf(DomainError)
+    })
+
+    it('returns an object with param Errors for all invalid params', () => {
+      const { sut } = makeSut()
+      const email = null
       const name = null
 
-      const result = sut.create({ ...makeParamsFake(), id, name })
+      const result = sut.create({ ...makeParamsFake(), email, name })
 
-      expect(Object.keys(result.value)).toEqual(
-        expect.arrayContaining(['id', 'name'])
+      expect((result.value as any).map(error => error.props.field)).toEqual(
+        expect.arrayContaining(['Email', 'Name'])
       )
     })
   })
