@@ -39,7 +39,7 @@ describe('Name', () => {
 
       const result = sut.create(input)
 
-      expect((result.value as any).length).toBeGreaterThan(1)
+      expect((result.value as any).length).toBeGreaterThanOrEqual(1)
     })
   })
 })
