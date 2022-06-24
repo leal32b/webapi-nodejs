@@ -1,29 +1,39 @@
+import DomainError from '@/0.domain/base/domain-error'
 import User from '@/0.domain/entities/user'
-import { Either, left } from '@/0.domain/utils/either'
+import { Either, left, right } from '@/0.domain/utils/either'
+import UseCase from '@/1.application/base/use-case'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import Hasher from '@/1.application/interfaces/hasher'
-import UseCase from '@/1.application/interfaces/use-case'
 import { UserData } from '@/1.application/types/user-data'
 
-export default class CreateUserUseCase implements UseCase<UserData, User> {
+export default class CreateUserUseCase extends UseCase<UserData, User> {
   constructor (private readonly props: {
     hasher: Hasher
     createUserRepository: CreateUserRepository
-  }) {}
+  }) { super() }
 
-  async execute (userData: UserData): Promise<Either<Error, User>> {
+  async execute (userData: UserData): Promise<Either<DomainError[], User>> {
     const { hasher, createUserRepository } = this.props
-    const hashedPassword = await hasher.hash(userData.password)
+    const hashedPasswordOrError = await hasher.hash(userData.password)
 
-    if (hashedPassword.isLeft()) {
-      return left(hashedPassword.value)
+    if (hashedPasswordOrError.isLeft()) {
+      return left([hashedPasswordOrError.value])
     }
 
-    const user = await createUserRepository.create({
-      ...userData,
-      password: hashedPassword.value
-    })
+    const hashedPassword = hashedPasswordOrError.value
+    const userOrError = User.create({ ...userData, password: hashedPassword })
 
-    return user.applyOnRight(user => user)
+    if (userOrError.isLeft()) {
+      return userOrError
+    }
+
+    const user = userOrError.value
+    const createdUserOrError = await createUserRepository.create(user)
+
+    if (createdUserOrError.isLeft()) {
+      return left([createdUserOrError.value])
+    }
+
+    return right(createdUserOrError.value)
   }
 }

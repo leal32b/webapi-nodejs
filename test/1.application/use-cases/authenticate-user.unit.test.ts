@@ -1,3 +1,4 @@
+import DomainError from '@/0.domain/base/domain-error'
 import User from '@/0.domain/entities/user'
 import { Either, left, right } from '@/0.domain/utils/either'
 import HashComparer from '@/1.application/interfaces/hash-comparer'
@@ -7,17 +8,27 @@ import UpdateUserAccessTokenRepository from '@/1.application/interfaces/update-u
 import { AuthenticationData } from '@/1.application/types/authentication-data'
 import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
 
+const makeErrorFake = (): DomainError => {
+  class ErrorFake extends DomainError {
+    constructor () {
+      super({ message: 'any_message' })
+    }
+  }
+
+  return new ErrorFake()
+}
+
 const makeAuthenticationDataFake = (): AuthenticationData => ({
   email: 'any@mail.com',
   password: 'password'
 })
 
 const makeHashComparerStub = (): HashComparer => ({
-  compare: jest.fn(async (): Promise<boolean> => true)
+  compare: jest.fn(async (): Promise<Either<DomainError, true>> => right(true))
 })
 
 const makeReadUserByEmailRepositoryStub = (): ReadUserByEmailRepository => ({
-  read: jest.fn(async (): Promise<Either<Error, User>> => {
+  read: jest.fn(async (): Promise<Either<DomainError, User>> => {
     return right(User.create({
       email: 'any@mail.com',
       id: 'any_id',
@@ -32,7 +43,7 @@ const makeTokenGeneratorStub = (): TokenGenerator => ({
 })
 
 const makeUpdateUserAccessTokenRepositoryStub = (): UpdateUserAccessTokenRepository => ({
-  update: jest.fn(async (): Promise<Either<Error, null>> => right(null))
+  update: jest.fn(async (): Promise<Either<DomainError, true>> => right(null))
 })
 
 type SutTypes = {
@@ -41,9 +52,15 @@ type SutTypes = {
   readUserByEmailRepository: ReadUserByEmailRepository
   tokenGenerator: TokenGenerator
   updateUserAccessTokenRepository: UpdateUserAccessTokenRepository
+  errorFake: DomainError
+  authenticationDataFake: AuthenticationData
 }
 
 const makeSut = (): SutTypes => {
+  const fakes = {
+    authenticationDataFake: makeAuthenticationDataFake(),
+    errorFake: makeErrorFake()
+  }
   const injection = {
     hashComparer: makeHashComparerStub(),
     readUserByEmailRepository: makeReadUserByEmailRepositoryStub(),
@@ -52,79 +69,78 @@ const makeSut = (): SutTypes => {
   }
   const sut = new AuthenticateUserUseCase(injection)
 
-  return { sut, ...injection }
+  return { sut, ...injection, ...fakes }
 }
 
 describe('AuthenticateUserUseCase', () => {
   describe('success', () => {
-    it('calls HashComparer with correct values', async () => {
-      const { sut, hashComparer } = makeSut()
+    it('calls HashComparer with correct params', async () => {
+      const { sut, hashComparer, authenticationDataFake } = makeSut()
 
-      await sut.execute(makeAuthenticationDataFake())
+      await sut.execute(authenticationDataFake)
 
       expect(hashComparer.compare).toHaveBeenCalledWith('password', 'hashed_password')
     })
 
     it('calls ReadUserByEmailRepository with correct param', async () => {
-      const { sut, readUserByEmailRepository } = makeSut()
+      const { sut, readUserByEmailRepository, authenticationDataFake } = makeSut()
 
-      await sut.execute(makeAuthenticationDataFake())
+      await sut.execute(authenticationDataFake)
 
-      expect(readUserByEmailRepository.read).toHaveBeenCalledWith(makeAuthenticationDataFake().email)
+      expect(readUserByEmailRepository.read).toHaveBeenCalledWith(authenticationDataFake.email)
     })
 
-    it('calls TokenGenerator with correct id', async () => {
-      const { sut, tokenGenerator } = makeSut()
+    it('calls TokenGenerator with correct param', async () => {
+      const { sut, tokenGenerator, authenticationDataFake } = makeSut()
 
-      await sut.execute(makeAuthenticationDataFake())
+      await sut.execute(authenticationDataFake)
 
       expect(tokenGenerator.generate).toHaveBeenCalledWith('any_id')
     })
 
-    it('calls UpdateUserAccessTokenRepository with correct values', async () => {
-      const { sut, updateUserAccessTokenRepository } = makeSut()
-      const updateSpy = jest.spyOn(updateUserAccessTokenRepository, 'update')
+    it('calls UpdateUserAccessTokenRepository with correct params', async () => {
+      const { sut, updateUserAccessTokenRepository, authenticationDataFake } = makeSut()
 
-      await sut.execute(makeAuthenticationDataFake())
+      await sut.execute(authenticationDataFake)
 
-      expect(updateSpy).toHaveBeenCalledWith('any_id', 'valid_token')
+      expect(updateUserAccessTokenRepository.update).toHaveBeenCalledWith('any_id', 'valid_token')
     })
 
     it('returns an accessToken', async () => {
-      const { sut } = makeSut()
+      const { sut, authenticationDataFake } = makeSut()
 
-      const accessToken = await sut.execute(makeAuthenticationDataFake())
+      const accessToken = await sut.execute(authenticationDataFake)
 
       expect(accessToken.value).toBe('valid_token')
     })
   })
 
   describe('failure', () => {
-    it('returns an Error if ReadUserByEmailRepository fails', async () => {
-      const { sut, readUserByEmailRepository } = makeSut()
-      jest.spyOn(readUserByEmailRepository, 'read').mockResolvedValueOnce(left(new Error()))
+    it('returns an Error when ReadUserByEmailRepository fails', async () => {
+      const { sut, readUserByEmailRepository, errorFake, authenticationDataFake } = makeSut()
+      jest.spyOn(readUserByEmailRepository, 'read').mockResolvedValueOnce(left(errorFake))
 
-      const promise = sut.execute(makeAuthenticationDataFake())
+      const promise = sut.execute(authenticationDataFake)
 
-      await expect(promise).resolves.toHaveProperty('value', new Error())
+      await expect(promise).resolves.toEqual(left([errorFake]))
     })
 
-    it('returns an Error if HashComparer fails', async () => {
-      const { sut, hashComparer } = makeSut()
-      jest.spyOn(hashComparer, 'compare').mockResolvedValueOnce(false)
+    it('returns an Error when HashComparer fails', async () => {
+      const { sut, hashComparer, errorFake } = makeSut()
+      jest.spyOn(hashComparer, 'compare').mockResolvedValueOnce(left(errorFake))
 
       const promise = sut.execute(makeAuthenticationDataFake())
 
-      await expect(promise).resolves.toHaveProperty('value', new Error())
+      await expect(promise).resolves.toEqual(left([errorFake]))
     })
 
-    it('returns an Error if UpdateUserAccessTokenRepository fails', async () => {
-      const { sut, updateUserAccessTokenRepository } = makeSut()
-      jest.spyOn(updateUserAccessTokenRepository, 'update').mockResolvedValueOnce(left(new Error()))
+    it('returns an Error when UpdateUserAccessTokenRepository fails', async () => {
+      const { sut, updateUserAccessTokenRepository, errorFake } = makeSut()
+      jest.spyOn(updateUserAccessTokenRepository, 'update').mockResolvedValueOnce(left(errorFake))
 
       const promise = sut.execute(makeAuthenticationDataFake())
 
-      await expect(promise).resolves.toHaveProperty('value', new Error())
+      await expect(promise).resolves.toEqual(left([errorFake]))
     })
   })
 })
