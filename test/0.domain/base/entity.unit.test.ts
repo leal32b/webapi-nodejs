@@ -39,7 +39,7 @@ const makeSut = (): SutTypes => {
 
 describe('Entity', () => {
   describe('success', () => {
-    it('returns Right if all params are valid', () => {
+    it('returns Right when all params are valid', () => {
       const { sut } = makeSut()
 
       const result = sut.validateParams<Params>({
@@ -49,7 +49,7 @@ describe('Entity', () => {
       expect(result.isRight()).toBeTruthy()
     })
 
-    it('returns an object with params and value-objects if all params are valid', () => {
+    it('returns an object with params and value-objects when all params are valid', () => {
       const { sut } = makeSut()
 
       const result = sut.validateParams<Params>({
@@ -61,7 +61,7 @@ describe('Entity', () => {
   })
 
   describe('failure', () => {
-    it('returns an array with errors if any param is invalid', () => {
+    it('returns an array with errors when any param is invalid', () => {
       const { sut } = makeSut()
 
       const result = sut.validateParams<Params>({

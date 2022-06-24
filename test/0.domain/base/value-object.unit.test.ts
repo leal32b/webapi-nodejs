@@ -37,7 +37,7 @@ const makeSut = (): SutTypes => {
 
 describe('ValueObject', () => {
   describe('success', () => {
-    it('returns Right if all validators pass', () => {
+    it('returns Right when all validators pass', () => {
       const { sut, validatorStub } = makeSut()
       const input = 'any_input'
 
@@ -48,7 +48,7 @@ describe('ValueObject', () => {
   })
 
   describe('failure', () => {
-    it('returns an array of errors if any validator fails', () => {
+    it('returns an array of errors when any validator fails', () => {
       const { sut, validatorStub } = makeSut()
       const input = 'short'
       jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(left(makeErrorFake()))

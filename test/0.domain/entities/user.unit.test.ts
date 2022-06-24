@@ -20,7 +20,7 @@ const makeSut = (): SutTypes => {
 
 describe('User', () => {
   describe('success', () => {
-    it('returns an User if params are valid', () => {
+    it('returns an User when params are valid', () => {
       const { sut } = makeSut()
 
       const result = sut.create(makeParamsFake())
@@ -30,7 +30,7 @@ describe('User', () => {
   })
 
   describe('failure', () => {
-    it('returns Left if any param is invalid', () => {
+    it('returns Left when any param is invalid', () => {
       const { sut } = makeSut()
       const email = null
 
@@ -39,7 +39,7 @@ describe('User', () => {
       expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns Errors if any param is invalid', () => {
+    it('returns Errors when any param is invalid', () => {
       const { sut } = makeSut()
       const email = null
 

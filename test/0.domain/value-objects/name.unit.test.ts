@@ -24,7 +24,7 @@ describe('Name', () => {
   })
 
   describe('failure', () => {
-    it('returns at least one error if input is invalid', () => {
+    it('returns at least one error when input is invalid', () => {
       const { sut } = makeSut()
       const input = null
 
@@ -33,7 +33,7 @@ describe('Name', () => {
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an array with errors if validators fail more than once', () => {
+    it('returns an array with errors when validators fail more than once', () => {
       const { sut } = makeSut()
       const input = null
 

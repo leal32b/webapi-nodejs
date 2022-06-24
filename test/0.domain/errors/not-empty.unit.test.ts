@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('NotEmptyError', () => {
   describe('success', () => {
-    it('returns an NotEmptyError', () => {
+    it('returns a NotEmptyError', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -22,7 +22,7 @@ describe('NotEmptyError', () => {
       expect(result).toBeInstanceOf(NotEmptyError)
     })
 
-    it('returns an NotEmptyError with correct message', () => {
+    it('returns a NotEmptyError with correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null

@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('Random', () => {
   describe('success', () => {
-    it('return a random number', () => {
+    it('returns a random number', () => {
       const { sut } = makeSut()
 
       const result = sut.nextInt()
@@ -20,7 +20,7 @@ describe('Random', () => {
       expect(typeof result).toBe('number')
     })
 
-    it('return a random double', () => {
+    it('returns a random double', () => {
       const { sut } = makeSut()
 
       const result = sut.nextDouble()
