@@ -8,10 +8,13 @@ type Params = {
 }
 
 export default abstract class Entity<T> {
-  protected readonly id: Identifier
+  readonly props: T & { id: Identifier }
 
-  constructor (protected readonly props: T, id?: string) {
-    this.id = new Identifier(id)
+  constructor (props: T, id?: string) {
+    this.props = {
+      ...props,
+      id: new Identifier(id)
+    }
   }
 
   static validateParams <T>(params: Params): Either<DomainError[], T> {
