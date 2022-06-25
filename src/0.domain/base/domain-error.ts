@@ -1,8 +1,8 @@
 type ConstructParams = {
   message: string
-  error?: any
   field?: string
   input?: any
+  stack?: string
 }
 
 export default abstract class DomainError {
