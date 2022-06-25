@@ -1,9 +1,10 @@
 import DomainError from '@/0.domain/base/domain-error'
 import User from '@/0.domain/entities/user'
 import { Either, left, right } from '@/0.domain/utils/either'
+import InvalidPasswordError from '@/1.application/errors/invalid-password'
 import CreateUserRepository from '@/1.application/interfaces/create-user-repository'
 import Hasher from '@/1.application/interfaces/hasher'
-import { UserData } from '@/1.application/types/user-data'
+import { CreateUserData } from '@/1.application/types/create-user-data'
 import CreateUserUseCase from '@/1.application/use-cases/create-user'
 
 const makeErrorFake = (): DomainError => {
@@ -16,10 +17,11 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
-const makeUserDataFake = (): UserData => ({
+const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
   name: 'any_name',
-  password: 'any_password'
+  password: 'any_password',
+  passwordRetype: 'any_password'
 })
 
 const makeHasherStub = (): Hasher => ({
@@ -32,7 +34,7 @@ const makeCreateUserRepositoryStub = (): CreateUserRepository => ({
   create: jest.fn(async (): Promise<Either<DomainError, User>> => {
     return right(User.create({
       id: 'any_id',
-      ...makeUserDataFake()
+      ...makeCreateUserDataFake()
     }).value as User)
   })
 })
@@ -42,13 +44,13 @@ type SutTypes = {
   hasher: Hasher
   createUserRepository: CreateUserRepository
   errorFake: DomainError
-  userDataFake: UserData
+  createUserDataFake: CreateUserData
 }
 
 const makeSut = (): SutTypes => {
   const fakes = {
     errorFake: makeErrorFake(),
-    userDataFake: makeUserDataFake()
+    createUserDataFake: makeCreateUserDataFake()
   }
   const injection = {
     hasher: makeHasherStub(),
@@ -62,17 +64,17 @@ const makeSut = (): SutTypes => {
 describe('CreateUserUseCase', () => {
   describe('success', () => {
     it('calls Hasher with correct param', async () => {
-      const { sut, hasher, userDataFake } = makeSut()
+      const { sut, hasher, createUserDataFake } = makeSut()
 
-      await sut.execute(userDataFake)
+      await sut.execute(createUserDataFake)
 
-      expect(hasher.hash).toHaveBeenCalledWith(userDataFake.password)
+      expect(hasher.hash).toHaveBeenCalledWith(createUserDataFake.password)
     })
 
     it('calls CreateUserRepository with correct params', async () => {
-      const { sut, createUserRepository, userDataFake } = makeSut()
+      const { sut, createUserRepository, createUserDataFake } = makeSut()
 
-      await sut.execute(userDataFake)
+      await sut.execute(createUserDataFake)
 
       expect(createUserRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -87,31 +89,47 @@ describe('CreateUserUseCase', () => {
     })
 
     it('returns an User', async () => {
-      const { sut, userDataFake } = makeSut()
+      const { sut, createUserDataFake } = makeSut()
 
-      const user = await sut.execute(userDataFake)
+      const user = await sut.execute(createUserDataFake)
 
       expect(user.value).toBeInstanceOf(User)
     })
   })
 
   describe('failure', () => {
+    it('returns InvalidPasswordError when passwords do not match', async () => {
+      const { sut, createUserDataFake } = makeSut()
+
+      const result = await sut.execute({ ...createUserDataFake, passwordRetype: 'anything' })
+
+      expect(result.value[0]).toBeInstanceOf(InvalidPasswordError)
+    })
+
     it('returns an Error when Hasher fails', async () => {
-      const { sut, hasher, errorFake } = makeSut()
+      const { sut, hasher, errorFake, createUserDataFake } = makeSut()
       jest.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
 
-      const promise = sut.execute(makeUserDataFake())
+      const result = await sut.execute(createUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
+    })
+
+    it('returns an Error when User.create fails', async () => {
+      const { sut, createUserDataFake } = makeSut()
+
+      const result = await sut.execute({ ...createUserDataFake, email: 'invalid_email' })
+
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when CreateUserRepository fails', async () => {
-      const { sut, createUserRepository, errorFake } = makeSut()
+      const { sut, createUserRepository, errorFake, createUserDataFake } = makeSut()
       jest.spyOn(createUserRepository, 'create').mockResolvedValueOnce(left(errorFake))
 
-      const promise = sut.execute(makeUserDataFake())
+      const result = await sut.execute(createUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
     })
   })
 })
