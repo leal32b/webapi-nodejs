@@ -1,5 +1,3 @@
-import faker from 'faker'
-
 import DomainError from '@/0.domain/base/domain-error'
 import User from '@/0.domain/entities/user'
 import { Either, left, right } from '@/0.domain/utils/either'
@@ -19,9 +17,9 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeUserDataFake = (): UserData => ({
-  email: faker.internet.email(),
-  name: faker.internet.userName(),
-  password: faker.internet.password()
+  email: 'any@mail.com',
+  name: 'any_name',
+  password: 'any_password'
 })
 
 const makeHasherStub = (): Hasher => ({
@@ -33,7 +31,7 @@ const makeHasherStub = (): Hasher => ({
 const makeCreateUserRepositoryStub = (): CreateUserRepository => ({
   create: jest.fn(async (): Promise<Either<DomainError, User>> => {
     return right(User.create({
-      id: faker.datatype.uuid(),
+      id: 'any_id',
       ...makeUserDataFake()
     }).value as User)
   })
