@@ -38,4 +38,14 @@ export default abstract class Entity<T> {
 
     return right(validatedParams)
   }
+
+  getValue (): Params {
+    const value = {}
+
+    Object.entries(this.props).forEach(([key, object]) => {
+      value[key] = object.value
+    })
+
+    return value
+  }
 }

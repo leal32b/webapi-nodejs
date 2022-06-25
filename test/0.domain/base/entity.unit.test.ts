@@ -58,6 +58,20 @@ describe('Entity', () => {
 
       expect((result.value as any).valueObjectFake).toBeInstanceOf(ValueObjectFake)
     })
+
+    it('returns an object with values from getValue', () => {
+      const { sut } = makeSut()
+      class Test extends sut<{ prop: ValueObject }> {
+        constructor () { super({ prop: { value: 'any_value' } }) }
+      }
+
+      const test = new Test()
+
+      expect(test.getValue()).toMatchObject({
+        id: expect.any(String),
+        prop: 'any_value'
+      })
+    })
   })
 
   describe('failure', () => {
