@@ -1,10 +1,10 @@
-export default class ServerError extends Error {
-  constructor (stack: string) {
-    super('Internal Server error')
-    this.name = 'ServerError'
+import DomainError from '@/0.domain/base/domain-error'
 
-    if (stack) {
-      this.stack = stack
-    }
+export default class ServerError extends DomainError {
+  constructor (message: string, stack: string) {
+    super({
+      message,
+      stack
+    })
   }
 }

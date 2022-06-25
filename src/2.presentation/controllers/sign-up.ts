@@ -1,31 +1,28 @@
 import CreateUserUseCase from '@/1.application/use-cases/create-user'
-import { clientError, serverError, success } from '@/2.presentation/helpers/http-response'
-import Controller from '@/2.presentation/interfaces/controller'
-import Validator from '@/2.presentation/interfaces/validator'
-import { HttpRequest, HttpResponse } from '@/2.presentation/types/http-types'
+import Controller from '@/2.presentation/base/controller'
+import { HttpRequest } from '@/2.presentation/types/http-request'
+import { HttpResponse } from '@/2.presentation/types/http-response'
+import { SignUpData } from '@/2.presentation/types/sign-up-data'
+import { clientError, serverError, success } from '@/2.presentation/utils/http-response'
 
-export default class SignUpController implements Controller {
+export default class SignUpController extends Controller {
   constructor (private readonly props: {
-    validator: Validator
     createUserUseCase: CreateUserUseCase
-  }) {}
+  }) { super() }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (httpRequest: HttpRequest<SignUpData>): Promise<HttpResponse> {
     try {
-      const error = this.props.validator.validate(httpRequest.body)
+      const { body: signUpData } = httpRequest
 
-      if (error) {
-        return clientError.badRequest(error)
+      const userOrError = await this.props.createUserUseCase.execute(signUpData)
+
+      if (userOrError.isLeft()) {
+        return clientError.badRequest(userOrError.value)
       }
 
-      const { name, email, password } = httpRequest.body
-      const user = await this.props.createUserUseCase.execute({
-        name,
-        email,
-        password
-      })
+      const user = userOrError.value
 
-      return success.ok({ ...user.props })
+      return success.ok({ ...user.getValue() })
     } catch (error) {
       return serverError.internalServerError(error)
     }

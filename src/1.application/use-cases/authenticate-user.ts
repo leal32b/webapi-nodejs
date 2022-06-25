@@ -22,6 +22,7 @@ export default class AuthenticateUserUseCase implements UseCase<AuthenticationDa
       tokenGenerator,
       updateUserAccessTokenRepository
     } = this.props
+
     const userOrError = await readUserByEmailRepository.read(authenticationData.email)
 
     if (userOrError.isLeft()) {

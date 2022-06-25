@@ -1,29 +1,26 @@
 import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
-import { clientError, serverError, success } from '@/2.presentation/helpers/http-response'
-import Controller from '@/2.presentation/interfaces/controller'
-import Validator from '@/2.presentation/interfaces/validator'
-import { HttpRequest, HttpResponse } from '@/2.presentation/types/http-types'
+import Controller from '@/2.presentation/base/controller'
+import { HttpRequest } from '@/2.presentation/types/http-request'
+import { HttpResponse } from '@/2.presentation/types/http-response'
+import { SignInData } from '@/2.presentation/types/sign-in-data'
+import { clientError, serverError, success } from '@/2.presentation/utils/http-response'
 
-export default class SignInController implements Controller {
+export default class SignInController extends Controller {
   constructor (private readonly props: {
-    validator: Validator
     authenticateUserUseCase: AuthenticateUserUseCase
-  }) {}
+  }) { super() }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (httpRequest: HttpRequest<SignInData>): Promise<HttpResponse> {
     try {
-      const error = this.props.validator.validate(httpRequest.body)
+      const { body: signInData } = httpRequest
 
-      if (error) {
-        return clientError.badRequest(error)
+      const accessTokenOrError = await this.props.authenticateUserUseCase.execute(signInData)
+
+      if (accessTokenOrError.isLeft()) {
+        return clientError.unauthorized(accessTokenOrError.value)
       }
 
-      const { email, password } = httpRequest.body
-      const accessToken = await this.props.authenticateUserUseCase.execute({ email, password })
-
-      if (!accessToken) {
-        return clientError.unauthorized()
-      }
+      const accessToken = accessTokenOrError.value
 
       return success.ok({ accessToken })
     } catch (error) {

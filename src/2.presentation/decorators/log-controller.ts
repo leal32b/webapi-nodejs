@@ -1,18 +1,21 @@
-import Controller from '@/2.presentation/interfaces/controller'
+import Controller from '@/2.presentation/base/controller'
 import LogErrorRepository from '@/2.presentation/interfaces/log-error-repository'
-import { HttpRequest, HttpResponse } from '@/2.presentation/types/http-types'
+import { HttpRequest } from '@/2.presentation/types/http-request'
+import { HttpResponse } from '@/2.presentation/types/http-response'
 
-export default class LogControllerDecorator implements Controller {
-  constructor (
-    private readonly controller: Controller,
-    private readonly logErrorRepository: LogErrorRepository
-  ) {}
+export default class LogControllerDecorator extends Controller {
+  constructor (private readonly props: {
+    controller: Controller
+    logErrorRepository: LogErrorRepository
+  }) { super() }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const httpResponse = await this.controller.handle(httpRequest)
+  async handle (httpRequest: HttpRequest<any>): Promise<HttpResponse> {
+    const { controller, logErrorRepository } = this.props
+
+    const httpResponse = await controller.handle(httpRequest)
 
     if (httpResponse.statusCode === 500) {
-      await this.logErrorRepository.log(httpResponse.body.stack)
+      await logErrorRepository.log(httpResponse.body)
     }
 
     return httpResponse
