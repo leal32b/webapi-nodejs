@@ -6,12 +6,10 @@ export default class Identifier {
   readonly value: string
 
   constructor (id?: string) {
-    this.value = id || this.create(id)
+    this.value = id || this.create()
   }
 
-  private create (id?: string): string {
-    if (id) return id
-
+  private create (): string {
     const random = new Random()
     let idToReturn = ''
 
