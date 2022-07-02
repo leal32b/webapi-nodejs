@@ -1,6 +1,10 @@
 {
   "name": "webapi-nodejs",
   "version": "1.0.0",
+  "engines": {
+    "node": "^16.15.1",
+    "npm": "^8.13.12"
+  },
   "description": "Nodejs Webapi template",
   "main": "index.js",
   "repository": {
@@ -17,7 +21,6 @@
     "@": "dist"
   },
   "scripts": {
-    "express": "npm run build && node ./dist/src/infrastructure/http/express.js",
     "start": "node dist/4.main/server.js",
     "debug": "nodemon dist/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
     "build": "rimraf dist && tsc -b tsconfig.build.json",
