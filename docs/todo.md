@@ -6,3 +6,4 @@
 [ ] move route type from 2.presentation
 [ ] adjust identifier alphabet
 [ ] adjust server (app and persistence calls)
+[ ] adjust typeORM cli https://typeorm.io/changelog#deprecations

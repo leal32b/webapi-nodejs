@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { Route } from '@/2.presentation/types/route'
-import { MongodbAdapter } from '@/3.infra/persistence/mongodb/adapter/mongodb'
+import { PostgresAdapter } from '@/3.infra/persistence/postgres/adapter/postgres'
 import ExpressApp from '@/3.infra/web/express/app/express'
 import signUpRoute from '@/4.main/routes/user/sign-up'
 
@@ -21,15 +21,12 @@ const makeSut = (): SutTypes => {
 
 describe('SignUpRoute', () => {
   beforeAll(async () => {
-    await MongodbAdapter.connect(global.__MONGO_URI__)
-  })
-
-  beforeEach(async () => {
-    await MongodbAdapter.getCollection('users').deleteMany({})
+    await PostgresAdapter.connect('test')
   })
 
   afterAll(async () => {
-    await MongodbAdapter.close()
+    await PostgresAdapter.postgresClient.dropDatabase()
+    await PostgresAdapter.close()
   })
 
   it('returns an user on success', async () => {

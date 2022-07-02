@@ -1,16 +1,5 @@
 version: '3'
 services:
-  mongodb:
-    container_name: mongodb-container
-    image: mongo:4.4
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DB_MONGODB_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGODB_PASSWORD}
-    volumes:
-      - ./data-mongodb:/data/db
-    ports:
-      - 27017:27017
-  
   postgres:
     container_name: postgres-container
     image: postgres:14.1
@@ -28,10 +17,9 @@ services:
     container_name: webapi-container
     image: node:16.15
     working_dir: /usr/src/webapi-nodejs
-    command: bash -c "npm ci --only=prod && npm run debug"
+    command: bash -c "npm ci --production --legacy-peer-deps && npm run debug"
     env_file: .env
     environment:
-      - DB_MONGODB_HOST=mongodb
       - DB_POSTGRES_HOST=postgres
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
@@ -42,14 +30,12 @@ services:
       - ${PORT}:${PORT}
       - 9222:9222
     links:
-      - mongodb
       - postgres
 
   start_dependencies:
     container_name: wait-for-dependencies
     image: dadarek/wait-for-dependencies
-    command: mongodb:27017 postgres:5432 webapi:3000
+    command: postgres:5432 webapi:3000
     depends_on:
-      - mongodb
       - postgres
       - webapi

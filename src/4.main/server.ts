@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import 'module-alias/register'
 
-import { MongodbAdapter } from '@/3.infra/persistence/mongodb/adapter/mongodb'
-// import { PostgresAdapter } from '@/3.infra/databases/postgres/adapter/postgres'
+import { PostgresAdapter } from '@/3.infra/persistence/postgres/adapter/postgres'
 import ExpressApp from '@/3.infra/web/express/app/express'
 // import FastifyApp from '@/3.infra/http/fastify/app/fastify'
 import { setRoutes } from '@/4.main/config/set-routes'
@@ -13,14 +12,8 @@ const app = new ExpressApp()
 
 setRoutes(app, 'dist/4.main/routes')
 
-MongodbAdapter.connect().then(async () => {
+PostgresAdapter.connect().then(async () => {
   app.listen(PORT, () => {
     console.log(`server running at http://localhost:${PORT}`)
   })
 })
-
-// PostgresAdapter.connect().then(async () => {
-//   app.listen(PORT, () => {
-//     console.log(`server running at http://localhost:${PORT}`)
-//   })
-// })

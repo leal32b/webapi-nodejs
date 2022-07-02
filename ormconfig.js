@@ -1,4 +1,3 @@
-// const root = process.env.SRC || 'dist'
 const root = process.env.NODE_ENV === 'test' ? 'src' : 'dist'
 
 const defaultOptions = {

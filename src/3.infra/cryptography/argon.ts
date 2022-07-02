@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt'
+import argon2id from 'argon2'
 
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 import Hasher from '@/1.application/interfaces/hasher'
 import ServerError from '@/2.presentation/errors/server'
 
-export default class BcryptAdapter implements Hasher {
+export default class ArgonAdapter implements Hasher {
   constructor (private readonly props: {
     salt: number
   }) {}
@@ -14,7 +14,7 @@ export default class BcryptAdapter implements Hasher {
     try {
       const { salt } = this.props
 
-      const hash = await bcrypt.hash(value, salt)
+      const hash = await argon2id.hash(value, { saltLength: salt })
 
       return right(hash)
     } catch (error) {

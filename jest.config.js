@@ -11,7 +11,6 @@ module.exports = {
     '<rootDir>/globalConfig',
     '<rootDir>/data-.*'
   ],
-  preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
   },

@@ -1,9 +1,9 @@
-import bcrypt from 'bcrypt'
+import argon2id from 'argon2'
 
 import DomainError from '@/0.domain/base/domain-error'
-import BcryptAdapter from '@/3.infra/cryptography/bcrypt'
+import ArgonAdapter from '@/3.infra/cryptography/argon'
 
-jest.mock('bcrypt', () => ({
+jest.mock('argon2', () => ({
   async hash (): Promise<string> {
     return await Promise.resolve('hashed_value')
   }
@@ -20,7 +20,7 @@ const makeErrorFake = (): DomainError => {
 }
 
 type SutTypes = {
-  sut: BcryptAdapter
+  sut: ArgonAdapter
   salt: number
   errorFake: DomainError
 }
@@ -32,20 +32,20 @@ const makeSut = (): SutTypes => {
   const injection = {
     salt: 12
   }
-  const sut = new BcryptAdapter(injection)
+  const sut = new ArgonAdapter(injection)
 
   return { sut, ...injection, ...fakes }
 }
 
-describe('BcryptAdapter', () => {
+describe('ArgonAdapter', () => {
   describe('success', () => {
-    it('calls bcrypt with correct params', async () => {
+    it('calls argon with correct params', async () => {
       const { sut, salt } = makeSut()
-      const hashSpy = jest.spyOn(bcrypt, 'hash')
+      const hashSpy = jest.spyOn(argon2id, 'hash')
 
       await sut.hash('any_value')
 
-      expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
+      expect(hashSpy).toHaveBeenCalledWith('any_value', { saltLength: salt })
     })
 
     it('returns Right on success', async () => {
@@ -68,7 +68,7 @@ describe('BcryptAdapter', () => {
   describe('failure', () => {
     it('returns Left when bcrypt throws', async () => {
       const { sut, errorFake } = makeSut()
-      jest.spyOn(bcrypt, 'hash').mockRejectedValueOnce(errorFake as never)
+      jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
 
       const result = await sut.hash('any_value')
 
@@ -77,7 +77,7 @@ describe('BcryptAdapter', () => {
 
     it('returns an error when bcrypt throws', async () => {
       const { sut, errorFake } = makeSut()
-      jest.spyOn(bcrypt, 'hash').mockRejectedValueOnce(errorFake as never)
+      jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
 
       const result = await sut.hash('any_value')
 

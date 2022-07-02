@@ -14,7 +14,7 @@ export default class Password extends ValueObject {
     const trueOrError = this.validate(input, [
       new NotEmptyValidator(),
       new MinLengthValidator({ minLength: 6 }),
-      new MaxLengthValidator({ maxLength: 64 })
+      new MaxLengthValidator({ maxLength: 128 })
     ])
 
     return trueOrError.applyOnRight(() => new Password(input))
