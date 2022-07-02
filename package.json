@@ -37,7 +37,8 @@
     "test:unit": "npm test -- -c jest-unit.config.js --watch",
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
     "test:staged": "npm test -- --findRelatedTests test",
-    "test:ci": "npm test -- --coverage"
+    "test:ci": "npm test -- --coverage",
+    "prepare": "husky install"
   },
   "dependencies": {
     "ajv": "^8.11.0",
@@ -66,7 +67,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "git-commit-msg-linter": "^4.1.3",
-    "husky": "4.3.8",
+    "husky": "^8.0.0",
     "jest": "^27.5.1",
     "lint-staged": "^13.0.3",
     "rimraf": "^3.0.2",
