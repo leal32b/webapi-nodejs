@@ -9,11 +9,11 @@ const defaultOptions = {
   password: process.env.DB_POSTGRES_PASSWORD,
   database: process.env.DB_POSTGRES_DATABASE,
   synchronize: process.env.DB_POSTGRES_SYNCHRONIZE === 'true',
-  entities: [`${root}/3.infra/databases/postgres/entities/*.{js,ts}`],
-  migrations: [`${root}/3.infra/databases/postgres/migration/**/*.{js,ts}`],
+  entities: [`${root}/3.infra/persistence/postgres/entities/*.{js,ts}`],
+  migrations: [`${root}/3.infra/persistence/postgres/migration/**/*.{js,ts}`],
   cli: {
-    entitiesDir: `${root}/3.infra/databases/postgres/entities`,
-    migrationsDir: `${root}/3.infra/databases/postgres/migration`
+    entitiesDir: `${root}/3.infra/persistence/postgres/entities`,
+    migrationsDir: `${root}/3.infra/persistence/postgres/migration`
   }
 }
 

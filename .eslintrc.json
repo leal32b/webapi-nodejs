@@ -6,26 +6,22 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-extraneous-class": "off",
-    "new-cap": "off",
-    "import/no-unresolved": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "import/export": "warn",
     "import/named": "warn",
     "import/namespace": "warn",
     "import/no-named-as-default": "off",
-    "import/export": "warn",
-    "import/order": [
-      "error",
-      {
-        "groups": ["builtin", "external", "parent", "sibling", "index"],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        }
-      }
-    ]
+    "import/no-unresolved": "off",
+    "import/order": ["error", {
+      "alphabetize": { "order": "asc", "caseInsensitive": true },
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+      "newlines-between": "always",
+      "pathGroups": [{ "pattern": "@/**", "group": "internal" }]
+    }],
+    "new-cap": "off"
   }
 }
