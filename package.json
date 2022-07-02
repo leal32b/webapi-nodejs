@@ -17,12 +17,14 @@
     "@": "dist"
   },
   "scripts": {
+    "express": "npm run build && node ./dist/src/infrastructure/http/express.js",
     "start": "node dist/4.main/server.js",
     "debug": "nodemon dist/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
     "build": "rimraf dist && tsc -b tsconfig.build.json",
     "build:watch": "npm run build -- -w",
     "docker:up": "docker-compose run --rm start_dependencies",
     "docker:down": "docker-compose down",
+    "docker:attach": "docker attach webapi-container",
     "migration:create": "NODE_ENV=test typeorm migration:create -n",
     "migration:generate": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:generate -n",
     "migration:run": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:run",
@@ -35,15 +37,16 @@
     "test:ci": "npm test -- --coverage"
   },
   "dependencies": {
+    "ajv": "^8.11.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "fastify": "^4.0.1",
     "module-alias": "^2.2.2",
     "mongodb": "^4.6.0",
     "nodemon": "^2.0.16",
     "pg": "^8.7.3",
-    "typeorm": "^0.3.6",
-    "validator": "^13.7.0"
+    "typeorm": "^0.3.6"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.2.2",
@@ -61,7 +64,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "faker": "^5.5.3",
     "git-commit-msg-linter": "^4.1.3",
     "husky": "4.3.8",
     "jest": "^27.5.1",
