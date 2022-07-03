@@ -22,7 +22,7 @@ describe('InvalidEmailError', () => {
       expect(result).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns a InvalidEmailError with correct message', () => {
+    it('returns an InvalidEmailError with correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any@mail'

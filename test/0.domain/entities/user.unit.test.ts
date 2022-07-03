@@ -1,5 +1,5 @@
 import DomainError from '@/0.domain/base/domain-error'
-import User, { CreateParams } from '@/0.domain/entities/user'
+import User, { CreateParams } from '@/0.domain/entities/user/user'
 
 const makeParamsFake = (): CreateParams => ({
   id: 'any_id',

@@ -1,4 +1,4 @@
-import User from '@/0.domain/entities/user'
+import User from '@/0.domain/entities/user/user'
 import { PostgresAdapter } from '@/3.infra/persistence/postgres/adapter/postgres'
 import UserPostgresRepository from '@/3.infra/persistence/postgres/repositories/user'
 

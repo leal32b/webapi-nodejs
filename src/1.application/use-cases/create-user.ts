@@ -1,5 +1,5 @@
 import DomainError from '@/0.domain/base/domain-error'
-import User from '@/0.domain/entities/user'
+import User from '@/0.domain/entities/user/user'
 import { Either, left, right } from '@/0.domain/utils/either'
 import UseCase from '@/1.application/base/use-case'
 import InvalidPasswordError from '@/1.application/errors/invalid-password'
