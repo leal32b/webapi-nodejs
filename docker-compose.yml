@@ -26,7 +26,6 @@ services:
       - ./ormconfig.js:/usr/src/webapi-nodejs/ormconfig.js
       - ./package.json:/usr/src/webapi-nodejs/package.json
       - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
-      - ./.npmrc:/usr/src/webapi-nodejs/.npmrc
     ports:
       - ${PORT}:${PORT}
       - 9222:9222
