@@ -5,7 +5,7 @@ import { Either, left, right } from '@/0.domain/utils/either'
 export default abstract class ValueObject<T> {
   constructor (readonly value: T) {}
 
-  static validate (input: any, validators: Validator[]): Either<DomainError[], true> {
+  static validate (input: any, validators: Array<Validator<any>>): Either<DomainError[], void> {
     const errors: DomainError[] = []
 
     validators.forEach(validator => {
@@ -20,6 +20,6 @@ export default abstract class ValueObject<T> {
       return left(errors)
     }
 
-    return right(true)
+    return right(null)
   }
 }

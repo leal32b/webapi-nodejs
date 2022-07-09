@@ -1,4 +1,5 @@
-import DomainError from '@/0.domain/base/domain-error'
+import MaxLengthError from '@/0.domain/errors/max-length-error'
+import MinLengthError from '@/0.domain/errors/min-length-error'
 import Name from '@/0.domain/value-objects/name'
 
 type SutTypes = {
@@ -13,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Name', () => {
   describe('success', () => {
-    it('returns a new Name when input is valid', () => {
+    it('returns an Name when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_name'
 
@@ -24,22 +25,22 @@ describe('Name', () => {
   })
 
   describe('failure', () => {
-    it('returns at least one error when input is invalid', () => {
+    it('returns MinLengthError when input.length is lower than minLength', () => {
       const { sut } = makeSut()
       const input = null
 
       const result = sut.create(input)
 
-      expect(result.value[0]).toBeInstanceOf(DomainError)
+      expect(result.value[0]).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns an array with errors when validators fail more than once', () => {
+    it('returns MaxLengthError when input.length is higher than maxLength', () => {
       const { sut } = makeSut()
-      const input = null
+      const input = 'input_that_exceeds_name_max_length_of_thirty_two_characters'
 
       const result = sut.create(input)
 
-      expect((result.value as any).length).toBeGreaterThanOrEqual(1)
+      expect(result.value[0]).toBeInstanceOf(MaxLengthError)
     })
   })
 })

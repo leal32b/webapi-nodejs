@@ -1,4 +1,4 @@
-import MinLengthError from '@/0.domain/errors/min-length'
+import MinLengthError from '@/0.domain/errors/min-length-error'
 
 type SutTypes = {
   sut: typeof MinLengthError
@@ -23,7 +23,7 @@ describe('MinLengthError', () => {
       expect(result).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns a MinLengthError with correct message', () => {
+    it('returns the correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6

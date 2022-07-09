@@ -28,7 +28,4 @@ describe('Random', () => {
       expect(result % 1).not.toBe(0)
     })
   })
-
-  describe('failure', () => {
-  })
 })

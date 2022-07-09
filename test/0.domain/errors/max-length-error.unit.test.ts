@@ -1,4 +1,4 @@
-import MaxLengthError from '@/0.domain/errors/max-length'
+import MaxLengthError from '@/0.domain/errors/max-length-error'
 
 type SutTypes = {
   sut: typeof MaxLengthError
@@ -23,7 +23,7 @@ describe('MaxLengthError', () => {
       expect(result).toBeInstanceOf(MaxLengthError)
     })
 
-    it('returns a MaxLengthError with correct message', () => {
+    it('returns the correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6

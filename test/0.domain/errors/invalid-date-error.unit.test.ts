@@ -1,4 +1,4 @@
-import InvalidDateError from '@/0.domain/errors/invalid-date'
+import InvalidDateError from '@/0.domain/errors/invalid-date-error'
 
 type SutTypes = {
   sut: typeof InvalidDateError
@@ -22,7 +22,7 @@ describe('InvalidDateError', () => {
       expect(result).toBeInstanceOf(InvalidDateError)
     })
 
-    it('returns an InvalidEmailError with correct message', () => {
+    it('returns the correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'invalid_format'

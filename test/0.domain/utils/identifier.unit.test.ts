@@ -6,10 +6,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const id = 'any_id'
-  const sut = new Identifier(id)
+  const injection = {
+    id: 'any_id'
+  }
+  const sut = new Identifier(injection.id)
 
-  return { sut, id }
+  return { sut, ...injection }
 }
 
 describe('Identifier', () => {
@@ -43,9 +45,5 @@ describe('Identifier', () => {
 
       expect(sut.value.length).toBe(24)
     })
-  })
-
-  describe('failure', () => {
-
   })
 })

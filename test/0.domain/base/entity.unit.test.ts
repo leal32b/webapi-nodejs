@@ -3,12 +3,6 @@ import Entity from '@/0.domain/base/entity'
 import ValueObject from '@/0.domain/base/value-object'
 import { Either, left, right } from '@/0.domain/utils/either'
 
-class ValueObjectFake extends ValueObject<any> {
-  static create (): Either<DomainError[], ValueObjectFake> {
-    return right(new ValueObjectFake(null))
-  }
-}
-
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
     constructor () {
@@ -17,6 +11,12 @@ const makeErrorFake = (): DomainError => {
   }
 
   return new ErrorFake()
+}
+
+class ValueObjectFake extends ValueObject<any> {
+  static create (): Either<DomainError[], ValueObjectFake> {
+    return right(new ValueObjectFake(null))
+  }
 }
 
 type Params = {
@@ -29,12 +29,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const collaborators = {
+  const fakes = {
     errorFake: makeErrorFake()
   }
   const sut = Entity
 
-  return { sut, ...collaborators }
+  return { sut, ...fakes }
 }
 
 describe('Entity', () => {
@@ -56,30 +56,16 @@ describe('Entity', () => {
         valueObjectFake: ValueObjectFake.create()
       })
 
-      expect((result.value as any).valueObjectFake).toBeInstanceOf(ValueObjectFake)
-    })
-
-    it('returns an object with values from getValue', () => {
-      const { sut } = makeSut()
-      class Test extends sut<{ prop: ValueObject<any> }> {
-        constructor () { super({ prop: { value: 'any_value' } }) }
-      }
-
-      const test = new Test()
-
-      expect(test.getValue()).toMatchObject({
-        id: expect.any(String),
-        prop: 'any_value'
-      })
+      expect((result.value as Params).valueObjectFake).toBeInstanceOf(ValueObjectFake)
     })
   })
 
   describe('failure', () => {
-    it('returns an array with errors when any param is invalid', () => {
-      const { sut } = makeSut()
+    it('returns an array of errors when any param is invalid', () => {
+      const { sut, errorFake } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObjectFake: left([makeErrorFake()])
+        valueObjectFake: left([errorFake])
       })
 
       expect(result.value[0]).toBeInstanceOf(DomainError)

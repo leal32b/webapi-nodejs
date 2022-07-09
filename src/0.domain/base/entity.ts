@@ -8,7 +8,7 @@ type Params = {
 }
 
 export default abstract class Entity<T> {
-  readonly props: T & { id: Identifier }
+  protected readonly props: T & { id: Identifier }
 
   constructor (props: T, id?: string) {
     this.props = {
@@ -37,15 +37,5 @@ export default abstract class Entity<T> {
     })
 
     return right(validatedParams)
-  }
-
-  getValue (): Params {
-    const value = {}
-
-    Object.entries(this.props).forEach(([key, object]) => {
-      value[key] = object.value
-    })
-
-    return value
   }
 }

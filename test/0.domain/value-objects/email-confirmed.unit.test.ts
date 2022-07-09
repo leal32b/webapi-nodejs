@@ -1,4 +1,4 @@
-import DomainError from '@/0.domain/base/domain-error'
+import NullError from '@/0.domain/errors/null-error'
 import EmailConfirmed from '@/0.domain/value-objects/email-confirmed'
 
 type SutTypes = {
@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
 
 describe('EmailConfirmed', () => {
   describe('success', () => {
-    it('returns a new EmailConfirmed', () => {
+    it('returns an EmailConfirmed when input is valid', () => {
       const { sut } = makeSut()
       const input = true
 
@@ -24,22 +24,13 @@ describe('EmailConfirmed', () => {
   })
 
   describe('failure', () => {
-    it('returns at least one error when input is invalid', () => {
+    it('returns NullError when input is null', () => {
       const { sut } = makeSut()
       const input = null
 
       const result = sut.create(input)
 
-      expect(result.value[0]).toBeInstanceOf(DomainError)
-    })
-
-    it('returns an array with an error when validator fails', () => {
-      const { sut } = makeSut()
-      const input = null
-
-      const result = sut.create(input)
-
-      expect((result.value as any).length).toBeGreaterThanOrEqual(1)
+      expect(result.value[0]).toBeInstanceOf(NullError)
     })
   })
 })

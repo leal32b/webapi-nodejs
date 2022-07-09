@@ -1,5 +1,5 @@
-import MaxLengthError from '@/0.domain/errors/max-length'
-import MaxLengthValidator from '@/0.domain/validators/max-length'
+import MaxLengthError from '@/0.domain/errors/max-length-error'
+import MaxLengthValidator from '@/0.domain/validators/max-length-validator'
 
 type SutTypes = {
   sut: MaxLengthValidator
@@ -7,7 +7,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = { maxLength: 16 }
+  const injection = {
+    maxLength: 16
+  }
   const sut = new MaxLengthValidator(injection)
 
   return { sut, ...injection }

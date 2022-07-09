@@ -1,4 +1,5 @@
-import DomainError from '@/0.domain/base/domain-error'
+import EmptyError from '@/0.domain/errors/empty-error'
+import NullError from '@/0.domain/errors/null-error'
 import Token from '@/0.domain/value-objects/token'
 
 type SutTypes = {
@@ -13,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Token', () => {
   describe('success', () => {
-    it('returns a new Token when input is valid', () => {
+    it('returns a Token when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_Token'
 
@@ -24,22 +25,22 @@ describe('Token', () => {
   })
 
   describe('failure', () => {
-    it('returns at least one error when input is invalid', () => {
+    it('returns EmptyError when input is empty', () => {
       const { sut } = makeSut()
-      const input = null
+      const input = ''
 
       const result = sut.create(input)
 
-      expect(result.value[0]).toBeInstanceOf(DomainError)
+      expect(result.value[0]).toBeInstanceOf(EmptyError)
     })
 
-    it('returns an array with errors when validators fail more than once', () => {
+    it('returns NullError when input is null', () => {
       const { sut } = makeSut()
       const input = null
 
       const result = sut.create(input)
 
-      expect((result.value as any).length).toBeGreaterThanOrEqual(1)
+      expect(result.value[0]).toBeInstanceOf(NullError)
     })
   })
 })

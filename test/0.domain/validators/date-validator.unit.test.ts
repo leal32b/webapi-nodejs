@@ -1,22 +1,22 @@
-import InvalidEmailError from '@/0.domain/errors/invalid-email'
-import EmailValidator from '@/0.domain/validators/email'
+import InvalidDateError from '@/0.domain/errors/invalid-date-error'
+import DateValidator from '@/0.domain/validators/date-validator'
 
 type SutTypes = {
-  sut: EmailValidator
+  sut: DateValidator
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new EmailValidator()
+  const sut = new DateValidator()
 
   return { sut }
 }
 
-describe('EmailValidator', () => {
+describe('DateValidator', () => {
   describe('success', () => {
-    it('returns Right when input is a valid email', () => {
+    it('returns Right when input is a valid date', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'any@mail.com'
+      const input = '2022-07-02T22:37:52.000Z'
 
       const result = sut.validate(field, input)
 
@@ -25,20 +25,10 @@ describe('EmailValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input has no @', () => {
+    it('returns Left when input is an invalid date', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'without_at.com'
-
-      const result = sut.validate(field, input)
-
-      expect(result.isLeft()).toBeTruthy()
-    })
-
-    it('returns Left when input has no domain', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'any@mail'
+      const input = 'invalid_date'
 
       const result = sut.validate(field, input)
 
@@ -75,14 +65,14 @@ describe('EmailValidator', () => {
       expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns InvalidEmailError when validation fails', () => {
+    it('returns InvalidDateError when validation fails', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
 
       const result = sut.validate(field, input)
 
-      expect(result.value).toBeInstanceOf(InvalidEmailError)
+      expect(result.value).toBeInstanceOf(InvalidDateError)
     })
   })
 })

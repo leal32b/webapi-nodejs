@@ -1,4 +1,7 @@
 import DomainError from '@/0.domain/base/domain-error'
+import InvalidEmailError from '@/0.domain/errors/invalid-email-error'
+import MaxLengthError from '@/0.domain/errors/max-length-error'
+import MinLengthError from '@/0.domain/errors/min-length-error'
 import Email from '@/0.domain/value-objects/email'
 
 type SutTypes = {
@@ -13,7 +16,7 @@ const makeSut = (): SutTypes => {
 
 describe('Email', () => {
   describe('success', () => {
-    it('returns a new Email when input is valid', () => {
+    it('returns an Email when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any@mail.com'
 
@@ -24,22 +27,40 @@ describe('Email', () => {
   })
 
   describe('failure', () => {
-    it('returns at least one error when input is invalid', () => {
+    it('returns MinLengthError when input.length is lower than minLength', () => {
       const { sut } = makeSut()
-      const input = null
+      const input = 'a@b.com'
 
       const result = sut.create(input)
 
-      expect(result.value[0]).toBeInstanceOf(DomainError)
+      expect(result.value[0]).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns an array with errors when validators fail more than once', () => {
+    it('returns MaxLengthError when input.length is higher than maxLength', () => {
+      const { sut } = makeSut()
+      const input = 'input_that_exceeds_email_max_length_of_sixty_four_characters@mail.com'
+
+      const result = sut.create(input)
+
+      expect(result.value[0]).toBeInstanceOf(MaxLengthError)
+    })
+
+    it('returns InvalidEmailError when input is not an e-mail', () => {
+      const { sut } = makeSut()
+      const input = 'invalid_email'
+
+      const result = sut.create(input)
+
+      expect(result.value[0]).toBeInstanceOf(InvalidEmailError)
+    })
+
+    it('returns an array of errors when validators fail', () => {
       const { sut } = makeSut()
       const input = null
 
       const result = sut.create(input)
 
-      expect((result.value as any).length).toBeGreaterThanOrEqual(1)
+      expect((result.value as DomainError[]).length).toBeGreaterThan(1)
     })
   })
 })

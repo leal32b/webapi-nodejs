@@ -1,5 +1,5 @@
-import MinLengthError from '@/0.domain/errors/min-length'
-import MinLengthValidator from '@/0.domain/validators/min-length'
+import MinLengthError from '@/0.domain/errors/min-length-error'
+import MinLengthValidator from '@/0.domain/validators/min-length-validator'
 
 type SutTypes = {
   sut: MinLengthValidator
@@ -7,7 +7,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = { minLength: 7 }
+  const injection = {
+    minLength: 7
+  }
   const sut = new MinLengthValidator(injection)
 
   return { sut, ...injection }

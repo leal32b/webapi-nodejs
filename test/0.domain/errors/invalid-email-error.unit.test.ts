@@ -1,4 +1,4 @@
-import InvalidEmailError from '@/0.domain/errors/invalid-email'
+import InvalidEmailError from '@/0.domain/errors/invalid-email-error'
 
 type SutTypes = {
   sut: typeof InvalidEmailError
@@ -22,7 +22,7 @@ describe('InvalidEmailError', () => {
       expect(result).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns an InvalidEmailError with correct message', () => {
+    it('returns the correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any@mail'

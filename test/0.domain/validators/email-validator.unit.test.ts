@@ -1,22 +1,22 @@
-import InvalidDateError from '@/0.domain/errors/invalid-date'
-import DateValidator from '@/0.domain/validators/date'
+import InvalidEmailError from '@/0.domain/errors/invalid-email-error'
+import EmailValidator from '@/0.domain/validators/email-validator'
 
 type SutTypes = {
-  sut: DateValidator
+  sut: EmailValidator
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new DateValidator()
+  const sut = new EmailValidator()
 
   return { sut }
 }
 
-describe('DateValidator', () => {
+describe('EmailValidator', () => {
   describe('success', () => {
-    it('returns Right when input is a valid date', () => {
+    it('returns Right when input is a valid email', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = '2022-07-02T22:37:52.000Z'
+      const input = 'any@mail.com'
 
       const result = sut.validate(field, input)
 
@@ -25,10 +25,20 @@ describe('DateValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is an invalid date', () => {
+    it('returns Left when input has no @', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'invalid_date'
+      const input = 'without_at.com'
+
+      const result = sut.validate(field, input)
+
+      expect(result.isLeft()).toBeTruthy()
+    })
+
+    it('returns Left when input has no domain', () => {
+      const { sut } = makeSut()
+      const field = 'any_field'
+      const input = 'any@mail'
 
       const result = sut.validate(field, input)
 
@@ -72,7 +82,7 @@ describe('DateValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.value).toBeInstanceOf(InvalidDateError)
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
   })
 })

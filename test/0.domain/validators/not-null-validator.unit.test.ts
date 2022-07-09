@@ -1,22 +1,22 @@
-import NotEmptyError from '@/0.domain/errors/not-empty'
-import NotEmptyValidator from '@/0.domain/validators/not-empty'
+import NullError from '@/0.domain/errors/null-error'
+import NotNullValidator from '@/0.domain/validators/not-null-validator'
 
 type SutTypes = {
-  sut: NotEmptyValidator
+  sut: NotNullValidator
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new NotEmptyValidator()
+  const sut = new NotNullValidator()
 
   return { sut }
 }
 
-describe('NotEmptyValidator', () => {
+describe('NotNullValidator', () => {
   describe('success', () => {
-    it('returns Right when input is not empty', () => {
+    it('returns Right when input is not null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'anything'
+      const input = ''
 
       const result = sut.validate(field, input)
 
@@ -25,16 +25,6 @@ describe('NotEmptyValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is an empty string', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = ''
-
-      const result = sut.validate(field, input)
-
-      expect(result.isLeft()).toBeTruthy()
-    })
-
     it('returns Left when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
@@ -55,14 +45,14 @@ describe('NotEmptyValidator', () => {
       expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns NotEmptyError when validation fails', () => {
+    it('returns NotNullValidator when validation fails', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
 
       const result = sut.validate(field, input)
 
-      expect(result.value).toBeInstanceOf(NotEmptyError)
+      expect(result.value).toBeInstanceOf(NullError)
     })
   })
 })

@@ -3,12 +3,6 @@ import Validator from '@/0.domain/base/validator'
 import ValueObject from '@/0.domain/base/value-object'
 import { Either, left, right } from '@/0.domain/utils/either'
 
-const makeValidatorStub = (): Validator => ({
-  validate: jest.fn((): Either<DomainError, true> => {
-    return right(true)
-  })
-})
-
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
     constructor () {
@@ -19,29 +13,37 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
+const makeValidatorStub = (): Validator<any> => ({
+  validate: jest.fn((): Either<DomainError, void> => {
+    return right(null)
+  })
+})
+
 type SutTypes = {
   sut: typeof ValueObject
-  validatorStub: Validator
+  validator: Validator<any>
   errorFake: DomainError
 }
 
 const makeSut = (): SutTypes => {
-  const collaborators = {
-    validatorStub: makeValidatorStub(),
+  const fakes = {
     errorFake: makeErrorFake()
+  }
+  const collaborators = {
+    validator: makeValidatorStub()
   }
   const sut = ValueObject
 
-  return { sut, ...collaborators }
+  return { sut, ...collaborators, ...fakes }
 }
 
 describe('ValueObject', () => {
   describe('success', () => {
     it('returns Right when all validators pass', () => {
-      const { sut, validatorStub } = makeSut()
+      const { sut, validator } = makeSut()
       const input = 'any_input'
 
-      const result = sut.validate(input, [validatorStub])
+      const result = sut.validate(input, [validator])
 
       expect(result.isRight()).toBeTruthy()
     })
@@ -49,11 +51,11 @@ describe('ValueObject', () => {
 
   describe('failure', () => {
     it('returns an array of errors when any validator fails', () => {
-      const { sut, validatorStub } = makeSut()
+      const { sut, validator, errorFake } = makeSut()
       const input = 'short'
-      jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(left(makeErrorFake()))
+      jest.spyOn(validator, 'validate').mockReturnValueOnce(left(errorFake))
 
-      const result = sut.validate(input, [validatorStub])
+      const result = sut.validate(input, [validator])
 
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
