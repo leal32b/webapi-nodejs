@@ -4,7 +4,7 @@ import { Either, left, right } from '@/0.domain/utils/either'
 import Identifier from '@/0.domain/utils/identifier'
 
 type Params = {
-  [key: string]: Either<DomainError[], ValueObject>
+  [key: string]: Either<DomainError[], ValueObject<any>>
 }
 
 export default abstract class Entity<T> {

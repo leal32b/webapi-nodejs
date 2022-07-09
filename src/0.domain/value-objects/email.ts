@@ -6,9 +6,9 @@ import MaxLengthValidator from '@/0.domain/validators/max-length'
 import MinLengthValidator from '@/0.domain/validators/min-length'
 import NotEmptyValidator from '@/0.domain/validators/not-empty'
 
-export default class Email extends ValueObject {
-  private constructor (readonly value: string) {
-    super()
+export default class Email extends ValueObject<string> {
+  private constructor (value: string) {
+    super(value)
   }
 
   static create (input: string): Either<DomainError[], Email> {

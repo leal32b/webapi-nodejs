@@ -3,9 +3,9 @@ import Entity from '@/0.domain/base/entity'
 import ValueObject from '@/0.domain/base/value-object'
 import { Either, left, right } from '@/0.domain/utils/either'
 
-class ValueObjectFake extends ValueObject {
+class ValueObjectFake extends ValueObject<any> {
   static create (): Either<DomainError[], ValueObjectFake> {
-    return right(new ValueObjectFake())
+    return right(new ValueObjectFake(null))
   }
 }
 
@@ -61,7 +61,7 @@ describe('Entity', () => {
 
     it('returns an object with values from getValue', () => {
       const { sut } = makeSut()
-      class Test extends sut<{ prop: ValueObject }> {
+      class Test extends sut<{ prop: ValueObject<any> }> {
         constructor () { super({ prop: { value: 'any_value' } }) }
       }
 

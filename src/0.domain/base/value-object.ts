@@ -2,7 +2,9 @@ import DomainError from '@/0.domain/base/domain-error'
 import Validator from '@/0.domain/base/validator'
 import { Either, left, right } from '@/0.domain/utils/either'
 
-export default abstract class ValueObject {
+export default abstract class ValueObject<T> {
+  constructor (readonly value: T) {}
+
   static validate (input: any, validators: Validator[]): Either<DomainError[], true> {
     const errors: DomainError[] = []
 
