@@ -1,7 +1,7 @@
 import DomainError from '@/0.domain/base/domain-error'
 import Controller from '@/2.presentation/base/controller'
-import LogControllerDecorator from '@/2.presentation/decorators/log-controller'
-import LogErrorRepository from '@/2.presentation/interfaces/log-error-repository'
+import LogControllerDecorator from '@/2.presentation/decorators/log-controller-decorator'
+import LogErrorRepository from '@/2.presentation/repositories/log-error-repository'
 import { HttpRequest } from '@/2.presentation/types/http-request'
 import { HttpResponse } from '@/2.presentation/types/http-response'
 
@@ -27,7 +27,7 @@ const makeControllerStub = (): Controller => ({
   handle: jest.fn(async (): Promise<HttpResponse> => {
     return await Promise.resolve({
       statusCode: 200,
-      body: { }
+      body: {}
     })
   })
 } as any)
@@ -76,7 +76,7 @@ describe('LogControllerDecorator', () => {
       const result = await sut.handle(requestFake)
 
       expect(result).toEqual({
-        body: { },
+        body: {},
         statusCode: 200
       })
     })

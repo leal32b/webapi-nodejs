@@ -1,5 +1,5 @@
 import DomainError from '@/0.domain/base/domain-error'
-import ServerError from '@/2.presentation/errors/server'
+import ServerError from '@/2.presentation/errors/server-error'
 import { HttpResponse } from '@/2.presentation/types/http-response'
 
 export const success = {
@@ -21,8 +21,10 @@ export const clientError = {
 }
 
 export const serverError = {
-  internalServerError: (error: Error): HttpResponse => ({
+  internalServerError: (error?: Error): HttpResponse => ({
     statusCode: 500,
-    body: new ServerError(error.message, error.stack)
+    body: error
+      ? new ServerError(error.message, error.stack)
+      : 'internal server error'
   })
 }

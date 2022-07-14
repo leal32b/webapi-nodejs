@@ -1,5 +1,5 @@
 import Controller from '@/2.presentation/base/controller'
-import LogErrorRepository from '@/2.presentation/interfaces/log-error-repository'
+import LogErrorRepository from '@/2.presentation/repositories/log-error-repository'
 import { HttpRequest } from '@/2.presentation/types/http-request'
 import { HttpResponse } from '@/2.presentation/types/http-response'
 

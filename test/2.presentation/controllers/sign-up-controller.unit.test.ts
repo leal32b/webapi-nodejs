@@ -1,11 +1,8 @@
 import DomainError from '@/0.domain/base/domain-error'
-import User from '@/0.domain/entities/user/user'
 import { Either, left, right } from '@/0.domain/utils/either'
-import CreateUserUseCase from '@/1.application/use-cases/create-user'
-import SignUpController from '@/2.presentation/controllers/sign-up'
-import ServerError from '@/2.presentation/errors/server'
+import CreateUserUseCase, { CreateUserResultDTO } from '@/1.application/use-cases/create-user-use-case'
+import SignUpController, { SignUpData } from '@/2.presentation/controllers/sign-up-controller'
 import { HttpRequest } from '@/2.presentation/types/http-request'
-import { SignUpData } from '@/2.presentation/types/sign-up-data'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -27,15 +24,13 @@ const makeRequestFake = (): HttpRequest<SignUpData> => ({
 })
 
 const makeCreateUserUseCaseStub = (): CreateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], User>> => {
-    return right(User.create({
+  execute: jest.fn(async (): Promise<Either<DomainError[], CreateUserResultDTO>> => {
+    return right({
       email: 'any@mail.com',
-      id: 'any_id',
-      name: 'any_name',
-      password: 'any_password'
-    }).value as User)
+      message: 'user created successfully'
+    })
   })
-} as any)
+} as unknown as CreateUserUseCase)
 
 type SutTypes = {
   sut: SignUpController
@@ -50,7 +45,7 @@ const makeSut = (): SutTypes => {
     requestFake: makeRequestFake()
   }
   const injection = {
-    createUserUseCase: makeCreateUserUseCaseStub() as unknown as CreateUserUseCase
+    createUserUseCase: makeCreateUserUseCaseStub()
   }
   const sut = new SignUpController(injection)
 
@@ -87,9 +82,7 @@ describe('SignUpController', () => {
 
       expect(result.body).toEqual({
         email: 'any@mail.com',
-        id: 'any_id',
-        name: 'any_name',
-        password: 'any_password'
+        message: 'user created successfully'
       })
     })
   })
@@ -128,7 +121,7 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.body).toBeInstanceOf(ServerError)
+      expect(result.body).toBe('internal server error')
     })
   })
 })

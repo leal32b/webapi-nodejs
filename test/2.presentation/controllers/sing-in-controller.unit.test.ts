@@ -1,10 +1,8 @@
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user'
-import SignInController from '@/2.presentation/controllers/sign-in'
-import ServerError from '@/2.presentation/errors/server'
+import AuthenticateUserUseCase, { AuthenticateUserResultDTO } from '@/1.application/use-cases/authenticate-user-use-case'
+import SignInController, { SignInData } from '@/2.presentation/controllers/sign-in-controller'
 import { HttpRequest } from '@/2.presentation/types/http-request'
-import { SignInData } from '@/2.presentation/types/sign-in-data'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -24,8 +22,11 @@ const makeRequestFake = (): HttpRequest<SignInData> => ({
 })
 
 const makeAuthenticateUserUseCaseStub = (): AuthenticateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], string>> => {
-    return right('access_token')
+  execute: jest.fn(async (): Promise<Either<DomainError[], AuthenticateUserResultDTO>> => {
+    return right({
+      accessToken: 'access_token',
+      message: 'user authenticated successfully'
+    })
   })
 } as any)
 
@@ -67,7 +68,10 @@ describe('SignInController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.body).toEqual({ accessToken: 'access_token' })
+      expect(result.body).toEqual({
+        accessToken: 'access_token',
+        message: 'user authenticated successfully'
+      })
     })
   })
 
@@ -104,9 +108,8 @@ describe('SignInController', () => {
       jest.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
-      console.log('result >>>', result)
 
-      expect(result.body).toBeInstanceOf(ServerError)
+      expect(result.body).toBe('internal server error')
     })
   })
 })

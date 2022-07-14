@@ -1,9 +1,15 @@
-import CreateUserUseCase from '@/1.application/use-cases/create-user'
+import CreateUserUseCase from '@/1.application/use-cases/create-user-use-case'
 import Controller from '@/2.presentation/base/controller'
 import { HttpRequest } from '@/2.presentation/types/http-request'
 import { HttpResponse } from '@/2.presentation/types/http-response'
-import { SignUpData } from '@/2.presentation/types/sign-up-data'
 import { clientError, serverError, success } from '@/2.presentation/utils/http-response'
+
+export type SignUpData = {
+  email: string
+  name: string
+  password: string
+  passwordRetype: string
+}
 
 export default class SignUpController extends Controller {
   constructor (private readonly props: {
@@ -14,17 +20,17 @@ export default class SignUpController extends Controller {
     try {
       const { body: signUpData } = httpRequest
 
-      const userOrError = await this.props.createUserUseCase.execute(signUpData)
+      const createUserResultDtoOrError = await this.props.createUserUseCase.execute(signUpData)
 
-      if (userOrError.isLeft()) {
-        return clientError.badRequest(userOrError.value)
+      if (createUserResultDtoOrError.isLeft()) {
+        return clientError.badRequest(createUserResultDtoOrError.value)
       }
 
-      const user = userOrError.value
+      const createUserResultDTO = createUserResultDtoOrError.value
 
-      return success.ok({ ...user.getValue() })
+      return success.ok(createUserResultDTO)
     } catch (error) {
-      return serverError.internalServerError(error)
+      return serverError.internalServerError()
     }
   }
 }
