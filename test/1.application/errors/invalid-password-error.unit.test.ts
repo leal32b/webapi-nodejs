@@ -1,4 +1,4 @@
-import InvalidPasswordError from '@/1.application/errors/invalid-password'
+import InvalidPasswordError from '@/1.application/errors/invalid-password-error'
 
 type SutTypes = {
   sut: typeof InvalidPasswordError
@@ -21,7 +21,7 @@ describe('InvalidPasswordError', () => {
       expect(result).toBeInstanceOf(InvalidPasswordError)
     })
 
-    it('returns a InvalidPasswordError with passed message', () => {
+    it('returns an InvalidPasswordError with correct message', () => {
       const { sut } = makeSut()
       const field = 'any_field'
 
