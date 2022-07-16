@@ -6,10 +6,12 @@ export enum TokenType {
   access = 'access'
 }
 
-type TokenData<T = {}> = {
+export type TokenData<T = {}> = {
   type: TokenType
   payload?: T
 }
-export default interface TokenGenerator {
-  generate: (input: TokenData) => Promise<Either<DomainError, string>>
+
+export default interface Encrypter {
+  encrypt: (data: TokenData) => Promise<Either<DomainError, string>>
+  decrypt: (token: string) => Promise<Either<DomainError, any>>
 }

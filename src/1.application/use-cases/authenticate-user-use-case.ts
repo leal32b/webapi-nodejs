@@ -1,8 +1,8 @@
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 import UseCase from '@/1.application/base/use-case'
-import HashComparer from '@/1.application/cryptography/hash-comparer'
-import TokenGenerator, { TokenType } from '@/1.application/cryptography/token-generator'
+import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
+import Hasher from '@/1.application/cryptography/hasher'
 import UserRepository from '@/1.application/repositories/user-repository'
 
 export type AuthenticateUserData = {
@@ -16,14 +16,13 @@ export type AuthenticateUserResultDTO = {
 }
 export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, AuthenticateUserResultDTO> {
   constructor (private readonly props: {
-    hashComparer: HashComparer
     userRepository: UserRepository
-    tokenGenerator: TokenGenerator
+    hasher: Hasher
+    encrypter: Encrypter
   }) { super() }
 
   async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
-    const { hashComparer, userRepository, tokenGenerator } = this.props
-
+    const { hasher, encrypter, userRepository } = this.props
     const userAggregateOrError = await userRepository.readByEmail(authenticateUserData.email)
 
     if (userAggregateOrError.isLeft()) {
@@ -32,13 +31,13 @@ export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserDat
 
     const userAggregate = userAggregateOrError.value
     const { id, password } = userAggregate.aggregateRoot
-    const passwordIsValidOrError = await hashComparer.compare(authenticateUserData.password, password.value)
+    const passwordIsValidOrError = await hasher.compare(authenticateUserData.password, password.value)
 
     if (passwordIsValidOrError.isLeft()) {
       return left([passwordIsValidOrError.value])
     }
 
-    const accessTokenOrError = await tokenGenerator.generate({
+    const accessTokenOrError = await encrypter.encrypt({
       type: TokenType.access, payload: { id: id.value }
     })
 

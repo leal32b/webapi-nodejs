@@ -2,8 +2,8 @@ import UserAggregate from '@/0.domain/aggregates/user-aggregate'
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 import UseCase from '@/1.application/base/use-case'
+import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
 import Hasher from '@/1.application/cryptography/hasher'
-import TokenGenerator, { TokenType } from '@/1.application/cryptography/token-generator'
 import EmailTakenError from '@/1.application/errors/email-taken-error'
 import InvalidPasswordError from '@/1.application/errors/invalid-password-error'
 import UserRepository from '@/1.application/repositories/user-repository'
@@ -22,16 +22,16 @@ export type CreateUserResultDTO = {
 
 export default class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultDTO> {
   constructor (private readonly props: {
-    hasher: Hasher
-    tokenGenerator: TokenGenerator
     userRepository: UserRepository
+    hasher: Hasher
+    encrypter: Encrypter
   }) { super() }
 
   async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
-    const { hasher, tokenGenerator, userRepository } = this.props
+    const { hasher, encrypter, userRepository } = this.props
     const { email, password, passwordRetype } = createUserData
-
     const userAggregateByEmailOrError = await userRepository.readByEmail(email)
+
     if (userAggregateByEmailOrError.isLeft()) {
       return left([userAggregateByEmailOrError.value])
     }
@@ -50,7 +50,7 @@ export default class CreateUserUseCase extends UseCase<CreateUserData, CreateUse
       return left([hashedPasswordOrError.value])
     }
 
-    const tokenOrError = await tokenGenerator.generate({ type: TokenType.email })
+    const tokenOrError = await encrypter.encrypt({ type: TokenType.email })
 
     if (tokenOrError.isLeft()) {
       return left([tokenOrError.value])

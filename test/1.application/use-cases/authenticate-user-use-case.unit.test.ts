@@ -1,8 +1,8 @@
 import UserAggregate from '@/0.domain/aggregates/user-aggregate'
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import HashComparer from '@/1.application/cryptography/hash-comparer'
-import TokenGenerator from '@/1.application/cryptography/token-generator'
+import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
+import Hasher from '@/1.application/cryptography/hasher'
 import UserRepository from '@/1.application/repositories/user-repository'
 import AuthenticateUserUseCase, { AuthenticateUserData } from '@/1.application/use-cases/authenticate-user-use-case'
 
@@ -19,10 +19,6 @@ const makeErrorFake = (): DomainError => {
 const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
   email: 'any@mail.com',
   password: 'password'
-})
-
-const makeHashComparerStub = (): HashComparer => ({
-  compare: jest.fn(async (): Promise<Either<DomainError, void>> => right(null))
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
@@ -43,15 +39,34 @@ const makeUserRepositoryStub = (): UserRepository => ({
   })
 })
 
-const makeTokenGeneratorStub = (): TokenGenerator => ({
-  generate: jest.fn(async (): Promise<Either<DomainError, string>> => right('valid_token'))
+const makeHasherStub = (): Hasher => ({
+  hash: jest.fn(async (): Promise<Either<DomainError, string>> => {
+    return right('hashed_password')
+  }),
+  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => {
+    return right(true)
+  })
+})
+
+const makeEncrypterStub = (): Encrypter => ({
+  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => {
+    return right('token')
+  }),
+  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => {
+    return right({
+      type: TokenType.access,
+      payload: {
+        anyKey: 'any_value'
+      }
+    })
+  })
 })
 
 type SutTypes = {
   sut: AuthenticateUserUseCase
-  hashComparer: HashComparer
   userRepository: UserRepository
-  tokenGenerator: TokenGenerator
+  hasher: Hasher
+  encrypter: Encrypter
   errorFake: DomainError
   authenticateUserDataFake: AuthenticateUserData
 }
@@ -62,9 +77,9 @@ const makeSut = (): SutTypes => {
     errorFake: makeErrorFake()
   }
   const injection = {
-    hashComparer: makeHashComparerStub(),
     userRepository: makeUserRepositoryStub(),
-    tokenGenerator: makeTokenGeneratorStub()
+    hasher: makeHasherStub(),
+    encrypter: makeEncrypterStub()
   }
   const sut = new AuthenticateUserUseCase(injection)
 
@@ -73,14 +88,6 @@ const makeSut = (): SutTypes => {
 
 describe('AuthenticateUserUseCase', () => {
   describe('success', () => {
-    it('calls HashComparer with correct params', async () => {
-      const { sut, hashComparer, authenticateUserDataFake } = makeSut()
-
-      await sut.execute(authenticateUserDataFake)
-
-      expect(hashComparer.compare).toHaveBeenCalledWith('password', 'hashed_password')
-    })
-
     it('calls UserRepository.readByEmail with correct param', async () => {
       const { sut, userRepository, authenticateUserDataFake } = makeSut()
 
@@ -89,12 +96,20 @@ describe('AuthenticateUserUseCase', () => {
       expect(userRepository.readByEmail).toHaveBeenCalledWith('any@mail.com')
     })
 
-    it('calls TokenGenerator with correct param', async () => {
-      const { sut, tokenGenerator, authenticateUserDataFake } = makeSut()
+    it('calls Hasher.compare with correct params', async () => {
+      const { sut, hasher, authenticateUserDataFake } = makeSut()
 
       await sut.execute(authenticateUserDataFake)
 
-      expect(tokenGenerator.generate).toHaveBeenCalledWith({ payload: { id: 'any_id' }, type: 'access' })
+      expect(hasher.compare).toHaveBeenCalledWith('password', 'hashed_password')
+    })
+
+    it('calls Encrypter.encrypt with correct param', async () => {
+      const { sut, encrypter, authenticateUserDataFake } = makeSut()
+
+      await sut.execute(authenticateUserDataFake)
+
+      expect(encrypter.encrypt).toHaveBeenCalledWith({ payload: { id: 'any_id' }, type: 'access' })
     })
 
     it('calls UserRepository.update with correct params', async () => {
@@ -125,7 +140,7 @@ describe('AuthenticateUserUseCase', () => {
 
       expect(result.value).toEqual({
         message: 'user authenticated successfully',
-        accessToken: 'valid_token'
+        accessToken: 'token'
       })
     })
   })
@@ -140,9 +155,18 @@ describe('AuthenticateUserUseCase', () => {
       await expect(promise).resolves.toEqual(left([errorFake]))
     })
 
-    it('returns an Error when HashComparer fails', async () => {
-      const { sut, hashComparer, errorFake, authenticateUserDataFake } = makeSut()
-      jest.spyOn(hashComparer, 'compare').mockResolvedValueOnce(left(errorFake))
+    it('returns an Error when Hasher.compare fails', async () => {
+      const { sut, hasher, errorFake, authenticateUserDataFake } = makeSut()
+      jest.spyOn(hasher, 'compare').mockResolvedValueOnce(left(errorFake))
+
+      const promise = sut.execute(authenticateUserDataFake)
+
+      await expect(promise).resolves.toEqual(left([errorFake]))
+    })
+
+    it('returns an Error when Encrypter.encrypt fails', async () => {
+      const { sut, encrypter, errorFake, authenticateUserDataFake } = makeSut()
+      jest.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
 
       const promise = sut.execute(authenticateUserDataFake)
 
