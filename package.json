@@ -28,9 +28,9 @@
     "docker:up": "docker-compose run --rm start_dependencies",
     "docker:down": "docker-compose down",
     "docker:attach": "docker attach webapi-container",
-    "migration:create": "NODE_ENV=test typeorm migration:create",
-    "migration:generate": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:generate",
-    "migration:run": "NODE_ENV=test ts-node -T ./node_modules/.bin/typeorm migration:run",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:generate": "npm run typeorm -- migration:generate -d src/3.infra/persistence/postgres/data-sources/default.ts",
+    "migration:run": "npm run typeorm -- migration:run -d src/3.infra/persistence/postgres/data-sources/default.ts",
     "eslint": "eslint 'src/**' --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand --silent --noStackTrace",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
@@ -38,7 +38,7 @@
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
     "test:staged": "npm test -- --findRelatedTests test",
     "test:ci": "npm test -- --coverage",
-    "prepare": "husky install"
+    "prepare": "if test $NODE_ENV = test; then husky install; fi"
   },
   "dependencies": {
     "ajv": "^8.11.0",
@@ -47,6 +47,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "fastify": "^4.0.1",
+    "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "nodemon": "^2.0.18",
     "pg": "^8.7.3",
@@ -56,6 +57,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.4",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^18.0.0",
     "@types/pg": "^8.6.5",
     "@types/supertest": "^2.0.12",
