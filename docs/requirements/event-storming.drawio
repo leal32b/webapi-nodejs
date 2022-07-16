@@ -1,0 +1,449 @@
+<mxfile host="65bd71144e">
+    <diagram id="16DHBJypyjHvHkMZ5D0L" name="Page-1">
+        <mxGraphModel dx="1828" dy="1264" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Experts" style="swimlane;fillColor=#999900;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="10" width="130" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="???" style="rounded=0;whiteSpace=wrap;html=1;fillColor=default;" parent="2" vertex="1">
+                    <mxGeometry x="10" y="30" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Events" style="swimlane;fillColor=#CC6600;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="10" width="341" height="160" as="geometry">
+                        <mxRectangle width="70" height="23" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="Something that happend and that people care about" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="7" vertex="1">
+                    <mxGeometry x="10" y="30" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="- Always in the past&lt;br style=&quot;font-size: 10px;&quot;&gt;- Could be timed&lt;br style=&quot;font-size: 10px;&quot;&gt;- Result of somethig important" style="rounded=0;whiteSpace=wrap;html=1;align=center;fontSize=10;" parent="7" vertex="1">
+                    <mxGeometry x="10" y="110" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="[subject]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="7" vertex="1">
+                    <mxGeometry x="10" y="80" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="[verb]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="7" vertex="1">
+                    <mxGeometry x="90" y="80" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="How they are generated?" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="7" vertex="1">
+                    <mxGeometry x="179" y="30" width="150" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="System" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#CC0000;" parent="7" vertex="1">
+                    <mxGeometry x="188" y="80" width="59" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Event" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#CC6600;" parent="7" vertex="1">
+                    <mxGeometry x="261" y="80" width="59" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="Commands" style="swimlane;fontSize=12;fillColor=#0066CC;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="10" width="140" height="160" as="geometry">
+                        <mxRectangle x="380" width="100" height="23" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="An action started by an Actor" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="17" vertex="1">
+                    <mxGeometry x="10" y="30" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="[present]" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="17" vertex="1">
+                    <mxGeometry x="40" y="80" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="- The inverse of Event" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="17" vertex="1">
+                    <mxGeometry x="10" y="110" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Experts" style="swimlane;fillColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="190" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Admin" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="21" vertex="1">
+                    <mxGeometry x="10" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="21" vertex="1">
+                    <mxGeometry x="100" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Events" style="swimlane;fillColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="320" width="280" height="760" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="Sign up realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="60" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="Confirmation e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" parent="24" vertex="1">
+                    <mxGeometry x="190" y="60" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="E-mail confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="150" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Sign in realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="240" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Password forgot" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="330" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Forgot password e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" parent="24" vertex="1">
+                    <mxGeometry x="190" y="150" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="Password updated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="420" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="E-mail changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="510" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="24" vertex="1">
+                    <mxGeometry x="100" y="30" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="186" value="Admin" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="24">
+                    <mxGeometry x="10" y="30" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="Commands" style="swimlane;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="190" width="540" height="890" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="Sign up" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="Confirm e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Sign in" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="Forget password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="300" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="Change password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="390" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="Change e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="37" vertex="1">
+                    <mxGeometry x="10" y="480" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Sign up realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="E-mail changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="480" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="Password changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="390" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="Password forgot" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="300" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="Sign in realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="E-mail confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="37" vertex="1">
+                    <mxGeometry x="90" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="182" value="Send e-mail confirmation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="37">
+                    <mxGeometry x="370" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="183" value="Send forgot password e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="37">
+                    <mxGeometry x="370" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="184" value="Confirmation e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" vertex="1" parent="37">
+                    <mxGeometry x="450" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="185" value="Forgot password e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" vertex="1" parent="37">
+                    <mxGeometry x="450" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="Timeline" style="swimlane;fillColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="190" width="440" height="890" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Sign up" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="20" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="Sign up realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="30" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="14" y="100" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="Send e-mail confirmation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="Confirmation e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="Confirm e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="E-mail confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="260" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="170" y="280" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="Sign in" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="310" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="Sign in realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="310" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="90" y="380" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="Forget password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="410" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="Password forgot" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="410" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="90" y="480" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="Send forgot password e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="500" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="Forgot password e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" parent="52" vertex="1">
+                    <mxGeometry x="260" y="500" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="Update password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="260" y="590" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="Password updated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="340" y="590" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="250" y="660" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="Change password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="690" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="Password changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="690" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="Change e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" parent="52" vertex="1">
+                    <mxGeometry x="100" y="790" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="E-mail changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" parent="52" vertex="1">
+                    <mxGeometry x="180" y="790" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="90" y="760" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" parent="52" vertex="1">
+                    <mxGeometry x="90" y="860" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="Mappers" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="1300" y="190" width="790" height="890" as="geometry"/>
+                </mxCell>
+                <mxCell id="179" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="120" target="121">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="Send e-mail confirmation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="83">
+                    <mxGeometry x="220" y="70" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="Confirmation e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" vertex="1" parent="83">
+                    <mxGeometry x="320" y="70" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="181" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="128" target="129">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="128" value="Send forgot password e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="83">
+                    <mxGeometry x="220" y="670" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="129" value="Forgot password e-mail sent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC0000;" vertex="1" parent="83">
+                    <mxGeometry x="320" y="670" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="155" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="83" source="85" target="95">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="330" y="290"/>
+                            <mxPoint x="260" y="290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="158" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="103">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="390" y="290"/>
+                            <mxPoint x="460" y="290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="163" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="108">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="480" y="380"/>
+                            <mxPoint x="480" y="310"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="165" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="113">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="480" y="440"/>
+                            <mxPoint x="480" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="167" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="117">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="390" y="530"/>
+                            <mxPoint x="460" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="173" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="169">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="330" y="530"/>
+                            <mxPoint x="260" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="178" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="85" target="175">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="440"/>
+                            <mxPoint x="240" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFF99;fontColor=#333300;" vertex="1" parent="83">
+                    <mxGeometry x="300" y="350" width="120" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="95" target="120">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="Sign up realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="220" y="170" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="Sign in realized" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="520" y="270" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="" style="group" vertex="1" connectable="0" parent="83">
+                    <mxGeometry x="110" y="170" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="Sign up" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="123">
+                    <mxGeometry x="10" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="123">
+                    <mxGeometry y="70" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="E-mail confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="420" y="170" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="E-mail changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="420" y="570" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="Password changed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="520" y="470" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="" style="group" vertex="1" connectable="0" parent="83">
+                    <mxGeometry x="510" y="370" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="Change password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="126">
+                    <mxGeometry x="10" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="126">
+                    <mxGeometry y="70" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" value="" style="group" vertex="1" connectable="0" parent="83">
+                    <mxGeometry x="510" y="170" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="Sign in" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="127">
+                    <mxGeometry x="10" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="127">
+                    <mxGeometry y="70" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="124" value="" style="group" vertex="1" connectable="0" parent="83">
+                    <mxGeometry x="310" y="170" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="Confirm e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="124">
+                    <mxGeometry x="10" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="124">
+                    <mxGeometry y="70" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="154" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="92" target="85">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="160" y="260"/>
+                            <mxPoint x="240" y="260"/>
+                            <mxPoint x="240" y="300"/>
+                            <mxPoint x="300" y="300"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="157" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="83" source="100" target="85">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="320" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="360" y="320"/>
+                            <mxPoint x="360" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="162" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="105" target="85">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="560" y="260"/>
+                            <mxPoint x="470" y="260"/>
+                            <mxPoint x="470" y="350"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="164" style="edgeStyle=orthogonalEdgeStyle;html=1;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="110" target="85">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="125" value="" style="group" vertex="1" connectable="0" parent="83">
+                    <mxGeometry x="510" y="570" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="Change e-mail" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="125">
+                    <mxGeometry x="10" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="125">
+                    <mxGeometry y="70" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="115" target="85">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="560" y="560"/>
+                            <mxPoint x="470" y="560"/>
+                            <mxPoint x="470" y="520"/>
+                            <mxPoint x="420" y="520"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="180" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="169" target="128">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="169" value="Password forgot" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="220" y="570" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="172" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="170" target="85">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="170" value="Forget password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="83">
+                    <mxGeometry x="320" y="570" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="171" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="83">
+                    <mxGeometry x="310" y="640" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="177" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=1;entryDx=0;entryDy=0;fontColor=#333300;startArrow=none;startFill=0;endArrow=classic;endFill=1;elbow=vertical;" edge="1" parent="83" source="174" target="85">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="160" y="560"/>
+                            <mxPoint x="250" y="560"/>
+                            <mxPoint x="250" y="470"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="174" value="Update password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0066CC;" vertex="1" parent="83">
+                    <mxGeometry x="120" y="570" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="175" value="Password updated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CC6600;" vertex="1" parent="83">
+                    <mxGeometry x="120" y="470" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="176" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#999900;" vertex="1" parent="83">
+                    <mxGeometry x="110" y="640" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="Aggregates" style="swimlane;fontSize=12;fillColor=#FFFF99;fontColor=#333300;" vertex="1" parent="1">
+                    <mxGeometry x="650" y="10" width="140" height="160" as="geometry">
+                        <mxRectangle x="380" width="100" height="23" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
