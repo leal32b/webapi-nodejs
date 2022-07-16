@@ -19,7 +19,6 @@ export default class SignUpController extends Controller {
   async handle (httpRequest: HttpRequest<SignUpData>): Promise<HttpResponse> {
     try {
       const { body: signUpData } = httpRequest
-
       const createUserResultDtoOrError = await this.props.createUserUseCase.execute(signUpData)
 
       if (createUserResultDtoOrError.isLeft()) {

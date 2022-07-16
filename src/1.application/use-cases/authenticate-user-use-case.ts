@@ -26,7 +26,7 @@ export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserDat
     const userAggregateOrError = await userRepository.readByEmail(authenticateUserData.email)
 
     if (userAggregateOrError.isLeft()) {
-      return left([userAggregateOrError.value])
+      return left(userAggregateOrError.value)
     }
 
     const userAggregate = userAggregateOrError.value
@@ -50,7 +50,7 @@ export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserDat
     const accessTokenUpdatedOrError = await userRepository.update(userAggregate)
 
     if (accessTokenUpdatedOrError.isLeft()) {
-      return left([accessTokenUpdatedOrError.value])
+      return left(accessTokenUpdatedOrError.value)
     }
 
     return right({

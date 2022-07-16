@@ -22,10 +22,10 @@ const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError, void>> => {
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
   }),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError, UserAggregate>> => {
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
     return right(UserAggregate.create({
       email: 'any@mail.com',
       id: 'any_id',
@@ -34,7 +34,7 @@ const makeUserRepositoryStub = (): UserRepository => ({
       token: 'any_token'
     }).value as UserAggregate)
   }),
-  update: jest.fn(async (): Promise<Either<DomainError, void>> => {
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
   })
 })
@@ -148,7 +148,7 @@ describe('AuthenticateUserUseCase', () => {
   describe('failure', () => {
     it('returns an Error when UserRepository.readByEmail fails', async () => {
       const { sut, userRepository, errorFake, authenticateUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left(errorFake))
+      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
       const promise = sut.execute(authenticateUserDataFake)
 
@@ -175,7 +175,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when UserRepository.update fails', async () => {
       const { sut, userRepository, errorFake, authenticateUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'update').mockResolvedValueOnce(left(errorFake))
+      jest.spyOn(userRepository, 'update').mockResolvedValueOnce(left([errorFake]))
 
       const promise = sut.execute(authenticateUserDataFake)
 

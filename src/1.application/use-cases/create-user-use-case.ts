@@ -33,7 +33,7 @@ export default class CreateUserUseCase extends UseCase<CreateUserData, CreateUse
     const userAggregateByEmailOrError = await userRepository.readByEmail(email)
 
     if (userAggregateByEmailOrError.isLeft()) {
-      return left([userAggregateByEmailOrError.value])
+      return left(userAggregateByEmailOrError.value)
     }
 
     if (userAggregateByEmailOrError.value) {
@@ -72,7 +72,7 @@ export default class CreateUserUseCase extends UseCase<CreateUserData, CreateUse
     const createdUserOrError = await userRepository.create(userAggregate)
 
     if (createdUserOrError.isLeft()) {
-      return left([createdUserOrError.value])
+      return left(createdUserOrError.value)
     }
 
     return right({

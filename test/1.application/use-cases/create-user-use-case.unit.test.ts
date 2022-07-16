@@ -26,13 +26,13 @@ const makeCreateUserDataFake = (): CreateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError, void>> => {
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
   }),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError, UserAggregate>> => {
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
     return right(null)
   }),
-  update: jest.fn(async (): Promise<Either<DomainError, void>> => {
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
   })
 })
@@ -146,7 +146,7 @@ describe('CreateUserUseCase', () => {
   describe('failure', () => {
     it('returns an Error when UserRepository fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left(errorFake))
+      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 
@@ -204,7 +204,7 @@ describe('CreateUserUseCase', () => {
 
     it('returns an Error when UserRepository.create fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'create').mockResolvedValueOnce(left(errorFake))
+      jest.spyOn(userRepository, 'create').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 

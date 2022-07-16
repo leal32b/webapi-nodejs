@@ -1,11 +1,14 @@
 import argon2id from 'argon2'
 
 import DomainError from '@/0.domain/base/domain-error'
-import ArgonAdapter from '@/3.infra/cryptography/argon'
+import ArgonAdapter from '@/3.infra/cryptography/argon/argon-adapter'
 
 jest.mock('argon2', () => ({
   async hash (): Promise<string> {
     return await Promise.resolve('hashed_value')
+  },
+  async verify (): Promise<boolean> {
+    return await Promise.resolve(true)
   }
 }))
 
@@ -48,25 +51,27 @@ describe('ArgonAdapter', () => {
       expect(hashSpy).toHaveBeenCalledWith('any_value', { saltLength: salt })
     })
 
-    it('returns Right on success', async () => {
-      const { sut } = makeSut()
-
-      const result = await sut.hash('any_value')
-
-      expect(result.isRight()).toBeTruthy()
-    })
-
-    it('returns a hash on success', async () => {
+    it('returns a hash', async () => {
       const { sut } = makeSut()
 
       const result = await sut.hash('any_value')
 
       expect(result.value).toBe('hashed_value')
     })
+
+    it('compares a hash with a value', async () => {
+      const { sut } = makeSut()
+      const hash = 'hashed_value'
+      const value = 'any_value'
+
+      const result = await sut.compare(hash, value)
+
+      expect(result.value).toBe(true)
+    })
   })
 
   describe('failure', () => {
-    it('returns Left when bcrypt throws', async () => {
+    it('returns Left when argon.hash throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
 
@@ -75,11 +80,33 @@ describe('ArgonAdapter', () => {
       expect(result.isLeft()).toBeTruthy()
     })
 
-    it('returns an error when bcrypt throws', async () => {
+    it('returns an error when argon.hash throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
 
       const result = await sut.hash('any_value')
+
+      expect(result.value).toBeInstanceOf(DomainError)
+    })
+
+    it('returns Left when argon.verify throws', async () => {
+      const { sut, errorFake } = makeSut()
+      jest.spyOn(argon2id, 'verify').mockRejectedValueOnce(errorFake as never)
+      const hash = 'hashed_value'
+      const value = 'any_value'
+
+      const result = await sut.compare(hash, value)
+
+      expect(result.isLeft()).toBeTruthy()
+    })
+
+    it('returns an error when argon.verify throws', async () => {
+      const { sut, errorFake } = makeSut()
+      jest.spyOn(argon2id, 'verify').mockRejectedValueOnce(errorFake as never)
+      const hash = 'hashed_value'
+      const value = 'any_value'
+
+      const result = await sut.compare(hash, value)
 
       expect(result.value).toBeInstanceOf(DomainError)
     })
