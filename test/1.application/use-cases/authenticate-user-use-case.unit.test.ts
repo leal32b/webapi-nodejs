@@ -101,7 +101,7 @@ describe('AuthenticateUserUseCase', () => {
 
       await sut.execute(authenticateUserDataFake)
 
-      expect(hasher.compare).toHaveBeenCalledWith('password', 'hashed_password')
+      expect(hasher.compare).toHaveBeenCalledWith('hashed_password', 'password')
     })
 
     it('calls Encrypter.encrypt with correct param', async () => {

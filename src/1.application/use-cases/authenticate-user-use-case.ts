@@ -31,7 +31,7 @@ export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserDat
 
     const userAggregate = userAggregateOrError.value
     const { id, password } = userAggregate.aggregateRoot
-    const passwordIsValidOrError = await hasher.compare(authenticateUserData.password, password.value)
+    const passwordIsValidOrError = await hasher.compare(password.value, authenticateUserData.password)
 
     if (passwordIsValidOrError.isLeft()) {
       return left([passwordIsValidOrError.value])
