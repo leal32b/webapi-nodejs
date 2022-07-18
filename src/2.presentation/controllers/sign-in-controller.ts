@@ -1,8 +1,8 @@
-import AuthenticateUserUseCase from '@/1.application/use-cases/authenticate-user-use-case'
-import Controller from '@/2.presentation/base/controller'
-import { HttpRequest } from '@/2.presentation/types/http-request'
-import { HttpResponse } from '@/2.presentation/types/http-response'
-import { clientError, serverError, success } from '@/2.presentation/utils/http-response'
+import AuthenticateUserUseCase, { AuthenticateUserResultDTO } from '@/1.application/use-cases/authenticate-user-use-case'
+import Controller, { AppRequest, AppResponse } from '@/2.presentation/base/controller'
+import { clientError } from '@/2.presentation/factories/client-error-factory'
+import { serverError } from '@/2.presentation/factories/server-error-factory'
+import { success } from '@/2.presentation/factories/success-factory'
 
 export type SignInData = {
   email: string
@@ -14,9 +14,9 @@ export default class SignInController extends Controller {
     authenticateUserUseCase: AuthenticateUserUseCase
   }) { super() }
 
-  async handle (httpRequest: HttpRequest<SignInData>): Promise<HttpResponse> {
+  async handle (request: AppRequest<SignInData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
     try {
-      const { body: signInData } = httpRequest
+      const { payload: signInData } = request
 
       const AuthenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
 
@@ -28,7 +28,7 @@ export default class SignInController extends Controller {
 
       return success.ok(authenticateUserResultDto)
     } catch (error) {
-      return serverError.internalServerError()
+      return serverError.internalServerError(error)
     }
   }
 }

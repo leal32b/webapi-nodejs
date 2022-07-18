@@ -1,8 +1,9 @@
 import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 import CreateUserUseCase, { CreateUserResultDTO } from '@/1.application/use-cases/create-user-use-case'
+import { AppRequest } from '@/2.presentation/base/controller'
 import SignUpController, { SignUpData } from '@/2.presentation/controllers/sign-up-controller'
-import { HttpRequest } from '@/2.presentation/types/http-request'
+import ServerError from '@/2.presentation/errors/server-error'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -14,8 +15,14 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
-const makeRequestFake = (): HttpRequest<SignUpData> => ({
-  body: {
+const makeSystemErrorFake = (): Error => ({
+  name: 'any_name',
+  message: 'any_message',
+  stack: 'any_stack'
+})
+
+const makeRequestFake = (): AppRequest<SignUpData> => ({
+  payload: {
     email: 'any@mail.com',
     name: 'any_name',
     password: 'any_password',
@@ -36,12 +43,14 @@ type SutTypes = {
   sut: SignUpController
   createUserUseCase: CreateUserUseCase
   errorFake: DomainError
-  requestFake: HttpRequest<SignUpData>
+  systemErrorFake: Error
+  requestFake: AppRequest<SignUpData>
 }
 
 const makeSut = (): SutTypes => {
   const fakes = {
     errorFake: makeErrorFake(),
+    systemErrorFake: makeSystemErrorFake(),
     requestFake: makeRequestFake()
   }
   const injection = {
@@ -67,12 +76,12 @@ describe('SignUpController', () => {
       })
     })
 
-    it('returns 200 (Ok) when valid params are provided', async () => {
+    it('returns "ok" when valid params are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(200)
+      expect(result.status).toBe('ok')
     })
 
     it('returns an User when valid params are provided', async () => {
@@ -80,7 +89,7 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.body).toEqual({
+      expect(result.payload).toEqual({
         email: 'any@mail.com',
         message: 'user created successfully'
       })
@@ -88,40 +97,40 @@ describe('SignUpController', () => {
   })
 
   describe('failure', () => {
-    it('returns 400 (Bad Request) when CreateUserUseCase returns error(s)', async () => {
+    it('returns "bad_request" when CreateUserUseCase returns any error', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(400)
+      expect(result.status).toBe('bad_request')
     })
 
-    it('returns error(s) in body when CreateUserUseCase returns error(s)', async () => {
+    it('returns errors in body when CreateUserUseCase returns errors', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.body[0]).toBeInstanceOf(DomainError)
+      expect(result.payload[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns 500 (Internal Server Error) when anything throws', async () => {
+    it('returns "internal_server_error" when anything throws', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(500)
+      expect(result.status).toBe('internal_server_error')
     })
 
     it('returns ServerError in body when anything throws', async () => {
-      const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+      const { sut, createUserUseCase, systemErrorFake, requestFake } = makeSut()
+      jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
 
       const result = await sut.handle(requestFake)
 
-      expect(result.body).toBe('internal server error')
+      expect(result.payload).toBeInstanceOf(ServerError)
     })
   })
 })

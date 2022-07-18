@@ -1,8 +1,8 @@
-import CreateUserUseCase from '@/1.application/use-cases/create-user-use-case'
-import Controller from '@/2.presentation/base/controller'
-import { HttpRequest } from '@/2.presentation/types/http-request'
-import { HttpResponse } from '@/2.presentation/types/http-response'
-import { clientError, serverError, success } from '@/2.presentation/utils/http-response'
+import CreateUserUseCase, { CreateUserResultDTO } from '@/1.application/use-cases/create-user-use-case'
+import Controller, { AppRequest, AppResponse } from '@/2.presentation/base/controller'
+import { clientError } from '@/2.presentation/factories/client-error-factory'
+import { serverError } from '@/2.presentation/factories/server-error-factory'
+import { success } from '@/2.presentation/factories/success-factory'
 
 export type SignUpData = {
   email: string
@@ -16,9 +16,9 @@ export default class SignUpController extends Controller {
     createUserUseCase: CreateUserUseCase
   }) { super() }
 
-  async handle (httpRequest: HttpRequest<SignUpData>): Promise<HttpResponse> {
+  async handle (request: AppRequest<SignUpData>): Promise<AppResponse<CreateUserResultDTO>> {
     try {
-      const { body: signUpData } = httpRequest
+      const { payload: signUpData } = request
       const createUserResultDtoOrError = await this.props.createUserUseCase.execute(signUpData)
 
       if (createUserResultDtoOrError.isLeft()) {
@@ -29,7 +29,7 @@ export default class SignUpController extends Controller {
 
       return success.ok(createUserResultDTO)
     } catch (error) {
-      return serverError.internalServerError()
+      return serverError.internalServerError(error)
     }
   }
 }
