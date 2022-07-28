@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import { EntityManager, Repository } from 'typeorm'
 
-import pg from '@/3.infra/persistence/postgres/client/pg-client'
+import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
 
 type SutTypes = {

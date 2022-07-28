@@ -1,5 +1,6 @@
+
 import UserAggregate from '@/0.domain/aggregates/user-aggregate'
-import pg from '@/3.infra/persistence/postgres/client/pg-client'
+import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
 import PgUserRepository from '@/3.infra/persistence/postgres/repositories/pg-user-repository'
 

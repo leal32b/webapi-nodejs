@@ -62,7 +62,7 @@ class PgClient {
   }
 }
 
-const pg = {
+export const pg = {
   client: null as PgClient,
 
   async connect (dataSource: DataSource): Promise<void> {
@@ -70,5 +70,3 @@ const pg = {
     await this.client.connect()
   }
 }
-
-export default pg
