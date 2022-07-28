@@ -38,7 +38,7 @@
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
     "test:staged": "npm test -- --findRelatedTests test",
     "test:ci": "npm test -- --coverage",
-    "prepare": "if test $NODE_ENV=test; then husky install; fi"
+    "prepare": "if test $NODE_ENV = test; then husky install; fi"
   },
   "dependencies": {
     "ajv": "^8.11.0",
@@ -49,7 +49,7 @@
     "fastify": "^4.0.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-    "nodemon": "^2.0.18",
+    "nodemon": "^2.0.19",
     "pg": "^8.7.3",
     "typeorm": "^0.3.7"
   },
@@ -61,7 +61,7 @@
     "@types/node": "^18.0.0",
     "@types/pg": "^8.6.5",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.30.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
     "eslint": "^8.19.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
     "eslint-plugin-import": "^2.26.0",
