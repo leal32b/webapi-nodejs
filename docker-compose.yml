@@ -17,7 +17,7 @@ services:
     container_name: webapi-container
     image: node:16.15
     working_dir: /usr/src/webapi-nodejs
-    command: bash -c "npm ci --production && npm run debug"
+    command: bash -c "npm ci --omit=dev && npm run debug"
     env_file: .env
     environment:
       - DB_POSTGRES_HOST=postgres
