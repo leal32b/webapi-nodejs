@@ -18,13 +18,13 @@ export default class SignInController extends Controller {
     try {
       const { payload: signInData } = request
 
-      const AuthenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
+      const authenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
 
-      if (AuthenticateUserResultDtoOrError.isLeft()) {
-        return clientError.unauthorized(AuthenticateUserResultDtoOrError.value)
+      if (authenticateUserResultDtoOrError.isLeft()) {
+        return clientError.unauthorized(authenticateUserResultDtoOrError.value)
       }
 
-      const authenticateUserResultDto = AuthenticateUserResultDtoOrError.value
+      const authenticateUserResultDto = authenticateUserResultDtoOrError.value
 
       return success.ok(authenticateUserResultDto)
     } catch (error) {

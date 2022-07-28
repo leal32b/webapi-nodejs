@@ -3,6 +3,7 @@ import DomainError from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
 import Hasher from '@/1.application/cryptography/hasher'
+import NotFoundError from '@/1.application/errors/not-found-error'
 import UserRepository from '@/1.application/repositories/user-repository'
 import AuthenticateUserUseCase, { AuthenticateUserData } from '@/1.application/use-cases/authenticate-user-use-case'
 
@@ -150,36 +151,45 @@ describe('AuthenticateUserUseCase', () => {
       const { sut, userRepository, errorFake, authenticateUserDataFake } = makeSut()
       jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
-      const promise = sut.execute(authenticateUserDataFake)
+      const result = await sut.execute(authenticateUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
+    })
+
+    it('returns NotFoundError when userRepository.readByEmail returns null', async () => {
+      const { sut, userRepository, authenticateUserDataFake } = makeSut()
+      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(right(null))
+
+      const result = await sut.execute(authenticateUserDataFake)
+
+      expect(result.value[0]).toBeInstanceOf(NotFoundError)
     })
 
     it('returns an Error when Hasher.compare fails', async () => {
       const { sut, hasher, errorFake, authenticateUserDataFake } = makeSut()
       jest.spyOn(hasher, 'compare').mockResolvedValueOnce(left(errorFake))
 
-      const promise = sut.execute(authenticateUserDataFake)
+      const result = await sut.execute(authenticateUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
     })
 
     it('returns an Error when Encrypter.encrypt fails', async () => {
       const { sut, encrypter, errorFake, authenticateUserDataFake } = makeSut()
       jest.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
 
-      const promise = sut.execute(authenticateUserDataFake)
+      const result = await sut.execute(authenticateUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
     })
 
     it('returns an Error when UserRepository.update fails', async () => {
       const { sut, userRepository, errorFake, authenticateUserDataFake } = makeSut()
       jest.spyOn(userRepository, 'update').mockResolvedValueOnce(left([errorFake]))
 
-      const promise = sut.execute(authenticateUserDataFake)
+      const result = await sut.execute(authenticateUserDataFake)
 
-      await expect(promise).resolves.toEqual(left([errorFake]))
+      expect(result.value[0]).toEqual(errorFake)
     })
   })
 })
