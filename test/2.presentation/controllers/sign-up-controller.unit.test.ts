@@ -81,7 +81,7 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('ok')
+      expect(result.statusCode).toBe(200)
     })
 
     it('returns an User when valid params are provided', async () => {
@@ -103,7 +103,7 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('bad_request')
+      expect(result.statusCode).toBe(400)
     })
 
     it('returns errors in body when CreateUserUseCase returns errors', async () => {
@@ -121,7 +121,7 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('internal_server_error')
+      expect(result.statusCode).toBe(500)
     })
 
     it('returns ServerError in body when anything throws', async () => {

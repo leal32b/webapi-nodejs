@@ -34,7 +34,7 @@ describe('clientError', () => {
 
       expect(result).toEqual({
         payload: expect.any(DomainError),
-        status: 'bad_request'
+        statusCode: 400
       })
     })
 
@@ -45,7 +45,7 @@ describe('clientError', () => {
 
       expect(result).toEqual({
         payload: expect.any(DomainError),
-        status: 'unauthorized'
+        statusCode: 401
       })
     })
   })

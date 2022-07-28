@@ -35,7 +35,7 @@ describe('serverError', () => {
 
       expect(result).toEqual({
         payload: expect.any(ServerError),
-        status: 'internal_server_error'
+        statusCode: 500
       })
     })
   })

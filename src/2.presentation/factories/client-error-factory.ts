@@ -9,14 +9,14 @@ export const clientError = {
   badRequest (error: any): AppResponse<typeof error> {
     return {
       payload: error,
-      status: ClientErrorStatus.badRequest
+      statusCode: 400
     }
   },
 
   unauthorized (error: any): AppResponse<typeof error> {
     return {
       payload: error,
-      status: ClientErrorStatus.unauthorized
+      statusCode: 401
     }
   }
 }

@@ -11,7 +11,7 @@ export const serverError = {
 
     return {
       payload: serverError,
-      status: ServerErrorStatus.internalServerError
+      statusCode: 500
     }
   }
 }

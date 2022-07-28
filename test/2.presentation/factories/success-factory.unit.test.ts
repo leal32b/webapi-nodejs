@@ -35,7 +35,7 @@ describe('success', () => {
 
       expect(result).toEqual({
         payload: { anyKey: 'any_value' },
-        status: 'ok'
+        statusCode: 200
       })
     })
   })

@@ -77,7 +77,7 @@ describe('SignInController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('ok')
+      expect(result.statusCode).toBe(200)
     })
 
     it('returns a accessToken when valid credentials are provided', async () => {
@@ -99,7 +99,7 @@ describe('SignInController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('unauthorized')
+      expect(result.statusCode).toBe(401)
     })
 
     it('returns errors in body when invalid credentials are provided', async () => {
@@ -117,7 +117,7 @@ describe('SignInController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.status).toBe('internal_server_error')
+      expect(result.statusCode).toBe(500)
     })
 
     it('returns ServerError in body when anything throws', async () => {

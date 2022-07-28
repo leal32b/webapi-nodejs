@@ -6,7 +6,7 @@ export type AppRequest<T> = {
 
 export type AppResponse<T> = {
   payload: T | DomainError[]
-  status: string
+  statusCode: number
 }
 
 export default abstract class Controller {
