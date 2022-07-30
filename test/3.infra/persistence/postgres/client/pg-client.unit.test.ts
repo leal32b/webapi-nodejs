@@ -2,28 +2,39 @@ import 'dotenv/config'
 
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
+import UserEntity from '@/0.domain/entities/user/user-entity'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
-import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
+
+const makeManagerStub = (): EntityManager => {
+  return new EntityManager(new DataSource({ type: 'postgres' }))
+}
+
+const makeDataSourceMock = (): DataSource => ({
+  initialize: jest.fn(async (): Promise<void> => {}),
+  isInitialized: true,
+  destroy: jest.fn(async (): Promise<void> => {}),
+  manager: makeManagerStub(),
+  getRepository: jest.fn((): Repository<UserEntity> => {
+    return new Repository(UserEntity, makeManagerStub())
+  })
+}) as any
 
 type SutTypes = {
   sut: typeof pg.client
+  dataSourceMock: DataSource
 }
 
 const makeSut = (): SutTypes => {
+  const fakes = {
+    dataSourceMock: makeDataSourceMock()
+  }
+  pg.connect(fakes.dataSourceMock)
   const sut = pg.client
 
-  return { sut }
+  return { sut, ...fakes }
 }
 
 describe('PgClient', () => {
-  beforeAll(async () => {
-    await pg.connect(testDataSource)
-  })
-
-  afterAll(async () => {
-    await pg.client.close()
-  })
-
   describe('success', () => {
     it('returns true when dataSource is initialized', async () => {
       const { sut } = makeSut()
@@ -33,9 +44,9 @@ describe('PgClient', () => {
       expect(result).toBe(true)
     })
 
-    it('returns false when dataSource is not initialized', async () => {
-      const { sut } = makeSut()
-      await sut.close()
+    xit('returns false when dataSource is not initialized', async () => {
+      const { sut, dataSourceMock } = makeSut()
+      jest.spyOn(dataSourceMock, 'isInitialized', 'get').mockReturnValueOnce(false as never)
 
       const result = sut.isInitialized()
 
@@ -43,13 +54,11 @@ describe('PgClient', () => {
     })
 
     it('reconnects when dataSource is down', async () => {
-      const { sut } = makeSut()
-      await sut.close()
+      const { sut, dataSourceMock } = makeSut()
 
       await sut.reconnect()
-      const result = sut.isInitialized()
 
-      expect(result).toBe(true)
+      expect(dataSourceMock.initialize).toBeCalled()
     })
 
     it('gets dataSource manager', async () => {
@@ -71,8 +80,8 @@ describe('PgClient', () => {
 
   describe('failure', () => {
     it('returns Left if connect throws', async () => {
-      const { sut } = makeSut()
-      await sut.close()
+      const { dataSourceMock } = makeSut()
+      jest.spyOn(dataSourceMock, 'initialize').mockRejectedValueOnce(new Error())
 
       const result = await pg.connect(new DataSource({
         type: 'postgres',
@@ -82,6 +91,15 @@ describe('PgClient', () => {
         password: 'any_password',
         database: 'any_database'
       }))
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left if connect throws', async () => {
+      const { sut, dataSourceMock } = makeSut()
+      jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
+
+      const result = await sut.close()
 
       expect(result.isLeft()).toBe(true)
     })
