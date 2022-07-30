@@ -64,4 +64,34 @@ describe('UserPostgresRepository', () => {
       expect(result.isRight()).toBe(true)
     })
   })
+
+  describe('failure', () => {
+    it('returns Left on create when it throws', async () => {
+      const { sut, userAggregateFake } = makeSut()
+      jest.spyOn(pg.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+      const result = await sut.create(userAggregateFake)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left on readByEmail when it throws', async () => {
+      const { sut } = makeSut()
+      const email = 'any@mail.com'
+      jest.spyOn(pg.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+      const result = await sut.readByEmail(email)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left on update when it throws', async () => {
+      const { sut, userAggregateFake } = makeSut()
+      jest.spyOn(pg.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+      const result = await sut.update(userAggregateFake)
+
+      expect(result.isLeft()).toBe(true)
+    })
+  })
 })

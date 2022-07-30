@@ -5,6 +5,8 @@
   "cSpell.words": [
     "Encrypter",
     "Fastify",
-    "Middlewares"
+    "Metadatas",
+    "Middlewares",
+    "typeorm"
   ]
 }

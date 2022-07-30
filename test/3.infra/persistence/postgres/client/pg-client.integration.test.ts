@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { EntityManager, Repository } from 'typeorm'
+import { DataSource, EntityManager, Repository } from 'typeorm'
 
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
@@ -10,7 +10,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  return { sut: pg.client }
+  const sut = pg.client
+
+  return { sut }
 }
 
 describe('PgClient', () => {
@@ -31,7 +33,7 @@ describe('PgClient', () => {
       expect(result).toBe(true)
     })
 
-    xit('returns false when dataSource is not initialized', async () => {
+    it('returns false when dataSource is not initialized', async () => {
       const { sut } = makeSut()
       await sut.close()
 
@@ -40,7 +42,7 @@ describe('PgClient', () => {
       expect(result).toBe(false)
     })
 
-    xit('reconnects when dataSource is down', async () => {
+    it('reconnects when dataSource is down', async () => {
       const { sut } = makeSut()
       await sut.close()
 
@@ -64,6 +66,24 @@ describe('PgClient', () => {
       const result = await sut.getRepository('PgUser')
 
       expect(result).toBeInstanceOf(Repository)
+    })
+  })
+
+  describe('failure', () => {
+    it('returns Left if connect throws', async () => {
+      const { sut } = makeSut()
+      await sut.close()
+
+      const result = await pg.connect(new DataSource({
+        type: 'postgres',
+        host: 'invalid_host',
+        port: 5432,
+        username: 'any_username',
+        password: 'any_password',
+        database: 'any_database'
+      }))
+
+      expect(result.isLeft()).toBe(true)
     })
   })
 })

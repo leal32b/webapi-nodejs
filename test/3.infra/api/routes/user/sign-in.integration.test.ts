@@ -68,4 +68,22 @@ describe('SignInRoute', () => {
       })
     })
   })
+
+  describe('failure', () => {
+    it('returns 401 when when email is not found', async () => {
+      const { sut, expressApp } = makeSut()
+      expressApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      await request(expressApp.app)
+        .post('/user/sign-in')
+        .send({
+          email: 'not_in_base@mail.com',
+          password: 'any_password'
+        })
+        .expect(401)
+    })
+  })
 })

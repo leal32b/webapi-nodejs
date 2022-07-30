@@ -1,5 +1,7 @@
 import { DataSource, EntityManager, EntityTarget, Repository } from 'typeorm'
 
+import { Either, left, right } from '@/0.domain/utils/either'
+
 type constructParams = {
   dataSource: DataSource
 }
@@ -7,28 +9,36 @@ type constructParams = {
 class PgClient {
   constructor (private readonly props: constructParams) {}
 
-  async connect (message?: string): Promise<void> {
-    if (this.props.dataSource.isInitialized) {
-      return
-    }
-
+  async connect (message?: string): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.initialize()
-
       console.log(message || 'connected to dataSource')
+
+      return right(null)
     } catch (error) {
-      console.log(error)
+      console.log('connect', error)
+
+      return left(error)
     }
   }
 
-  async reconnect (): Promise<void> {
-    this.connect('reconnected to dataSource')
+  async reconnect (): Promise<Either<Error, void>> {
+    const result = await this.connect('reconnected to dataSource')
+
+    return result
   }
 
-  async close (): Promise<void> {
-    await this.props.dataSource.destroy()
+  async close (): Promise<Either<Error, void>> {
+    try {
+      await this.props.dataSource.destroy()
+      console.log('disconnected from dataSource')
 
-    console.log('disconnected from dataSource')
+      return right(null)
+    } catch (error) {
+      console.log('close', error)
+
+      return left(error)
+    }
   }
 
   isInitialized (): boolean {
@@ -46,14 +56,12 @@ class PgClient {
 
     const { database } = this.props.dataSource.options
 
-    if (!(database as string).includes('test')) {
-      return
-    }
+    if ((database as string).includes('test')) {
+      const entities = this.props.dataSource.entityMetadatas
 
-    const entities = this.props.dataSource.entityMetadatas
-
-    for await (const entity of entities) {
-      await this.props.dataSource.getRepository(entity.name).clear()
+      for await (const entity of entities) {
+        await this.props.dataSource.getRepository(entity.name).clear()
+      }
     }
   }
 
@@ -65,8 +73,10 @@ class PgClient {
 export const pg = {
   client: null as PgClient,
 
-  async connect (dataSource: DataSource): Promise<void> {
+  async connect (dataSource: DataSource): Promise<Either<Error, void>> {
     this.client = new PgClient({ dataSource })
-    await this.client.connect()
+    const result = await this.client.connect()
+
+    return result
   }
 }
