@@ -20,7 +20,7 @@ export default class ExpressAdapter implements WebApp {
       const { path, routes } = router
 
       for (const route of routes) {
-        this.app[route.type](`${path}${route.path}`, this.expressRoute(route.controller))
+        this.app[route.type](`/api${path}${route.path}`, this.expressRoute(route.controller))
       }
 
       return right(null)

@@ -40,7 +40,7 @@ describe('SignUpRoute', () => {
       })
 
       await request(expressApp.app)
-        .post('/user/sign-up')
+        .post('/api/user/sign-up')
         .send({
           name: 'any_name',
           email: 'any@mail.com',
@@ -58,7 +58,7 @@ describe('SignUpRoute', () => {
       })
 
       const result = await request(expressApp.app)
-        .post('/user/sign-up')
+        .post('/api/user/sign-up')
         .send({
           name: 'any_name',
           email: 'another@mail.com',

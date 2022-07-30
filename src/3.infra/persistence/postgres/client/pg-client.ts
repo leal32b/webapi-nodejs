@@ -16,7 +16,7 @@ class PgClient {
 
       return right(null)
     } catch (error) {
-      console.log('connect', error)
+      // console.log('connect', error)
 
       return left(error)
     }

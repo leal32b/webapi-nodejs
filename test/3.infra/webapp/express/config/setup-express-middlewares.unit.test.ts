@@ -28,7 +28,7 @@ describe('BodyParser', () => {
     it('parses body as json', async () => {
       const { sut } = makeSut()
       sut.setRouter({
-        path: '/api',
+        path: '/middleware',
         routes: [{
           path: '/test_body_parser',
           type: RouteType.POST,
@@ -38,7 +38,7 @@ describe('BodyParser', () => {
       const body = { key: 'any_value' }
 
       await request(sut.app)
-        .post('/api/test_body_parser')
+        .post('/api/middleware/test_body_parser')
         .send(body)
         .expect(body)
     })
@@ -50,7 +50,7 @@ describe('ContentTypes', () => {
     it('returns default content type as json', async () => {
       const { sut } = makeSut()
       sut.setRouter({
-        path: '/api',
+        path: '/middleware',
         routes: [{
           path: '/test_content_type',
           type: RouteType.GET,
@@ -59,7 +59,7 @@ describe('ContentTypes', () => {
       })
 
       await request(sut.app)
-        .get('/api/test_content_type')
+        .get('/api/middleware/test_content_type')
         .expect('content-type', /json/)
     })
   })
@@ -70,7 +70,7 @@ describe('CORS', () => {
     it('enables CORS', async () => {
       const { sut } = makeSut()
       sut.setRouter({
-        path: '/api',
+        path: '/middleware',
         routes: [{
           path: '/test_cors',
           type: RouteType.GET,
@@ -79,7 +79,7 @@ describe('CORS', () => {
       })
 
       await request(sut.app)
-        .get('/api/test_cors')
+        .get('/api/middleware/test_cors')
         .expect('access-control-allow-origin', '*')
         .expect('access-control-allow-methods', '*')
         .expect('access-control-allow-headers', '*')

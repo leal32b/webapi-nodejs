@@ -8,13 +8,12 @@ import { setRouters } from '@/4.main/config/set-routers'
 
 const bootstrap = async (): Promise<void> => {
   const PORT = parseInt(process.env.PORT)
-  const app = new ExpressAdapter()
-
-  setRouters(app, 'dist/4.main/routers')
+  const webapp = new ExpressAdapter()
 
   await pg.connect(defaultDataSource)
+  await setRouters(webapp, 'dist/4.main/routers')
 
-  app.listen(PORT, () => {
+  webapp.listen(PORT, () => {
     console.log(`server running at http://localhost:${PORT}`)
   })
 }

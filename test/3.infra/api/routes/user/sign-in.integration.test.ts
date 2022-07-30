@@ -40,7 +40,7 @@ describe('SignInRoute', () => {
       })
 
       await request(expressApp.app)
-        .post('/user/sign-in')
+        .post('/api/user/sign-in')
         .send({
           email: 'any@mail.com',
           password: 'any_password'
@@ -56,7 +56,7 @@ describe('SignInRoute', () => {
       })
 
       const result = await request(expressApp.app)
-        .post('/user/sign-in')
+        .post('/api/user/sign-in')
         .send({
           email: 'any@mail.com',
           password: 'any_password'
@@ -78,7 +78,7 @@ describe('SignInRoute', () => {
       })
 
       await request(expressApp.app)
-        .post('/user/sign-in')
+        .post('/api/user/sign-in')
         .send({
           email: 'not_in_base@mail.com',
           password: 'any_password'
