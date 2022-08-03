@@ -15,3 +15,4 @@
 [ ] verify user.unit.test.ts prop gets (is it necessary to verify it's value?)
 [ ] add validation for errors creation
 [ ] verify fail cases for identifier and random tests
+[ ] move IntegerGreaterThanZero to a common place

@@ -2,8 +2,8 @@ import 'dotenv/config'
 
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
-import UserEntity from '@/0.domain/entities/user/user-entity'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
+import { PgUser } from '@/3.infra/persistence/postgres/entities/pg-user'
 
 const makeManagerStub = (): EntityManager => {
   return new EntityManager(new DataSource({ type: 'postgres' }))
@@ -14,8 +14,8 @@ const makeDataSourceMock = (): DataSource => ({
   isInitialized: true,
   destroy: jest.fn(async (): Promise<void> => {}),
   manager: makeManagerStub(),
-  getRepository: jest.fn((): Repository<UserEntity> => {
-    return new Repository(UserEntity, makeManagerStub())
+  getRepository: jest.fn((): Repository<PgUser> => {
+    return new Repository(PgUser, makeManagerStub())
   })
 }) as any
 
@@ -42,15 +42,6 @@ describe('PgClient', () => {
       const result = sut.isInitialized()
 
       expect(result).toBe(true)
-    })
-
-    xit('returns false when dataSource is not initialized', async () => {
-      const { sut, dataSourceMock } = makeSut()
-      jest.spyOn(dataSourceMock, 'isInitialized', 'get').mockReturnValueOnce(false as never)
-
-      const result = sut.isInitialized()
-
-      expect(result).toBe(false)
     })
 
     it('reconnects when dataSource is down', async () => {

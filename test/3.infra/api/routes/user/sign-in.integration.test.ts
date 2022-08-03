@@ -4,16 +4,20 @@ import { Route } from '@/3.infra/api/app/web-app'
 import signInRoute from '@/3.infra/api/routes/user/sign-in-route'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
+import PgUserFactory from '@/3.infra/persistence/postgres/factories/user-factory'
 import ExpressApp from '@/3.infra/webapp/express/express-adapter'
+import config from '@/4.main/config/config'
 import signInControllerFactory from '@/4.main/factories/user/sign-in-controller-factory'
 
 type SutTypes = {
   sut: Route
+  pgUserFactory: PgUserFactory
   expressApp: ExpressApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
+    pgUserFactory: PgUserFactory.create(),
     expressApp: new ExpressApp()
   }
   const sut = signInRoute(signInControllerFactory())
@@ -32,8 +36,12 @@ describe('SignInRoute', () => {
   })
 
   describe('success', () => {
-    xit('returns 200 on success', async () => {
-      const { sut, expressApp } = makeSut()
+    it('returns 200 on success', async () => {
+      const { sut, pgUserFactory, expressApp } = makeSut()
+      const email = 'any@mail.com'
+      const password = 'any_password'
+      const hashedPassword = (await config.hasher.hash(password)).value as string
+      await pgUserFactory.createFixtures({ email, password: hashedPassword })
       expressApp.setRouter({
         path: '/user',
         routes: [sut]
@@ -48,8 +56,12 @@ describe('SignInRoute', () => {
         .expect(200)
     })
 
-    xit('returns an accessToken on success', async () => {
-      const { sut, expressApp } = makeSut()
+    it('returns an accessToken on success', async () => {
+      const { sut, pgUserFactory, expressApp } = makeSut()
+      const email = 'any2@mail.com'
+      const password = 'any_password'
+      const hashedPassword = (await config.hasher.hash(password)).value as string
+      await pgUserFactory.createFixtures({ email, password: hashedPassword })
       expressApp.setRouter({
         path: '/user',
         routes: [sut]
@@ -58,7 +70,7 @@ describe('SignInRoute', () => {
       const result = await request(expressApp.app)
         .post('/api/user/sign-in')
         .send({
-          email: 'any@mail.com',
+          email: 'any2@mail.com',
           password: 'any_password'
         })
 

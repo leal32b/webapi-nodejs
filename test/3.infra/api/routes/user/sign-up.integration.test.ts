@@ -4,16 +4,19 @@ import { Route } from '@/3.infra/api/app/web-app'
 import signUpRoute from '@/3.infra/api/routes/user/sign-up-route'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
+import PgUserFactory from '@/3.infra/persistence/postgres/factories/user-factory'
 import ExpressApp from '@/3.infra/webapp/express/express-adapter'
 import signUpControllerFactory from '@/4.main/factories/user/sign-up-controller-factory'
 
 type SutTypes = {
   sut: Route
+  pgUserFactory: PgUserFactory
   expressApp: ExpressApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
+    pgUserFactory: PgUserFactory.create(),
     expressApp: new ExpressApp()
   }
   const sut = signUpRoute(signUpControllerFactory())
@@ -70,6 +73,55 @@ describe('SignUpRoute', () => {
         email: expect.any(String),
         message: 'user created successfully'
       })
+    })
+  })
+
+  describe('failure', () => {
+    it('returns 400 when email is already in use', async () => {
+      const { sut, pgUserFactory, expressApp } = makeSut()
+      const email = 'any@mail.com'
+      await pgUserFactory.createFixtures({ email })
+      expressApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      await request(expressApp.app)
+        .post('/api/user/sign-up')
+        .send({
+          name: 'any_name',
+          email: 'any@mail.com',
+          password: 'any_password',
+          passwordRetype: 'any_password'
+        })
+        .expect(400)
+    })
+
+    it('returns email already in use error message', async () => {
+      const { sut, pgUserFactory, expressApp } = makeSut()
+      const email = 'any@mail.com'
+      await pgUserFactory.createFixtures({ email })
+      expressApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      const result = await request(expressApp.app)
+        .post('/api/user/sign-up')
+        .send({
+          name: 'any_name',
+          email: 'any@mail.com',
+          password: 'any_password',
+          passwordRetype: 'any_password'
+        })
+
+      expect(result.body).toEqual([{
+        props: {
+          message: 'email already in use',
+          field: 'email',
+          input: 'any@mail.com'
+        }
+      }])
     })
   })
 })
