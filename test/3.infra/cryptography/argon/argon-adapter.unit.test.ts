@@ -1,7 +1,7 @@
 import argon2id from 'argon2'
 
-import DomainError from '@/0.domain/base/domain-error'
-import ArgonAdapter from '@/3.infra/cryptography/argon/argon-adapter'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { ArgonAdapter } from '@/3.infra/cryptography/argon/argon-adapter'
 
 jest.mock('argon2', () => ({
   async hash (): Promise<string> {

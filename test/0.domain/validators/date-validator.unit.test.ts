@@ -1,5 +1,5 @@
-import InvalidDateError from '@/0.domain/errors/invalid-date-error'
-import DateValidator from '@/0.domain/validators/date-validator'
+import { InvalidDateError } from '@/0.domain/errors/invalid-date-error'
+import { DateValidator } from '@/0.domain/validators/date-validator'
 
 type SutTypes = {
   sut: DateValidator

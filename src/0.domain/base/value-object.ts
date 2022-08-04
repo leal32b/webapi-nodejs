@@ -1,8 +1,8 @@
-import DomainError from '@/0.domain/base/domain-error'
-import Validator from '@/0.domain/base/validator'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { Validator } from '@/0.domain/base/validator'
 import { Either, left, right } from '@/0.domain/utils/either'
 
-export default abstract class ValueObject<T> {
+export abstract class ValueObject<T> {
   constructor (readonly value: T) {}
 
   static validate (input: any, validators: Array<Validator<any>>): Either<DomainError[], void> {

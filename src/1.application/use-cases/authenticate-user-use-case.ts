@@ -1,10 +1,10 @@
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import UseCase from '@/1.application/base/use-case'
-import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
-import Hasher from '@/1.application/cryptography/hasher'
-import NotFoundError from '@/1.application/errors/not-found-error'
-import UserRepository from '@/1.application/repositories/user-repository'
+import { UseCase } from '@/1.application/base/use-case'
+import { Encrypter, TokenType } from '@/1.application/cryptography/encrypter'
+import { Hasher } from '@/1.application/cryptography/hasher'
+import { NotFoundError } from '@/1.application/errors/not-found-error'
+import { UserRepository } from '@/1.application/repositories/user-repository'
 
 export type AuthenticateUserData = {
   email: string
@@ -15,7 +15,7 @@ export type AuthenticateUserResultDTO = {
   accessToken: string
   message: string
 }
-export default class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, AuthenticateUserResultDTO> {
+export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, AuthenticateUserResultDTO> {
   constructor (private readonly props: {
     userRepository: UserRepository
     hasher: Hasher

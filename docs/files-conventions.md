@@ -5,7 +5,7 @@
 ## entities
 - `user.ts`
 - ```typescript
-  export default class User {
+  export class User {
     constructor (readonly props: {
       readonly id: string
       readonly name: string
@@ -28,7 +28,7 @@
   import User from '@/0.domain/entities/user'
   import { UserData } from '@/0.domain/types/user'
   
-  export default interface CreateUser {
+  export interface CreateUser {
     create: (userData: UserData) => Promise<User>
   }
   ```

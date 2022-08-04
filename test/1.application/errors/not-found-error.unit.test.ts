@@ -1,4 +1,4 @@
-import NotFoundError from '@/1.application/errors/not-found-error'
+import { NotFoundError } from '@/1.application/errors/not-found-error'
 
 type SutTypes = {
   sut: typeof NotFoundError

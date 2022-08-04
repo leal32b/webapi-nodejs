@@ -1,4 +1,4 @@
-export default class Random {
+export class Random {
   private readonly A_multiplier: number = 1103515245
   private readonly C_incrementer: number = 12345
   private readonly M_modules: number = 2147483647

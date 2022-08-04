@@ -1,4 +1,4 @@
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { clientError } from '@/2.presentation/factories/client-error-factory'
 
 const makeErrorFake = (): DomainError => {

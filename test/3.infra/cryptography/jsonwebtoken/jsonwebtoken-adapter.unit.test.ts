@@ -2,9 +2,9 @@ import 'dotenv/config'
 
 import jwt, { JwtPayload } from 'jsonwebtoken'
 
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { TokenData, TokenType } from '@/1.application/cryptography/encrypter'
-import JsonwebtokenAdapter from '@/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
+import { JsonwebtokenAdapter } from '@/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 
 jest.mock('jsonwebtoken', () => ({
   async sign (): Promise<string> {

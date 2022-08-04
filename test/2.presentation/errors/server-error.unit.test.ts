@@ -1,4 +1,4 @@
-import ServerError from '@/2.presentation/errors/server-error'
+import { ServerError } from '@/2.presentation/errors/server-error'
 
 type SutTypes = {
   sut: typeof ServerError

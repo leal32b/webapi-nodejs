@@ -1,11 +1,11 @@
 import argon2id from 'argon2'
 
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import Hasher from '@/1.application/cryptography/hasher'
-import ServerError from '@/2.presentation/errors/server-error'
+import { Hasher } from '@/1.application/cryptography/hasher'
+import { ServerError } from '@/2.presentation/errors/server-error'
 
-export default class ArgonAdapter implements Hasher {
+export class ArgonAdapter implements Hasher {
   constructor (private readonly props: {
     salt: number
   }) {}

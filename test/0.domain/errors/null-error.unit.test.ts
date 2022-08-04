@@ -1,4 +1,4 @@
-import NullError from '@/0.domain/errors/null-error'
+import { NullError } from '@/0.domain/errors/null-error'
 
 type SutTypes = {
   sut: typeof NullError

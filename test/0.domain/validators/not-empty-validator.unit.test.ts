@@ -1,5 +1,5 @@
-import EmptyError from '@/0.domain/errors/empty-error'
-import NotEmptyValidator from '@/0.domain/validators/not-empty-validator'
+import { EmptyError } from '@/0.domain/errors/empty-error'
+import { NotEmptyValidator } from '@/0.domain/validators/not-empty-validator'
 
 type SutTypes = {
   sut: NotEmptyValidator

@@ -1,13 +1,13 @@
-import DomainError from '@/0.domain/base/domain-error'
-import ValueObject from '@/0.domain/base/value-object'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { ValueObject } from '@/0.domain/base/value-object'
 import { Either, left, right } from '@/0.domain/utils/either'
-import Identifier from '@/0.domain/utils/identifier'
+import { Identifier } from '@/0.domain/utils/identifier'
 
 type Params = {
   [key: string]: Either<DomainError[], ValueObject<any>>
 }
 
-export default abstract class Entity<T> {
+export abstract class Entity<T> {
   protected readonly props: T & { id: Identifier }
 
   constructor (props: T, id?: string) {

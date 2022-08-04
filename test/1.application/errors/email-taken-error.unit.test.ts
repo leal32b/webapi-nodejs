@@ -1,4 +1,4 @@
-import EmailTakenError from '@/1.application/errors/email-taken-error'
+import { EmailTakenError } from '@/1.application/errors/email-taken-error'
 
 type SutTypes = {
   sut: typeof EmailTakenError

@@ -1,9 +1,9 @@
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify'
 
-import Controller, { AppRequest } from '@/2.presentation/base/controller'
-import WebApp, { Router } from '@/3.infra/api/app/web-app'
+import { Controller, AppRequest } from '@/2.presentation/base/controller'
+import { WebApp, Router } from '@/3.infra/api/app/web-app'
 
-export default class FastifyAdapter implements WebApp {
+export class FastifyAdapter implements WebApp {
   private readonly app: FastifyInstance
 
   constructor () {

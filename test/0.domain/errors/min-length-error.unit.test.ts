@@ -1,4 +1,4 @@
-import MinLengthError from '@/0.domain/errors/min-length-error'
+import { MinLengthError } from '@/0.domain/errors/min-length-error'
 
 type SutTypes = {
   sut: typeof MinLengthError

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { DataSource } from 'typeorm'
 
-import PgFactory from '@/3.infra/persistence/postgres/base/pg-factory'
+import { PgFactory } from '@/3.infra/persistence/postgres/base/pg-factory'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { PgUser } from '@/3.infra/persistence/postgres/entities/pg-user'
 

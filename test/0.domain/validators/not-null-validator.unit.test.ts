@@ -1,5 +1,5 @@
-import NullError from '@/0.domain/errors/null-error'
-import NotNullValidator from '@/0.domain/validators/not-null-validator'
+import { NullError } from '@/0.domain/errors/null-error'
+import { NotNullValidator } from '@/0.domain/validators/not-null-validator'
 
 type SutTypes = {
   sut: NotNullValidator

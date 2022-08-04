@@ -5,6 +5,6 @@ type ConstructParams = {
   stack?: string
 }
 
-export default abstract class DomainError {
+export abstract class DomainError {
   constructor (readonly props: ConstructParams) {}
 }

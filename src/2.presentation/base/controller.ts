@@ -1,4 +1,4 @@
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 
 export type AppRequest<T> = {
   payload: T
@@ -9,6 +9,6 @@ export type AppResponse<T> = {
   statusCode: number
 }
 
-export default abstract class Controller {
+export abstract class Controller {
   abstract handle (request: AppRequest<any>): Promise<AppResponse<any>>
 }

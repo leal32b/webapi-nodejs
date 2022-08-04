@@ -1,4 +1,4 @@
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { success } from '@/2.presentation/factories/success-factory'
 
 const makeErrorFake = (): DomainError => {

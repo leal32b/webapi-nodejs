@@ -1,6 +1,6 @@
-import DomainError from '@/0.domain/base/domain-error'
-import Validator from '@/0.domain/base/validator'
-import ValueObject from '@/0.domain/base/value-object'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { Validator } from '@/0.domain/base/validator'
+import { ValueObject } from '@/0.domain/base/value-object'
 import { Either, left, right } from '@/0.domain/utils/either'
 
 const makeErrorFake = (): DomainError => {

@@ -1,12 +1,12 @@
-import Validator from '@/0.domain/base/validator'
-import MinLengthError from '@/0.domain/errors/min-length-error'
+import { Validator } from '@/0.domain/base/validator'
+import { MinLengthError } from '@/0.domain/errors/min-length-error'
 import { Either, left, right } from '@/0.domain/utils/either'
 
 type Props = {
   minLength: number
 }
 
-export default class MinLengthValidator extends Validator<Props> {
+export class MinLengthValidator extends Validator<Props> {
   validate (field: string, input: string): Either<MinLengthError, void> {
     const { minLength } = this.props
 

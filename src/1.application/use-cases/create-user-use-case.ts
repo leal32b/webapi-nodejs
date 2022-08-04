@@ -1,12 +1,12 @@
-import UserAggregate from '@/0.domain/aggregates/user-aggregate'
-import DomainError from '@/0.domain/base/domain-error'
+import { UserAggregate } from '@/0.domain/aggregates/user-aggregate'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import UseCase from '@/1.application/base/use-case'
-import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
-import Hasher from '@/1.application/cryptography/hasher'
-import EmailTakenError from '@/1.application/errors/email-taken-error'
-import InvalidPasswordError from '@/1.application/errors/invalid-password-error'
-import UserRepository from '@/1.application/repositories/user-repository'
+import { UseCase } from '@/1.application/base/use-case'
+import { Encrypter, TokenType } from '@/1.application/cryptography/encrypter'
+import { Hasher } from '@/1.application/cryptography/hasher'
+import { EmailTakenError } from '@/1.application/errors/email-taken-error'
+import { InvalidPasswordError } from '@/1.application/errors/invalid-password-error'
+import { UserRepository } from '@/1.application/repositories/user-repository'
 
 export type CreateUserData = {
   name: string
@@ -20,7 +20,7 @@ export type CreateUserResultDTO = {
   message: string
 }
 
-export default class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultDTO> {
+export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultDTO> {
   constructor (private readonly props: {
     userRepository: UserRepository
     hasher: Hasher

@@ -1,4 +1,4 @@
-import MaxLengthError from '@/0.domain/errors/max-length-error'
+import { MaxLengthError } from '@/0.domain/errors/max-length-error'
 
 type SutTypes = {
   sut: typeof MaxLengthError

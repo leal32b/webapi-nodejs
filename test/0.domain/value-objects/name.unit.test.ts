@@ -1,6 +1,6 @@
-import MaxLengthError from '@/0.domain/errors/max-length-error'
-import MinLengthError from '@/0.domain/errors/min-length-error'
-import Name from '@/0.domain/value-objects/name'
+import { MaxLengthError } from '@/0.domain/errors/max-length-error'
+import { MinLengthError } from '@/0.domain/errors/min-length-error'
+import { Name } from '@/0.domain/value-objects/name'
 
 type SutTypes = {
   sut: typeof Name

@@ -1,4 +1,4 @@
-import Random from '@/0.domain/utils/random'
+import { Random } from '@/0.domain/utils/random'
 
 type SutTypes = {
   sut: Random

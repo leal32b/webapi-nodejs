@@ -1,4 +1,4 @@
-import Identifier from '@/0.domain/utils/identifier'
+import { Identifier } from '@/0.domain/utils/identifier'
 
 type SutTypes = {
   sut: Identifier

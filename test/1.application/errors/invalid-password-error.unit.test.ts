@@ -1,4 +1,4 @@
-import InvalidPasswordError from '@/1.application/errors/invalid-password-error'
+import { InvalidPasswordError } from '@/1.application/errors/invalid-password-error'
 
 type SutTypes = {
   sut: typeof InvalidPasswordError

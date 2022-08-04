@@ -1,12 +1,12 @@
 import express, { Express, Request, RequestHandler, Response } from 'express'
 
 import { Either, left, right } from '@/0.domain/utils/either'
-import Controller, { AppRequest } from '@/2.presentation/base/controller'
-import ServerError from '@/2.presentation/errors/server-error'
-import WebApp, { Router } from '@/3.infra/api/app/web-app'
-import setupExpressMiddlewares from '@/3.infra/webapp/express/config/setup-express-middlewares'
+import { Controller, AppRequest } from '@/2.presentation/base/controller'
+import { ServerError } from '@/2.presentation/errors/server-error'
+import { WebApp, Router } from '@/3.infra/api/app/web-app'
+import { setupExpressMiddlewares } from '@/3.infra/webapp/express/config/setup-express-middlewares'
 
-export default class ExpressAdapter implements WebApp {
+export class ExpressAdapter implements WebApp {
   readonly app: Express
 
   constructor () {

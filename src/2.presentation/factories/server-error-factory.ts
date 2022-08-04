@@ -1,5 +1,5 @@
 import { AppResponse } from '@/2.presentation/base/controller'
-import ServerError from '@/2.presentation/errors/server-error'
+import { ServerError } from '@/2.presentation/errors/server-error'
 
 export enum ServerErrorStatus {
   internalServerError = 'internal_server_error',

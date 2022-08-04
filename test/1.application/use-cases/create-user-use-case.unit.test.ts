@@ -1,12 +1,12 @@
-import UserAggregate from '@/0.domain/aggregates/user-aggregate'
-import DomainError from '@/0.domain/base/domain-error'
+import { UserAggregate } from '@/0.domain/aggregates/user-aggregate'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import Encrypter, { TokenType } from '@/1.application/cryptography/encrypter'
-import Hasher from '@/1.application/cryptography/hasher'
-import EmailTakenError from '@/1.application/errors/email-taken-error'
-import InvalidPasswordError from '@/1.application/errors/invalid-password-error'
-import UserRepository from '@/1.application/repositories/user-repository'
-import CreateUserUseCase, { CreateUserData } from '@/1.application/use-cases/create-user-use-case'
+import { Encrypter, TokenType } from '@/1.application/cryptography/encrypter'
+import { Hasher } from '@/1.application/cryptography/hasher'
+import { EmailTakenError } from '@/1.application/errors/email-taken-error'
+import { InvalidPasswordError } from '@/1.application/errors/invalid-password-error'
+import { UserRepository } from '@/1.application/repositories/user-repository'
+import { CreateUserUseCase, CreateUserData } from '@/1.application/use-cases/create-user-use-case'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {

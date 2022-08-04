@@ -1,5 +1,5 @@
-import DomainError from '@/0.domain/base/domain-error'
-import ServerError from '@/2.presentation/errors/server-error'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { ServerError } from '@/2.presentation/errors/server-error'
 import { serverError } from '@/2.presentation/factories/server-error-factory'
 
 const makeErrorFake = (): DomainError => {

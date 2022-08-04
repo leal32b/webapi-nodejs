@@ -12,7 +12,7 @@ type IntegerGreaterThanZero<T extends number> =
         ? never
         : T
 
-export default abstract class PgFactory<T> {
+export abstract class PgFactory<T> {
   protected constructor (private readonly props: Props<T>) {}
 
   async createFixtures (): Promise<T>

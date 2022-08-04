@@ -1,5 +1,5 @@
-import MinLengthError from '@/0.domain/errors/min-length-error'
-import MinLengthValidator from '@/0.domain/validators/min-length-validator'
+import { MinLengthError } from '@/0.domain/errors/min-length-error'
+import { MinLengthValidator } from '@/0.domain/validators/min-length-validator'
 
 type SutTypes = {
   sut: MinLengthValidator

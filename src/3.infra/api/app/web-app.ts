@@ -1,4 +1,4 @@
-import Controller from '@/2.presentation/base/controller'
+import { Controller } from '@/2.presentation/base/controller'
 
 export enum RouteType {
   POST = 'post',
@@ -18,7 +18,8 @@ export type Router = {
   routes: Route[]
 }
 
-export default interface WebApp {
+export interface WebApp {
+  app: any
   listen: (port: number, callback: () => void) => void
   setRouter: (router: Router) => void
 }

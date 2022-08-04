@@ -14,7 +14,7 @@ const cors = (req: Request, res: Response, next: NextFunction): void => {
   next()
 }
 
-export default (app: Express): void => {
+export const setupExpressMiddlewares = (app: Express): void => {
   app.use(bodyParser)
   app.use(cors)
   app.use(contentTypes)

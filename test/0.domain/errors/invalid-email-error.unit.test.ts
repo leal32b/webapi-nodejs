@@ -1,4 +1,4 @@
-import InvalidEmailError from '@/0.domain/errors/invalid-email-error'
+import { InvalidEmailError } from '@/0.domain/errors/invalid-email-error'
 
 type SutTypes = {
   sut: typeof InvalidEmailError

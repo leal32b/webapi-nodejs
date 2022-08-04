@@ -1,6 +1,6 @@
-import Controller, { AppRequest, AppResponse } from '@/2.presentation/base/controller'
+import { Controller, AppRequest, AppResponse } from '@/2.presentation/base/controller'
 import { RouteType } from '@/3.infra/api/app/web-app'
-import ExpressAdapter from '@/3.infra/webapp/express/express-adapter'
+import { ExpressAdapter } from '@/3.infra/webapp/express/express-adapter'
 
 const makeControllerStub = (): Controller => ({
   handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {

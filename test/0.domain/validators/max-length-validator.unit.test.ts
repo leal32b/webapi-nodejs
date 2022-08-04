@@ -1,5 +1,5 @@
-import MaxLengthError from '@/0.domain/errors/max-length-error'
-import MaxLengthValidator from '@/0.domain/validators/max-length-validator'
+import { MaxLengthError } from '@/0.domain/errors/max-length-error'
+import { MaxLengthValidator } from '@/0.domain/validators/max-length-validator'
 
 type SutTypes = {
   sut: MaxLengthValidator

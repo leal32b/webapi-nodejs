@@ -1,4 +1,4 @@
-import EmptyError from '@/0.domain/errors/empty-error'
+import { EmptyError } from '@/0.domain/errors/empty-error'
 
 type SutTypes = {
   sut: typeof EmptyError

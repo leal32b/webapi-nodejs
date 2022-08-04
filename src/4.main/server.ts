@@ -3,12 +3,12 @@ import 'module-alias/register'
 
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { defaultDataSource } from '@/3.infra/persistence/postgres/data-sources/default'
-import ExpressAdapter from '@/3.infra/webapp/express/express-adapter'
+import { config } from '@/4.main/config/config'
 import { setRouters } from '@/4.main/config/set-routers'
 
 const bootstrap = async (): Promise<void> => {
   const PORT = parseInt(process.env.PORT)
-  const webapp = new ExpressAdapter()
+  const webapp = config.app.webApp
 
   await pg.connect(defaultDataSource)
   await setRouters(webapp, 'dist/4.main/routers')

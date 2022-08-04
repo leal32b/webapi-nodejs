@@ -1,12 +1,12 @@
-import DomainError from '@/0.domain/base/domain-error'
-import Entity from '@/0.domain/base/entity'
+import { DomainError } from '@/0.domain/base/domain-error'
+import { Entity } from '@/0.domain/base/entity'
 import { Either } from '@/0.domain/utils/either'
-import Identifier from '@/0.domain/utils/identifier'
-import Email from '@/0.domain/value-objects/email'
-import EmailConfirmed from '@/0.domain/value-objects/email-confirmed'
-import Name from '@/0.domain/value-objects/name'
-import Password from '@/0.domain/value-objects/password'
-import Token from '@/0.domain/value-objects/token'
+import { Identifier } from '@/0.domain/utils/identifier'
+import { Email } from '@/0.domain/value-objects/email'
+import { EmailConfirmed } from '@/0.domain/value-objects/email-confirmed'
+import { Name } from '@/0.domain/value-objects/name'
+import { Password } from '@/0.domain/value-objects/password'
+import { Token } from '@/0.domain/value-objects/token'
 
 type ConstructParams = {
   email: Email
@@ -25,7 +25,7 @@ export type UserEntityCreateParams = {
   id?: string
 }
 
-export default class UserEntity extends Entity<ConstructParams> {
+export class UserEntity extends Entity<ConstructParams> {
   static create (params: UserEntityCreateParams): Either<DomainError[], UserEntity> {
     const { email, name, password, token, id, emailConfirmed } = params
 

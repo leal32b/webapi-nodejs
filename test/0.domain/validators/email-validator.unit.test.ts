@@ -1,5 +1,5 @@
-import InvalidEmailError from '@/0.domain/errors/invalid-email-error'
-import EmailValidator from '@/0.domain/validators/email-validator'
+import { InvalidEmailError } from '@/0.domain/errors/invalid-email-error'
+import { EmailValidator } from '@/0.domain/validators/email-validator'
 
 type SutTypes = {
   sut: EmailValidator

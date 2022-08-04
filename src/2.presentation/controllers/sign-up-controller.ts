@@ -1,5 +1,5 @@
-import CreateUserUseCase, { CreateUserResultDTO } from '@/1.application/use-cases/create-user-use-case'
-import Controller, { AppRequest, AppResponse } from '@/2.presentation/base/controller'
+import { CreateUserUseCase, CreateUserResultDTO } from '@/1.application/use-cases/create-user-use-case'
+import { Controller, AppRequest, AppResponse } from '@/2.presentation/base/controller'
 import { clientError } from '@/2.presentation/factories/client-error-factory'
 import { serverError } from '@/2.presentation/factories/server-error-factory'
 import { success } from '@/2.presentation/factories/success-factory'
@@ -11,7 +11,7 @@ export type SignUpData = {
   passwordRetype: string
 }
 
-export default class SignUpController extends Controller {
+export class SignUpController extends Controller {
   constructor (private readonly props: {
     createUserUseCase: CreateUserUseCase
   }) { super() }

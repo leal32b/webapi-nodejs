@@ -1,6 +1,6 @@
-import Random from '@/0.domain/utils/random'
+import { Random } from '@/0.domain/utils/random'
 
-export default class Identifier {
+export class Identifier {
   private readonly alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   private readonly length = 24
   readonly value: string

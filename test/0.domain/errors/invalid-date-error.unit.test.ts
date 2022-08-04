@@ -1,4 +1,4 @@
-import InvalidDateError from '@/0.domain/errors/invalid-date-error'
+import { InvalidDateError } from '@/0.domain/errors/invalid-date-error'
 
 type SutTypes = {
   sut: typeof InvalidDateError

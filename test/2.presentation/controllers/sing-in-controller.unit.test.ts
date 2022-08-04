@@ -1,9 +1,9 @@
-import DomainError from '@/0.domain/base/domain-error'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import AuthenticateUserUseCase, { AuthenticateUserResultDTO } from '@/1.application/use-cases/authenticate-user-use-case'
+import { AuthenticateUserUseCase, AuthenticateUserResultDTO } from '@/1.application/use-cases/authenticate-user-use-case'
 import { AppRequest } from '@/2.presentation/base/controller'
-import SignInController, { SignInData } from '@/2.presentation/controllers/sign-in-controller'
-import ServerError from '@/2.presentation/errors/server-error'
+import { SignInController, SignInData } from '@/2.presentation/controllers/sign-in-controller'
+import { ServerError } from '@/2.presentation/errors/server-error'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {

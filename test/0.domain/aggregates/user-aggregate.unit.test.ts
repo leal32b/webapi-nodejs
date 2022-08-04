@@ -1,6 +1,6 @@
-import UserAggregate from '@/0.domain/aggregates/user-aggregate'
-import UserEntity, { UserEntityCreateParams } from '@/0.domain/entities/user/user-entity'
-import NullError from '@/0.domain/errors/null-error'
+import { UserAggregate } from '@/0.domain/aggregates/user-aggregate'
+import { UserEntity, UserEntityCreateParams } from '@/0.domain/entities/user/user-entity'
+import { NullError } from '@/0.domain/errors/null-error'
 
 const makeParamsFake = (): UserEntityCreateParams => ({
   email: 'any@mail.com',

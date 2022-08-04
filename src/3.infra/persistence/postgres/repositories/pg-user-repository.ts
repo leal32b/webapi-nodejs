@@ -1,11 +1,11 @@
-import UserAggregate from '@/0.domain/aggregates/user-aggregate'
-import DomainError from '@/0.domain/base/domain-error'
+import { UserAggregate } from '@/0.domain/aggregates/user-aggregate'
+import { DomainError } from '@/0.domain/base/domain-error'
 import { Either, left, right } from '@/0.domain/utils/either'
-import UserRepository from '@/1.application/repositories/user-repository'
-import ServerError from '@/2.presentation/errors/server-error'
+import { UserRepository } from '@/1.application/repositories/user-repository'
+import { ServerError } from '@/2.presentation/errors/server-error'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 
-export default class PgUserRepository implements UserRepository {
+export class PgUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
       const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
