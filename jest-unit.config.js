@@ -1,4 +1,4 @@
 module.exports = {
   ...require('./jest.config'),
-  testMatch: ['**/*.unit.test.ts']
+  testMatch: ['<rootDir>/test/**/*.unit.test.ts']
 }
