@@ -6,14 +6,10 @@ import ServerError from '@/2.presentation/errors/server-error'
 import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 
 export default class PgUserRepository implements UserRepository {
-  private readonly pgClient = pg.client
-  private readonly manager = pg.client.manager
-
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { pgClient, manager } = this
       const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
-      const repository = await pgClient.getRepository('PgUser')
+      const repository = await pg.client.getRepository('PgUser')
 
       const pgUser = repository.create({
         email: email.value,
@@ -24,7 +20,7 @@ export default class PgUserRepository implements UserRepository {
         token: token.value
       })
 
-      await manager.save(pgUser)
+      await pg.client.manager.save(pgUser)
 
       return right(null)
     } catch (error) {
@@ -34,8 +30,7 @@ export default class PgUserRepository implements UserRepository {
 
   async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const { pgClient } = this
-      const repository = await pgClient.getRepository('PgUser')
+      const repository = await pg.client.getRepository('PgUser')
       const user = await repository.findOneBy({ email })
 
       if (!user) {
@@ -52,9 +47,8 @@ export default class PgUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { pgClient, manager } = this
       const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
-      const repository = await pgClient.getRepository('PgUser')
+      const repository = await pg.client.getRepository('PgUser')
 
       const pgUser = repository.create({
         email: email.value,
@@ -64,7 +58,7 @@ export default class PgUserRepository implements UserRepository {
         token: token.value
       })
 
-      const result = await manager.update('PgUser', { id: id.value }, pgUser)
+      const result = await pg.client.manager.update('PgUser', { id: id.value }, pgUser)
 
       return right(result)
     } catch (error) {

@@ -6,7 +6,7 @@ import { pg } from '@/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/3.infra/persistence/postgres/data-sources/test'
 import PgUserFactory from '@/3.infra/persistence/postgres/factories/user-factory'
 import ExpressApp from '@/3.infra/webapp/express/express-adapter'
-import config from '@/4.main/config/config'
+import { config } from '@/4.main/config/config'
 import signInControllerFactory from '@/4.main/factories/user/sign-in-controller-factory'
 
 type SutTypes = {
@@ -40,7 +40,7 @@ describe('SignInRoute', () => {
       const { sut, pgUserFactory, expressApp } = makeSut()
       const email = 'any@mail.com'
       const password = 'any_password'
-      const hashedPassword = (await config.hasher.hash(password)).value as string
+      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ email, password: hashedPassword })
       expressApp.setRouter({
         path: '/user',
@@ -60,7 +60,7 @@ describe('SignInRoute', () => {
       const { sut, pgUserFactory, expressApp } = makeSut()
       const email = 'any2@mail.com'
       const password = 'any_password'
-      const hashedPassword = (await config.hasher.hash(password)).value as string
+      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ email, password: hashedPassword })
       expressApp.setRouter({
         path: '/user',

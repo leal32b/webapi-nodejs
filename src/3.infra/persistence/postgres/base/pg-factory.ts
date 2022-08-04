@@ -13,9 +13,6 @@ type IntegerGreaterThanZero<T extends number> =
         : T
 
 export default abstract class PgFactory<T> {
-  private readonly pgClient = pg.client
-  private readonly manager = pg.client.manager
-
   protected constructor (private readonly props: Props<T>) {}
 
   async createFixtures (): Promise<T>
@@ -23,9 +20,8 @@ export default abstract class PgFactory<T> {
   async createFixtures (entities: Array<Partial<T>>): Promise<T[]>
   async createFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
   async createFixtures <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
-    const { pgClient, manager, props } = this
-    const { createDefault, repositoryName } = props
-    const repository = await pgClient.getRepository(repositoryName)
+    const { createDefault, repositoryName } = this.props
+    const repository = await pg.client.getRepository(repositoryName)
 
     if (typeof amountOrEntityOrEntities === 'number') {
       const entities: T[] = []
@@ -34,20 +30,20 @@ export default abstract class PgFactory<T> {
         entities.push(createDefault())
       }
 
-      await manager.save(entities)
+      await pg.client.manager.save(entities)
 
       return entities
     }
 
     if (!Array.isArray(amountOrEntityOrEntities)) {
       const entity = repository.create({ ...createDefault(), ...amountOrEntityOrEntities })
-      await manager.save(entity)
+      await pg.client.manager.save(entity)
 
       return entity
     }
 
     const entities = amountOrEntityOrEntities.map(entity => ({ ...createDefault(), ...entity }))
-    await manager.save(entities)
+    await pg.client.manager.save(entities)
 
     return entities
   }
