@@ -1,7 +1,7 @@
 import { Aggregate } from '@/core/0.domain/base/aggregate'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either } from '@/core/0.domain/utils/either'
-import { UserEntity, UserEntityCreateParams } from '@/modules/user/0.domain/entities/user/user-entity'
+import { UserEntity, UserEntityCreateParams } from '@/modules/user/0.domain/entities/user-entity'
 import { EmailConfirmed } from '@/modules/user/0.domain/value-objects/email-confirmed'
 import { Token } from '@/modules/user/0.domain/value-objects/token'
 

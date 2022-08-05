@@ -1,6 +1,6 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Identifier } from '@/core/0.domain/utils/identifier'
-import { UserEntity, UserEntityCreateParams } from '@/modules/user/0.domain/entities/user/user-entity'
+import { UserEntity, UserEntityCreateParams } from '@/modules/user/0.domain/entities/user-entity'
 import { Email } from '@/modules/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/modules/user/0.domain/value-objects/email-confirmed'
 import { Name } from '@/modules/user/0.domain/value-objects/name'
