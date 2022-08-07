@@ -94,6 +94,16 @@ describe('JsonwebtokenAdapter', () => {
         }
       })
     })
+
+    it('returns an Error when token is invalid', async () => {
+      const { sut, errorFake } = makeSut()
+      jest.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
+      const token = 'token'
+
+      const result = await sut.decrypt(token)
+
+      expect(result.value).toBeInstanceOf(DomainError)
+    })
   })
 
   describe('failure', () => {

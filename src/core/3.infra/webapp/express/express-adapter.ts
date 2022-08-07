@@ -1,8 +1,9 @@
-import express, { Express, Request, RequestHandler, Response } from 'express'
+import express, { Express, NextFunction, Request, RequestHandler, Response } from 'express'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
+import { Middleware } from '@/core/2.presentation/middleware/middleware'
 import { WebApp, Router } from '@/core/3.infra/api/app/web-app'
 import { setupExpressMiddlewares } from '@/core/3.infra/webapp/express/config/setup-express-middlewares'
 
@@ -20,7 +21,11 @@ export class ExpressAdapter implements WebApp {
       const { path, routes } = router
 
       for (const route of routes) {
-        this.app[route.type](`/api${path}${route.path}`, this.expressRoute(route.controller))
+        this.app[route.type](
+          `/api${path}${route.path}`,
+          this.expressMiddleware(route.auth),
+          this.expressRoute(route.controller)
+        )
       }
 
       return right(null)
@@ -44,15 +49,36 @@ export class ExpressAdapter implements WebApp {
   }
 
   private expressRoute (controller: Controller): RequestHandler {
-    return async (req: Request, res: Response): Promise<void> => {
+    return async (request: Request, response: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
-        payload: req.body
+        payload: request.body
       }
-
       const appResponse = await controller.handle(httpRequest)
       const { statusCode, payload } = appResponse
 
-      res.status(statusCode).json(payload)
+      response.status(statusCode).json(payload)
+    }
+  }
+
+  private expressMiddleware (middleware: Middleware): RequestHandler {
+    return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+      if (!middleware) {
+        return next()
+      }
+
+      const httpRequest = {
+        accessToken: request.headers.authorization,
+        payload: request.body
+      }
+      const appResponse = await middleware.handle(httpRequest)
+      const { statusCode, payload } = appResponse
+
+      if (statusCode === 200) {
+        Object.assign(request, payload)
+        next()
+      } else {
+        response.status(statusCode).json(payload)
+      }
     }
   }
 }
