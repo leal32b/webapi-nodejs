@@ -4,8 +4,8 @@ import { WebApp } from '@/core/3.infra/api/app/web-app'
 import { ArgonAdapter } from '@/core/3.infra/cryptography/argon/argon-adapter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
-import { PgUserRepository } from '@/modules/user/3.infra/persistence/postgres/repositories/pg-user-repository'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
 
 type Cryptography = {
   encrypter: Encrypter

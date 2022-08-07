@@ -1,5 +1,5 @@
 import { NullError } from '@/core/0.domain/errors/null-error'
-import { EmailConfirmed } from '@/modules/user/0.domain/value-objects/email-confirmed'
+import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 
 type SutTypes = {
   sut: typeof EmailConfirmed

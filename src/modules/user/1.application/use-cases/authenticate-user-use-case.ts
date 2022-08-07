@@ -5,7 +5,7 @@ import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypte
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export type AuthenticateUserData = {
   email: string

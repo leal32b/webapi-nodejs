@@ -7,9 +7,9 @@ import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
 import { authMiddlewareFactory } from '@/core/4.main/factories/auth-middle-factory'
-import { changePasswordRoute } from '@/modules/user/3.infra/api/routes/change-password-route'
-import { PgUserFactory } from '@/modules/user/3.infra/persistence/postgres/factories/user-factory'
-import { changePasswordControllerFactory } from '@/modules/user/4.main/factories/change-password-controller-factory'
+import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password-route'
+import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
+import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 const makeFakeAuthorization = async (): Promise<string> => {
   const token = await config.cryptography.encrypter.encrypt({ type: TokenType.access })

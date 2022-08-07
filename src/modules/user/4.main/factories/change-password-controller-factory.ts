@@ -1,6 +1,6 @@
 import { config } from '@/core/4.main/config/config'
-import { ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
-import { ChangePasswordController } from '@/modules/user/2.presentation/controllers/change-password-controller'
+import { ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
+import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
 export const changePasswordControllerFactory = (): ChangePasswordController => {
   const { userRepository } = config.persistence

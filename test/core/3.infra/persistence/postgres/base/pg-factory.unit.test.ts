@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm'
 
 import { PgFactory } from '@/core/3.infra/persistence/postgres/base/pg-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { PgUser } from '@/modules/user/3.infra/persistence/postgres/entities/pg-user'
+import { PgUser } from '@/user/3.infra/persistence/postgres/entities/pg-user'
 
 const makeDataSourceMock = (): DataSource => ({
   initialize: jest.fn(async (): Promise<void> => {}),

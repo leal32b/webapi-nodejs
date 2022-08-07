@@ -1,6 +1,6 @@
 import { EmptyError } from '@/core/0.domain/errors/empty-error'
 import { NullError } from '@/core/0.domain/errors/null-error'
-import { Password } from '@/modules/user/0.domain/value-objects/password'
+import { Password } from '@/user/0.domain/value-objects/password'
 
 type SutTypes = {
   sut: typeof Password

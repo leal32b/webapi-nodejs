@@ -1,9 +1,9 @@
 
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
-import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
-import { PgUserFactory } from '@/modules/user/3.infra/persistence/postgres/factories/user-factory'
-import { PgUserRepository } from '@/modules/user/3.infra/persistence/postgres/repositories/pg-user-repository'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
+import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
 
 const makeFakeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({

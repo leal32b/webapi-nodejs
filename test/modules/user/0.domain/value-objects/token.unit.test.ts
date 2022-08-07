@@ -1,6 +1,6 @@
 import { EmptyError } from '@/core/0.domain/errors/empty-error'
 import { NullError } from '@/core/0.domain/errors/null-error'
-import { Token } from '@/modules/user/0.domain/value-objects/token'
+import { Token } from '@/user/0.domain/value-objects/token'
 
 type SutTypes = {
   sut: typeof Token

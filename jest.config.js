@@ -18,7 +18,8 @@ module.exports = {
     '<rootDir>/test/**/*.test.ts'
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/core/(.*)$': '<rootDir>/src/core/$1',
+    '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
   }
 }

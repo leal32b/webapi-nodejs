@@ -3,8 +3,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
-import { ChangePasswordController } from '@/modules/user/2.presentation/controllers/change-password-controller'
+import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
+import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {

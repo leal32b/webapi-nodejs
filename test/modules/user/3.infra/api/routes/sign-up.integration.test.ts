@@ -4,9 +4,9 @@ import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
-import { signUpRoute } from '@/modules/user/3.infra/api/routes/sign-up-route'
-import { PgUserFactory } from '@/modules/user/3.infra/persistence/postgres/factories/user-factory'
-import { signUpControllerFactory } from '@/modules/user/4.main/factories/sign-up-controller-factory'
+import { signUpRoute } from '@/user/3.infra/api/routes/sign-up-route'
+import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
+import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
 
 type SutTypes = {
   sut: Route

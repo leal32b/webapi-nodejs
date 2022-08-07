@@ -12,7 +12,8 @@
     "rootDir": ".",
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["src/*"],
+      "@/core/*": ["src/core/*"],
+      "@/user/*": ["src/modules/user/*"],
       "~/*": ["test/*"]
     },
   },

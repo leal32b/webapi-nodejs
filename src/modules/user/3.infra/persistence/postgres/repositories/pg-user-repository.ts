@@ -3,8 +3,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export class PgUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {

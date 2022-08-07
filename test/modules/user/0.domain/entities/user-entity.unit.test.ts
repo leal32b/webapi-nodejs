@@ -1,11 +1,11 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Identifier } from '@/core/0.domain/utils/identifier'
-import { UserEntity, UserEntityCreateParams } from '@/modules/user/0.domain/entities/user-entity'
-import { Email } from '@/modules/user/0.domain/value-objects/email'
-import { EmailConfirmed } from '@/modules/user/0.domain/value-objects/email-confirmed'
-import { Name } from '@/modules/user/0.domain/value-objects/name'
-import { Password } from '@/modules/user/0.domain/value-objects/password'
-import { Token } from '@/modules/user/0.domain/value-objects/token'
+import { UserEntity, UserEntityCreateParams } from '@/user/0.domain/entities/user-entity'
+import { Email } from '@/user/0.domain/value-objects/email'
+import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
+import { Name } from '@/user/0.domain/value-objects/name'
+import { Password } from '@/user/0.domain/value-objects/password'
+import { Token } from '@/user/0.domain/value-objects/token'
 
 const makeParamsFake = (): UserEntityCreateParams => ({
   email: 'any@mail.com',

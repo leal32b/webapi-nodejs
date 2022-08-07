@@ -3,9 +3,9 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
-import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
-import { ChangePasswordData, ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
 const fakeAggregate = UserAggregate.create({
   email: 'any@mail.com',

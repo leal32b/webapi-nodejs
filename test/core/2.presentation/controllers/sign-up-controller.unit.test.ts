@@ -2,8 +2,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { CreateUserData, CreateUserResultDTO, CreateUserUseCase } from '@/modules/user/1.application/use-cases/create-user-use-case'
-import { SignUpController } from '@/modules/user/2.presentation/controllers/sign-up-controller'
+import { CreateUserData, CreateUserResultDTO, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
+import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {

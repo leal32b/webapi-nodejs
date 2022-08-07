@@ -3,9 +3,9 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
-import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
-import { AuthenticateUserData, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { AuthenticateUserData, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
 const fakeAggregate = UserAggregate.create({
   email: 'any@mail.com',

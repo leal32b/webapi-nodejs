@@ -4,9 +4,9 @@ import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypte
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
-import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
-import { CreateUserData, CreateUserUseCase } from '@/modules/user/1.application/use-cases/create-user-use-case'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {

@@ -2,7 +2,7 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
 import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
 import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
-import { Email } from '@/modules/user/0.domain/value-objects/email'
+import { Email } from '@/user/0.domain/value-objects/email'
 
 type SutTypes = {
   sut: typeof Email

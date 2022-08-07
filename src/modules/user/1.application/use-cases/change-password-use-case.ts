@@ -4,7 +4,7 @@ import { UseCase } from '@/core/1.application/base/use-case'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
-import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
+import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export type ChangePasswordData = {
   id: string
