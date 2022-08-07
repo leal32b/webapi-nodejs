@@ -2,19 +2,14 @@ import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
-
-export type SignInData = {
-  email: string
-  password: string
-}
+import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
 
 export class SignInController extends Controller {
   constructor (private readonly props: {
     authenticateUserUseCase: AuthenticateUserUseCase
   }) { super() }
 
-  async handle (request: AppRequest<SignInData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
+  async handle (request: AppRequest<AuthenticateUserData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
     try {
       const { payload: signInData } = request
 

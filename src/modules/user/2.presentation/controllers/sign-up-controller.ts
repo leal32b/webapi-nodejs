@@ -2,21 +2,14 @@ import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { CreateUserUseCase, CreateUserResultDTO } from '@/modules/user/1.application/use-cases/create-user-use-case'
-
-export type SignUpData = {
-  email: string
-  name: string
-  password: string
-  passwordRetype: string
-}
+import { CreateUserUseCase, CreateUserResultDTO, CreateUserData } from '@/modules/user/1.application/use-cases/create-user-use-case'
 
 export class SignUpController extends Controller {
   constructor (private readonly props: {
     createUserUseCase: CreateUserUseCase
   }) { super() }
 
-  async handle (request: AppRequest<SignUpData>): Promise<AppResponse<CreateUserResultDTO>> {
+  async handle (request: AppRequest<CreateUserData>): Promise<AppResponse<CreateUserResultDTO>> {
     try {
       const { payload: signUpData } = request
       const createUserResultDtoOrError = await this.props.createUserUseCase.execute(signUpData)
