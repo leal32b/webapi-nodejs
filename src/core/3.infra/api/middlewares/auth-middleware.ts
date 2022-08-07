@@ -12,7 +12,8 @@ export class AuthMiddleware implements Middleware {
 
   async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
     const { encrypter } = this.props
-    const decryptedTokenOrError = await encrypter.decrypt(request.accessToken)
+    const [, accessToken] = request.accessToken.split(' ')
+    const decryptedTokenOrError = await encrypter.decrypt(accessToken)
 
     if (decryptedTokenOrError.isLeft()) {
       return {

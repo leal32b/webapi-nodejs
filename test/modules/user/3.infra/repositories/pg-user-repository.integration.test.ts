@@ -55,6 +55,14 @@ describe('UserPostgresRepository', () => {
       expect(result.value).toBeInstanceOf(UserAggregate)
     })
 
+    it('returns an UserAggregate on readById success', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.readById('any_id')
+
+      expect(result.value).toBeInstanceOf(UserAggregate)
+    })
+
     it('returns Right on update success', async () => {
       const { sut, userAggregateFake } = makeSut()
       userAggregateFake.setEmailConfirmed(true)

@@ -77,7 +77,7 @@ describe('SignUpRoute', () => {
   })
 
   describe('failure', () => {
-    it('returns 400 when email is already in use', async () => {
+    it('returns 400 when passwords do not match', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
       const email = 'any@mail.com'
       await pgUserFactory.createFixtures({ email })
@@ -92,14 +92,14 @@ describe('SignUpRoute', () => {
           name: 'any_name',
           email: 'any@mail.com',
           password: 'any_password',
-          passwordRetype: 'any_password'
+          passwordRetype: 'another_password'
         })
         .expect(400)
     })
 
-    it('returns email already in use error message', async () => {
+    it('returns passwords should match error message', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any@mail.com'
+      const email = 'any2@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -112,14 +112,61 @@ describe('SignUpRoute', () => {
           name: 'any_name',
           email: 'any@mail.com',
           password: 'any_password',
+          passwordRetype: 'another_password'
+        })
+        .expect(400)
+
+      expect(result.body).toEqual([{
+        props: {
+          field: 'password',
+          message: 'passwords should match'
+        }
+      }])
+    })
+
+    it('returns 400 when email is already in use', async () => {
+      const { sut, pgUserFactory, webApp } = makeSut()
+      const email = 'any3@mail.com'
+      await pgUserFactory.createFixtures({ email })
+      webApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      await request(webApp.app)
+        .post('/api/user/sign-up')
+        .send({
+          name: 'any_name',
+          email: 'any3@mail.com',
+          password: 'any_password',
+          passwordRetype: 'any_password'
+        })
+        .expect(400)
+    })
+
+    it('returns email already in use error message', async () => {
+      const { sut, pgUserFactory, webApp } = makeSut()
+      const email = 'any4@mail.com'
+      await pgUserFactory.createFixtures({ email })
+      webApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      const result = await request(webApp.app)
+        .post('/api/user/sign-up')
+        .send({
+          name: 'any_name',
+          email: 'any4@mail.com',
+          password: 'any_password',
           passwordRetype: 'any_password'
         })
 
       expect(result.body).toEqual([{
         props: {
-          message: 'email already in use',
+          input: 'any4@mail.com',
           field: 'email',
-          input: 'any@mail.com'
+          message: 'email already in use'
         }
       }])
     })

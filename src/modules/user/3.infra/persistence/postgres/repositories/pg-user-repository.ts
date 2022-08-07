@@ -46,6 +46,23 @@ export class PgUserRepository implements UserRepository {
     }
   }
 
+  async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
+    try {
+      const repository = await pg.client.getRepository('PgUser')
+      const user = await repository.findOneBy({ id })
+
+      if (!user) {
+        return right(null)
+      }
+
+      const userAggregateOrError = UserAggregate.create(user)
+
+      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+    } catch (error) {
+      return left([new ServerError(error.message, error.stack)])
+    }
+  }
+
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
       const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
