@@ -12,7 +12,6 @@ export class SignInController extends Controller {
   async handle (request: AppRequest<AuthenticateUserData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
     try {
       const { payload: signInData } = request
-
       const authenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
 
       if (authenticateUserResultDtoOrError.isLeft()) {

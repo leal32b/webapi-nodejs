@@ -99,6 +99,45 @@ describe('ChangePasswordRoute', () => {
   })
 
   describe('failure', () => {
+    it('returns 401 when accessToken is missing', async () => {
+      const { sut, webApp } = await makeSut()
+      webApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      await request(webApp.app)
+        .post('/api/user/change-password')
+        .send({
+          id: 'any_id',
+          password: 'any_password',
+          passwordRetype: 'another_password'
+        })
+        .expect(401)
+    })
+
+    it('returns correct error message when accessToken is missing', async () => {
+      const { sut, webApp } = await makeSut()
+      webApp.setRouter({
+        path: '/user',
+        routes: [sut]
+      })
+
+      const result = await request(webApp.app)
+        .post('/api/user/change-password')
+        .send({
+          id: 'any_id',
+          password: 'any_password',
+          passwordRetype: 'another_password'
+        })
+
+      expect(result.body).toEqual([{
+        props: {
+          message: 'no Authorization token was provided'
+        }
+      }])
+    })
+
     it('returns 400 when passwords do not match', async () => {
       const { sut, webApp, fakeAuthorization } = await makeSut()
       webApp.setRouter({

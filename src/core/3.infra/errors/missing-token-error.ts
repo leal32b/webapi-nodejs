@@ -1,9 +1,9 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
-export class InvalidPasswordError extends DomainError {
+export class MissingTokenError extends DomainError {
   constructor () {
     super({
-      message: 'invalid username or password'
+      message: 'no Authorization token was provided'
     })
   }
 }

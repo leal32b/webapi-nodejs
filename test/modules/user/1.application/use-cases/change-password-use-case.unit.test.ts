@@ -1,8 +1,8 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
-import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
+import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 import { ChangePasswordData, ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
@@ -128,12 +128,12 @@ describe('AuthenticateUserUseCase', () => {
   })
 
   describe('failure', () => {
-    it('returns InvalidPasswordError when passwords do not match', async () => {
+    it('returns PasswordMismatchError when passwords do not match', async () => {
       const { sut, changePasswordDataFake } = makeSut()
 
       const result = await sut.execute({ ...changePasswordDataFake, passwordRetype: 'anything' })
 
-      expect(result.value[0]).toBeInstanceOf(InvalidPasswordError)
+      expect(result.value[0]).toBeInstanceOf(PasswordMismatchError)
     })
 
     it('returns an Error when UserRepository.readById fails', async () => {

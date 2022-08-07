@@ -3,7 +3,7 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
-import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
+import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 import { CreateUserData, CreateUserUseCase } from '@/modules/user/1.application/use-cases/create-user-use-case'
@@ -171,12 +171,12 @@ describe('CreateUserUseCase', () => {
       expect(result.value[0]).toBeInstanceOf(EmailTakenError)
     })
 
-    it('returns InvalidPasswordError when passwords do not match', async () => {
+    it('returns PasswordMismatchError when passwords do not match', async () => {
       const { sut, createUserDataFake } = makeSut()
 
       const result = await sut.execute({ ...createUserDataFake, passwordRetype: 'anything' })
 
-      expect(result.value[0]).toBeInstanceOf(InvalidPasswordError)
+      expect(result.value[0]).toBeInstanceOf(PasswordMismatchError)
     })
 
     it('returns an Error when Hasher.hash fails', async () => {

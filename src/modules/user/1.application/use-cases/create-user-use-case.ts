@@ -4,7 +4,7 @@ import { UseCase } from '@/core/1.application/base/use-case'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
-import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
+import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 
@@ -32,7 +32,7 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     const { email, password, passwordRetype } = createUserData
 
     if (password !== passwordRetype) {
-      return left([new InvalidPasswordError('password')])
+      return left([new PasswordMismatchError('password')])
     }
 
     const userAggregateByEmailOrError = await userRepository.readByEmail(email)

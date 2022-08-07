@@ -3,6 +3,7 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 
@@ -47,7 +48,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
 
     const passwordIsValid = passwordIsValidOrError.value
     if (!passwordIsValid) {
-      return left([])
+      return left([new InvalidPasswordError()])
     }
 
     const accessTokenOrError = await encrypter.encrypt({

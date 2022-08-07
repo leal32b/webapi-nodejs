@@ -2,8 +2,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
-import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
+import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 
 export type ChangePasswordData = {
@@ -27,7 +27,7 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     const { id, password, passwordRetype } = changePasswordData
 
     if (password !== passwordRetype) {
-      return left([new InvalidPasswordError('password')])
+      return left([new PasswordMismatchError('password')])
     }
 
     const userAggregateOrError = await userRepository.readById(id)

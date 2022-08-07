@@ -51,7 +51,7 @@ describe('AuthMiddleware', () => {
     it('returns payload and statusCode 200 when token is valid', async () => {
       const { sut } = makeSut()
       const fakeRequest = {
-        accessToken: 'any_token',
+        accessToken: 'Bearer any_token',
         payload: { anyKey: 'any_value' }
       }
 
@@ -65,18 +65,79 @@ describe('AuthMiddleware', () => {
   })
 
   describe('failure', () => {
-    it('returns error and statusCode 401 when token is invalid', async () => {
+    it('returns error and statusCode 401 when encrypter.decrypt fails', async () => {
       const { sut, encrypter, errorFake } = makeSut()
       jest.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
-        accessToken: 'invalid_token',
+        accessToken: 'Bearer invalid_token',
         payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: expect.any(DomainError),
+        payload: [{
+          props: {
+            message: 'token is invalid (type: Bearer)'
+          }
+        }],
+        statusCode: 401
+      })
+    })
+
+    it('returns error and statusCode 401 when token type is invalid', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: 'invalid_type any_token',
+        payload: { anyKey: 'any_value' }
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: [{
+          props: {
+            message: 'token is invalid (type: Bearer)'
+          }
+        }],
+        statusCode: 401
+      })
+    })
+
+    it('returns error and statusCode 401 when token value is null', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: 'invalid_type',
+        payload: { anyKey: 'any_value' }
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: [{
+          props: {
+            message: 'token is invalid (type: Bearer)'
+          }
+        }],
+        statusCode: 401
+      })
+    })
+
+    it('returns error and statusCode 401 when token is null', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: null,
+        payload: { anyKey: 'any_value' }
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: [{
+          props: {
+            message: 'no Authorization token was provided'
+          }
+        }],
         statusCode: 401
       })
     })

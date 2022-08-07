@@ -121,9 +121,9 @@ describe('SignInRoute', () => {
       }])
     })
 
-    xit('returns 401 when when password is invalid', async () => {
+    it('returns 401 when when password is invalid', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any2@mail.com'
+      const email = 'any3@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -133,15 +133,15 @@ describe('SignInRoute', () => {
       await request(webApp.app)
         .post('/api/user/sign-in')
         .send({
-          email: 'any2@mail.com',
+          email: 'any3@mail.com',
           password: 'invalid_password'
         })
         .expect(401)
     })
 
-    xit('returns email not found error message', async () => {
+    it('returns invalid password error message', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any3@mail.com'
+      const email = 'any4@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -151,16 +151,14 @@ describe('SignInRoute', () => {
       const result = await request(webApp.app)
         .post('/api/user/sign-in')
         .send({
-          email: 'any3@mail.com',
+          email: 'any4@mail.com',
           password: 'any_password'
         })
         .expect(401)
 
       expect(result.body).toEqual([{
         props: {
-          input: 'any3@mail.com',
-          field: 'email',
-          message: 'email "not_in_base@mail.com" not found'
+          message: 'invalid username or password'
         }
       }])
     })

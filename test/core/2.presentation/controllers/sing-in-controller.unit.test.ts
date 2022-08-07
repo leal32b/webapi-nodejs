@@ -72,7 +72,7 @@ describe('SignInController', () => {
       })
     })
 
-    it('returns "ok" when valid credentials are provided', async () => {
+    it('returns 200 when valid credentials are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
@@ -93,7 +93,7 @@ describe('SignInController', () => {
   })
 
   describe('failure', () => {
-    it('returns "unauthorized" when invalid credentials are provided', async () => {
+    it('returns 401 when invalid credentials are provided', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
@@ -111,7 +111,7 @@ describe('SignInController', () => {
       expect(result.payload[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns "internal_server_error" when anything throws', async () => {
+    it('returns 500 when anything throws', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 

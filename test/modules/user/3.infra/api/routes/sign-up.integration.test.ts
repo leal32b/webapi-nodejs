@@ -79,7 +79,7 @@ describe('SignUpRoute', () => {
   describe('failure', () => {
     it('returns 400 when passwords do not match', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any@mail.com'
+      const email = 'any2@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -99,7 +99,7 @@ describe('SignUpRoute', () => {
 
     it('returns passwords should match error message', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any2@mail.com'
+      const email = 'any3@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -126,7 +126,7 @@ describe('SignUpRoute', () => {
 
     it('returns 400 when email is already in use', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any3@mail.com'
+      const email = 'any4@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',
@@ -146,7 +146,7 @@ describe('SignUpRoute', () => {
 
     it('returns email already in use error message', async () => {
       const { sut, pgUserFactory, webApp } = makeSut()
-      const email = 'any4@mail.com'
+      const email = 'any5@mail.com'
       await pgUserFactory.createFixtures({ email })
       webApp.setRouter({
         path: '/user',

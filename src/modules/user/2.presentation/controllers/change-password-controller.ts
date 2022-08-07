@@ -2,13 +2,7 @@ import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { ChangePasswordResultDTO, ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
-
-export type ChangePasswordData = {
-  id: string
-  password: string
-  passwordRetype: string
-}
+import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/modules/user/1.application/use-cases/change-password-use-case'
 
 export class ChangePasswordController extends Controller {
   constructor (private readonly props: {

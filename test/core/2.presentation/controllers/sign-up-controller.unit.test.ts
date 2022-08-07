@@ -76,7 +76,7 @@ describe('SignUpController', () => {
       })
     })
 
-    it('returns "ok" when valid params are provided', async () => {
+    it('returns 200 when valid params are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
@@ -97,7 +97,7 @@ describe('SignUpController', () => {
   })
 
   describe('failure', () => {
-    it('returns "bad_request" when CreateUserUseCase returns any error', async () => {
+    it('returns 400 when CreateUserUseCase returns any error', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
@@ -115,7 +115,7 @@ describe('SignUpController', () => {
       expect(result.payload[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns "internal_server_error" when anything throws', async () => {
+    it('returns 500 when anything throws', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
