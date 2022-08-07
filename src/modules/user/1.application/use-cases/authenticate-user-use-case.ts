@@ -1,4 +1,3 @@
-
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
@@ -16,6 +15,7 @@ export type AuthenticateUserResultDTO = {
   accessToken: string
   message: string
 }
+
 export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, AuthenticateUserResultDTO> {
   constructor (private readonly props: {
     userRepository: UserRepository
@@ -56,10 +56,10 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
 
     const accessToken = accessTokenOrError.value
     userAggregate.setToken(accessToken)
-    const accessTokenUpdatedOrError = await userRepository.update(userAggregate)
+    const updatedOrError = await userRepository.update(userAggregate)
 
-    if (accessTokenUpdatedOrError.isLeft()) {
-      return left(accessTokenUpdatedOrError.value)
+    if (updatedOrError.isLeft()) {
+      return left(updatedOrError.value)
     }
 
     return right({

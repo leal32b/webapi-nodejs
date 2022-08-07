@@ -36,7 +36,6 @@
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:unit": "npm test -- -c jest-unit.config.js --watch",
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
-    "test:staged": "npm test -- --findRelatedTests test",
     "test:ci": "npm test -- --coverage",
     "prepare": "if test $NODE_ENV = test; then husky install; fi"
   },

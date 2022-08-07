@@ -1,4 +1,3 @@
-
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
@@ -31,6 +30,9 @@ const makeUserRepositoryStub = (): UserRepository => ({
     return right(null)
   }),
   readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
+    return right(null)
+  }),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
     return right(null)
   }),
   update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
@@ -100,7 +102,7 @@ describe('CreateUserUseCase', () => {
 
       await sut.execute(createUserDataFake)
 
-      expect(hasher.hash).toHaveBeenCalledWith(createUserDataFake.password)
+      expect(hasher.hash).toHaveBeenCalledWith('any_password')
     })
 
     it('calls Encrypter.encrypt with correct param', async () => {

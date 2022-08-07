@@ -1,4 +1,3 @@
-
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
@@ -7,6 +6,14 @@ import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { UserAggregate } from '@/modules/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/modules/user/1.application/repositories/user-repository'
 import { AuthenticateUserData, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
+
+const fakeAggregate = UserAggregate.create({
+  email: 'any@mail.com',
+  id: 'any_id',
+  name: 'any_name',
+  password: 'hashed_password',
+  token: 'any_token'
+}).value as UserAggregate
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -20,21 +27,18 @@ const makeErrorFake = (): DomainError => {
 
 const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
   email: 'any@mail.com',
-  password: 'password'
+  password: 'any_password'
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
   create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
   }),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
+    return right(null)
+  }),
   readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(UserAggregate.create({
-      email: 'any@mail.com',
-      id: 'any_id',
-      name: 'any_name',
-      password: 'hashed_password',
-      token: 'any_token'
-    }).value as UserAggregate)
+    return right(fakeAggregate)
   }),
   update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
     return right(null)
@@ -103,7 +107,7 @@ describe('AuthenticateUserUseCase', () => {
 
       await sut.execute(authenticateUserDataFake)
 
-      expect(hasher.compare).toHaveBeenCalledWith('hashed_password', 'password')
+      expect(hasher.compare).toHaveBeenCalledWith('hashed_password', 'any_password')
     })
 
     it('calls Encrypter.encrypt with correct param', async () => {

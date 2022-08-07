@@ -1,4 +1,3 @@
-
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
@@ -31,6 +30,11 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
   async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
     const { hasher, encrypter, userRepository } = this.props
     const { email, password, passwordRetype } = createUserData
+
+    if (password !== passwordRetype) {
+      return left([new InvalidPasswordError('password')])
+    }
+
     const userAggregateByEmailOrError = await userRepository.readByEmail(email)
 
     if (userAggregateByEmailOrError.isLeft()) {
@@ -39,10 +43,6 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
 
     if (userAggregateByEmailOrError.value) {
       return left([new EmailTakenError('email', email)])
-    }
-
-    if (password !== passwordRetype) {
-      return left([new InvalidPasswordError('password')])
     }
 
     const hashedPasswordOrError = await hasher.hash(password)
