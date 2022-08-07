@@ -101,6 +101,17 @@ describe('UserEntity', () => {
       expect((result.value as UserEntity).password).toBeInstanceOf(Password)
     })
 
+    it('sets password prop', () => {
+      const { sut, paramsFake } = makeSut()
+      const password = Password.create('any_password').value as Token
+
+      const result = sut.create(paramsFake)
+      const userEntity = result.value as UserEntity
+      userEntity.password = password
+
+      expect(userEntity.token.value).toBe('any_token')
+    })
+
     it('gets token prop', () => {
       const { sut, paramsFake } = makeSut()
 

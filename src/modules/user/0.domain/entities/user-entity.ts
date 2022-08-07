@@ -64,6 +64,10 @@ export class UserEntity extends Entity<ConstructParams> {
     return this.props.password
   }
 
+  set password (value: Password) {
+    this.props.password = value
+  }
+
   get token (): Token {
     return this.props.token
   }

@@ -43,6 +43,16 @@ describe('UserAggregate', () => {
 
       expect(result.value).toBe(true)
     })
+
+    it('updates the password of aggregateRoot', () => {
+      const { sut } = makeSut()
+      const password = 'any_password'
+
+      sut.setPassword(password)
+      const result = sut.aggregateRoot.password
+
+      expect(result.value).toBe('any_password')
+    })
   })
 
   describe('failure', () => {
