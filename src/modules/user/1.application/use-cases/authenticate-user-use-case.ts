@@ -45,6 +45,11 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
       return left([passwordIsValidOrError.value])
     }
 
+    const passwordIsValid = passwordIsValidOrError.value
+    if (!passwordIsValid) {
+      return left([])
+    }
+
     const accessTokenOrError = await encrypter.encrypt({
       type: TokenType.access,
       payload: { id: id.value }

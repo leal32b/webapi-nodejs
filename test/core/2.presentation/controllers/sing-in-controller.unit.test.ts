@@ -2,8 +2,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
-import { SignInController, SignInData } from '@/modules/user/2.presentation/controllers/sign-in-controller'
+import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/modules/user/1.application/use-cases/authenticate-user-use-case'
+import { SignInController } from '@/modules/user/2.presentation/controllers/sign-in-controller'
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -21,7 +21,7 @@ const makeSystemErrorFake = (): Error => ({
   stack: 'any_stack'
 })
 
-const makeRequestFake = (): AppRequest<SignInData> => ({
+const makeRequestFake = (): AppRequest<AuthenticateUserData> => ({
   payload: {
     email: 'any@email.com',
     password: 'any_password'
@@ -42,7 +42,7 @@ type SutTypes = {
   authenticateUserUseCase: AuthenticateUserUseCase
   errorFake: DomainError
   systemErrorFake: Error
-  requestFake: AppRequest<SignInData>
+  requestFake: AppRequest<AuthenticateUserData>
 }
 
 const makeSut = (): SutTypes => {
