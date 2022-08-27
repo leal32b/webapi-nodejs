@@ -18,5 +18,12 @@ export const clientError = {
       payload: error,
       statusCode: 401
     }
+  },
+
+  unprocessableEntity (error: any): AppResponse<typeof error> {
+    return {
+      payload: error,
+      statusCode: 422
+    }
   }
 }

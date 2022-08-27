@@ -48,5 +48,16 @@ describe('clientError', () => {
         statusCode: 401
       })
     })
+
+    it('returns AppResponse with unprocessableEntity status', () => {
+      const { sut, errorFake } = makeSut()
+
+      const result = sut.unprocessableEntity(errorFake)
+
+      expect(result).toEqual({
+        payload: expect.any(DomainError),
+        statusCode: 422
+      })
+    })
   })
 })
