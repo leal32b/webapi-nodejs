@@ -4,6 +4,7 @@ import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
+import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in-route'
 import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
@@ -20,6 +21,11 @@ const makeSut = (): SutTypes => {
     webApp: config.app.webApp
   }
   const sut = signInRoute(signInControllerFactory())
+  collaborators.webApp.setRouter({
+    path: '/user',
+    routes: [sut],
+    middlewares: [schemaValidatorMiddlewareFactory()]
+  })
 
   return { sut, ...collaborators }
 }
@@ -36,15 +42,11 @@ describe('SignInRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { sut, pgUserFactory, webApp } = makeSut()
+      const { pgUserFactory, webApp } = makeSut()
       const email = 'any@mail.com'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ email, password: hashedPassword })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -56,15 +58,11 @@ describe('SignInRoute', () => {
     })
 
     it('returns an accessToken on success', async () => {
-      const { sut, pgUserFactory, webApp } = makeSut()
+      const { pgUserFactory, webApp } = makeSut()
       const email = 'any2@mail.com'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ email, password: hashedPassword })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')
@@ -81,12 +79,33 @@ describe('SignInRoute', () => {
   })
 
   describe('failure', () => {
+    it('returns 400 when schema is invalid', async () => {
+      const { webApp } = makeSut()
+
+      await request(webApp.app)
+        .post('/api/user/sign-in')
+        .send({})
+        .expect(422)
+    })
+
+    it('returns schema error message when schema is invalid', async () => {
+      const { webApp } = makeSut()
+
+      const result = await request(webApp.app)
+        .post('/api/user/sign-in')
+        .send({})
+
+      expect(result.body).toEqual([{
+        instancePath: '',
+        keyword: 'required',
+        message: "must have required property 'email'",
+        params: { missingProperty: 'email' },
+        schemaPath: '#/required'
+      }])
+    })
+
     it('returns 401 when when email is not found', async () => {
-      const { sut, webApp } = makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp } = makeSut()
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -98,11 +117,7 @@ describe('SignInRoute', () => {
     })
 
     it('returns email not found error message', async () => {
-      const { sut, webApp } = makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp } = makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')
@@ -122,13 +137,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns 401 when when password is invalid', async () => {
-      const { sut, pgUserFactory, webApp } = makeSut()
+      const { pgUserFactory, webApp } = makeSut()
       const email = 'any3@mail.com'
       await pgUserFactory.createFixtures({ email })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -140,13 +151,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns invalid password error message', async () => {
-      const { sut, pgUserFactory, webApp } = makeSut()
+      const { pgUserFactory, webApp } = makeSut()
       const email = 'any4@mail.com'
       await pgUserFactory.createFixtures({ email })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')

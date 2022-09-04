@@ -32,8 +32,10 @@ describe('BodyParser', () => {
         routes: [{
           path: '/test_body_parser',
           type: RouteType.POST,
+          schema: 'any_schema',
           controller: makeControllerStub()
-        }]
+        }],
+        middlewares: []
       })
       const body = { key: 'any_value' }
 
@@ -54,8 +56,10 @@ describe('ContentTypes', () => {
         routes: [{
           path: '/test_content_type',
           type: RouteType.GET,
+          schema: 'any_schema',
           controller: makeControllerStub()
-        }]
+        }],
+        middlewares: []
       })
 
       await request(sut.app)
@@ -74,8 +78,10 @@ describe('CORS', () => {
         routes: [{
           path: '/test_cors',
           type: RouteType.GET,
+          schema: 'any_schema',
           controller: makeControllerStub()
-        }]
+        }],
+        middlewares: []
       })
 
       await request(sut.app)

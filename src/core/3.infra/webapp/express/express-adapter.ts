@@ -4,7 +4,7 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { Middleware } from '@/core/2.presentation/middleware/middleware'
-import { WebApp, Router } from '@/core/3.infra/api/app/web-app'
+import { WebApp, Router, Route } from '@/core/3.infra/api/app/web-app'
 import { setupExpressMiddlewares } from '@/core/3.infra/webapp/express/config/setup-express-middlewares'
 
 export class ExpressAdapter implements WebApp {
@@ -18,13 +18,13 @@ export class ExpressAdapter implements WebApp {
 
   setRouter (router: Router): Either<ServerError, void> {
     try {
-      const { path, routes } = router
+      const { path, routes, middlewares } = router
 
       for (const route of routes) {
         this.app[route.type](
-          `/api${path}${route.path}`,
-          this.expressMiddleware(route.auth),
-          this.expressRoute(route.controller)
+          '/api' + path + route.path,
+          middlewares.map(middleware => this.expressMiddleware(route, middleware)),
+          this.expressController(route.controller)
         )
       }
 
@@ -48,7 +48,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  private expressRoute (controller: Controller): RequestHandler {
+  private expressController (controller: Controller): RequestHandler {
     return async (request: Request, response: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
         payload: request.body
@@ -60,15 +60,15 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  private expressMiddleware (middleware: Middleware): RequestHandler {
-    return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
-      if (!middleware) {
-        return next()
-      }
+  private expressMiddleware (route: Route, middleware: Middleware): RequestHandler {
+    const { auth, schema } = route
 
+    return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
       const httpRequest = {
         accessToken: request.headers.authorization,
-        payload: request.body
+        payload: request.body,
+        auth,
+        schema
       }
       const appResponse = await middleware.handle(httpRequest)
       const { statusCode, payload } = appResponse

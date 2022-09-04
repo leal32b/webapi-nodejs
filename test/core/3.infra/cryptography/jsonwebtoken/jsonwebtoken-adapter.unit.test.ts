@@ -14,7 +14,8 @@ jest.mock('jsonwebtoken', () => ({
     return await Promise.resolve({
       type: TokenType.access,
       payload: {
-        anyKey: 'any_value'
+        id: 'any_id',
+        auth: ['any_auth']
       }
     })
   }
@@ -33,7 +34,8 @@ const makeErrorFake = (): DomainError => {
 const makeFakeData = (): TokenData => ({
   type: TokenType.access,
   payload: {
-    anyKey: 'any_value'
+    id: 'any_id',
+    auth: ['any_auth']
   }
 })
 
@@ -64,7 +66,8 @@ describe('JsonwebtokenAdapter', () => {
       expect(signSpy).toHaveBeenCalledWith({
         type: TokenType.access,
         payload: {
-          anyKey: 'any_value'
+          id: 'any_id',
+          auth: ['any_auth']
         }
       },
       'any_secret',
@@ -90,7 +93,8 @@ describe('JsonwebtokenAdapter', () => {
       expect(result.value).toEqual({
         type: TokenType.access,
         payload: {
-          anyKey: 'any_value'
+          id: 'any_id',
+          auth: ['any_auth']
         }
       })
     })

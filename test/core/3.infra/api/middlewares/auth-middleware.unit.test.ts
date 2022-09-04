@@ -21,7 +21,7 @@ const makeEncrypterStub = (): Encrypter => ({
     return right({
       type: TokenType.access,
       payload: {
-        anyKey: 'any_value'
+        auth: ['user']
       }
     })
   })
@@ -48,11 +48,43 @@ const makeSut = (): SutTypes => {
 
 describe('AuthMiddleware', () => {
   describe('success', () => {
-    it('returns payload and statusCode 200 when token is valid', async () => {
+    it('returns payload and statusCode 200 when there is no auth', async () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
         payload: { anyKey: 'any_value' }
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: { anyKey: 'any_value' },
+        statusCode: 200
+      })
+    })
+
+    it('returns payload and statusCode 200 when auth is empty', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: 'Bearer any_token',
+        payload: { anyKey: 'any_value' },
+        auth: []
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: { anyKey: 'any_value' },
+        statusCode: 200
+      })
+    })
+
+    it('returns payload and statusCode 200 when token is valid', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: 'Bearer any_token',
+        payload: { anyKey: 'any_value' },
+        auth: ['user']
       }
 
       const result = await sut.handle(fakeRequest)
@@ -70,17 +102,18 @@ describe('AuthMiddleware', () => {
       jest.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         accessToken: 'Bearer invalid_token',
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        auth: ['any']
       }
 
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: [{
+        payload: {
           props: {
             message: 'token is invalid (type: Bearer)'
           }
-        }],
+        },
         statusCode: 401
       })
     })
@@ -89,17 +122,18 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type any_token',
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        auth: ['any']
       }
 
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: [{
+        payload: {
           props: {
             message: 'token is invalid (type: Bearer)'
           }
-        }],
+        },
         statusCode: 401
       })
     })
@@ -108,17 +142,18 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type',
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        auth: ['any']
       }
 
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: [{
+        payload: {
           props: {
             message: 'token is invalid (type: Bearer)'
           }
-        }],
+        },
         statusCode: 401
       })
     })
@@ -127,17 +162,38 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: null,
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        auth: ['any']
       }
 
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: [{
+        payload: {
           props: {
             message: 'no Authorization token was provided'
           }
-        }],
+        },
+        statusCode: 401
+      })
+    })
+
+    it('returns error and statusCode 401 when user is not authorized', async () => {
+      const { sut } = makeSut()
+      const fakeRequest = {
+        accessToken: 'Bearer any_token',
+        payload: { anyKey: 'any_value' },
+        auth: ['any']
+      }
+
+      const result = await sut.handle(fakeRequest)
+
+      expect(result).toEqual({
+        payload: {
+          props: {
+            message: 'user must have at least one of these permissions: any'
+          }
+        },
         statusCode: 401
       })
     })

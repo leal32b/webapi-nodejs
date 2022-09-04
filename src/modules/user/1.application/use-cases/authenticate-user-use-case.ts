@@ -53,7 +53,10 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
 
     const accessTokenOrError = await encrypter.encrypt({
       type: TokenType.access,
-      payload: { id: id.value }
+      payload: {
+        id: id.value,
+        auth: ['user']
+      }
     })
 
     if (accessTokenOrError.isLeft()) {

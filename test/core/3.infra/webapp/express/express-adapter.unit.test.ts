@@ -21,16 +21,27 @@ const makeControllerStub = (): Controller => ({
   })
 })
 
+const makeMiddlewareStub = (): Middleware => ({
+  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {
+    return {
+      payload: request.payload,
+      statusCode: 200
+    }
+  })
+})
+
 type SutTypes = {
   sut: ExpressAdapter
   auth: Middleware
   controller: Controller
+  middleware: Middleware
 }
 
 const makeSut = (): SutTypes => {
   const fakes = {
     auth: makeAuthStub(),
-    controller: makeControllerStub()
+    controller: makeControllerStub(),
+    middleware: makeMiddlewareStub()
   }
 
   const sut = new ExpressAdapter()
@@ -48,24 +59,27 @@ describe('ExpressAdapter', () => {
         routes: [{
           type: RouteType.GET,
           path: 'any_path',
+          schema: 'any_schema',
           controller
-        }]
+        }],
+        middlewares: []
       })
 
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns Right on setRouter when route has an auth and a controller', () => {
-      const { sut, auth, controller } = makeSut()
+    it('returns Right on setRouter when route has middlewares', () => {
+      const { sut, controller, middleware } = makeSut()
 
       const result = sut.setRouter({
         path: 'any_path',
         routes: [{
           type: RouteType.GET,
           path: 'any_path',
-          auth,
+          schema: 'any_schema',
           controller
-        }]
+        }],
+        middlewares: [middleware]
       })
 
       expect(result.isRight()).toBe(true)
@@ -94,8 +108,10 @@ describe('ExpressAdapter', () => {
         routes: [{
           type: RouteType.GET,
           path: 'any_path',
+          schema: 'any_schema',
           controller
-        }]
+        }],
+        middlewares: []
       })
 
       expect(result.isLeft()).toBe(true)

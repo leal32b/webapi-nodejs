@@ -62,7 +62,8 @@ const makeEncrypterStub = (): Encrypter => ({
     return right({
       type: TokenType.access,
       payload: {
-        anyKey: 'any_value'
+        id: 'any_id',
+        auth: ['any_auth']
       }
     })
   })
@@ -115,7 +116,13 @@ describe('AuthenticateUserUseCase', () => {
 
       await sut.execute(authenticateUserDataFake)
 
-      expect(encrypter.encrypt).toHaveBeenCalledWith({ payload: { id: 'any_id' }, type: 'access' })
+      expect(encrypter.encrypt).toHaveBeenCalledWith({
+        payload: {
+          id: 'any_id',
+          auth: ['user']
+        },
+        type: 'access'
+      })
     })
 
     it('calls UserRepository.update with correct params', async () => {

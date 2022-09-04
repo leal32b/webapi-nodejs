@@ -1,5 +1,5 @@
 
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
@@ -21,11 +21,11 @@ export class JsonwebtokenAdapter implements Encrypter {
     }
   }
 
-  async decrypt (token: string): Promise<Either<DomainError, JwtPayload>> {
+  async decrypt (token: string): Promise<Either<DomainError, TokenData>> {
     try {
       const result = await jwt.verify(token, this.secret)
 
-      return right(result as JwtPayload)
+      return right(result as TokenData)
     } catch (error) {
       return left(new ServerError(error.message, error.stack))
     }

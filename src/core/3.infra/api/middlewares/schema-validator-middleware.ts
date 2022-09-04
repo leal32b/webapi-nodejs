@@ -15,6 +15,7 @@ export class SchemaValidatorMiddleware implements Middleware {
   async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
     const { schemaValidator } = this.props
     const { schema } = request
+
     const resultOrError = await schemaValidator.validate(request, schema)
 
     if (resultOrError.isLeft()) {

@@ -1,18 +1,24 @@
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
 import { authMiddlewareFactory } from '@/core/4.main/factories/auth-middle-factory'
+import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password-route'
 import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 const makeFakeAuthorization = async (): Promise<string> => {
-  const token = await config.cryptography.encrypter.encrypt({ type: TokenType.access })
+  const token = await config.cryptography.encrypter.encrypt({
+    type: TokenType.access,
+    payload: {
+      id: 'any_id',
+      auth: ['user']
+    }
+  })
 
   return `Bearer ${token.value as string}`
 }
@@ -21,7 +27,6 @@ type SutTypes = {
   sut: Route
   pgUserFactory: PgUserFactory
   webApp: WebApp
-  authMiddleware: Middleware
   fakeAuthorization: string
 }
 
@@ -31,10 +36,14 @@ const makeSut = async (): Promise<SutTypes> => {
   }
   const collaborators = {
     pgUserFactory: PgUserFactory.create(),
-    webApp: config.app.webApp,
-    authMiddleware: authMiddlewareFactory()
+    webApp: config.app.webApp
   }
-  const sut = changePasswordRoute(changePasswordControllerFactory(), collaborators.authMiddleware)
+  const sut = changePasswordRoute(changePasswordControllerFactory())
+  collaborators.webApp.setRouter({
+    path: '/user',
+    routes: [sut],
+    middlewares: [authMiddlewareFactory(), schemaValidatorMiddlewareFactory()]
+  })
 
   return { sut, ...collaborators, ...fakes }
 }
@@ -51,15 +60,11 @@ describe('ChangePasswordRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { sut, pgUserFactory, webApp, fakeAuthorization } = await makeSut()
+      const { pgUserFactory, webApp, fakeAuthorization } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ id, password: hashedPassword })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       await request(webApp.app)
         .post('/api/user/change-password')
@@ -73,15 +78,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct message on success', async () => {
-      const { sut, pgUserFactory, webApp, fakeAuthorization } = await makeSut()
+      const { pgUserFactory, webApp, fakeAuthorization } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
       await pgUserFactory.createFixtures({ id, password: hashedPassword })
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
@@ -100,11 +101,7 @@ describe('ChangePasswordRoute', () => {
 
   describe('failure', () => {
     it('returns 401 when accessToken is missing', async () => {
-      const { sut, webApp } = await makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp } = await makeSut()
 
       await request(webApp.app)
         .post('/api/user/change-password')
@@ -117,11 +114,7 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct error message when accessToken is missing', async () => {
-      const { sut, webApp } = await makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
@@ -131,19 +124,42 @@ describe('ChangePasswordRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual([{
+      expect(result.body).toEqual({
         props: {
           message: 'no Authorization token was provided'
         }
+      })
+    })
+
+    it('returns 400 when schema is invalid', async () => {
+      const { webApp, fakeAuthorization } = await makeSut()
+
+      await request(webApp.app)
+        .post('/api/user/change-password')
+        .set('Authorization', fakeAuthorization)
+        .send({})
+        .expect(422)
+    })
+
+    it('returns schema error message when schema is invalid', async () => {
+      const { webApp, fakeAuthorization } = await makeSut()
+
+      const result = await request(webApp.app)
+        .post('/api/user/change-password')
+        .set('Authorization', fakeAuthorization)
+        .send({})
+
+      expect(result.body).toEqual([{
+        instancePath: '',
+        keyword: 'required',
+        message: "must have required property 'id'",
+        params: { missingProperty: 'id' },
+        schemaPath: '#/required'
       }])
     })
 
     it('returns 400 when passwords do not match', async () => {
-      const { sut, webApp, fakeAuthorization } = await makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp, fakeAuthorization } = await makeSut()
 
       await request(webApp.app)
         .post('/api/user/change-password')
@@ -157,11 +173,7 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns passwords should match error message', async () => {
-      const { sut, webApp, fakeAuthorization } = await makeSut()
-      webApp.setRouter({
-        path: '/user',
-        routes: [sut]
-      })
+      const { webApp, fakeAuthorization } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
