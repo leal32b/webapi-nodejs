@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
   "_moduleAliases": {
-    "@": "dist"
+    "@/core": "dist/core",
+    "@/user": "dist/modules/user"
   },
   "scripts": {
     "start": "node dist/core/4.main/server.js",
