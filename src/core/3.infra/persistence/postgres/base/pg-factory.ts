@@ -1,16 +1,10 @@
+import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 
 type Props<T> = {
   createDefault: () => T
   repositoryName: string
 }
-
-type IntegerGreaterThanZero<T extends number> =
-    number extends T
-      ? never
-      : `${T}` extends `-${string}` | '0' | `${string}.${string}`
-        ? never
-        : T
 
 export abstract class PgFactory<T> {
   protected constructor (private readonly props: Props<T>) {}
