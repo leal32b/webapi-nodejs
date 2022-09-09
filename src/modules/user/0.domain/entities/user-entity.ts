@@ -1,6 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Entity } from '@/core/0.domain/base/entity'
-import { Either } from '@/core/0.domain/utils/either'
+import { NullError } from '@/core/0.domain/errors/null-error'
+import { Either, left } from '@/core/0.domain/utils/either'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
@@ -27,6 +28,10 @@ export type UserEntityCreateParams = {
 
 export class UserEntity extends Entity<ConstructParams> {
   static create (params: UserEntityCreateParams): Either<DomainError[], UserEntity> {
+    if (!params) {
+      return left([new NullError('params', JSON.stringify(params))])
+    }
+
     const { email, name, password, token, id, emailConfirmed } = params
 
     const constructParamsOrError = this.validateParams<ConstructParams>({

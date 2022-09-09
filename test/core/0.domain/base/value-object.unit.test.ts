@@ -26,15 +26,13 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
-    errorFake: makeErrorFake()
-  }
-  const collaborators = {
+  const doubles = {
+    errorFake: makeErrorFake(),
     validator: makeValidatorStub()
   }
   const sut = ValueObject
 
-  return { sut, ...collaborators, ...fakes }
+  return { sut, ...doubles }
 }
 
 describe('ValueObject', () => {
@@ -45,19 +43,39 @@ describe('ValueObject', () => {
 
       const result = sut.validate(input, [validator])
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('returns a null when all validators pass', () => {
+      const { sut, validator } = makeSut()
+      const input = 'any_input'
+
+      const result = sut.validate(input, [validator])
+
+      expect(result.value).toBe(null)
     })
   })
 
   describe('failure', () => {
-    it('returns an array of errors when any validator fails', () => {
+    it('returns Left when any validator fails', () => {
       const { sut, validator, errorFake } = makeSut()
       const input = 'short'
-      jest.spyOn(validator, 'validate').mockReturnValueOnce(left(errorFake))
+      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
 
       const result = sut.validate(input, [validator])
 
-      expect(result.value[0]).toBeInstanceOf(DomainError)
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns an array of errors when any validator fails', () => {
+      const { sut, validator, errorFake } = makeSut()
+      const input = 'short'
+      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+
+      const result = sut.validate(input, [validator])
+
+      expect((result.value as DomainError[])
+        .every(item => item instanceof DomainError)).toBe(true)
     })
   })
 })

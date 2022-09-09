@@ -1,22 +1,47 @@
 import { Random } from '@/core/0.domain/utils/random'
 
-export class Identifier {
-  private readonly alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-  private readonly length = 24
-  readonly value: string
+type Options = {
+  alphabet: string
+  length: number
+}
 
-  constructor (id?: string) {
-    this.value = id || this.create()
+type ConstructParams = {
+  id?: string
+  options?: Options
+}
+
+const defaultOptions = {
+  alphabet: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  length: 24
+}
+
+export class Identifier {
+  private readonly props: Options
+  private readonly random: Random
+  private readonly _value: string
+
+  constructor (params?: ConstructParams) {
+    this.props = Object.assign(defaultOptions, params?.options)
+    this.random = new Random()
+    this._value = params?.id || this.create()
   }
 
   private create (): string {
-    const random = new Random()
-    let idToReturn = ''
+    const { length } = this.props
+    const id = Array
+      .from({ length }, () => this.randomCharacter())
+      .join('')
 
-    for (let i = 0; i < this.length; i++) {
-      idToReturn += this.alphabet[random.nextInt() % this.alphabet.length]
-    }
+    return id
+  }
 
-    return idToReturn
+  private randomCharacter (): string {
+    const { alphabet } = this.props
+
+    return alphabet[this.random.nextInt() % alphabet.length]
+  }
+
+  get value (): string {
+    return this._value
   }
 }

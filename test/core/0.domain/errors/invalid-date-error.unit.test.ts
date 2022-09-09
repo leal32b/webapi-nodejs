@@ -15,21 +15,25 @@ describe('InvalidDateError', () => {
     it('returns an InvalidDateError', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'invalid_format'
+      const input = 'invalid_date'
 
       const result = new sut(field, input)
 
       expect(result).toBeInstanceOf(InvalidDateError)
     })
 
-    it('returns the correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'invalid_format'
+      const input = 'invalid_date'
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('should have format: "yyyy-MM-ddTHH:mm:ss.fffZ"')
+      expect(result.props).toEqual({
+        message: 'should have format: "yyyy-MM-ddTHH:mm:ss.fffZ"',
+        field: 'any_field',
+        input: 'invalid_date'
+      })
     })
   })
 })

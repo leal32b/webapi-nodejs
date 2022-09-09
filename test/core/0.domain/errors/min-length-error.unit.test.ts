@@ -23,15 +23,19 @@ describe('MinLengthError', () => {
       expect(result).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns the correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6
-      const input = 'any_input'
+      const input = 'short'
 
       const result = new sut(field, length, input)
 
-      expect(result.props.message).toBe('should be at least 6 characters long')
+      expect(result.props).toEqual({
+        message: 'should be at least 6 characters long',
+        field: 'any_field',
+        input: 'short'
+      })
     })
   })
 })

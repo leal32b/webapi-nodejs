@@ -1,4 +1,3 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
 import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
 import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
 import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
@@ -52,15 +51,6 @@ describe('Email', () => {
       const result = sut.create(input)
 
       expect(result.value[0]).toBeInstanceOf(InvalidEmailError)
-    })
-
-    it('returns an array of errors when validators fail', () => {
-      const { sut } = makeSut()
-      const input = null
-
-      const result = sut.create(input)
-
-      expect((result.value as DomainError[]).length).toBeGreaterThan(1)
     })
   })
 })

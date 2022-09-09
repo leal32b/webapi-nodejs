@@ -1,19 +1,40 @@
+type Options = {
+  incrementer: number
+  modulus: number
+  multiplier: number
+}
+
+type ConstructParams = {
+  seed?: number
+  options?: Options
+}
+
+const defaultOptions = {
+  incrementer: 2971215073,
+  modulus: 2282047327510,
+  multiplier: 456409465503
+}
+
 export class Random {
-  private readonly A_multiplier: number = 1103515245
-  private readonly C_incrementer: number = 12345
-  private readonly M_modules: number = 2147483647
+  private readonly props: Options
+  private seed: number
 
-  constructor (private seed: number = Date.now()) {}
+  constructor (params?: ConstructParams) {
+    this.props = Object.assign(defaultOptions, params?.options)
+    this.seed = params?.seed || Date.now()
+  }
 
-  nextInt = (): number => {
-    this.seed = (this.seed * this.A_multiplier + this.C_incrementer) % this.M_modules
+  nextInt (): number {
+    const { incrementer, modulus, multiplier } = this.props
+
+    this.seed = (this.seed * multiplier + incrementer) % modulus
 
     return this.seed
   }
 
-  nextDouble = (): number => {
-    const value = this.nextInt()
+  nextDouble (): number {
+    const { modulus } = this.props
 
-    return value / this.M_modules
+    return this.nextInt() / modulus
   }
 }

@@ -22,24 +22,32 @@ describe('NullError', () => {
       expect(result).toBeInstanceOf(NullError)
     })
 
-    it('returns the correct message when input is null', () => {
+    it('returns props with correct values when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('should not be null')
+      expect(result.props).toEqual({
+        message: 'should not be null',
+        field: 'any_field',
+        input: null
+      })
     })
 
-    it('returns the correct message when input is undefined', () => {
+    it('returns props with correct values when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('should not be undefined')
+      expect(result.props).toEqual({
+        message: 'should not be undefined',
+        field: 'any_field',
+        input: undefined
+      })
     })
   })
 })

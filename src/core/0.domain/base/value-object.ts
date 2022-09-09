@@ -6,18 +6,12 @@ export abstract class ValueObject<T> {
   constructor (readonly value: T) {}
 
   static validate (input: any, validators: Array<Validator<any>>): Either<DomainError[], void> {
-    const errors: DomainError[] = []
-
-    validators.forEach(validator => {
-      const result = validator.validate(this.name, input)
-
-      if (result.isLeft()) {
-        errors.push(result.value)
-      }
-    })
+    const errors = validators
+      .map(validator => validator.validate(this.name, input).value)
+      .filter(result => result)
 
     if (errors.length > 0) {
-      return left(errors)
+      return left(errors as DomainError[])
     }
 
     return right(null)

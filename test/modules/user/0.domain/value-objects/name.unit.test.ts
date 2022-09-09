@@ -14,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Name', () => {
   describe('success', () => {
-    it('returns an Name when input is valid', () => {
+    it('returns a Name when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_name'
 

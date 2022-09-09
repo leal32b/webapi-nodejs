@@ -1,4 +1,5 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
+import { NullError } from '@/core/0.domain/errors/null-error'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 import { UserEntity, UserEntityCreateParams } from '@/user/0.domain/entities/user-entity'
 import { Email } from '@/user/0.domain/value-objects/email'
@@ -21,12 +22,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     paramsFake: makeParamsFake()
   }
   const sut = UserEntity
 
-  return { sut, ...fakes }
+  return { sut, ...doubles }
 }
 
 describe('UserEntity', () => {
@@ -133,6 +134,33 @@ describe('UserEntity', () => {
   })
 
   describe('failure', () => {
+    it('returns Left when params is invalid', () => {
+      const { sut } = makeSut()
+      const params = null
+
+      const result = sut.create(params)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns NullError when params is null', () => {
+      const { sut } = makeSut()
+      const params = null
+
+      const result = sut.create(params)
+
+      expect(result.value[0]).toBeInstanceOf(NullError)
+    })
+
+    it('returns NullError when params is undefined', () => {
+      const { sut } = makeSut()
+      const params = undefined
+
+      const result = sut.create(params)
+
+      expect(result.value[0]).toBeInstanceOf(NullError)
+    })
+
     it('returns Left when any param is invalid', () => {
       const { sut, paramsFake } = makeSut()
       const email = null
@@ -148,10 +176,11 @@ describe('UserEntity', () => {
 
       const result = sut.create({ ...paramsFake, email })
 
-      expect((result.value as DomainError[])[0]).toBeInstanceOf(DomainError)
+      expect((result.value as DomainError[])
+        .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns an error for each param validation tha failed', () => {
+    it('returns an error for each param validation that fails', () => {
       const { sut, paramsFake } = makeSut()
       const email = null
       const name = null

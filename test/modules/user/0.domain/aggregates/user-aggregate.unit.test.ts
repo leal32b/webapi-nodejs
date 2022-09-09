@@ -1,6 +1,6 @@
 import { NullError } from '@/core/0.domain/errors/null-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-import { UserEntity, UserEntityCreateParams } from '@/user/0.domain/entities/user-entity'
+import { UserEntityCreateParams } from '@/user/0.domain/entities/user-entity'
 
 const makeParamsFake = (): UserEntityCreateParams => ({
   email: 'any@mail.com',
@@ -16,25 +16,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
-    paramsFake: makeParamsFake()
-  }
+  const paramsFake = makeParamsFake()
 
-  const sut = UserAggregate.create(fakes.paramsFake).value as UserAggregate
+  const sut = UserAggregate.create(paramsFake).value as UserAggregate
 
-  return { sut, ...fakes }
+  return { sut, paramsFake }
 }
 
 describe('UserAggregate', () => {
   describe('success', () => {
-    it('gets the aggregateRoot', () => {
-      const { sut } = makeSut()
-
-      const result = sut.aggregateRoot
-
-      expect(result).toBeInstanceOf(UserEntity)
-    })
-
     it('updates the emailConfirmed of aggregateRoot', () => {
       const { sut } = makeSut()
 
@@ -56,6 +46,22 @@ describe('UserAggregate', () => {
   })
 
   describe('failure', () => {
+    it('returns Left when params is invalid', () => {
+      const params = null
+
+      const result = UserAggregate.create(params)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns NullError when params is invalid', () => {
+      const params = null
+
+      const result = UserAggregate.create(params)
+
+      expect(result.value[0]).toBeInstanceOf(NullError)
+    })
+
     it('returns NullError when emailConfirmed is null', () => {
       const { sut } = makeSut()
 

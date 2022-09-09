@@ -22,14 +22,18 @@ describe('EmptyError', () => {
       expect(result).toBeInstanceOf(EmptyError)
     })
 
-    it('returns the correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('should not be empty')
+      expect(result.props).toEqual({
+        message: 'should not be empty',
+        field: 'any_field',
+        input: ''
+      })
     })
   })
 })

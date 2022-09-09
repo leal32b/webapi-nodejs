@@ -21,5 +21,6 @@ module.exports = {
     '^@/core/(.*)$': '<rootDir>/src/core/$1',
     '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
-  }
+  },
+  testTimeout: 10000
 }

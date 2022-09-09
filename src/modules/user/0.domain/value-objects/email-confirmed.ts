@@ -5,10 +5,10 @@ import { NotNullValidator } from '@/core/0.domain/validators/not-null-validator'
 
 export class EmailConfirmed extends ValueObject<boolean> {
   static create (input: boolean): Either<DomainError[], EmailConfirmed> {
-    const trueOrError = this.validate(input, [
+    const validOrError = this.validate(input, [
       new NotNullValidator()
     ])
 
-    return trueOrError.applyOnRight(() => new EmailConfirmed(input))
+    return validOrError.applyOnRight(() => new EmailConfirmed(input))
   }
 }

@@ -6,11 +6,11 @@ import { NotNullValidator } from '@/core/0.domain/validators/not-null-validator'
 
 export class Token extends ValueObject<string> {
   static create (input: string): Either<DomainError[], Token> {
-    const trueOrError = this.validate(input, [
+    const validOrError = this.validate(input, [
       new NotEmptyValidator(),
       new NotNullValidator()
     ])
 
-    return trueOrError.applyOnRight(() => new Token(input))
+    return validOrError.applyOnRight(() => new Token(input))
   }
 }

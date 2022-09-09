@@ -13,29 +13,24 @@ export abstract class Entity<T> {
   constructor (props: T, id?: string) {
     this.props = {
       ...props,
-      id: new Identifier(id)
+      id: new Identifier({ id })
     }
   }
 
   static validateParams <T>(params: Params): Either<DomainError[], T> {
-    const errors: DomainError[] = []
-
-    Object.entries(params).forEach(([param, result]) => {
-      if (result.isLeft()) {
-        errors.push(...result.value)
-      }
-    })
+    const errors = Object.values(params)
+      .map(param => param.isLeft() ? param.value : [])
+      .reduce((acc, curVal) => acc.concat(curVal))
 
     if (errors.length > 0) {
       return left(errors)
     }
 
-    const validatedParams: T = {} as any
+    const validatedParams = Object.fromEntries(
+      Object.entries(params)
+        .map(([param, result]) => [param, result.value])
+    )
 
-    Object.entries(params).forEach(([param, result]) => {
-      validatedParams[param] = result.value
-    })
-
-    return right(validatedParams)
+    return right(validatedParams as T)
   }
 }

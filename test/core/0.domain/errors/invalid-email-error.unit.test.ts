@@ -15,21 +15,25 @@ describe('InvalidEmailError', () => {
     it('returns an InvalidEmailError', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'any@mail'
+      const input = 'invalid_mail'
 
       const result = new sut(field, input)
 
       expect(result).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns the correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
-      const input = 'any@mail'
+      const input = 'invalid_mail'
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('should have format: name@mail.com')
+      expect(result.props).toEqual({
+        message: 'should have format: "name@mail.com"',
+        field: 'any_field',
+        input: 'invalid_mail'
+      })
     })
   })
 })

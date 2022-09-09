@@ -7,12 +7,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = {
+  const params = {
     maxLength: 16
   }
-  const sut = new MaxLengthValidator(injection)
+  const sut = new MaxLengthValidator(params)
 
-  return { sut, ...injection }
+  return { sut, ...params }
 }
 
 describe('MaxLengthValidator', () => {

@@ -7,12 +7,12 @@ import { MinLengthValidator } from '@/core/0.domain/validators/min-length-valida
 
 export class Email extends ValueObject<string> {
   static create (input: string): Either<DomainError[], Email> {
-    const trueOrError = this.validate(input, [
+    const validOrError = this.validate(input, [
       new MinLengthValidator({ minLength: 12 }),
       new MaxLengthValidator({ maxLength: 64 }),
       new EmailValidator()
     ])
 
-    return trueOrError.applyOnRight(() => new Email(input))
+    return validOrError.applyOnRight(() => new Email(input))
   }
 }

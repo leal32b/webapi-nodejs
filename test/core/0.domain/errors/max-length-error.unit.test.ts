@@ -23,7 +23,7 @@ describe('MaxLengthError', () => {
       expect(result).toBeInstanceOf(MaxLengthError)
     })
 
-    it('returns the correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6
@@ -31,7 +31,11 @@ describe('MaxLengthError', () => {
 
       const result = new sut(field, length, input)
 
-      expect(result.props.message).toBe('should have a maximum of 6 characters')
+      expect(result.props).toEqual({
+        message: 'should have a maximum of 6 characters',
+        field: 'any_field',
+        input: 'long_string'
+      })
     })
   })
 })

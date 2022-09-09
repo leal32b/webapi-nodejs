@@ -7,12 +7,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = {
+  const params = {
     minLength: 7
   }
-  const sut = new MinLengthValidator(injection)
+  const sut = new MinLengthValidator(params)
 
-  return { sut, ...injection }
+  return { sut, ...params }
 }
 
 describe('MinLengthValidator', () => {
