@@ -20,7 +20,7 @@ describe('NotEmptyValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
   })
 
@@ -32,7 +32,7 @@ describe('NotEmptyValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns EmptyError when validation fails', () => {

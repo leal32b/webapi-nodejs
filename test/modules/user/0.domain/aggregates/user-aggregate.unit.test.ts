@@ -46,22 +46,6 @@ describe('UserAggregate', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when params is invalid', () => {
-      const params = null
-
-      const result = UserAggregate.create(params)
-
-      expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns NullError when params is invalid', () => {
-      const params = null
-
-      const result = UserAggregate.create(params)
-
-      expect(result.value[0]).toBeInstanceOf(NullError)
-    })
-
     it('returns NullError when emailConfirmed is null', () => {
       const { sut } = makeSut()
 

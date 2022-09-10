@@ -24,7 +24,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input.length is lower than maxLength', () => {
@@ -34,7 +34,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input is an empty string', () => {
@@ -44,7 +44,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input is null', () => {
@@ -54,7 +54,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input is undefined', () => {
@@ -64,7 +64,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
   })
 
@@ -76,7 +76,7 @@ describe('MaxLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns MaxLengthError when validation fails', () => {

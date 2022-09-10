@@ -20,7 +20,7 @@ describe('NotNullValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
   })
 
@@ -32,7 +32,7 @@ describe('NotNullValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is undefined', () => {
@@ -42,7 +42,7 @@ describe('NotNullValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns NotNullValidator when validation fails', () => {

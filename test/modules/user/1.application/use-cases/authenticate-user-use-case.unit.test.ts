@@ -31,10 +31,10 @@ const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right()),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
   readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeUserAggregateFake())),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
@@ -154,7 +154,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns NotFoundError when userRepository.readByEmail returns null', async () => {
       const { sut, userRepository, authenticateUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(right(null))
+      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(right())
 
       const result = await sut.execute(authenticateUserDataFake)
 

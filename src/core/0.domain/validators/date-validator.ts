@@ -15,6 +15,6 @@ export class DateValidator extends Validator<null> {
       return left(new InvalidDateError(field, input))
     }
 
-    return right(null)
+    return right()
   }
 }

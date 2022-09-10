@@ -28,7 +28,7 @@ export class ExpressAdapter implements WebApp {
         )
       }
 
-      return right(null)
+      return right()
     } catch (error) {
       console.log('setRouter', error)
 
@@ -40,7 +40,7 @@ export class ExpressAdapter implements WebApp {
     try {
       this.app.listen(port, callback)
 
-      return right(null)
+      return right()
     } catch (error) {
       console.log('listen', error)
 

@@ -26,10 +26,10 @@ const makeCreateUserDataFake = (): CreateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right()),
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({

@@ -14,6 +14,6 @@ export class MinLengthValidator extends Validator<Props> {
       return left(new MinLengthError(field, minLength, input))
     }
 
-    return right(null)
+    return right()
   }
 }

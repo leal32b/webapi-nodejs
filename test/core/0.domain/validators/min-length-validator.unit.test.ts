@@ -24,7 +24,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input.length is greater than minLength', () => {
@@ -34,7 +34,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
   })
 
@@ -46,7 +46,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is an empty string', () => {
@@ -56,7 +56,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is null', () => {
@@ -66,7 +66,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is undefined', () => {
@@ -76,7 +76,7 @@ describe('MinLengthValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns MinLengthError when validation fails', () => {

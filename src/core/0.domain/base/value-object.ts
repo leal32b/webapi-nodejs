@@ -14,6 +14,6 @@ export abstract class ValueObject<T> {
       return left(errors as DomainError[])
     }
 
-    return right(null)
+    return right()
   }
 }

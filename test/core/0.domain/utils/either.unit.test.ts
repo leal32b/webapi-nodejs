@@ -19,6 +19,12 @@ describe('Either', () => {
 
       expect(result.applyOnRight(value => value).isRight()).toBe(true)
     })
+
+    it('returns Right with value=undefined when no param is provided', () => {
+      const result: Either<any, any> = right()
+
+      expect(result.value).toBe(undefined)
+    })
   })
 
   describe('failure', () => {

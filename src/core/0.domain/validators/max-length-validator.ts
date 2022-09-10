@@ -14,6 +14,6 @@ export class MaxLengthValidator extends Validator<Props> {
       return left(new MaxLengthError(field, maxLength, input))
     }
 
-    return right(null)
+    return right()
   }
 }

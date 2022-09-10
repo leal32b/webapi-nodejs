@@ -8,6 +8,6 @@ export class NotEmptyValidator extends Validator<null> {
       return left(new EmptyError(field, input))
     }
 
-    return right(null)
+    return right()
   }
 }

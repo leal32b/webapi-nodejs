@@ -11,6 +11,6 @@ export class EmailValidator extends Validator<null> {
       return left(new InvalidEmailError(field, input))
     }
 
-    return right(null)
+    return right()
   }
 }

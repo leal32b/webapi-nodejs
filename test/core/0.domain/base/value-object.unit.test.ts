@@ -15,7 +15,7 @@ const makeErrorFake = (): DomainError => {
 
 const makeValidatorStub = (): Validator<any> => ({
   validate: jest.fn((): Either<DomainError, void> => {
-    return right(null)
+    return right()
   })
 })
 
@@ -46,13 +46,13 @@ describe('ValueObject', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns a null when all validators pass', () => {
+    it('returns undefined when all validators pass', () => {
       const { sut, validator } = makeSut()
       const input = 'any_input'
 
       const result = sut.validate(input, [validator])
 
-      expect(result.value).toBe(null)
+      expect(result.value).toBe(undefined)
     })
   })
 

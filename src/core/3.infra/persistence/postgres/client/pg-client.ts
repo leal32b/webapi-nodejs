@@ -14,7 +14,7 @@ class PgClient {
       await this.props.dataSource.initialize()
       console.log(message || 'connected to dataSource')
 
-      return right(null)
+      return right()
     } catch (error) {
       // console.log('connect', error)
 
@@ -33,7 +33,7 @@ class PgClient {
       await this.props.dataSource.destroy()
       console.log('disconnected from dataSource')
 
-      return right(null)
+      return right()
     } catch (error) {
       console.log('close', error)
 

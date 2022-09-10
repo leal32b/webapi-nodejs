@@ -32,10 +32,10 @@ const makeChangePasswordDataFake = (): ChangePasswordData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right()),
   readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
@@ -135,7 +135,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns NotFoundError when userRepository.readById returns null', async () => {
       const { sut, userRepository, changePasswordDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readById').mockResolvedValueOnce(right(null))
+      jest.spyOn(userRepository, 'readById').mockResolvedValueOnce(right())
 
       const result = await sut.execute(changePasswordDataFake)
 

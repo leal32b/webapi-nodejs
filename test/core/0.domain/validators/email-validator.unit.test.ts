@@ -20,7 +20,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isRight()).toBeTruthy()
+      expect(result.isRight()).toBe(true)
     })
   })
 
@@ -32,7 +32,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input has no domain', () => {
@@ -42,7 +42,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is an empty string', () => {
@@ -52,7 +52,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is null', () => {
@@ -62,7 +62,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when input is undefined', () => {
@@ -72,7 +72,7 @@ describe('EmailValidator', () => {
 
       const result = sut.validate(field, input)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns InvalidEmailError when validation fails', () => {

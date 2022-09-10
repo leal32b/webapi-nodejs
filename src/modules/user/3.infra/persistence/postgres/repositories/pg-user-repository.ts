@@ -23,7 +23,7 @@ export class PgUserRepository implements UserRepository {
 
       await pg.client.manager.save(pgUser)
 
-      return right(null)
+      return right()
     } catch (error) {
       return left([new ServerError(error.message, error.stack)])
     }

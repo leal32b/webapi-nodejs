@@ -17,7 +17,7 @@ export class Left<L, A> {
 }
 
 export class Right<L, A> {
-  constructor (readonly value: A) {}
+  constructor (readonly value?: A) {}
 
   isLeft (): this is Left<L, A> {
     return false
@@ -27,7 +27,7 @@ export class Right<L, A> {
     return true
   }
 
-  applyOnRight<B>(func: (a: A) => B): Either<L, B> {
+  applyOnRight<B>(func: (a?: A) => B): Either<L, B> {
     return new Right(func(this.value))
   }
 }
@@ -36,6 +36,6 @@ export const left = <L, A>(l: L): Either<L, A> => {
   return new Left(l)
 }
 
-export const right = <L, A>(a: A): Either<L, A> => {
+export const right = <L, A>(a?: A): Either<L, A> => {
   return new Right<L, A>(a)
 }

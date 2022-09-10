@@ -8,6 +8,6 @@ export class NotNullValidator extends Validator<null> {
       return left(new NullError(field, input))
     }
 
-    return right(null)
+    return right()
   }
 }
