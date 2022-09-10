@@ -32,9 +32,9 @@ describe('MaxLengthError', () => {
       const result = new sut(field, length, input)
 
       expect(result.props).toEqual({
-        message: 'should have a maximum of 6 characters',
         field: 'any_field',
-        input: 'long_string'
+        input: 'long_string',
+        message: 'should have a maximum of 6 characters'
       })
     })
   })

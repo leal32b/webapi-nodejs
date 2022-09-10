@@ -22,14 +22,18 @@ describe('NotFoundError', () => {
       expect(result).toBeInstanceOf(NotFoundError)
     })
 
-    it('returns an NotFoundError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any_input'
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('any_field "any_input" not found')
+      expect(result.props).toEqual({
+        field: 'any_field',
+        input: 'any_input',
+        message: 'any_field "any_input" not found'
+      })
     })
   })
 })

@@ -7,14 +7,6 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { AuthenticateUserData, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
-const fakeAggregate = UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
-
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
     constructor () {
@@ -25,48 +17,40 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
+const makeUserAggregateFake = (): UserAggregate => UserAggregate.create({
+  email: 'any@mail.com',
+  id: 'any_id',
+  name: 'any_name',
+  password: 'hashed_password',
+  token: 'any_token'
+}).value as UserAggregate
+
 const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
   email: 'any@mail.com',
   password: 'any_password'
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  }),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(null)
-  }),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(fakeAggregate)
-  }),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  })
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeUserAggregateFake())),
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('hashed_password')
-  }),
-  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => {
-    return right(true)
-  })
+  hash: jest.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
+  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('token')
-  }),
-  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => {
-    return right({
-      type: TokenType.access,
-      payload: {
-        id: 'any_id',
-        auth: ['any_auth']
-      }
-    })
-  })
+  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => right('token')),
+  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => right({
+    type: TokenType.access,
+    payload: {
+      id: 'any_id',
+      auth: ['any_auth']
+    }
+  }))
 })
 
 type SutTypes = {
@@ -79,18 +63,18 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     authenticateUserDataFake: makeAuthenticateUserDataFake(),
     errorFake: makeErrorFake()
   }
-  const injection = {
+  const params = {
     userRepository: makeUserRepositoryStub(),
     hasher: makeHasherStub(),
     encrypter: makeEncrypterStub()
   }
-  const sut = new AuthenticateUserUseCase(injection)
+  const sut = new AuthenticateUserUseCase(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('AuthenticateUserUseCase', () => {
@@ -118,8 +102,8 @@ describe('AuthenticateUserUseCase', () => {
 
       expect(encrypter.encrypt).toHaveBeenCalledWith({
         payload: {
-          id: 'any_id',
-          auth: ['user']
+          auth: ['user'],
+          id: 'any_id'
         },
         type: 'access'
       })
@@ -152,8 +136,8 @@ describe('AuthenticateUserUseCase', () => {
       const result = await sut.execute(authenticateUserDataFake)
 
       expect(result.value).toEqual({
-        message: 'user authenticated successfully',
-        accessToken: 'token'
+        accessToken: 'token',
+        message: 'user authenticated successfully'
       })
     })
   })

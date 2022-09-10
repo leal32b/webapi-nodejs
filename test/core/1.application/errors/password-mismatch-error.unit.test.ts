@@ -21,13 +21,16 @@ describe('PasswordMismatchError', () => {
       expect(result).toBeInstanceOf(PasswordMismatchError)
     })
 
-    it('returns a PasswordMismatchError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
 
       const result = new sut(field)
 
-      expect(result.props.message).toBe('passwords should match')
+      expect(result.props).toEqual({
+        field: 'any_field',
+        message: 'passwords should match'
+      })
     })
   })
 })

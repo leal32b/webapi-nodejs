@@ -7,14 +7,6 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-const fakeAggregate = UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
-
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
     constructor () {
@@ -25,6 +17,14 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
+const makeAggregateFake = (): UserAggregate => UserAggregate.create({
+  email: 'any@mail.com',
+  id: 'any_id',
+  name: 'any_name',
+  password: 'hashed_password',
+  token: 'any_token'
+}).value as UserAggregate
+
 const makeChangePasswordDataFake = (): ChangePasswordData => ({
   id: 'any_id',
   password: 'any_password',
@@ -32,27 +32,15 @@ const makeChangePasswordDataFake = (): ChangePasswordData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  }),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(fakeAggregate)
-  }),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(null)
-  }),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  })
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('hashed_password')
-  }),
-  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => {
-    return right(true)
-  })
+  hash: jest.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
+  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 type SutTypes = {

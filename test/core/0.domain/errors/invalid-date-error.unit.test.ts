@@ -30,9 +30,9 @@ describe('InvalidDateError', () => {
       const result = new sut(field, input)
 
       expect(result.props).toEqual({
-        message: 'should have format: "yyyy-MM-ddTHH:mm:ss.fffZ"',
         field: 'any_field',
-        input: 'invalid_date'
+        input: 'invalid_date',
+        message: 'should have format: "yyyy-MM-ddTHH:mm:ss.fffZ"'
       })
     })
   })

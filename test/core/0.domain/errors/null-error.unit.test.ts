@@ -30,9 +30,9 @@ describe('NullError', () => {
       const result = new sut(field, input)
 
       expect(result.props).toEqual({
-        message: 'should not be null',
         field: 'any_field',
-        input: null
+        input: null,
+        message: 'should not be null'
       })
     })
 

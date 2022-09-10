@@ -30,9 +30,9 @@ describe('InvalidEmailError', () => {
       const result = new sut(field, input)
 
       expect(result.props).toEqual({
-        message: 'should have format: "name@mail.com"',
         field: 'any_field',
-        input: 'invalid_mail'
+        input: 'invalid_mail',
+        message: 'should have format: "name@mail.com"'
       })
     })
   })

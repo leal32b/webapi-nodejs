@@ -30,9 +30,9 @@ describe('EmptyError', () => {
       const result = new sut(field, input)
 
       expect(result.props).toEqual({
-        message: 'should not be empty',
         field: 'any_field',
-        input: ''
+        input: '',
+        message: 'should not be empty'
       })
     })
   })

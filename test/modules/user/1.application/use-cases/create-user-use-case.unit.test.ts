@@ -26,41 +26,25 @@ const makeCreateUserDataFake = (): CreateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  }),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(null)
-  }),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => {
-    return right(null)
-  }),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => {
-    return right(null)
-  })
+  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null)),
+  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
+  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(null)),
+  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right(null))
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('hashed_password')
-  }),
-  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => {
-    return right(true)
-  })
+  hash: jest.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
+  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('token')
-  }),
-  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => {
-    return right({
-      type: TokenType.access,
-      payload: {
-        anyKey: 'any_value'
-      }
-    })
-  })
+  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => right('token')),
+  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => right({
+    type: TokenType.access,
+    payload: {
+      anyKey: 'any_value'
+    }
+  }))
 })
 
 type SutTypes = {
@@ -73,18 +57,18 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake(),
     createUserDataFake: makeCreateUserDataFake()
   }
-  const injection = {
+  const params = {
     userRepository: makeUserRepositoryStub(),
     hasher: makeHasherStub(),
     encrypter: makeEncrypterStub()
   }
-  const sut = new CreateUserUseCase(injection)
+  const sut = new CreateUserUseCase(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('CreateUserUseCase', () => {

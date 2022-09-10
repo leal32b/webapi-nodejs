@@ -22,14 +22,18 @@ describe('EmailTakenError', () => {
       expect(result).toBeInstanceOf(EmailTakenError)
     })
 
-    it('returns an EmailTakenError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any@mail.com'
 
       const result = new sut(field, input)
 
-      expect(result.props.message).toBe('email already in use')
+      expect(result.props).toEqual({
+        field: 'any_field',
+        input: 'any@mail.com',
+        message: 'email already in use'
+      })
     })
   })
 })
