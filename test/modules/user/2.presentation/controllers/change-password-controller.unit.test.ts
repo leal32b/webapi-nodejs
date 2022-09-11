@@ -31,11 +31,9 @@ const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
 })
 
 const makeChangePasswordUseCaseStub = (): ChangePasswordUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => {
-    return right({
-      message: 'password updated successfully'
-    })
-  })
+  execute: jest.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => right({
+    message: 'password updated successfully'
+  }))
 } as any)
 
 type SutTypes = {
@@ -47,17 +45,17 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake(),
     systemErrorFake: makeSystemErrorFake(),
     requestFake: makeRequestFake()
   }
-  const injection = {
+  const params = {
     changePasswordUseCase: makeChangePasswordUseCaseStub() as any
   }
-  const sut = new ChangePasswordController(injection)
+  const sut = new ChangePasswordController(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('ChangePasswordController', () => {

@@ -18,12 +18,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake()
   }
   const sut = serverError
 
-  return { sut, ...fakes }
+  return { sut, ...doubles }
 }
 
 describe('serverError', () => {

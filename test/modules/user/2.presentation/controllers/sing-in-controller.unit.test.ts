@@ -29,12 +29,10 @@ const makeRequestFake = (): AppRequest<AuthenticateUserData> => ({
 })
 
 const makeAuthenticateUserUseCaseStub = (): AuthenticateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], AuthenticateUserResultDTO>> => {
-    return right({
-      accessToken: 'access_token',
-      message: 'user authenticated successfully'
-    })
-  })
+  execute: jest.fn(async (): Promise<Either<DomainError[], AuthenticateUserResultDTO>> => right({
+    accessToken: 'access_token',
+    message: 'user authenticated successfully'
+  }))
 } as any)
 
 type SutTypes = {
@@ -46,17 +44,17 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake(),
     systemErrorFake: makeSystemErrorFake(),
     requestFake: makeRequestFake()
   }
-  const injection = {
+  const params = {
     authenticateUserUseCase: makeAuthenticateUserUseCaseStub() as any
   }
-  const sut = new SignInController(injection)
+  const sut = new SignInController(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('SignInController', () => {

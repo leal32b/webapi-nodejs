@@ -22,14 +22,17 @@ describe('ServerError', () => {
       expect(result).toBeInstanceOf(ServerError)
     })
 
-    it('returns an ServerError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const message = 'any_message'
       const stack = 'any_stack'
 
       const result = new sut(message, stack)
 
-      expect(result.props.message).toBe('any_message')
+      expect(result.props).toEqual({
+        message: 'any_message',
+        stack: 'any_stack'
+      })
     })
   })
 })

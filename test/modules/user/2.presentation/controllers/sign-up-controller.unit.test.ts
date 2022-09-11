@@ -31,12 +31,10 @@ const makeRequestFake = (): AppRequest<CreateUserData> => ({
 })
 
 const makeCreateUserUseCaseStub = (): CreateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], CreateUserResultDTO>> => {
-    return right({
-      email: 'any@mail.com',
-      message: 'user created successfully'
-    })
-  })
+  execute: jest.fn(async (): Promise<Either<DomainError[], CreateUserResultDTO>> => right({
+    email: 'any@mail.com',
+    message: 'user created successfully'
+  }))
 } as unknown as CreateUserUseCase)
 
 type SutTypes = {
@@ -48,17 +46,17 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake(),
     systemErrorFake: makeSystemErrorFake(),
     requestFake: makeRequestFake()
   }
-  const injection = {
+  const params = {
     createUserUseCase: makeCreateUserUseCaseStub()
   }
-  const sut = new SignUpController(injection)
+  const sut = new SignUpController(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('SignUpController', () => {
