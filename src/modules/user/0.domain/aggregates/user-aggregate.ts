@@ -1,41 +1,78 @@
-import { Aggregate } from '@/core/0.domain/base/aggregate'
+import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either } from '@/core/0.domain/utils/either'
-import { UserEntity, UserEntityCreateParams } from '@/user/0.domain/entities/user-entity'
+import { Identifier } from '@/core/0.domain/utils/identifier'
+import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
+import { Name } from '@/user/0.domain/value-objects/name'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { Token } from '@/user/0.domain/value-objects/token'
 
-export class UserAggregate extends Aggregate<UserEntity> {
-  static create (params: UserEntityCreateParams): Either<DomainError[], UserAggregate> {
-    const userEntityOrError = UserEntity.create(params)
+type ConstructParams = {
+  email: Email
+  emailConfirmed: EmailConfirmed
+  name: Name
+  password: Password
+  token: Token
+}
 
-    return userEntityOrError.applyOnRight(userEntity => new UserAggregate({
-      aggregateRoot: userEntity
-    }))
+export type UserAggregateCreateParams = {
+  email: string
+  name: string
+  password: string
+  token: string
+  emailConfirmed?: boolean
+  id?: string
+}
+
+export class UserAggregate extends AggregateRoot<ConstructParams> {
+  static create (params: UserAggregateCreateParams): Either<DomainError[], UserAggregate> {
+    const { email, name, password, token, id, emailConfirmed } = params
+
+    const constructParamsOrError = this.validateParams<ConstructParams>({
+      email: Email.create(email),
+      emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
+      name: Name.create(name),
+      password: Password.create(password),
+      token: Token.create(token)
+    })
+
+    return constructParamsOrError.applyOnRight(value => new UserAggregate(value, id))
   }
 
-  setEmailConfirmed (value: boolean): Either<DomainError[], void> {
-    const emailConfirmedOrError = EmailConfirmed.create(value)
-
-    return emailConfirmedOrError.applyOnRight(value => {
-      this.aggregateRoot.emailConfirmed = value
-    })
+  get email (): Email {
+    return this.props.email
   }
 
-  setToken (value: string): Either<DomainError[], void> {
-    const tokenOrError = Token.create(value)
-
-    return tokenOrError.applyOnRight(value => {
-      this.aggregateRoot.token = value
-    })
+  get emailConfirmed (): EmailConfirmed {
+    return this.props.emailConfirmed
   }
 
-  setPassword (value: string): Either<DomainError[], void> {
-    const passwordOrError = Password.create(value)
+  set emailConfirmed (value: EmailConfirmed) {
+    this.props.emailConfirmed = value
+  }
 
-    return passwordOrError.applyOnRight(value => {
-      this.aggregateRoot.password = value
-    })
+  get id (): Identifier {
+    return this.props.id
+  }
+
+  get name (): Name {
+    return this.props.name
+  }
+
+  get password (): Password {
+    return this.props.password
+  }
+
+  set password (value: Password) {
+    this.props.password = value
+  }
+
+  get token (): Token {
+    return this.props.token
+  }
+
+  set token (value: Token) {
+    this.props.token = value
   }
 }

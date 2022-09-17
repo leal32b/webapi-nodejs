@@ -2,10 +2,11 @@
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
 
-const makeFakeUserAggregateFake = (): UserAggregate => {
+const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
     email: 'any@mail.com',
     id: 'any_id',
@@ -23,7 +24,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    userAggregateFake: makeFakeUserAggregateFake()
+    userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
     pgUserFactory: PgUserFactory.create()
@@ -92,7 +93,8 @@ describe('UserPostgresRepository', () => {
 
     it('returns Right on update success', async () => {
       const { sut, userAggregateFake } = makeSut()
-      userAggregateFake.setEmailConfirmed(true)
+      const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
+      userAggregateFake.emailConfirmed = emailConfirmed
 
       const result = await sut.update(userAggregateFake)
 

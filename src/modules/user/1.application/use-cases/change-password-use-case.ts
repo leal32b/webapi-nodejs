@@ -4,6 +4,7 @@ import { UseCase } from '@/core/1.application/base/use-case'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
+import { Password } from '@/user/0.domain/value-objects/password'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export type ChangePasswordData = {
@@ -49,7 +50,14 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     }
 
     const hashedPassword = hashedPasswordOrError.value
-    userAggregate.setPassword(hashedPassword)
+    const passwordOrError = Password.create(hashedPassword)
+
+    if (passwordOrError.isLeft()) {
+      return left(passwordOrError.value)
+    }
+
+    const newPassword = passwordOrError.value
+    userAggregate.password = newPassword
     const updatedOrError = await userRepository.update(userAggregate)
 
     if (updatedOrError.isLeft()) {

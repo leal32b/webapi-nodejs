@@ -9,7 +9,7 @@ import { UserRepository } from '@/user/1.application/repositories/user-repositor
 export class PgUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
+      const { email, emailConfirmed, id, name, password, token } = userAggregate
       const repository = await pg.client.getRepository('PgUser')
 
       const pgUser = repository.create({
@@ -65,7 +65,7 @@ export class PgUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, name, password, token } = userAggregate.aggregateRoot
+      const { email, emailConfirmed, id, name, password, token } = userAggregate
       const repository = await pg.client.getRepository('PgUser')
 
       const pgUser = repository.create({

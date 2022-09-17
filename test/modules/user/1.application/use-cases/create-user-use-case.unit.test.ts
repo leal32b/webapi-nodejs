@@ -104,16 +104,12 @@ describe('CreateUserUseCase', () => {
 
       expect(userRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          aggregateRoot: {
-            props: {
-              email: expect.any(Object),
-              emailConfirmed: expect.any(Object),
-              id: expect.any(Object),
-              name: expect.any(Object),
-              password: expect.any(Object),
-              token: expect.any(Object)
-            }
-          }
+          email: expect.any(Object),
+          emailConfirmed: expect.any(Object),
+          id: expect.any(Object),
+          name: expect.any(Object),
+          password: expect.any(Object),
+          token: expect.any(Object)
         })
       )
     })

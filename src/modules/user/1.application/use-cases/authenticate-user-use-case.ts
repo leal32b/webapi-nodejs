@@ -5,6 +5,7 @@ import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypte
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
+import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export type AuthenticateUserData = {
@@ -39,7 +40,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
       return left([new NotFoundError('email', email)])
     }
 
-    const { id, password: hashedPassword } = userAggregate.aggregateRoot
+    const { id, password: hashedPassword } = userAggregate
     const passwordIsValidOrError = await hasher.compare(hashedPassword.value, password)
 
     if (passwordIsValidOrError.isLeft()) {
@@ -64,7 +65,14 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     }
 
     const accessToken = accessTokenOrError.value
-    userAggregate.setToken(accessToken)
+    const tokenOrError = Token.create(accessToken)
+
+    if (tokenOrError.isLeft()) {
+      return left(tokenOrError.value)
+    }
+
+    const token = tokenOrError.value
+    userAggregate.token = token
     const updatedOrError = await userRepository.update(userAggregate)
 
     if (updatedOrError.isLeft()) {
