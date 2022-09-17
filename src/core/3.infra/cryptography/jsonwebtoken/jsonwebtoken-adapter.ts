@@ -7,7 +7,7 @@ import { Encrypter, TokenData } from '@/core/1.application/cryptography/encrypte
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 export class JsonwebtokenAdapter implements Encrypter {
-  secret: string = process.env.JWT_SECRET
+  private readonly secret: string = process.env.JWT_SECRET
 
   async encrypt (data: TokenData, expiresIn: string | number = '1d'): Promise<Either<DomainError, string>> {
     try {

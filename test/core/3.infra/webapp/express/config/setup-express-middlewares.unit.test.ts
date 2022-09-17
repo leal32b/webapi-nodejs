@@ -5,12 +5,10 @@ import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 
 const makeControllerStub = (): Controller => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {
-    return {
-      payload: request.payload,
-      statusCode: 200
-    }
-  })
+  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+    payload: request.payload,
+    statusCode: 200
+  }))
 })
 
 type SutTypes = {

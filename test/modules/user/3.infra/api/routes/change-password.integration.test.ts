@@ -11,7 +11,7 @@ import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password-r
 import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
-const makeFakeAuthorization = async (): Promise<string> => {
+const makeAuthorizationFake = async (): Promise<string> => {
   const token = await config.cryptography.encrypter.encrypt({
     type: TokenType.access,
     payload: {
@@ -27,12 +27,12 @@ type SutTypes = {
   sut: Route
   pgUserFactory: PgUserFactory
   webApp: WebApp
-  fakeAuthorization: string
+  authorizationFake: string
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const fakes = {
-    fakeAuthorization: await makeFakeAuthorization()
+  const doubles = {
+    authorizationFake: await makeAuthorizationFake()
   }
   const collaborators = {
     pgUserFactory: PgUserFactory.create(),
@@ -45,7 +45,7 @@ const makeSut = async (): Promise<SutTypes> => {
     middlewares: [authMiddlewareFactory(), schemaValidatorMiddlewareFactory()]
   })
 
-  return { sut, ...collaborators, ...fakes }
+  return { sut, ...collaborators, ...doubles }
 }
 
 describe('ChangePasswordRoute', () => {
@@ -60,7 +60,7 @@ describe('ChangePasswordRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { pgUserFactory, webApp, fakeAuthorization } = await makeSut()
+      const { pgUserFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
@@ -68,7 +68,7 @@ describe('ChangePasswordRoute', () => {
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -78,7 +78,7 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct message on success', async () => {
-      const { pgUserFactory, webApp, fakeAuthorization } = await makeSut()
+      const { pgUserFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
@@ -86,7 +86,7 @@ describe('ChangePasswordRoute', () => {
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -132,21 +132,21 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns 400 when schema is invalid', async () => {
-      const { webApp, fakeAuthorization } = await makeSut()
+      const { webApp, authorizationFake } = await makeSut()
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({})
         .expect(422)
     })
 
     it('returns schema error message when schema is invalid', async () => {
-      const { webApp, fakeAuthorization } = await makeSut()
+      const { webApp, authorizationFake } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({})
 
       expect(result.body).toEqual([{
@@ -159,11 +159,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns 400 when passwords do not match', async () => {
-      const { webApp, fakeAuthorization } = await makeSut()
+      const { webApp, authorizationFake } = await makeSut()
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -173,11 +173,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns passwords should match error message', async () => {
-      const { webApp, fakeAuthorization } = await makeSut()
+      const { webApp, authorizationFake } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', fakeAuthorization)
+        .set('Authorization', authorizationFake)
         .send({
           id: 'any_id',
           password: 'any_password',

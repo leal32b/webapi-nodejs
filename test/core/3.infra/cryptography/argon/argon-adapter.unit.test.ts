@@ -29,15 +29,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake()
   }
-  const injection = {
+  const params = {
     salt: 12
   }
-  const sut = new ArgonAdapter(injection)
+  const sut = new ArgonAdapter(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('ArgonAdapter', () => {
@@ -45,18 +45,39 @@ describe('ArgonAdapter', () => {
     it('calls argon with correct params', async () => {
       const { sut, salt } = makeSut()
       const hashSpy = jest.spyOn(argon2id, 'hash')
+      const value = 'any_value'
 
-      await sut.hash('any_value')
+      await sut.hash(value)
 
       expect(hashSpy).toHaveBeenCalledWith('any_value', { saltLength: salt })
     })
 
+    it('returns Right on hash when it succeeds', async () => {
+      const { sut } = makeSut()
+      const value = 'any_value'
+
+      const result = await sut.hash(value)
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('returns a hash', async () => {
       const { sut } = makeSut()
+      const value = 'any_value'
 
-      const result = await sut.hash('any_value')
+      const result = await sut.hash(value)
 
       expect(result.value).toBe('hashed_value')
+    })
+
+    it('returns Right on compare when it succeeds', async () => {
+      const { sut } = makeSut()
+      const hash = 'hashed_value'
+      const value = 'any_value'
+
+      const result = await sut.compare(hash, value)
+
+      expect(result.isRight()).toBe(true)
     })
 
     it('compares a hash with a value', async () => {
@@ -74,17 +95,19 @@ describe('ArgonAdapter', () => {
     it('returns Left when argon.hash throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
+      const value = 'any_value'
 
-      const result = await sut.hash('any_value')
+      const result = await sut.hash(value)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when argon.hash throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(argon2id, 'hash').mockRejectedValueOnce(errorFake as never)
+      const value = 'any_value'
 
-      const result = await sut.hash('any_value')
+      const result = await sut.hash(value)
 
       expect(result.value).toBeInstanceOf(DomainError)
     })
@@ -97,7 +120,7 @@ describe('ArgonAdapter', () => {
 
       const result = await sut.compare(hash, value)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when argon.verify throws', async () => {

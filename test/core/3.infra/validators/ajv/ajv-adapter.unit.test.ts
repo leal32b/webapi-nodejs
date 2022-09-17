@@ -23,12 +23,12 @@ type SutMockedTypes = SutTypes & {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake()
   }
   const sut = new AjvAdapter()
 
-  return { sut, ...fakes }
+  return { sut, ...doubles }
 }
 
 const makeSutMocked = (): SutMockedTypes => {

@@ -4,30 +4,24 @@ import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 
 const makeAuthStub = (): Controller => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {
-    return {
-      payload: request.payload,
-      statusCode: 200
-    }
-  })
+  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+    payload: request.payload,
+    statusCode: 200
+  }))
 })
 
 const makeControllerStub = (): Controller => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {
-    return {
-      payload: request.payload,
-      statusCode: 200
-    }
-  })
+  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+    payload: request.payload,
+    statusCode: 200
+  }))
 })
 
 const makeMiddlewareStub = (): Middleware => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => {
-    return {
-      payload: request.payload,
-      statusCode: 200
-    }
-  })
+  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+    payload: request.payload,
+    statusCode: 200
+  }))
 })
 
 type SutTypes = {
@@ -38,7 +32,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     auth: makeAuthStub(),
     controller: makeControllerStub(),
     middleware: makeMiddlewareStub()
@@ -46,7 +40,7 @@ const makeSut = (): SutTypes => {
 
   const sut = new ExpressAdapter()
 
-  return { sut, ...fakes }
+  return { sut, ...doubles }
 }
 
 describe('ExpressAdapter', () => {
@@ -83,6 +77,14 @@ describe('ExpressAdapter', () => {
       })
 
       expect(result.isRight()).toBe(true)
+    })
+
+    it('gets the app', () => {
+      const { sut } = makeSut()
+
+      const result = sut.app
+
+      expect(result).toBeInstanceOf(Function)
     })
 
     it('returns Right when listen succeeds', () => {

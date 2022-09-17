@@ -8,10 +8,10 @@ import { WebApp, Router, Route } from '@/core/3.infra/api/app/web-app'
 import { setupExpressMiddlewares } from '@/core/3.infra/webapp/express/config/setup-express-middlewares'
 
 export class ExpressAdapter implements WebApp {
-  readonly app: Express
+  private readonly _app: Express
 
   constructor () {
-    this.app = express()
+    this._app = express()
 
     setupExpressMiddlewares(this.app)
   }
@@ -80,5 +80,9 @@ export class ExpressAdapter implements WebApp {
         response.status(statusCode).json(payload)
       }
     }
+  }
+
+  get app (): Express {
+    return this._app
   }
 }

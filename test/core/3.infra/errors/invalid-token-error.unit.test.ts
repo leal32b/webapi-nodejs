@@ -21,13 +21,15 @@ describe('InvalidTokenError', () => {
       expect(result).toBeInstanceOf(InvalidTokenError)
     })
 
-    it('returns an InvalidTokenError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const type = 'Bearer'
 
       const result = new sut(type)
 
-      expect(result.props.message).toBe('token is invalid (type: Bearer)')
+      expect(result.props).toEqual({
+        message: 'token is invalid (type: Bearer)'
+      })
     })
   })
 })

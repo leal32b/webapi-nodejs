@@ -11,12 +11,12 @@ class PgClient {
 
   async connect (message?: string): Promise<Either<Error, void>> {
     try {
-      await this.props.dataSource.initialize()
+      await this.props.dataSource.initialize().then(() => console.log('baby'))
       console.log(message || 'connected to dataSource')
 
       return right()
     } catch (error) {
-      // console.log('connect', error)
+      console.log('connect', error)
 
       return left(error)
     }

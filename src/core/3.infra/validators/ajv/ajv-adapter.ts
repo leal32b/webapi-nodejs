@@ -13,10 +13,13 @@ export class AjvAdapter implements SchemaValidator {
       const isValid = validate(request.payload)
 
       if (isValid) {
-        return right({ isValid: true })
-      } else {
-        return right({ isValid: false, errors: validate.errors })
+        return right({ isValid })
       }
+
+      return right({
+        isValid,
+        errors: validate.errors
+      })
     } catch (error) {
       return left(error)
     }

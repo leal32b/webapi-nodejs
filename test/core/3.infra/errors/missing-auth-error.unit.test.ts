@@ -21,13 +21,15 @@ describe('MissingAuthError', () => {
       expect(result).toBeInstanceOf(MissingAuthError)
     })
 
-    it('returns a MissingAuthError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
       const auth = ['any']
 
       const result = new sut(auth)
 
-      expect(result.props.message).toBe('user must have at least one of these permissions: any')
+      expect(result.props).toEqual({
+        message: 'user must have at least one of these permissions: any'
+      })
     })
   })
 })

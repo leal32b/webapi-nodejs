@@ -46,13 +46,13 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     errorFake: makeErrorFake(),
     dataFake: makeFakeData()
   }
   const sut = new JsonwebtokenAdapter()
 
-  return { sut, ...fakes }
+  return { sut, ...doubles }
 }
 
 describe('JsonwebtokenAdapter', () => {
@@ -76,12 +76,29 @@ describe('JsonwebtokenAdapter', () => {
       })
     })
 
+    it('returns Right when encrypt succeeds', async () => {
+      const { sut, dataFake } = makeSut()
+
+      const result = await sut.encrypt(dataFake)
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('returns a token', async () => {
       const { sut, dataFake } = makeSut()
 
       const result = await sut.encrypt(dataFake)
 
       expect(result.value).toBe('token')
+    })
+
+    it('returns Right when decrypt succeeds', async () => {
+      const { sut } = makeSut()
+      const token = 'token'
+
+      const result = await sut.decrypt(token)
+
+      expect(result.isRight()).toBe(true)
     })
 
     it('decrypts a token', async () => {
@@ -98,16 +115,6 @@ describe('JsonwebtokenAdapter', () => {
         }
       })
     })
-
-    it('returns an Error when token is invalid', async () => {
-      const { sut, errorFake } = makeSut()
-      jest.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
-      const token = 'token'
-
-      const result = await sut.decrypt(token)
-
-      expect(result.value).toBeInstanceOf(DomainError)
-    })
   })
 
   describe('failure', () => {
@@ -117,7 +124,7 @@ describe('JsonwebtokenAdapter', () => {
 
       const result = await sut.encrypt(dataFake)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when jsonwebtoken.encrypt throws', async () => {
@@ -132,17 +139,19 @@ describe('JsonwebtokenAdapter', () => {
     it('returns Left when jsonwebtoken.verify throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
+      const token = 'any_token'
 
-      const result = await sut.decrypt('token')
+      const result = await sut.decrypt(token)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when jsonwebtoken.verify throws', async () => {
       const { sut, errorFake } = makeSut()
       jest.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
+      const token = 'any_token'
 
-      const result = await sut.decrypt('token')
+      const result = await sut.decrypt(token)
 
       expect(result.value).toBeInstanceOf(DomainError)
     })

@@ -22,7 +22,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     userAggregateFake: makeFakeUserAggregateFake()
   }
   const collaborators = {
@@ -30,7 +30,7 @@ const makeSut = (): SutTypes => {
   }
   const sut = new PgUserRepository()
 
-  return { sut, ...collaborators, ...fakes }
+  return { sut, ...collaborators, ...doubles }
 }
 
 describe('UserPostgresRepository', () => {

@@ -9,7 +9,6 @@ import { MissingTokenError } from '@/core/3.infra/errors/missing-token-error'
 
 type ConstructProps = {
   encrypter: Encrypter
-  role?: string
 }
 
 export class AuthMiddleware implements Middleware {

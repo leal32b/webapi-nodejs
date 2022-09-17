@@ -19,15 +19,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = {
+  const params = {
     schemaValidator: makeSchemaValidatorStub(),
     role: 'any_role',
     errorFake: makeErrorFake()
   }
 
-  const sut = new SchemaValidatorMiddleware(injection)
+  const sut = new SchemaValidatorMiddleware(params)
 
-  return { sut, ...injection }
+  return { sut, ...params }
 }
 
 describe('SchemaValidatorMiddleware', () => {

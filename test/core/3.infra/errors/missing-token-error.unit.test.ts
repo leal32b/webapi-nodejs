@@ -20,12 +20,14 @@ describe('MissingTokenError', () => {
       expect(result).toBeInstanceOf(MissingTokenError)
     })
 
-    it('returns a MissingTokenError with correct message', () => {
+    it('returns props with correct values', () => {
       const { sut } = makeSut()
 
       const result = new sut()
 
-      expect(result.props.message).toBe('no Authorization token was provided')
+      expect(result.props).toEqual({
+        message: 'no Authorization token was provided'
+      })
     })
   })
 })

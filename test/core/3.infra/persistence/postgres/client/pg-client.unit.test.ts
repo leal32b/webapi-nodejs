@@ -14,9 +14,7 @@ const makeDataSourceMock = (): DataSource => ({
   isInitialized: true,
   destroy: jest.fn(async (): Promise<void> => {}),
   manager: makeManagerStub(),
-  getRepository: jest.fn((): Repository<PgUser> => {
-    return new Repository(PgUser, makeManagerStub())
-  })
+  getRepository: jest.fn((): Repository<PgUser> => new Repository(PgUser, makeManagerStub()))
 }) as any
 
 type SutTypes = {
@@ -24,20 +22,22 @@ type SutTypes = {
   dataSourceMock: DataSource
 }
 
-const makeSut = (): SutTypes => {
-  const fakes = {
-    dataSourceMock: makeDataSourceMock()
-  }
-  pg.connect(fakes.dataSourceMock)
+const makeSut = async (): Promise<SutTypes> => {
+  const dataSourceMock = makeDataSourceMock()
+  await pg.connect(dataSourceMock)
   const sut = pg.client
 
-  return { sut, ...fakes }
+  return { sut, dataSourceMock }
 }
 
 describe('PgClient', () => {
+  afterAll(async () => {
+    await pg.client.close()
+  })
+
   describe('success', () => {
     it('returns true when dataSource is initialized', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
 
       const result = sut.isInitialized()
 
@@ -45,7 +45,7 @@ describe('PgClient', () => {
     })
 
     it('reconnects when dataSource is down', async () => {
-      const { sut, dataSourceMock } = makeSut()
+      const { sut, dataSourceMock } = await makeSut()
 
       await sut.reconnect()
 
@@ -53,7 +53,7 @@ describe('PgClient', () => {
     })
 
     it('gets dataSource manager', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
 
       const result = sut.manager
 
@@ -61,7 +61,7 @@ describe('PgClient', () => {
     })
 
     it('gets a repository', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
 
       const result = await sut.getRepository('PgUser')
 
@@ -71,7 +71,7 @@ describe('PgClient', () => {
 
   describe('failure', () => {
     it('returns Left if connect throws', async () => {
-      const { dataSourceMock } = makeSut()
+      const { dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'initialize').mockRejectedValueOnce(new Error())
 
       const result = await pg.connect(new DataSource({
@@ -87,7 +87,7 @@ describe('PgClient', () => {
     })
 
     it('returns Left if connect throws', async () => {
-      const { sut, dataSourceMock } = makeSut()
+      const { sut, dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
 
       const result = await sut.close()

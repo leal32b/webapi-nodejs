@@ -35,20 +35,18 @@ type SutTypes = {
   dataSourceMock: DataSource
 }
 
-const makeSut = (): SutTypes => {
-  const fakes = {
-    dataSourceMock: makeDataSourceMock()
-  }
-  pg.connect(fakes.dataSourceMock)
+const makeSut = async (): Promise<SutTypes> => {
+  const dataSourceMock = makeDataSourceMock()
+  await pg.connect(dataSourceMock)
   const sut = FakeFactory.create()
 
-  return { sut, ...fakes }
+  return { sut, dataSourceMock }
 }
 
 describe('PgFactory', () => {
   describe('success', () => {
     it('returns the created entity when no params are provided', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
 
       const result = await sut.createFixtures()
 
@@ -63,7 +61,7 @@ describe('PgFactory', () => {
     })
 
     it('returns created entity with provided params', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
       const params = { name: 'any_name' }
 
       const result = await sut.createFixtures(params)
@@ -79,7 +77,7 @@ describe('PgFactory', () => {
     })
 
     it('returns created entities with provided params', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
       const params1 = { name: 'any_name1' }
       const params2 = { name: 'any_name2' }
 
@@ -104,7 +102,7 @@ describe('PgFactory', () => {
     })
 
     it('returns as many created entities as the provided amount', async () => {
-      const { sut } = makeSut()
+      const { sut } = await makeSut()
       const amount = 3
 
       const result = await sut.createFixtures(amount)

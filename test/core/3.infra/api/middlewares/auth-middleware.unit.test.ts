@@ -14,17 +14,13 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => {
-    return right('token')
-  }),
-  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => {
-    return right({
-      type: TokenType.access,
-      payload: {
-        auth: ['user']
-      }
-    })
-  })
+  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => right('token')),
+  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => right({
+    type: TokenType.access,
+    payload: {
+      auth: ['any_role']
+    }
+  }))
 })
 
 type SutTypes = {
@@ -35,15 +31,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const injection = {
+  const params = {
     encrypter: makeEncrypterStub(),
     role: 'any_role',
     errorFake: makeErrorFake()
   }
 
-  const sut = new AuthMiddleware(injection)
+  const sut = new AuthMiddleware(params)
 
-  return { sut, ...injection }
+  return { sut, ...params }
 }
 
 describe('AuthMiddleware', () => {
@@ -84,7 +80,7 @@ describe('AuthMiddleware', () => {
       const fakeRequest = {
         accessToken: 'Bearer any_token',
         payload: { anyKey: 'any_value' },
-        auth: ['user']
+        auth: ['any_role']
       }
 
       const result = await sut.handle(fakeRequest)
@@ -178,7 +174,7 @@ describe('AuthMiddleware', () => {
       })
     })
 
-    it('returns error and statusCode 401 when user is not authorized', async () => {
+    it('returns error and statusCode 401 when any_role is not authorized', async () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',

@@ -2,7 +2,7 @@ version: '3'
 services:
   postgres:
     container_name: postgres-container
-    image: postgres:14.1
+    image: postgres:14.5
     environment:
       - POSTGRES_DB=${DB_POSTGRES_DATABASE}
       - POSTGRES_USER=${DB_POSTGRES_USERNAME}
