@@ -20,6 +20,7 @@
       "newlines-between": "always",
       "pathGroups": [{ "pattern": "@/**", "group": "internal" }]
     }],
-    "new-cap": "off"
+    "new-cap": "off",
+    "no-new": "off"
   }
 }

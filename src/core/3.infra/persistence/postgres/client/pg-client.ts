@@ -1,4 +1,4 @@
-import { DataSource, EntityManager, EntityTarget, Repository } from 'typeorm'
+import { DataSource, EntityManager, EntityTarget, Repository, CannotConnectAlreadyConnectedError } from 'typeorm'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
@@ -11,12 +11,16 @@ class PgClient {
 
   async connect (message?: string): Promise<Either<Error, void>> {
     try {
-      await this.props.dataSource.initialize().then(() => console.log('baby'))
-      console.log(message || 'connected to dataSource')
+      await this.props.dataSource.initialize()
+      const dataSource = this.props.dataSource.name
+      const database = this.props.dataSource.options.database as string
+      console.log(message || `connected to ${database} (dataSource: ${dataSource})`)
 
       return right()
     } catch (error) {
-      console.log('connect', error)
+      if (!(error instanceof CannotConnectAlreadyConnectedError)) {
+        console.log('connect', error)
+      }
 
       return left(error)
     }

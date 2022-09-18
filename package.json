@@ -19,6 +19,7 @@
   "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
   "_moduleAliases": {
     "@/core": "dist/core",
+    "@/communication": "dist/modules/communication",
     "@/user": "dist/modules/user"
   },
   "scripts": {

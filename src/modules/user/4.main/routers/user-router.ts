@@ -8,7 +8,7 @@ import { changePasswordControllerFactory } from '@/user/4.main/factories/change-
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
 import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
 
-export default (webApp: WebApp): void => {
+export const userRouter = (webApp: WebApp): void => {
   webApp.setRouter({
     path: '/user',
     routes: [

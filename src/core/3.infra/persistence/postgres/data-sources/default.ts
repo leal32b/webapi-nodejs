@@ -9,6 +9,7 @@ export const defaultDataSource = new DataSource({
   password: process.env.DB_POSTGRES_PASSWORD,
   database: process.env.DB_POSTGRES_DATABASE,
   logging: false,
+  synchronize: false,
   entities: ['**/postgres/entities/**/*.{js,ts}'],
   migrations: ['**/postgres/migrations/**/*.{js,ts}']
 })

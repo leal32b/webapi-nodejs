@@ -13,3 +13,4 @@
 [ ] verify fail cases for identifier and random tests
 [x] move IntegerGreaterThanZero to a common place
 [ ] segregate express middlewares and their tests
+[ ] create tests for aggregate-root

@@ -4,6 +4,7 @@ import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { Password } from '@/user/0.domain/value-objects/password'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
@@ -96,7 +97,8 @@ describe('AuthenticateUserUseCase', () => {
           name: expect.any(Object),
           password: expect.any(Object),
           token: expect.any(Object)
-        }
+        },
+        _events: expect.any(Array)
       })
     })
 
@@ -141,6 +143,16 @@ describe('AuthenticateUserUseCase', () => {
     it('returns an Error when Hasher.hash fails', async () => {
       const { sut, hasher, errorFake, changePasswordDataFake } = makeSut()
       jest.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
+
+      const result = await sut.execute(changePasswordDataFake)
+
+      expect(result.value[0]).toEqual(errorFake)
+    })
+
+    it('returns an Error when Password.create fails', async () => {
+      const { sut, errorFake, changePasswordDataFake } = makeSut()
+      jest.spyOn(Password, 'create').mockReturnValueOnce(right(Password.create('any_password').value as Password))
+      jest.spyOn(Password, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 

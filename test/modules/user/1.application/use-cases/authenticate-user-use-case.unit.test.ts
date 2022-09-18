@@ -4,6 +4,7 @@ import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypte
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { AuthenticateUserData, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
@@ -122,7 +123,8 @@ describe('AuthenticateUserUseCase', () => {
           name: expect.any(Object),
           password: expect.any(Object),
           token: expect.any(Object)
-        }
+        },
+        _events: expect.any(Array)
       })
     })
 
@@ -169,6 +171,16 @@ describe('AuthenticateUserUseCase', () => {
     it('returns an Error when Encrypter.encrypt fails', async () => {
       const { sut, encrypter, errorFake, authenticateUserDataFake } = makeSut()
       jest.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
+
+      const result = await sut.execute(authenticateUserDataFake)
+
+      expect(result.value[0]).toEqual(errorFake)
+    })
+
+    it('returns an Error when Token.create fails', async () => {
+      const { sut, errorFake, authenticateUserDataFake } = makeSut()
+      jest.spyOn(Token, 'create').mockReturnValueOnce(right(Token.create('any_token').value as Token))
+      jest.spyOn(Token, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(authenticateUserDataFake)
 

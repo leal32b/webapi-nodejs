@@ -19,6 +19,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/core/(.*)$': '<rootDir>/src/core/$1',
+    '^@/communication/(.*)$': '<rootDir>/src/modules/communication/$1',
     '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
   },

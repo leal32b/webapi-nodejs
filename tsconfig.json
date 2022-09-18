@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "paths": {
       "@/core/*": ["src/core/*"],
+      "@/communication/*": [ "src/modules/communication/*"],
       "@/user/*": ["src/modules/user/*"],
       "~/*": ["test/*"]
     },

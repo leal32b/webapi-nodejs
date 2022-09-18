@@ -29,7 +29,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const domainEventFake = new DomainEventFake(makeAggregateFake())
+  const domainEventFake = new DomainEventFake(makeAggregateFake().id)
   const sut = new AggregateFake({ anyKey: 'any_value' })
 
   return { sut, domainEventFake }

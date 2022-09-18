@@ -26,6 +26,7 @@ export class ExpressAdapter implements WebApp {
           middlewares.map(middleware => this.expressMiddleware(route, middleware)),
           this.expressController(route.controller)
         )
+        console.log(`route ${route.type.toUpperCase()} ${path}${route.path}`)
       }
 
       return right()

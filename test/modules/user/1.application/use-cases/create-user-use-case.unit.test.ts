@@ -1,5 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
+import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { Identifier } from '@/core/0.domain/utils/identifier'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
@@ -112,6 +114,15 @@ describe('CreateUserUseCase', () => {
           token: expect.any(Object)
         })
       )
+    })
+
+    it('calls DomainEvents.dispatchEventsForAggregate with correct params', async () => {
+      const { sut, createUserDataFake } = makeSut()
+      const dispatchEventsForAggregateSpy = jest.spyOn(DomainEvents, 'dispatchEventsForAggregate')
+
+      await sut.execute(createUserDataFake)
+
+      expect(dispatchEventsForAggregateSpy).toHaveBeenCalledWith(expect.any(Identifier))
     })
 
     it('returns a message and the created user email', async () => {

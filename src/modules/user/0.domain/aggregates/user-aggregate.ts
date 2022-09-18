@@ -1,7 +1,8 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either } from '@/core/0.domain/utils/either'
+import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Identifier } from '@/core/0.domain/utils/identifier'
+import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { Name } from '@/user/0.domain/value-objects/name'
@@ -37,7 +38,15 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
       token: Token.create(token)
     })
 
-    return constructParamsOrError.applyOnRight(value => new UserAggregate(value, id))
+    if (constructParamsOrError.isLeft()) {
+      return left(constructParamsOrError.value)
+    }
+
+    const constructParams = constructParamsOrError.value
+    const userAggregate = new UserAggregate(constructParams, id)
+    userAggregate.addEvent(new UserCreatedEvent(userAggregate.id))
+
+    return right(userAggregate)
   }
 
   get email (): Email {

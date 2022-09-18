@@ -1,4 +1,5 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
+import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
@@ -75,6 +76,8 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     if (createdUserOrError.isLeft()) {
       return left(createdUserOrError.value)
     }
+
+    DomainEvents.dispatchEventsForAggregate(userAggregate.id)
 
     return right({
       email,
