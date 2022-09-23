@@ -3,7 +3,9 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/**/4.main/**'
+    '!<rootDir>/src/**/4.main/**',
+    '!<rootDir>/src/**/communication/**', // remove after implementation
+    '!<rootDir>/**/migrations/**'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
@@ -22,6 +24,14 @@ module.exports = {
     '^@/communication/(.*)$': '<rootDir>/src/modules/communication/$1',
     '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
+  },
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100
+    }
   },
   testTimeout: 10000
 }

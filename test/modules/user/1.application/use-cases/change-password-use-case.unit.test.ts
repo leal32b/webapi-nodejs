@@ -53,17 +53,17 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const fakes = {
+  const doubles = {
     changePasswordDataFake: makeChangePasswordDataFake(),
     errorFake: makeErrorFake()
   }
-  const injection = {
+  const params = {
     userRepository: makeUserRepositoryStub(),
     hasher: makeHasherStub()
   }
-  const sut = new ChangePasswordUseCase(injection)
+  const sut = new ChangePasswordUseCase(params)
 
-  return { sut, ...injection, ...fakes }
+  return { sut, ...params, ...doubles }
 }
 
 describe('AuthenticateUserUseCase', () => {
