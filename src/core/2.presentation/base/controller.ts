@@ -5,7 +5,7 @@ export type AppRequest<T> = {
 }
 
 export type AppResponse<T> = {
-  payload: T | DomainError[]
+  payload: T | { [key: string]: DomainError[] }
   statusCode: number
 }
 

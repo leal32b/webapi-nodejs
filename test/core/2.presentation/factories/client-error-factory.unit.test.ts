@@ -11,14 +11,24 @@ const makeErrorFake = (): DomainError => {
   return new ErrorFake()
 }
 
+const makeSchemaErrorFake = (): any => ({
+  type: 'object',
+  properties: {
+    anyKey: { type: 'string' }
+  },
+  required: ['anyKey']
+})
+
 type SutTypes = {
   sut: typeof clientError
   errorFake: DomainError
+  schemaErrorFake: any
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    errorFake: makeErrorFake()
+    errorFake: makeErrorFake(),
+    schemaErrorFake: makeSchemaErrorFake()
   }
   const sut = clientError
 
@@ -27,36 +37,114 @@ const makeSut = (): SutTypes => {
 
 describe('clientError', () => {
   describe('success', () => {
-    it('returns AppResponse with badRequest status', () => {
-      const { sut, errorFake } = makeSut()
+    describe('badRequest', () => {
+      it('returns AppResponse with correct badRequest status and error', () => {
+        const { sut, errorFake } = makeSut()
 
-      const result = sut.badRequest(errorFake)
+        const result = sut.badRequest([errorFake])
 
-      expect(result).toEqual({
-        payload: expect.any(DomainError),
-        statusCode: 400
+        expect(result).toEqual({
+          payload: {
+            error: {
+              message: 'any_message'
+            }
+          },
+          statusCode: 400
+        })
+      })
+
+      it('returns AppResponse with correct badRequest status and errors', () => {
+        const { sut, errorFake } = makeSut()
+
+        const result = sut.badRequest([errorFake, errorFake])
+
+        expect(result).toEqual({
+          payload: {
+            errors: [
+              { message: 'any_message' },
+              { message: 'any_message' }
+            ]
+          },
+          statusCode: 400
+        })
       })
     })
 
-    it('returns AppResponse with unauthorized status', () => {
-      const { sut, errorFake } = makeSut()
+    describe('unauthorized', () => {
+      it('returns AppResponse with correct unauthorized status and error', () => {
+        const { sut, errorFake } = makeSut()
 
-      const result = sut.unauthorized(errorFake)
+        const result = sut.unauthorized([errorFake])
 
-      expect(result).toEqual({
-        payload: expect.any(DomainError),
-        statusCode: 401
+        expect(result).toEqual({
+          payload: {
+            error: {
+              message: 'any_message'
+            }
+          },
+          statusCode: 401
+        })
+      })
+
+      it('returns AppResponse with correct unauthorized status and errors', () => {
+        const { sut, errorFake } = makeSut()
+
+        const result = sut.unauthorized([errorFake, errorFake])
+
+        expect(result).toEqual({
+          payload: {
+            errors: [
+              { message: 'any_message' },
+              { message: 'any_message' }
+            ]
+          },
+          statusCode: 401
+        })
       })
     })
 
-    it('returns AppResponse with unprocessableEntity status', () => {
-      const { sut, errorFake } = makeSut()
+    describe('unprocessableEntity', () => {
+      it('returns AppResponse with correct unprocessableEntity status and error', () => {
+        const { sut, schemaErrorFake } = makeSut()
 
-      const result = sut.unprocessableEntity(errorFake)
+        const result = sut.unprocessableEntity([schemaErrorFake])
 
-      expect(result).toEqual({
-        payload: expect.any(DomainError),
-        statusCode: 422
+        expect(result).toEqual({
+          payload: {
+            error: {
+              type: 'object',
+              properties: {
+                anyKey: { type: 'string' }
+              },
+              required: ['anyKey']
+            }
+          },
+          statusCode: 422
+        })
+      })
+
+      it('returns AppResponse with correct unprocessableEntity status and errors', () => {
+        const { sut, schemaErrorFake } = makeSut()
+
+        const result = sut.unprocessableEntity([schemaErrorFake, schemaErrorFake])
+
+        expect(result).toEqual({
+          payload: {
+            errors: [
+              {
+                type: 'object',
+                properties: { anyKey: { type: 'string' } },
+                required: ['anyKey']
+              },
+              {
+                type: 'object',
+                properties: { anyKey: { type: 'string' } },
+                required: ['anyKey']
+              }
+            ]
+          },
+          statusCode: 422
+        })
       })
     })
   })

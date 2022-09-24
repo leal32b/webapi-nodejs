@@ -125,7 +125,7 @@ describe('ChangePasswordRoute', () => {
         })
 
       expect(result.body).toEqual({
-        props: {
+        error: {
           message: 'no Authorization token was provided'
         }
       })
@@ -149,13 +149,15 @@ describe('ChangePasswordRoute', () => {
         .set('Authorization', authorizationFake)
         .send({})
 
-      expect(result.body).toEqual([{
-        instancePath: '',
-        keyword: 'required',
-        message: "must have required property 'id'",
-        params: { missingProperty: 'id' },
-        schemaPath: '#/required'
-      }])
+      expect(result.body).toEqual({
+        error: {
+          instancePath: '',
+          keyword: 'required',
+          message: "must have required property 'id'",
+          params: { missingProperty: 'id' },
+          schemaPath: '#/required'
+        }
+      })
     })
 
     it('returns 400 when passwords do not match', async () => {
@@ -185,12 +187,12 @@ describe('ChangePasswordRoute', () => {
         })
         .expect(400)
 
-      expect(result.body).toEqual([{
-        props: {
+      expect(result.body).toEqual({
+        error: {
           field: 'password',
           message: 'passwords should match'
         }
-      }])
+      })
     })
   })
 })

@@ -106,7 +106,7 @@ describe('AuthMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
+          error: {
             message: 'token is invalid (type: Bearer)'
           }
         },
@@ -126,7 +126,7 @@ describe('AuthMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
+          error: {
             message: 'token is invalid (type: Bearer)'
           }
         },
@@ -146,7 +146,7 @@ describe('AuthMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
+          error: {
             message: 'token is invalid (type: Bearer)'
           }
         },
@@ -166,7 +166,7 @@ describe('AuthMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
+          error: {
             message: 'no Authorization token was provided'
           }
         },
@@ -186,7 +186,7 @@ describe('AuthMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
+          error: {
             message: 'user must have at least one of these permissions: any'
           }
         },

@@ -2,9 +2,13 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { SchemaValidatorMiddleware } from '@/core/3.infra/api/middlewares/schema-validator-middleware'
 import { SchemaValidator, SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
 
-const makeErrorFake = (): Error => {
-  return new Error('any_message')
-}
+const makeErrorFake = (): any => ({
+  type: 'object',
+  properties: {
+    anyKey: { type: 'string' }
+  },
+  required: ['anyKey']
+})
 
 const makeSchemaValidatorStub = (): SchemaValidator => ({
   validate: jest.fn(async (): Promise<Either<Error, SchemaValidatorResult>> => {
@@ -69,9 +73,8 @@ describe('SchemaValidatorMiddleware', () => {
 
       expect(result).toEqual({
         payload: {
-          props: {
-            message: 'any_message',
-            stack: expect.any(String)
+          error: {
+            message: 'internal server error'
           }
         },
         statusCode: 500
@@ -92,7 +95,13 @@ describe('SchemaValidatorMiddleware', () => {
       const result = await sut.handle(fakeRequest)
 
       expect(result).toEqual({
-        payload: [errorFake],
+        payload: {
+          error: {
+            type: 'object',
+            properties: { anyKey: { type: 'string' } },
+            required: ['anyKey']
+          }
+        },
         statusCode: 422
       })
     })

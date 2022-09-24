@@ -1,15 +1,8 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
+const makeErrorFake = (): any => {
+  return new Error('any_message')
 }
 
 type SutTypes = {
@@ -28,13 +21,17 @@ const makeSut = (): SutTypes => {
 
 describe('serverError', () => {
   describe('success', () => {
-    it('returns AppResponse with internalServerError status', () => {
+    it('returns AppResponse with correct internalServerError status and error', () => {
       const { sut, errorFake } = makeSut()
 
       const result = sut.internalServerError(errorFake)
 
       expect(result).toEqual({
-        payload: expect.any(ServerError),
+        payload: {
+          error: {
+            message: 'internal server error'
+          }
+        },
         statusCode: 500
       })
     })

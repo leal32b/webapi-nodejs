@@ -95,13 +95,15 @@ describe('SignInRoute', () => {
         .post('/api/user/sign-in')
         .send({})
 
-      expect(result.body).toEqual([{
-        instancePath: '',
-        keyword: 'required',
-        message: "must have required property 'email'",
-        params: { missingProperty: 'email' },
-        schemaPath: '#/required'
-      }])
+      expect(result.body).toEqual({
+        error: {
+          instancePath: '',
+          keyword: 'required',
+          message: "must have required property 'email'",
+          params: { missingProperty: 'email' },
+          schemaPath: '#/required'
+        }
+      })
     })
 
     it('returns 401 when when email is not found', async () => {
@@ -127,13 +129,13 @@ describe('SignInRoute', () => {
         })
         .expect(401)
 
-      expect(result.body).toEqual([{
-        props: {
+      expect(result.body).toEqual({
+        error: {
           input: 'not_in_base@mail.com',
           field: 'email',
           message: 'email "not_in_base@mail.com" not found'
         }
-      }])
+      })
     })
 
     it('returns 401 when when password is invalid', async () => {
@@ -163,11 +165,11 @@ describe('SignInRoute', () => {
         })
         .expect(401)
 
-      expect(result.body).toEqual([{
-        props: {
+      expect(result.body).toEqual({
+        error: {
           message: 'invalid username or password'
         }
-      }])
+      })
     })
   })
 })

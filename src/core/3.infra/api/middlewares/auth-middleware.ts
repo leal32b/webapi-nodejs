@@ -24,26 +24,26 @@ export class AuthMiddleware implements Middleware {
     }
 
     if (!accessToken) {
-      return clientError.unauthorized(new MissingTokenError())
+      return clientError.unauthorized([new MissingTokenError()])
     }
 
     const [type, token] = accessToken?.split(' ')
 
     if (type !== 'Bearer' || !token) {
-      return clientError.unauthorized(new InvalidTokenError('Bearer'))
+      return clientError.unauthorized([new InvalidTokenError('Bearer')])
     }
 
     const decryptedTokenOrError = await encrypter.decrypt(token)
 
     if (decryptedTokenOrError.isLeft()) {
-      return clientError.unauthorized(new InvalidTokenError('Bearer'))
+      return clientError.unauthorized([new InvalidTokenError('Bearer')])
     }
 
     const decryptedToken = decryptedTokenOrError.value
     const userAuth = decryptedToken.payload.auth
 
     if (!userAuth.some(a => request.auth.includes(a))) {
-      return clientError.unauthorized(new MissingAuthError(request.auth))
+      return clientError.unauthorized([new MissingAuthError(request.auth)])
     }
 
     return appResponse

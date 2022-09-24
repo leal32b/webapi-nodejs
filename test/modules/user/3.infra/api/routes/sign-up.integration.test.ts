@@ -91,13 +91,15 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({})
 
-      expect(result.body).toEqual([{
-        instancePath: '',
-        keyword: 'required',
-        message: "must have required property 'name'",
-        params: { missingProperty: 'name' },
-        schemaPath: '#/required'
-      }])
+      expect(result.body).toEqual({
+        error: {
+          instancePath: '',
+          keyword: 'required',
+          message: "must have required property 'name'",
+          params: { missingProperty: 'name' },
+          schemaPath: '#/required'
+        }
+      })
     })
 
     it('returns 400 when passwords do not match', async () => {
@@ -126,12 +128,12 @@ describe('SignUpRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual([{
-        props: {
+      expect(result.body).toEqual({
+        error: {
           field: 'password',
           message: 'passwords should match'
         }
-      }])
+      })
     })
 
     it('returns 400 when email is already in use', async () => {
@@ -164,13 +166,13 @@ describe('SignUpRoute', () => {
           passwordRetype: 'any_password'
         })
 
-      expect(result.body).toEqual([{
-        props: {
+      expect(result.body).toEqual({
+        error: {
           input: 'any3@mail.com',
           field: 'email',
           message: 'email already in use'
         }
-      }])
+      })
     })
   })
 })

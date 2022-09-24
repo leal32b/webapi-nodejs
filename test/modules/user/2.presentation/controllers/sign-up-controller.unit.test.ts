@@ -1,7 +1,6 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { CreateUserData, CreateUserResultDTO, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
@@ -104,13 +103,17 @@ describe('SignUpController', () => {
       expect(result.statusCode).toBe(400)
     })
 
-    it('returns errors in body when CreateUserUseCase returns errors', async () => {
+    it('returns error in body when CreateUserUseCase returns errors', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload[0]).toBeInstanceOf(DomainError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'any_message'
+        }
+      })
     })
 
     it('returns 500 when anything throws', async () => {
@@ -128,7 +131,11 @@ describe('SignUpController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload).toBeInstanceOf(ServerError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'internal server error'
+        }
+      })
     })
   })
 })

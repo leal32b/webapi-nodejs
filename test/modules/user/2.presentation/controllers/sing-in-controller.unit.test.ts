@@ -1,7 +1,6 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 import { SignInController } from '@/user/2.presentation/controllers/sign-in-controller'
 
@@ -100,13 +99,17 @@ describe('SignInController', () => {
       expect(result.statusCode).toBe(401)
     })
 
-    it('returns errors in body when invalid credentials are provided', async () => {
+    it('returns error in body when invalid credentials are provided', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload[0]).toBeInstanceOf(DomainError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'any_message'
+        }
+      })
     })
 
     it('returns 500 when anything throws', async () => {
@@ -124,7 +127,11 @@ describe('SignInController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload).toBeInstanceOf(ServerError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'internal server error'
+        }
+      })
     })
   })
 })

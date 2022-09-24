@@ -2,7 +2,6 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
@@ -101,13 +100,17 @@ describe('ChangePasswordController', () => {
       expect(result.statusCode).toBe(400)
     })
 
-    it('returns errors in body when invalid params are provided', async () => {
+    it('returns error in body when invalid params are provided', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
       jest.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload[0]).toBeInstanceOf(DomainError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'any_message'
+        }
+      })
     })
 
     it('returns 500 when anything throws', async () => {
@@ -125,7 +128,11 @@ describe('ChangePasswordController', () => {
 
       const result = await sut.handle(requestFake)
 
-      expect(result.payload).toBeInstanceOf(ServerError)
+      expect(result.payload).toEqual({
+        error: {
+          message: 'internal server error'
+        }
+      })
     })
   })
 })

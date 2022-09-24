@@ -1,3 +1,4 @@
+import { DomainError } from '@/core/0.domain/base/domain-error'
 import { AppResponse } from '@/core/2.presentation/base/controller'
 
 export enum ClientErrorStatus {
@@ -6,24 +7,34 @@ export enum ClientErrorStatus {
 }
 
 export const clientError = {
-  badRequest (error: any): AppResponse<typeof error> {
+  badRequest (errors: DomainError[]): AppResponse<any> {
     return {
-      payload: error,
+      payload: adaptErrors(errors),
       statusCode: 400
     }
   },
 
-  unauthorized (error: any): AppResponse<typeof error> {
+  unauthorized (errors: DomainError[]): AppResponse<any> {
     return {
-      payload: error,
+      payload: adaptErrors(errors),
       statusCode: 401
     }
   },
 
-  unprocessableEntity (error: any): AppResponse<typeof error> {
+  unprocessableEntity (errors: any[]): AppResponse<any> {
+    const payload = errors.length === 1 ? { error: errors[0] } : { errors }
+
     return {
-      payload: error,
+      payload,
       statusCode: 422
     }
   }
+}
+
+const adaptErrors = (errors: DomainError[]): any => {
+  if (errors.length === 1) {
+    return { error: errors[0].props }
+  }
+
+  return { errors: errors.map(error => error.props) }
 }

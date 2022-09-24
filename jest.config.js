@@ -4,7 +4,6 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/4.main/**',
-    '!<rootDir>/src/**/communication/**', // remove after implementation
     '!<rootDir>/**/migrations/**'
   ],
   coverageDirectory: 'coverage',
