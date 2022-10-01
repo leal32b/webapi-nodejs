@@ -158,7 +158,7 @@ describe('AjvAdapter', () => {
 
       const result = await sut.validate(fakeRequest, schema)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when compile throws', async () => {
@@ -184,7 +184,7 @@ describe('AjvAdapter', () => {
 
       const result = await sut.validate(fakeRequest, schema)
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an error when validate throws', async () => {
