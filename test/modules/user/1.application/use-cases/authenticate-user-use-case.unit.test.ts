@@ -137,7 +137,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(authenticateUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns NotFoundError when userRepository.readByEmail returns null', async () => {
@@ -155,7 +155,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(authenticateUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Encrypter.encrypt fails', async () => {
@@ -164,7 +164,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(authenticateUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Token.create fails', async () => {
@@ -174,7 +174,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(authenticateUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when UserRepository.update fails', async () => {
@@ -183,7 +183,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(authenticateUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })
 })

@@ -118,7 +118,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns NotFoundError when userRepository.readById returns null', async () => {
@@ -136,7 +136,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Password.create fails', async () => {
@@ -146,7 +146,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when UserRepository.update fails', async () => {
@@ -155,7 +155,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })
 })

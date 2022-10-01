@@ -135,7 +135,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns EmailTakenError when email is already in use', async () => {
@@ -167,7 +167,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Encrypter.encrypt fails', async () => {
@@ -176,7 +176,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when UserAggregate.create fails', async () => {
@@ -193,7 +193,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })
 })
