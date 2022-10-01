@@ -104,16 +104,7 @@ describe('CreateUserUseCase', () => {
 
       await sut.execute(createUserDataFake)
 
-      expect(userRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          email: expect.any(Object),
-          emailConfirmed: expect.any(Object),
-          id: expect.any(Object),
-          name: expect.any(Object),
-          password: expect.any(Object),
-          token: expect.any(Object)
-        })
-      )
+      expect(userRepository.create).toHaveBeenCalledWith(expect.any(UserAggregate))
     })
 
     it('calls DomainEvents.dispatchEventsForAggregate with correct params', async () => {
