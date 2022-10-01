@@ -179,7 +179,7 @@ describe('CreateUserUseCase', () => {
       expect(result.value[0]).toEqual(errorFake)
     })
 
-    it('returns an Error when User.create fails', async () => {
+    it('returns an Error when UserAggregate.create fails', async () => {
       const { sut, createUserDataFake } = makeSut()
 
       const result = await sut.execute({ ...createUserDataFake, email: 'invalid_email' })
