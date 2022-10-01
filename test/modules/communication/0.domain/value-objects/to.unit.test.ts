@@ -1,4 +1,5 @@
 import { To } from '@/communication/0.domain/value-objects/to'
+import { DomainError } from '@/core/0.domain/base/domain-error'
 import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
 import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
 import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
@@ -18,6 +19,15 @@ describe('To', () => {
     it('returns a To when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any@mail.com'
+
+      const result = sut.create(input)
+
+      expect(result.value).toBeInstanceOf(To)
+    })
+
+    it('returns a To when input is a valid array', () => {
+      const { sut } = makeSut()
+      const input = ['any@mail.com', 'another@mail.com']
 
       const result = sut.create(input)
 
@@ -51,6 +61,16 @@ describe('To', () => {
       const result = sut.create(input)
 
       expect(result.value[0]).toBeInstanceOf(InvalidEmailError)
+    })
+
+    it('returns an error for each invalid array item', () => {
+      const { sut } = makeSut()
+      const input = ['invalid_email', 'another_invalid_email']
+
+      const result = sut.create(input)
+
+      expect((result.value as DomainError[])
+        .every(item => item instanceof DomainError)).toBe(true)
     })
   })
 })
