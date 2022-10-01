@@ -104,16 +104,7 @@ describe('CreateUserUseCase', () => {
 
       await sut.execute(createUserDataFake)
 
-      expect(userRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          email: expect.any(Object),
-          emailConfirmed: expect.any(Object),
-          id: expect.any(Object),
-          name: expect.any(Object),
-          password: expect.any(Object),
-          token: expect.any(Object)
-        })
-      )
+      expect(userRepository.create).toHaveBeenCalledWith(expect.any(UserAggregate))
     })
 
     it('calls DomainEvents.dispatchEventsForAggregate with correct params', async () => {
@@ -144,7 +135,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns EmailTakenError when email is already in use', async () => {
@@ -176,7 +167,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Encrypter.encrypt fails', async () => {
@@ -185,10 +176,10 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when User.create fails', async () => {
+    it('returns an Error when UserAggregate.create fails', async () => {
       const { sut, createUserDataFake } = makeSut()
 
       const result = await sut.execute({ ...createUserDataFake, email: 'invalid_email' })
@@ -202,7 +193,7 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute(createUserDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })
 })

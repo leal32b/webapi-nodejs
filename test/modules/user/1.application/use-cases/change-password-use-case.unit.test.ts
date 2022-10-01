@@ -89,17 +89,7 @@ describe('AuthenticateUserUseCase', () => {
 
       await sut.execute(changePasswordDataFake)
 
-      expect(userRepository.update).toHaveBeenCalledWith({
-        props: {
-          email: expect.any(Object),
-          emailConfirmed: expect.any(Object),
-          id: expect.any(Object),
-          name: expect.any(Object),
-          password: expect.any(Object),
-          token: expect.any(Object)
-        },
-        _events: expect.any(Array)
-      })
+      expect(userRepository.update).toHaveBeenCalledWith(expect.any(UserAggregate))
     })
 
     it('returns a message', async () => {
@@ -128,7 +118,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns NotFoundError when userRepository.readById returns null', async () => {
@@ -146,7 +136,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when Password.create fails', async () => {
@@ -156,7 +146,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns an Error when UserRepository.update fails', async () => {
@@ -165,7 +155,7 @@ describe('AuthenticateUserUseCase', () => {
 
       const result = await sut.execute(changePasswordDataFake)
 
-      expect(result.value[0]).toEqual(errorFake)
+      expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })
 })
