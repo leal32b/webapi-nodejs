@@ -139,7 +139,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create({ ...paramsFake, email })
 
-      expect(result.isLeft()).toBeTruthy()
+      expect(result.isLeft()).toBe(true)
     })
 
     it('returns an array of errors when any param is invalid', () => {
