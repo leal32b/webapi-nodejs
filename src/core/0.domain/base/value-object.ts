@@ -6,9 +6,13 @@ export abstract class ValueObject<T> {
   constructor (readonly value: T) {}
 
   static validate (input: any, validators: Array<Validator<any>>): Either<DomainError[], void> {
-    const errors = validators
-      .map(validator => validator.validate(this.name, input).value)
-      .filter(result => result)
+    const inputArray = Array.isArray(input) ? input : [input]
+
+    const errors = inputArray
+      .map(input => validators
+        .map(validator => validator.validate(this.name, input).value)
+        .filter(result => result))
+      .reduce((acc, curVal) => acc.concat(curVal))
 
     if (errors.length > 0) {
       return left(errors as DomainError[])

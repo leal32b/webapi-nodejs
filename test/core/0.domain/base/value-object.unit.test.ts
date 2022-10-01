@@ -46,6 +46,15 @@ describe('ValueObject', () => {
       expect(result.isRight()).toBe(true)
     })
 
+    it('returns Right when input is an array and all validators pass', () => {
+      const { sut, validator } = makeSut()
+      const input = ['any_input', 'any_input']
+
+      const result = sut.validate(input, [validator])
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('returns undefined when all validators pass', () => {
       const { sut, validator } = makeSut()
       const input = 'any_input'
@@ -60,6 +69,16 @@ describe('ValueObject', () => {
     it('returns Left when any validator fails', () => {
       const { sut, validator, errorFake } = makeSut()
       const input = 'short'
+      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+
+      const result = sut.validate(input, [validator])
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left when input is an array and any validator fails', () => {
+      const { sut, validator, errorFake } = makeSut()
+      const input = ['short', 'short']
       jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
 
       const result = sut.validate(input, [validator])
