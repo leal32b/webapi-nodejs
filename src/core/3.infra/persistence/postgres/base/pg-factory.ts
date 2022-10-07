@@ -1,4 +1,5 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
+import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 
 type Props<T> = {
@@ -6,14 +7,14 @@ type Props<T> = {
   repositoryName: string
 }
 
-export abstract class PgFactory<T> {
+export abstract class PgFactory<T> implements DatabaseFactory<T> {
   protected constructor (private readonly props: Props<T>) {}
 
-  async createFixtures (): Promise<T>
-  async createFixtures (entity: Partial<T>): Promise<T>
-  async createFixtures (entities: Array<Partial<T>>): Promise<T[]>
-  async createFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
-  async createFixtures <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
+  private async create (): Promise<T>
+  private async create (entity: Partial<T>): Promise<T>
+  private async create (entities: Array<Partial<T>>): Promise<T[]>
+  private async create <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
+  private async create <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, repositoryName } = this.props
     const repository = await pg.client.getRepository(repositoryName)
 
@@ -40,5 +41,21 @@ export abstract class PgFactory<T> {
     await pg.client.manager.save(entities)
 
     return entities
+  }
+
+  async createFixture (entity: Partial<T>): Promise<T> {
+    return await this.create(entity)
+  }
+
+  async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
+    return await this.create(entities)
+  }
+
+  async createRandomFixture (): Promise<T> {
+    return await this.create()
+  }
+
+  async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
+    return await this.create(amount)
   }
 }

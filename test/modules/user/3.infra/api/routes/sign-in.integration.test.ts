@@ -1,23 +1,24 @@
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
+import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
+import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in-route'
-import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
 
 type SutTypes = {
   sut: Route
-  pgUserFactory: PgUserFactory
+  userFactory: DatabaseFactory<UserAggregateCreateParams>
   webApp: WebApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    pgUserFactory: PgUserFactory.create(),
+    userFactory: config.persistence.factories.userFactory,
     webApp: config.app.webApp
   }
   const sut = signInRoute(signInControllerFactory())
@@ -42,11 +43,12 @@ describe('SignInRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any@mail.com'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
-      await pgUserFactory.createFixtures({ email, password: hashedPassword })
+      await userFactory.createFixture({ email, password: hashedPassword })
+      userFactory.createFixture({})
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -58,11 +60,11 @@ describe('SignInRoute', () => {
     })
 
     it('returns an accessToken on success', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any2@mail.com'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
-      await pgUserFactory.createFixtures({ email, password: hashedPassword })
+      await userFactory.createFixture({ email, password: hashedPassword })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')
@@ -139,9 +141,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns 401 when when password is invalid', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any3@mail.com'
-      await pgUserFactory.createFixtures({ email })
+      await userFactory.createFixture({ email })
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -153,9 +155,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns invalid password error message', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any4@mail.com'
-      await pgUserFactory.createFixtures({ email })
+      await userFactory.createFixture({ email })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')

@@ -48,7 +48,7 @@ describe('PgFactory', () => {
     it('returns the created entity when no params are provided', async () => {
       const { sut } = await makeSut()
 
-      const result = await sut.createFixtures()
+      const result = await sut.createRandomFixture()
 
       expect(result).toEqual({
         email: expect.any(String),
@@ -64,7 +64,7 @@ describe('PgFactory', () => {
       const { sut } = await makeSut()
       const params = { name: 'any_name' }
 
-      const result = await sut.createFixtures(params)
+      const result = await sut.createFixture(params)
 
       expect(result).toEqual({
         email: expect.any(String),
@@ -105,7 +105,7 @@ describe('PgFactory', () => {
       const { sut } = await makeSut()
       const amount = 3
 
-      const result = await sut.createFixtures(amount)
+      const result = await sut.createRandomFixtures(amount)
 
       expect(result.length).toBe(3)
     })

@@ -1,9 +1,10 @@
 
+import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { config } from '@/core/4.main/config/config'
+import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
-import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
 
 const makeUserAggregateFake = (): UserAggregate => {
@@ -18,7 +19,7 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: PgUserRepository
-  pgUserFactory: PgUserFactory
+  userFactory: DatabaseFactory<UserAggregateCreateParams>
   userAggregateFake: UserAggregate
 }
 
@@ -27,7 +28,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    pgUserFactory: PgUserFactory.create()
+    userFactory: config.persistence.factories.userFactory
   }
   const sut = new PgUserRepository()
 
@@ -63,9 +64,9 @@ describe('UserPostgresRepository', () => {
     })
 
     it('returns an UserAggregate on readByEmail success', async () => {
-      const { sut, pgUserFactory } = makeSut()
+      const { sut, userFactory } = makeSut()
       const email = 'any2@mail.com'
-      await pgUserFactory.createFixtures({ email })
+      await userFactory.createFixture({ email })
 
       const result = await sut.readByEmail(email)
 
@@ -82,9 +83,9 @@ describe('UserPostgresRepository', () => {
     })
 
     it('returns an UserAggregate on readById success', async () => {
-      const { sut, pgUserFactory } = makeSut()
+      const { sut, userFactory } = makeSut()
       const id = 'any_id2'
-      await pgUserFactory.createFixtures({ id })
+      await userFactory.createFixture({ id })
 
       const result = await sut.readById(id)
 
