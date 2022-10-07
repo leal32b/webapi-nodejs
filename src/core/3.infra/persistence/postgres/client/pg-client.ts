@@ -2,12 +2,12 @@ import { DataSource, EntityManager, EntityTarget, Repository, CannotConnectAlrea
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
-type constructParams = {
+type ConstructParams = {
   dataSource: DataSource
 }
 
 class PgClient {
-  constructor (private readonly props: constructParams) {}
+  constructor (private readonly props: ConstructParams) {}
 
   async connect (message?: string): Promise<Either<Error, void>> {
     try {

@@ -86,7 +86,7 @@ describe('PgClient', () => {
       expect(result.isLeft()).toBe(true)
     })
 
-    it('returns Left if connect throws', async () => {
+    it('returns Left if close throws', async () => {
       const { sut, dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
 
