@@ -11,7 +11,7 @@ type ConstructParams = {
 }
 
 const defaultOptions = {
-  alphabet: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  alphabet: '0123456789abcdef',
   length: 24
 }
 

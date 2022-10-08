@@ -11,10 +11,6 @@ export abstract class AggregateRoot<T> extends Entity<T> {
     DomainEvents.markAggregateForDispatch(this)
   }
 
-  private logDomainEventAdded (domainEvent: DomainEvent): void {
-
-  }
-
   clearEvents (): void {
     this._events.splice(0, this._events.length)
   }

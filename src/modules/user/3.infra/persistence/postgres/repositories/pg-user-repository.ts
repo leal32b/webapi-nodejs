@@ -1,4 +1,3 @@
-
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
