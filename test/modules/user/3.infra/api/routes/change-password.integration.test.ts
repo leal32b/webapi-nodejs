@@ -6,6 +6,7 @@ import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
+import { factories } from '@/core/4.main/config/database-factories'
 import { authMiddlewareFactory } from '@/core/4.main/factories/auth-middle-factory'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
@@ -36,7 +37,7 @@ const makeSut = async (): Promise<SutTypes> => {
     authorizationFake: await makeAuthorizationFake()
   }
   const collaborators = {
-    userFactory: config.persistence.factories.userFactory,
+    userFactory: factories.userFactory,
     webApp: config.app.webApp
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())

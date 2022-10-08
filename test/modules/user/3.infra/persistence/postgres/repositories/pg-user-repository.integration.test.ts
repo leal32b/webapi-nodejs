@@ -1,7 +1,7 @@
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
 import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
-import { postgresPersistence } from '@/core/4.main/config/persistence/postgres'
+import { postgresFactories } from '@/core/4.main/config/database-factories/postgres-factory'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
@@ -27,7 +27,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFactory: postgresPersistence.factories.userFactory
+    userFactory: postgresFactories.userFactory
   }
   const sut = new PgUserRepository()
 

@@ -1,17 +1,15 @@
 import 'dotenv/config'
 import 'module-alias/register'
 
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { defaultDataSource } from '@/core/3.infra/persistence/postgres/data-sources/default'
 import { config } from '@/core/4.main/config/config'
-import { setHandlers } from '@/core/4.main/config/set-handlers'
-import { setRouters } from '@/core/4.main/config/set-routers'
+import { setHandlers } from '@/core/4.main/setup/set-handlers'
+import { setRouters } from '@/core/4.main/setup/set-routers'
 
 const port = parseInt(process.env.PORT)
 const webapp = config.app.webApp
 
 const bootstrap = async (): Promise<void> => {
-  await pg.connect(defaultDataSource)
+  await config.persistence.connect()
   setRouters(webapp)
   setHandlers()
 
