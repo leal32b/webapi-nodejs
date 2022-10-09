@@ -1,0 +1,52 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@3.2.2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: cimg/node:16.15.1
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm ci
+      - run:
+          name: Run tests
+          command: npm run test:ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - .
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: npm run build
+      - codecov/upload:
+          file: './coverage/lcov.info'
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - .
+
+workflows:
+  version: 2
+  test-build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
