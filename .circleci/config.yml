@@ -39,6 +39,8 @@ jobs:
           file: './coverage/lcov.info'
       - store_test_results:
           path: coverage
+      - store_artifacts:
+          path: coverage
       - persist_to_workspace:
           root: ~/repo
           paths:
