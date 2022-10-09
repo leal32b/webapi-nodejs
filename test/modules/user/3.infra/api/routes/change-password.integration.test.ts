@@ -2,13 +2,13 @@ import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
+import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { config } from '@/core/4.main/config/config'
+import { factories } from '@/core/4.main/config/database-factories'
 import { authMiddlewareFactory } from '@/core/4.main/factories/auth-middle-factory'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
+import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password-route'
-import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 const makeAuthorizationFake = async (): Promise<string> => {
@@ -25,7 +25,7 @@ const makeAuthorizationFake = async (): Promise<string> => {
 
 type SutTypes = {
   sut: Route
-  pgUserFactory: PgUserFactory
+  userFactory: DatabaseFactory<UserAggregateCreateParams>
   webApp: WebApp
   authorizationFake: string
 }
@@ -35,7 +35,7 @@ const makeSut = async (): Promise<SutTypes> => {
     authorizationFake: await makeAuthorizationFake()
   }
   const collaborators = {
-    pgUserFactory: PgUserFactory.create(),
+    userFactory: factories.userFactory,
     webApp: config.app.webApp
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())
@@ -50,21 +50,21 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('ChangePasswordRoute', () => {
   beforeAll(async () => {
-    await pg.connect(testDataSource)
+    await config.persistence.connect()
   })
 
   afterAll(async () => {
-    await pg.client.clearDatabase()
-    await pg.client.close()
+    await config.persistence.clear()
+    await config.persistence.close()
   })
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { pgUserFactory, webApp, authorizationFake } = await makeSut()
+      const { userFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
-      await pgUserFactory.createFixtures({ id, password: hashedPassword })
+      await userFactory.createFixture({ id, password: hashedPassword })
 
       await request(webApp.app)
         .post('/api/user/change-password')
@@ -78,11 +78,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct message on success', async () => {
-      const { pgUserFactory, webApp, authorizationFake } = await makeSut()
+      const { userFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
       const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
-      await pgUserFactory.createFixtures({ id, password: hashedPassword })
+      await userFactory.createFixture({ id, password: hashedPassword })
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')

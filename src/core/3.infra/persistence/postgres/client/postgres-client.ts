@@ -2,18 +2,19 @@ import { DataSource, EntityManager, EntityTarget, Repository, CannotConnectAlrea
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
-type constructParams = {
+type ConstructParams = {
   dataSource: DataSource
 }
 
-class PgClient {
-  constructor (private readonly props: constructParams) {}
+class PostgresClient {
+  constructor (private readonly props: ConstructParams) {}
 
   async connect (message?: string): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.initialize()
       const dataSource = this.props.dataSource.name
       const database = this.props.dataSource.options.database as string
+
       console.log(message || `connected to ${database} (dataSource: ${dataSource})`)
 
       return right()
@@ -55,17 +56,21 @@ class PgClient {
     return this.props.dataSource.getRepository(entity)
   }
 
-  async clearDatabase (): Promise<void> {
-    await this.reconnect()
+  async clearDatabase (): Promise<Either<Error, void>> {
+    if (process.env.NODE_ENV !== 'test') {
+      return left(new Error('Clear database is allowed only in test environment'))
+    }
 
-    const { database } = this.props.dataSource.options
-
-    if ((database as string).includes('test')) {
+    try {
       const entities = this.props.dataSource.entityMetadatas
 
       for await (const entity of entities) {
         await this.props.dataSource.getRepository(entity.name).clear()
       }
+
+      return right()
+    } catch (error) {
+      return left(error)
     }
   }
 
@@ -74,11 +79,11 @@ class PgClient {
   }
 }
 
-export const pg = {
-  client: null as PgClient,
+export const postgres = {
+  client: null as PostgresClient,
 
   async connect (dataSource: DataSource): Promise<Either<Error, void>> {
-    this.client = new PgClient({ dataSource })
+    this.client = new PostgresClient({ dataSource })
     const result = await this.client.connect()
 
     return result

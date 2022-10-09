@@ -3,7 +3,7 @@ import { CreateUserUseCase } from '@/user/1.application/use-cases/create-user-us
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
 export const signUpControllerFactory = (): SignUpController => {
-  const { userRepository } = config.persistence
+  const { userRepository } = config.persistence.repositories
   const { hasher, encrypter } = config.cryptography
   const createUserUseCase = new CreateUserUseCase({ userRepository, hasher, encrypter })
 

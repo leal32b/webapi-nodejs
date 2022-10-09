@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { DataSource } from 'typeorm'
 
-export const defaultDataSource = new DataSource({
+export const defaultDataSource = async (): Promise<DataSource> => new DataSource({
   type: 'postgres',
   host: process.env.DB_POSTGRES_HOST,
   port: parseInt(process.env.DB_POSTGRES_PORT),

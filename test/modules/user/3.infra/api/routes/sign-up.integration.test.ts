@@ -1,23 +1,23 @@
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
+import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { config } from '@/core/4.main/config/config'
+import { factories } from '@/core/4.main/config/database-factories'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
+import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { signUpRoute } from '@/user/3.infra/api/routes/sign-up-route'
-import { PgUserFactory } from '@/user/3.infra/persistence/postgres/factories/user-factory'
 import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
 
 type SutTypes = {
   sut: Route
-  pgUserFactory: PgUserFactory
+  userFactory: DatabaseFactory<UserAggregateCreateParams>
   webApp: WebApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    pgUserFactory: PgUserFactory.create(),
+    userFactory: factories.userFactory,
     webApp: config.app.webApp
   }
   const sut = signUpRoute(signUpControllerFactory())
@@ -32,12 +32,12 @@ const makeSut = (): SutTypes => {
 
 describe('SignUpRoute', () => {
   beforeAll(async () => {
-    await pg.connect(testDataSource)
+    await config.persistence.connect()
   })
 
   afterAll(async () => {
-    await pg.client.clearDatabase()
-    await pg.client.close()
+    await config.persistence.clear()
+    await config.persistence.close()
   })
 
   describe('success', () => {
@@ -137,9 +137,9 @@ describe('SignUpRoute', () => {
     })
 
     it('returns 400 when email is already in use', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any2@mail.com'
-      await pgUserFactory.createFixtures({ email })
+      await userFactory.createFixture({ email })
 
       await request(webApp.app)
         .post('/api/user/sign-up')
@@ -153,9 +153,9 @@ describe('SignUpRoute', () => {
     })
 
     it('returns email already in use error message', async () => {
-      const { pgUserFactory, webApp } = makeSut()
+      const { userFactory, webApp } = makeSut()
       const email = 'any3@mail.com'
-      await pgUserFactory.createFixtures({ email })
+      await userFactory.createFixture({ email })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-up')

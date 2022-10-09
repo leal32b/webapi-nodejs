@@ -6,40 +6,43 @@ import { ArgonAdapter } from '@/core/3.infra/cryptography/argon/argon-adapter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 import { AjvAdapter } from '@/core/3.infra/validators/ajv/ajv-adapter'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
+import { persistence } from '@/core/4.main/config/persistence'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
-import { PgUserRepository } from '@/user/3.infra/persistence/postgres/repositories/pg-user-repository'
+
+type App = {
+  webApp: WebApp
+}
 
 type Cryptography = {
   encrypter: Encrypter
   hasher: Hasher
 }
 
-type Persistence = {
-  userRepository: UserRepository
+export type Persistence = {
+  connect: Function
+  clear: Function
+  close: Function
+  repositories: {
+    userRepository: UserRepository
+  }
 }
 
 type Validators = {
   schemaValidator: SchemaValidator
 }
 
-type App = {
-  webApp: WebApp
-}
-
 type Config = {
+  app: App
   cryptography: Cryptography
   persistence: Persistence
   validators: Validators
-  app: App
 }
 
 export const config: Config = {
+  persistence,
   cryptography: {
     encrypter: new JsonwebtokenAdapter(),
     hasher: new ArgonAdapter({ salt: 12 })
-  },
-  persistence: {
-    userRepository: new PgUserRepository()
   },
   validators: {
     schemaValidator: new AjvAdapter()

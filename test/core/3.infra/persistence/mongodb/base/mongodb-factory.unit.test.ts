@@ -1,27 +1,19 @@
 import { faker } from '@faker-js/faker'
-import { DataSource } from 'typeorm'
 
-import { PgFactory } from '@/core/3.infra/persistence/postgres/base/pg-factory'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { PgUser } from '@/user/3.infra/persistence/postgres/entities/pg-user'
+import { MongodbFactory } from '@/core/3.infra/persistence/mongodb/base/mongodb-factory'
+import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { testDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/test'
+import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
 
-const makeDataSourceMock = (): DataSource => ({
-  initialize: jest.fn(async (): Promise<void> => {}),
-  isInitialized: true,
-  manager: { save: () => {} },
-  getRepository: jest.fn(async (): Promise<any> => ({
-    create: (entity) => entity
-  }))
-}) as any
-
-class FakeFactory extends PgFactory<PgUser> {
-  static create (): PgFactory<PgUser> {
+class FakeFactory extends MongodbFactory<MongodbUser> {
+  static create (): MongodbFactory<MongodbUser> {
     return new FakeFactory({
-      repositoryName: 'PgUser',
-      createDefault: (): PgUser => ({
+      collectionName: 'users',
+      createDefault: (): any => ({
+        id: faker.random.alphaNumeric(12),
         email: faker.internet.email(),
         emailConfirmed: false,
-        id: faker.random.alphaNumeric(12),
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
@@ -31,24 +23,29 @@ class FakeFactory extends PgFactory<PgUser> {
 }
 
 type SutTypes = {
-  sut: PgFactory<PgUser>
-  dataSourceMock: DataSource
+  sut: MongodbFactory<UserAggregateCreateParams>
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const dataSourceMock = makeDataSourceMock()
-  await pg.connect(dataSourceMock)
   const sut = FakeFactory.create()
 
-  return { sut, dataSourceMock }
+  return { sut }
 }
 
-describe('PgFactory', () => {
+describe('MongodbFactory', () => {
+  beforeAll(async () => {
+    await mongodb.connect(testDataSource)
+  })
+
+  afterAll(async () => {
+    await mongodb.client.close()
+  })
+
   describe('success', () => {
     it('returns the created entity when no params are provided', async () => {
       const { sut } = await makeSut()
 
-      const result = await sut.createFixtures()
+      const result = await sut.createRandomFixture()
 
       expect(result).toEqual({
         email: expect.any(String),
@@ -64,7 +61,7 @@ describe('PgFactory', () => {
       const { sut } = await makeSut()
       const params = { name: 'any_name' }
 
-      const result = await sut.createFixtures(params)
+      const result = await sut.createFixture(params)
 
       expect(result).toEqual({
         email: expect.any(String),
@@ -105,7 +102,7 @@ describe('PgFactory', () => {
       const { sut } = await makeSut()
       const amount = 3
 
-      const result = await sut.createFixtures(amount)
+      const result = await sut.createRandomFixtures(amount)
 
       expect(result.length).toBe(3)
     })
