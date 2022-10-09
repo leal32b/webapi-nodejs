@@ -1,13 +1,13 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
+import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
 
 type Props<T> = {
   createDefault: () => T
   repositoryName: string
 }
 
-export abstract class PgFactory<T> implements DatabaseFactory<T> {
+export abstract class PostgresFactory<T> implements DatabaseFactory<T> {
   protected constructor (private readonly props: Props<T>) {}
 
   private async create (): Promise<T>
@@ -16,7 +16,7 @@ export abstract class PgFactory<T> implements DatabaseFactory<T> {
   private async create <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
   private async create <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, repositoryName } = this.props
-    const repository = await pg.client.getRepository(repositoryName)
+    const repository = await postgres.client.getRepository(repositoryName)
 
     if (typeof amountOrEntityOrEntities === 'number') {
       const entities: T[] = []
@@ -25,20 +25,20 @@ export abstract class PgFactory<T> implements DatabaseFactory<T> {
         entities.push(createDefault())
       }
 
-      await pg.client.manager.save(entities)
+      await postgres.client.manager.save(entities)
 
       return entities
     }
 
     if (!Array.isArray(amountOrEntityOrEntities)) {
       const entity = repository.create({ ...createDefault(), ...amountOrEntityOrEntities })
-      await pg.client.manager.save(entity)
+      await postgres.client.manager.save(entity)
 
       return entity
     }
 
     const entities = amountOrEntityOrEntities.map(entity => ({ ...createDefault(), ...entity }))
-    await pg.client.manager.save(entities)
+    await postgres.client.manager.save(entities)
 
     return entities
   }

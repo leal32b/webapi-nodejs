@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { DataSource } from 'typeorm'
 
-import { PgFactory } from '@/core/3.infra/persistence/postgres/base/pg-factory'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { PgUser } from '@/user/3.infra/persistence/postgres/entities/pg-user'
+import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
+import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
 
 const makeDataSourceMock = (): DataSource => ({
   initialize: jest.fn(async (): Promise<void> => {}),
@@ -14,11 +14,11 @@ const makeDataSourceMock = (): DataSource => ({
   }))
 }) as any
 
-class FakeFactory extends PgFactory<PgUser> {
-  static create (): PgFactory<PgUser> {
+class FakeFactory extends PostgresFactory<PostgresUser> {
+  static create (): PostgresFactory<PostgresUser> {
     return new FakeFactory({
-      repositoryName: 'PgUser',
-      createDefault: (): PgUser => ({
+      repositoryName: 'PostgresUser',
+      createDefault: (): PostgresUser => ({
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),
@@ -31,19 +31,19 @@ class FakeFactory extends PgFactory<PgUser> {
 }
 
 type SutTypes = {
-  sut: PgFactory<PgUser>
+  sut: PostgresFactory<PostgresUser>
   dataSourceMock: DataSource
 }
 
 const makeSut = async (): Promise<SutTypes> => {
   const dataSourceMock = makeDataSourceMock()
-  await pg.connect(dataSourceMock)
+  await postgres.connect(dataSourceMock)
   const sut = FakeFactory.create()
 
   return { sut, dataSourceMock }
 }
 
-describe('PgFactory', () => {
+describe('PostgresFactory', () => {
   describe('success', () => {
     it('returns the created entity when no params are provided', async () => {
       const { sut } = await makeSut()

@@ -6,7 +6,7 @@ type ConstructParams = {
   dataSource: DataSource
 }
 
-class PgClient {
+class PostgresClient {
   constructor (private readonly props: ConstructParams) {}
 
   async connect (message?: string): Promise<Either<Error, void>> {
@@ -82,11 +82,11 @@ class PgClient {
   }
 }
 
-export const pg = {
-  client: null as PgClient,
+export const postgres = {
+  client: null as PostgresClient,
 
   async connect (dataSource: DataSource): Promise<Either<Error, void>> {
-    this.client = new PgClient({ dataSource })
+    this.client = new PostgresClient({ dataSource })
     const result = await this.client.connect()
 
     return result

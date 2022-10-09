@@ -1,7 +1,7 @@
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { PgUser } from '@/user/3.infra/persistence/postgres/entities/pg-user'
+import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
 
 const makeManagerStub = (): EntityManager => {
   return new EntityManager(new DataSource({ type: 'postgres' }))
@@ -12,25 +12,25 @@ const makeDataSourceMock = (): DataSource => ({
   isInitialized: true,
   destroy: jest.fn(async (): Promise<void> => {}),
   manager: makeManagerStub(),
-  getRepository: jest.fn((): Repository<PgUser> => new Repository(PgUser, makeManagerStub()))
+  getRepository: jest.fn((): Repository<PostgresUser> => new Repository(PostgresUser, makeManagerStub()))
 }) as any
 
 type SutTypes = {
-  sut: typeof pg.client
+  sut: typeof postgres.client
   dataSourceMock: DataSource
 }
 
 const makeSut = async (): Promise<SutTypes> => {
   const dataSourceMock = makeDataSourceMock()
-  await pg.connect(dataSourceMock)
-  const sut = pg.client
+  await postgres.connect(dataSourceMock)
+  const sut = postgres.client
 
   return { sut, dataSourceMock }
 }
 
-describe('PgClient', () => {
+describe('PostgresClient', () => {
   afterAll(async () => {
-    await pg.client.close()
+    await postgres.client.close()
   })
 
   describe('success', () => {
@@ -61,7 +61,7 @@ describe('PgClient', () => {
     it('gets a repository', async () => {
       const { sut } = await makeSut()
 
-      const result = await sut.getRepository('PgUser')
+      const result = await sut.getRepository('PostgresUser')
 
       expect(result).toBeInstanceOf(Repository)
     })
@@ -81,7 +81,7 @@ describe('PgClient', () => {
       const { dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'initialize').mockRejectedValueOnce(new Error())
 
-      const result = await pg.connect(new DataSource({
+      const result = await postgres.connect(new DataSource({
         type: 'postgres',
         host: 'invalid_host',
         port: 5432,

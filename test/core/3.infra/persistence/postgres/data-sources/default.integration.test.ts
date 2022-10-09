@@ -1,25 +1,25 @@
 import 'dotenv/config'
 
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
+import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
 import { defaultDataSource } from '@/core/3.infra/persistence/postgres/data-sources/default'
 
 type SutTypes = {
-  sut: typeof pg.client
+  sut: typeof postgres.client
 }
 
 const makeSut = (): SutTypes => {
-  const sut = pg.client
+  const sut = postgres.client
 
   return { sut }
 }
 
 describe('defaultDataSource', () => {
   beforeAll(async () => {
-    await pg.connect(defaultDataSource)
+    await postgres.connect(defaultDataSource)
   })
 
   afterAll(async () => {
-    await pg.client.close()
+    await postgres.client.close()
   })
 
   describe('success', () => {

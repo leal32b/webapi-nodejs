@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm'
 
 @Entity({ name: 'users' })
-export class PgUser {
+export class PostgresUser {
   @PrimaryColumn()
     id: string
 
