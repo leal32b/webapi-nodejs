@@ -2,8 +2,6 @@ import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
-import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { config } from '@/core/4.main/config/config'
 import { factories } from '@/core/4.main/config/database-factories'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/factories/schema-validator-middleware-factory'
@@ -34,12 +32,12 @@ const makeSut = (): SutTypes => {
 
 describe('SignUpRoute', () => {
   beforeAll(async () => {
-    await pg.connect(testDataSource)
+    await config.persistence.connect()
   })
 
   afterAll(async () => {
-    await pg.client.clearDatabase()
-    await pg.client.close()
+    await config.persistence.clear()
+    await config.persistence.close()
   })
 
   describe('success', () => {

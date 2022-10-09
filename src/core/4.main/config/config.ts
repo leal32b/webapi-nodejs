@@ -11,6 +11,8 @@ import { UserRepository } from '@/user/1.application/repositories/user-repositor
 
 export type Persistence = {
   connect: Function
+  clear: Function
+  close: Function
   repositories: {
     userRepository: UserRepository
   }

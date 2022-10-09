@@ -55,17 +55,25 @@ class PgClient {
     return this.props.dataSource.getRepository(entity)
   }
 
-  async clearDatabase (): Promise<void> {
+  async clearDatabase (): Promise<Either<Error, void>> {
     await this.reconnect()
 
     const { database } = this.props.dataSource.options
 
-    if ((database as string).includes('test')) {
+    if (!(database as string).includes('test')) {
+      return right()
+    }
+
+    try {
       const entities = this.props.dataSource.entityMetadatas
 
       for await (const entity of entities) {
         await this.props.dataSource.getRepository(entity.name).clear()
       }
+
+      return right()
+    } catch (error) {
+      return left(error)
     }
   }
 

@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
 import { pg } from '@/core/3.infra/persistence/postgres/client/pg-client'
@@ -67,10 +65,19 @@ describe('PgClient', () => {
 
       expect(result).toBeInstanceOf(Repository)
     })
+
+    xit('returns Right on clearDatabase', async () => {
+      const { sut } = await makeSut()
+
+      const result = await sut.clearDatabase()
+      console.log('result >>>', result)
+
+      expect(result.isRight()).toBe(true)
+    })
   })
 
   describe('failure', () => {
-    it('returns Left if connect throws', async () => {
+    it('returns Left when connect throws', async () => {
       const { dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'initialize').mockRejectedValueOnce(new Error())
 
@@ -86,7 +93,7 @@ describe('PgClient', () => {
       expect(result.isLeft()).toBe(true)
     })
 
-    it('returns Left if close throws', async () => {
+    it('returns Left when close throws', async () => {
       const { sut, dataSourceMock } = await makeSut()
       jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
 
