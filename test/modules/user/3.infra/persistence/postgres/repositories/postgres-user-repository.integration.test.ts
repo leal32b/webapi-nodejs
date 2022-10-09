@@ -1,7 +1,7 @@
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { testDataSource } from '@/core/3.infra/persistence/postgres/data-sources/test'
 import { postgresFactories } from '@/core/4.main/config/database-factories/postgres-factory'
+import { postgresPersistence } from '@/core/4.main/config/persistence/postgres-persistence'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
@@ -36,12 +36,12 @@ const makeSut = (): SutTypes => {
 
 describe('UserPostgresRepository', () => {
   beforeAll(async () => {
-    await postgres.connect(testDataSource)
+    await postgresPersistence.connect()
   })
 
   afterAll(async () => {
-    await postgres.client.clearDatabase()
-    await postgres.client.close()
+    await postgresPersistence.clear()
+    await postgresPersistence.close()
   })
 
   describe('success', () => {

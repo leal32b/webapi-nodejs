@@ -14,6 +14,7 @@ class PostgresClient {
       await this.props.dataSource.initialize()
       const dataSource = this.props.dataSource.name
       const database = this.props.dataSource.options.database as string
+
       console.log(message || `connected to ${database} (dataSource: ${dataSource})`)
 
       return right()
@@ -56,12 +57,8 @@ class PostgresClient {
   }
 
   async clearDatabase (): Promise<Either<Error, void>> {
-    await this.reconnect()
-
-    const { database } = this.props.dataSource.options
-
-    if (!(database as string).includes('test')) {
-      return right()
+    if (process.env.NODE_ENV !== 'test') {
+      return left(new Error('Clear database is allowed only in test environment'))
     }
 
     try {

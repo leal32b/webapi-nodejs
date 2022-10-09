@@ -1,15 +1,24 @@
-import 'dotenv/config'
+import { newDb } from 'pg-mem'
 import { DataSource } from 'typeorm'
 
-export const testDataSource = new DataSource({
-  type: 'postgres',
-  host: process.env.DB_POSTGRES_HOST,
-  port: parseInt(process.env.DB_POSTGRES_PORT),
-  username: process.env.DB_POSTGRES_USERNAME,
-  password: process.env.DB_POSTGRES_PASSWORD,
-  database: `${process.env.DB_POSTGRES_DATABASE}_test`,
-  logging: false,
-  synchronize: true,
-  entities: ['**/postgres/entities/**/*.{js,ts}'],
-  migrations: ['**/postgres/migrations/**/*.{js,ts}']
-})
+export const testDataSource = async (): Promise<DataSource> => {
+  const mem = newDb()
+  mem.public.registerFunction({
+    name: 'current_database',
+    implementation: () => 'postgres_test'
+  })
+  mem.public.registerFunction({
+    name: 'version',
+    implementation: () => '14.5'
+  })
+
+  const dataSource = await mem.adapters.createTypeormDataSource({
+    type: 'postgres',
+    database: 'postgres_test',
+    entities: ['**/postgres/entities/**/*.{js,ts}']
+  })
+  await dataSource.initialize()
+  await dataSource.synchronize()
+
+  return dataSource
+}

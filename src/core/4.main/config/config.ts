@@ -9,6 +9,15 @@ import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 import { persistence } from '@/core/4.main/config/persistence'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
+type App = {
+  webApp: WebApp
+}
+
+type Cryptography = {
+  encrypter: Encrypter
+  hasher: Hasher
+}
+
 export type Persistence = {
   connect: Function
   clear: Function
@@ -18,32 +27,23 @@ export type Persistence = {
   }
 }
 
-type Cryptography = {
-  encrypter: Encrypter
-  hasher: Hasher
-}
-
 type Validators = {
   schemaValidator: SchemaValidator
 }
 
-type App = {
-  webApp: WebApp
-}
-
 type Config = {
+  app: App
   cryptography: Cryptography
   persistence: Persistence
   validators: Validators
-  app: App
 }
 
 export const config: Config = {
+  persistence,
   cryptography: {
     encrypter: new JsonwebtokenAdapter(),
     hasher: new ArgonAdapter({ salt: 12 })
   },
-  persistence,
   validators: {
     schemaValidator: new AjvAdapter()
   },

@@ -1,39 +1,37 @@
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
 import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
-
-const makeManagerStub = (): EntityManager => {
-  return new EntityManager(new DataSource({ type: 'postgres' }))
-}
-
-const makeDataSourceMock = (): DataSource => ({
-  initialize: jest.fn(async (): Promise<void> => {}),
-  isInitialized: true,
-  destroy: jest.fn(async (): Promise<void> => {}),
-  manager: makeManagerStub(),
-  getRepository: jest.fn((): Repository<PostgresUser> => new Repository(PostgresUser, makeManagerStub()))
-}) as any
+import { postgresPersistence } from '@/core/4.main/config/persistence/postgres-persistence'
 
 type SutTypes = {
   sut: typeof postgres.client
-  dataSourceMock: DataSource
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const dataSourceMock = makeDataSourceMock()
-  await postgres.connect(dataSourceMock)
   const sut = postgres.client
 
-  return { sut, dataSourceMock }
+  return { sut }
 }
 
 describe('PostgresClient', () => {
+  beforeAll(async () => {
+    await postgresPersistence.connect()
+  })
+
   afterAll(async () => {
-    await postgres.client.close()
+    await postgresPersistence.close()
   })
 
   describe('success', () => {
+    it('connects to dataSource', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
+      const result = await sut.connect()
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('returns true when dataSource is initialized', async () => {
       const { sut } = await makeSut()
 
@@ -43,11 +41,12 @@ describe('PostgresClient', () => {
     })
 
     it('reconnects when dataSource is down', async () => {
-      const { sut, dataSourceMock } = await makeSut()
+      const { sut } = await makeSut()
+      await sut.close()
 
-      await sut.reconnect()
+      const result = await sut.reconnect()
 
-      expect(dataSourceMock.initialize).toBeCalled()
+      expect(result.isRight()).toBe(true)
     })
 
     it('gets dataSource manager', async () => {
@@ -66,20 +65,57 @@ describe('PostgresClient', () => {
       expect(result).toBeInstanceOf(Repository)
     })
 
-    xit('returns Right on clearDatabase', async () => {
+    it('returns Right on clearDatabase', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.clearDatabase()
-      console.log('result >>>', result)
 
       expect(result.isRight()).toBe(true)
+    })
+
+    it('returns Left on clearDatabase when not in test environment', async () => {
+      const { sut } = await makeSut()
+      process.env.NODE_ENV = 'any_environment'
+
+      const result = await sut.clearDatabase()
+      process.env.NODE_ENV = 'test'
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns an Error on clearDatabase when not in test environment', async () => {
+      const { sut } = await makeSut()
+      process.env.NODE_ENV = 'any_environment'
+
+      const result = await sut.clearDatabase()
+      process.env.NODE_ENV = 'test'
+
+      expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
     })
   })
 
   describe('failure', () => {
+    it('returns Left when close throws', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
+      const result = await sut.close()
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left when clearDatabase throws', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
+      const result = await sut.clearDatabase()
+
+      expect(result.isLeft()).toBe(true)
+    })
+
     it('returns Left when connect throws', async () => {
-      const { dataSourceMock } = await makeSut()
-      jest.spyOn(dataSourceMock, 'initialize').mockRejectedValueOnce(new Error())
+      const { sut } = await makeSut()
+      await sut.close()
 
       const result = await postgres.connect(new DataSource({
         type: 'postgres',
@@ -89,15 +125,6 @@ describe('PostgresClient', () => {
         password: 'any_password',
         database: 'any_database'
       }))
-
-      expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns Left when close throws', async () => {
-      const { sut, dataSourceMock } = await makeSut()
-      jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
-
-      const result = await sut.close()
 
       expect(result.isLeft()).toBe(true)
     })

@@ -5,8 +5,8 @@ import { postgresPersistence } from '@/core/4.main/config/persistence/postgres-p
 const DATABASE = process.env.DATABASE
 
 const _persistence: { [key: string]: Persistence } = {
-  postgres: postgresPersistence,
-  mongodb: mongodbPersistence
+  mongodb: mongodbPersistence,
+  postgres: postgresPersistence
 }
 
 export const persistence = _persistence[DATABASE]
