@@ -4,7 +4,10 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/4.main/**',
-    '!<rootDir>/**/migrations/**'
+    '!<rootDir>/**/migrations/**',
+    // remove after implementation:
+    '!<rootDir>/**/*handler.ts',
+    '!<rootDir>/**/mongodb-user.ts'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
@@ -18,6 +21,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/test/**/*.test.ts'
   ],
+  preset: '@shelf/jest-mongodb',
   moduleNameMapper: {
     '^@/core/(.*)$': '<rootDir>/src/core/$1',
     '^@/communication/(.*)$': '<rootDir>/src/modules/communication/$1',

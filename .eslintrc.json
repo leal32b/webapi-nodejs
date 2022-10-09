@@ -21,6 +21,7 @@
       "pathGroups": [{ "pattern": "@/**", "group": "internal" }]
     }],
     "new-cap": "off",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0 }],
     "no-new": "off"
   }
 }

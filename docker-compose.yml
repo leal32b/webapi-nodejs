@@ -13,6 +13,17 @@ services:
     ports:
       - 5432:5432
 
+  mongodb:
+    container_name: mongodb-container
+    image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGODB_PASSWORD}
+    volumes:
+      - ./data-mongodb:/data/db
+    ports:
+      - 27017:27017
+
   webapi:
     container_name: webapi-container
     image: node:16.15
@@ -20,6 +31,7 @@ services:
     command: bash -c "npm ci --omit=dev && npm run debug"
     env_file: .env
     environment:
+      - DB_MONGODB_HOST=mongodb
       - DB_POSTGRES_HOST=postgres
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
@@ -31,11 +43,13 @@ services:
       - 9222:9222
     links:
       - postgres
+      - mongodb
 
   start_dependencies:
     container_name: wait-for-dependencies
     image: dadarek/wait-for-dependencies
-    command: postgres:5432 webapi:3000
+    command: postgres:5432 mongodb:27017 webapi:3000
     depends_on:
       - postgres
+      - mongodb
       - webapi
