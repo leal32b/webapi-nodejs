@@ -55,13 +55,12 @@ class MongodbClient {
   }
 
   async clearDatabase (): Promise<Either<Error, void>> {
-    const { database } = this.props.dataSource
-
-    if (!database.includes('test')) {
-      return right()
+    if (process.env.NODE_ENV !== 'test') {
+      return left(new Error('Clear database is allowed only in test environment'))
     }
 
     try {
+      const { database } = this.props.dataSource
       await this.mongoClient.db(database).dropDatabase()
 
       return right()

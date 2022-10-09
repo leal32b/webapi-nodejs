@@ -1,54 +1,79 @@
 import { Collection } from 'mongodb'
 
 import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { testDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/test'
+import { mongodbPersistence } from '@/core/4.main/config/persistence/mongodb-persistence'
+
+type SutTypes = {
+  sut: typeof mongodb.client
+}
+
+const makeSut = async (): Promise<SutTypes> => {
+  const sut = mongodb.client
+
+  return { sut }
+}
 
 describe('MongodbAdapter', () => {
   beforeAll(async () => {
-    await mongodb.connect(testDataSource)
+    await mongodbPersistence.connect()
   })
 
   afterAll(async () => {
-    await mongodb.client.close()
+    await mongodbPersistence.close()
   })
 
   describe('success', () => {
+    it('connects to dataSource', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
+      const result = await sut.connect()
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('gets collection', async () => {
-      const result = await mongodb.client.getCollection('any_collection')
+      const { sut } = await makeSut()
+
+      const result = await sut.getCollection('any_collection')
 
       expect(result).toBeInstanceOf(Collection)
     })
 
     it('returns Right on clearDatabase', async () => {
-      const result = await mongodb.client.clearDatabase()
+      const { sut } = await makeSut()
+
+      const result = await sut.clearDatabase()
 
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns Right on clearDatabase when it is not a test database', async () => {
-      await mongodb.client.close()
-      await mongodb.connect({ ...testDataSource, database: 'any_database' })
+    it('returns Left on clearDatabase when not in test environment', async () => {
+      const { sut } = await makeSut()
+      process.env.NODE_ENV = 'any_environment'
 
-      const result = await mongodb.client.clearDatabase()
-
-      expect(result.isRight()).toBe(true)
-    })
-  })
-
-  describe('failure', () => {
-    it('returns Left when connect throws', async () => {
-      if (mongodb.client) await mongodb.client.close()
-
-      const result = await mongodb.connect({
-        name: 'any_name',
-        database: 'any_database',
-        connectionString: 'invalid_connectionString'
-      })
+      const result = await sut.clearDatabase()
+      process.env.NODE_ENV = 'test'
 
       expect(result.isLeft()).toBe(true)
     })
 
+    it('returns an Error on clearDatabase when not in test environment', async () => {
+      const { sut } = await makeSut()
+      process.env.NODE_ENV = 'any_environment'
+
+      const result = await sut.clearDatabase()
+      process.env.NODE_ENV = 'test'
+
+      expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
+    })
+  })
+
+  describe('failure', () => {
     it('returns Left when close throws', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
       await mongodb.connect({
         name: 'any_name',
         database: 'any_database',
@@ -60,11 +85,24 @@ describe('MongodbAdapter', () => {
       expect(result.isLeft()).toBe(true)
     })
 
-    xit('returns Left when clearDatabase throws', async () => {
-      await mongodb.client.close()
-      // jest.spyOn(MongoClient, '').mockRejectedValueOnce(new Error())
+    it('returns Left when clearDatabase throws', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
 
       const result = await mongodb.client.clearDatabase()
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left when connect throws', async () => {
+      const { sut } = await makeSut()
+      await sut.close()
+
+      const result = await mongodb.connect({
+        name: 'any_name',
+        database: 'any_database',
+        connectionString: 'invalid_connectionString'
+      })
 
       expect(result.isLeft()).toBe(true)
     })
