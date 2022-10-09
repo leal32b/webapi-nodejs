@@ -25,8 +25,6 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - store_test_results:
-          path: test-results
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -39,6 +37,8 @@ jobs:
       - run: npm run build
       - codecov/upload:
           file: './coverage/lcov.info'
+      - store_test_results:
+          path: test-results
       - persist_to_workspace:
           root: ~/repo
           paths:
