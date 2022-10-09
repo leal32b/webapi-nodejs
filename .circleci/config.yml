@@ -39,6 +39,8 @@ jobs:
           file: './coverage/lcov.info'
       - store_test_results:
           path: test-results
+      - store_artifacts:
+          path: test-results
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -46,7 +48,7 @@ jobs:
 
 workflows:
   version: 2
-  test-deploy:
+  test-build:
     jobs:
       - test
       - build:
