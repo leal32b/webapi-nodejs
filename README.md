@@ -21,27 +21,23 @@ Description
 
 Create a copy of `.env.development` and rename it to `.env`
 
-Install dependencies:
+Run the following commands:
+
 ```bash
+# Install dependencies:
 npm install
-```
 
-Build the project:
-```bash
+# Build project:
 npm run build
-```
 
-Start the containers (make sure docker is running on your machine):
-```bash
+# Start containers (make sure docker is running on your machine):
 npm run docker:up
-```
 
-Run migrations:
-```bash
+# Run migrations:
 npm run migration:run
-```
 
-Endpoint will be listening at http://localhost:3000/api
+# Endpoint will be listening at http://localhost:3000/api
+```
 
 ## Technologies
 
