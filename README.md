@@ -9,9 +9,9 @@
 [![GitHub issues](https://img.shields.io/github/issues/leal32b/webapi-nodejs?logo=github)](https://github.com/leal32b/webapi-nodejs/issues)
 
 
-A project that aims to serve as a template for the creation of new Web APIs.
+This project aims to serve as a template for the creation of new Web APIs.
 It comes with pre-built: user/profile management, communication events and the option to use SQL or noSQL databases.
-Concepts of Test-Driven Development, Domain-Driven Design and Clean Architecture are applied.
+Its design and implementation apply concepts of Test-Driven Development, Domain-Driven Design and Clean Architecture.
 
 <!--
 ## Table of Contents
