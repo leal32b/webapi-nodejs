@@ -1,4 +1,5 @@
-import { Encrypter } from '@/core/1.application/cryptography/encrypter'
+import { Either, left, right } from '@/core/0.domain/utils/either'
+import { Encrypter, TokenData } from '@/core/1.application/cryptography/encrypter'
 import { AppResponse } from '@/core/2.presentation/base/controller'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
@@ -15,7 +16,6 @@ export class AuthMiddleware implements Middleware {
   constructor (private readonly props: ConstructProps) {}
 
   async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
-    const { encrypter } = this.props
     const { auth, accessToken } = request
     const appResponse = success.ok(request.payload)
 
@@ -23,29 +23,50 @@ export class AuthMiddleware implements Middleware {
       return appResponse
     }
 
+    const decryptedTokenOrError = await this.decryptToken(accessToken)
+
+    if (decryptedTokenOrError.isLeft()) {
+      return decryptedTokenOrError.value
+    }
+
+    const decryptedToken = decryptedTokenOrError.value
+    const userAuth = decryptedToken.payload.auth
+    const authorizedOrError = this.verifyAuth(auth, userAuth)
+
+    if (authorizedOrError.isLeft()) {
+      return authorizedOrError.value
+    }
+
+    return appResponse
+  }
+
+  private async decryptToken (accessToken: string): Promise<Either<AppResponse<any>, TokenData>> {
+    const { encrypter } = this.props
+
     if (!accessToken) {
-      return clientError.unauthorized([new MissingTokenError()])
+      return left(clientError.unauthorized([new MissingTokenError()]))
     }
 
     const [type, token] = accessToken?.split(' ')
 
     if (type !== 'Bearer' || !token) {
-      return clientError.unauthorized([new InvalidTokenError('Bearer')])
+      return left(clientError.unauthorized([new InvalidTokenError('Bearer')]))
     }
 
     const decryptedTokenOrError = await encrypter.decrypt(token)
 
     if (decryptedTokenOrError.isLeft()) {
-      return clientError.unauthorized([new InvalidTokenError('Bearer')])
+      return left(clientError.unauthorized([new InvalidTokenError('Bearer')]))
     }
 
-    const decryptedToken = decryptedTokenOrError.value
-    const userAuth = decryptedToken.payload.auth
+    return right(decryptedTokenOrError.value)
+  }
 
-    if (!userAuth.some(a => request.auth.includes(a))) {
-      return clientError.unauthorized([new MissingAuthError(request.auth)])
+  private verifyAuth (auth: string[], userAuth: string[]): Either<AppResponse<any>, void> {
+    if (!userAuth.some(a => auth.includes(a))) {
+      return left(clientError.unauthorized([new MissingAuthError(auth)]))
     }
 
-    return appResponse
+    return right()
   }
 }

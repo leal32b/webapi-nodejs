@@ -29,42 +29,20 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
   }) { super() }
 
   async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
-    const { hasher, encrypter, userRepository } = this.props
+    const { userRepository } = this.props
     const { email, password, passwordRetype } = createUserData
 
     if (password !== passwordRetype) {
       return left([new PasswordMismatchError('password')])
     }
 
-    const userAggregateByEmailOrError = await userRepository.readByEmail(email)
+    const emailAvailableOrError = await this.isEmailAvailable(email)
 
-    if (userAggregateByEmailOrError.isLeft()) {
-      return left(userAggregateByEmailOrError.value)
+    if (emailAvailableOrError.isLeft()) {
+      return left(emailAvailableOrError.value)
     }
 
-    if (userAggregateByEmailOrError.value) {
-      return left([new EmailTakenError('email', email)])
-    }
-
-    const hashedPasswordOrError = await hasher.hash(password)
-
-    if (hashedPasswordOrError.isLeft()) {
-      return left([hashedPasswordOrError.value])
-    }
-
-    const tokenOrError = await encrypter.encrypt({ type: TokenType.email })
-
-    if (tokenOrError.isLeft()) {
-      return left([tokenOrError.value])
-    }
-
-    const token = tokenOrError.value
-    const hashedPassword = hashedPasswordOrError.value
-    const userAggregateOrError = UserAggregate.create({
-      ...createUserData,
-      password: hashedPassword,
-      token
-    })
+    const userAggregateOrError = await this.createUserAggregate(createUserData)
 
     if (userAggregateOrError.isLeft()) {
       return left(userAggregateOrError.value)
@@ -83,5 +61,50 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
       email,
       message: 'user created successfully'
     })
+  }
+
+  private async isEmailAvailable (email: string): Promise<Either<DomainError[], void>> {
+    const { userRepository } = this.props
+    const userAggregateByEmailOrError = await userRepository.readByEmail(email)
+
+    if (userAggregateByEmailOrError.isLeft()) {
+      return left(userAggregateByEmailOrError.value)
+    }
+
+    if (userAggregateByEmailOrError.value) {
+      return left([new EmailTakenError('email', email)])
+    }
+
+    return right()
+  }
+
+  private async createUserAggregate (createUserData: CreateUserData): Promise<Either<DomainError[], UserAggregate>> {
+    const { hasher, encrypter } = this.props
+    const { password } = createUserData
+    const hashedPasswordOrError = await hasher.hash(password)
+
+    if (hashedPasswordOrError.isLeft()) {
+      return left([hashedPasswordOrError.value])
+    }
+
+    const hashedPassword = hashedPasswordOrError.value
+    const tokenOrError = await encrypter.encrypt({ type: TokenType.email })
+
+    if (tokenOrError.isLeft()) {
+      return left([tokenOrError.value])
+    }
+
+    const token = tokenOrError.value
+    const userAggregateOrError = UserAggregate.create({
+      ...createUserData,
+      password: hashedPassword,
+      token
+    })
+
+    if (userAggregateOrError.isLeft()) {
+      return left(userAggregateOrError.value)
+    }
+
+    return userAggregateOrError
   }
 }
