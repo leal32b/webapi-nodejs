@@ -9,6 +9,7 @@
     "Fastify",
     "Metadatas",
     "Middlewares",
-    "typeorm"
+    "typeorm",
+    "webapi"
   ]
 }
