@@ -30,8 +30,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const repository = await postgres.client.getRepository('PostgresUser')
-      const user = await repository.findOneBy({ email })
+      const user = await this.readByFilter({ email })
 
       if (!user) {
         return right(null)
@@ -47,8 +46,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const repository = await postgres.client.getRepository('PostgresUser')
-      const user = await repository.findOneBy({ id })
+      const user = await this.readByFilter({ id })
 
       if (!user) {
         return right(null)
@@ -81,5 +79,12 @@ export class PostgresUserRepository implements UserRepository {
     } catch (error) {
       return left([new ServerError(error.message, error.stack)])
     }
+  }
+
+  private async readByFilter (filter: { [key: string]: any }): Promise<any> {
+    const repository = await postgres.client.getRepository('PostgresUser')
+    const user = await repository.findOneBy(filter)
+
+    return user
   }
 }
