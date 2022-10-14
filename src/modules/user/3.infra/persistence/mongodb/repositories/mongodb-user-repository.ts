@@ -31,8 +31,7 @@ export class MongodbUserRepository implements UserRepository {
 
   async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const userCollection = await mongodb.client.getCollection('users')
-      const user = await userCollection.findOne({ email })
+      const user = await this.readByFilter({ email })
 
       if (!user) {
         return right(null)
@@ -55,8 +54,7 @@ export class MongodbUserRepository implements UserRepository {
 
   async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const userCollection = await mongodb.client.getCollection('users')
-      const user = await userCollection.findOne({ _id: id })
+      const user = await this.readByFilter({ _id: id })
 
       if (!user) {
         return right(null)
@@ -96,5 +94,12 @@ export class MongodbUserRepository implements UserRepository {
     } catch (error) {
       return left([new ServerError(error.message, error.stack)])
     }
+  }
+
+  private async readByFilter (filter: { [key: string]: any }): Promise<any> {
+    const userCollection = await mongodb.client.getCollection('users')
+    const user = await userCollection.findOne(filter)
+
+    return user
   }
 }

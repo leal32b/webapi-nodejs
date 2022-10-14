@@ -5,6 +5,7 @@ import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypte
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
+import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
@@ -26,8 +27,45 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
   }) { super() }
 
   async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
-    const { hasher, encrypter, userRepository } = this.props
+    const { userRepository } = this.props
     const { email, password } = authenticateUserData
+
+    const userAggregateOrError = await this.getUserAggregate(email)
+
+    if (userAggregateOrError.isLeft()) {
+      return left(userAggregateOrError.value)
+    }
+
+    const userAggregate = userAggregateOrError.value
+    const { id, password: hashedPassword } = userAggregate
+    const passwordValidOrError = await this.isPasswordValid(hashedPassword.value, password)
+
+    if (passwordValidOrError.isLeft()) {
+      return left(passwordValidOrError.value)
+    }
+
+    const tokenOrError = await this.createAccessToken(id.value)
+
+    if (tokenOrError.isLeft()) {
+      return left(tokenOrError.value)
+    }
+
+    const token = tokenOrError.value
+    userAggregate.token = token
+    const updatedOrError = await userRepository.update(userAggregate)
+
+    if (updatedOrError.isLeft()) {
+      return left(updatedOrError.value)
+    }
+
+    return right({
+      accessToken: token.value,
+      message: 'user authenticated successfully'
+    })
+  }
+
+  private async getUserAggregate (email: string): Promise<Either<DomainError[], UserAggregate>> {
+    const { userRepository } = this.props
     const userAggregateOrError = await userRepository.readByEmail(email)
 
     if (userAggregateOrError.isLeft()) {
@@ -40,8 +78,12 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
       return left([new NotFoundError('email', email)])
     }
 
-    const { id, password: hashedPassword } = userAggregate
-    const passwordIsValidOrError = await hasher.compare(hashedPassword.value, password)
+    return right(userAggregate)
+  }
+
+  private async isPasswordValid (hashedPassword: string, password: string): Promise<Either<DomainError[], void>> {
+    const { hasher } = this.props
+    const passwordIsValidOrError = await hasher.compare(hashedPassword, password)
 
     if (passwordIsValidOrError.isLeft()) {
       return left([passwordIsValidOrError.value])
@@ -52,10 +94,16 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
       return left([new InvalidPasswordError()])
     }
 
+    return right()
+  }
+
+  private async createAccessToken (id: string): Promise<Either<DomainError[], Token>> {
+    const { encrypter } = this.props
+
     const accessTokenOrError = await encrypter.encrypt({
       type: TokenType.access,
       payload: {
-        id: id.value,
+        id,
         auth: ['user']
       }
     })
@@ -71,17 +119,6 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
       return left(tokenOrError.value)
     }
 
-    const token = tokenOrError.value
-    userAggregate.token = token
-    const updatedOrError = await userRepository.update(userAggregate)
-
-    if (updatedOrError.isLeft()) {
-      return left(updatedOrError.value)
-    }
-
-    return right({
-      accessToken,
-      message: 'user authenticated successfully'
-    })
+    return right(tokenOrError.value)
   }
 }
