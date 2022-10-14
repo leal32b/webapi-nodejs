@@ -1,6 +1,6 @@
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { mongodbFactories } from '@/core/4.main/config/persistence/factories/mongodb-factory'
-import { postgresFactories } from '@/core/4.main/config/persistence/factories/postgres-factory'
+import { mongodbFactories } from '@/core/4.main/setup/factories/mongodb-factory'
+import { postgresFactories } from '@/core/4.main/setup/factories/postgres-factory'
 
 const DATABASE = process.env.DATABASE
 

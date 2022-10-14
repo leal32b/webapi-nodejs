@@ -1,7 +1,7 @@
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
 import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { postgresPersistence } from '@/core/4.main/config/persistence/databases/postgres-persistence'
+import { makePostgres } from '@/core/4.main/config/persistence/make-postgres'
 
 type SutTypes = {
   sut: typeof postgres.client
@@ -15,11 +15,11 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('PostgresClient', () => {
   beforeAll(async () => {
-    await postgresPersistence.connect()
+    await makePostgres.connect()
   })
 
   afterAll(async () => {
-    await postgresPersistence.close()
+    await makePostgres.close()
   })
 
   describe('success', () => {

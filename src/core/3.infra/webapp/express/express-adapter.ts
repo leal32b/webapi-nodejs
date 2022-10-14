@@ -1,19 +1,61 @@
-import express, { Express, NextFunction, Request, RequestHandler, Response } from 'express'
+import express, { Express, json, NextFunction, Request, RequestHandler, Response } from 'express'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { Middleware } from '@/core/2.presentation/middleware/middleware'
-import { WebApp, Router, Route } from '@/core/3.infra/api/app/web-app'
-import { setupExpressMiddlewares } from '@/core/3.infra/webapp/express/config/setup-express-middlewares'
+import { WebApp, Router, Route, Header } from '@/core/3.infra/api/app/web-app'
 
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
 
   constructor () {
     this._app = express()
+    this._app.use(json())
+  }
 
-    setupExpressMiddlewares(this.app)
+  setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
+    try {
+      this.app.use(path, ...middlewares)
+
+      return right()
+    } catch (error) {
+      console.log('setApiSpecification', error)
+
+      return left(new ServerError(error.message, error.stack))
+    }
+  }
+
+  setContentType (type: string): Either<ServerError, void> {
+    try {
+      this.app.use((req: Request, res: Response, next: NextFunction): void => {
+        res.type(type)
+        next()
+      })
+
+      return right()
+    } catch (error) {
+      console.log('setContentType', error)
+
+      return left(new ServerError(error.message, error.stack))
+    }
+  }
+
+  setHeaders (headers: Header[]): Either<ServerError, void> {
+    try {
+      this.app.use((req: Request, res: Response, next: NextFunction): void => {
+        headers.forEach(({ field, value }) => {
+          res.set(field, value)
+        })
+        next()
+      })
+
+      return right()
+    } catch (error) {
+      console.log('setHeaders', error)
+
+      return left(new ServerError(error.message, error.stack))
+    }
   }
 
   setRouter (router: Router): Either<ServerError, void> {

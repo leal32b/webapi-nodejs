@@ -1,4 +1,4 @@
-import { config } from '@/core/4.main/config/config'
+import { config } from '@/core/4.main/config'
 import { ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 

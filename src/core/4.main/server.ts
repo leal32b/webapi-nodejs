@@ -1,20 +1,19 @@
 import 'dotenv/config'
 import 'module-alias/register'
 
-import { config } from '@/core/4.main/config/config'
-import { setHandlers } from '@/core/4.main/setup/set-handlers'
-import { setRouters } from '@/core/4.main/setup/set-routers'
+import { config } from '@/core/4.main/config'
+import { setHandlers } from '@/core/4.main/setup/handlers/set-handlers'
+import { setupWebApp } from '@/core/4.main/setup/webapp'
 
 const port = parseInt(process.env.PORT)
-const webapp = config.app.webApp
+const webApp = config.app.webApp
 
 const bootstrap = async (): Promise<void> => {
   await config.persistence.connect()
-  webapp.app.use()
-  setRouters(webapp)
+  setupWebApp(webApp)
   setHandlers()
 
-  webapp.listen(port, () => {
+  webApp.listen(port, () => {
     console.log(`server running at http://localhost:${port}`)
   })
 }

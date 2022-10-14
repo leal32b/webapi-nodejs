@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 
 import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { mongodbPersistence } from '@/core/4.main/config/persistence/databases/mongodb-persistence'
+import { makeMongodb } from '@/core/4.main/config/persistence/make-mongodb'
 
 type SutTypes = {
   sut: typeof mongodb.client
@@ -15,11 +15,11 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('MongodbAdapter', () => {
   beforeAll(async () => {
-    await mongodbPersistence.connect()
+    await makeMongodb.connect()
   })
 
   afterAll(async () => {
-    await mongodbPersistence.close()
+    await makeMongodb.close()
   })
 
   describe('success', () => {
