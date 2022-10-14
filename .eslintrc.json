@@ -21,7 +21,6 @@
       "newlines-between": "always",
       "pathGroups": [{ "pattern": "@/**", "group": "internal" }]
     }],
-    // "max-lines-per-function": ["error", { "max": 25, "skipBlankLines": true, "skipComments": true }],
     "new-cap": "off",
     "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0 }],
     "no-new": "off"
