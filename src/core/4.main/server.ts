@@ -10,6 +10,7 @@ const webapp = config.app.webApp
 
 const bootstrap = async (): Promise<void> => {
   await config.persistence.connect()
+  webapp.app.use()
   setRouters(webapp)
   setHandlers()
 

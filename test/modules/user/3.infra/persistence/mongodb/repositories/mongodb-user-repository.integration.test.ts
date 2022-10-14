@@ -1,7 +1,7 @@
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 import { testDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/test'
-import { mongodbFactories } from '@/core/4.main/config/database-factories/mongodb-factory'
+import { mongodbFactories } from '@/core/4.main/config/persistence/factories/mongodb-factory'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'

@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 
 import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { mongodbPersistence } from '@/core/4.main/config/persistence/mongodb-persistence'
+import { mongodbPersistence } from '@/core/4.main/config/persistence/databases/mongodb-persistence'
 
 type SutTypes = {
   sut: typeof mongodb.client

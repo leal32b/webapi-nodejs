@@ -6,7 +6,7 @@ import { ArgonAdapter } from '@/core/3.infra/cryptography/argon/argon-adapter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 import { AjvAdapter } from '@/core/3.infra/validators/ajv/ajv-adapter'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
-import { persistence } from '@/core/4.main/config/persistence'
+import { persistence } from '@/core/4.main/config/persistence/databases'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
 type App = {

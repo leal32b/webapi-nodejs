@@ -1,7 +1,7 @@
 import { DataSource, EntityManager, Repository } from 'typeorm'
 
 import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { postgresPersistence } from '@/core/4.main/config/persistence/postgres-persistence'
+import { postgresPersistence } from '@/core/4.main/config/persistence/databases/postgres-persistence'
 
 type SutTypes = {
   sut: typeof postgres.client
