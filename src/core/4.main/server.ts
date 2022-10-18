@@ -13,9 +13,7 @@ const bootstrap = async (): Promise<void> => {
   setupWebApp(webApp)
   setHandlers()
 
-  webApp.listen(port, () => {
-    console.log(`server running at http://localhost:${port}`)
-  })
+  webApp.listen(port)
 }
 
 bootstrap()

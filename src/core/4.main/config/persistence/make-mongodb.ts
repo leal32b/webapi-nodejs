@@ -8,8 +8,8 @@ export const makeMongodb = {
     const dataSource = process.env.NODE_ENV === 'test' ? testDataSource : defaultDataSource
     await mongodb.connect(dataSource)
   },
-  clear: async () => await mongodb.client.clearDatabase(),
-  close: async () => await mongodb.client.close(),
+  clear: async () => { await mongodb.client.clearDatabase() },
+  close: async () => { await mongodb.client.close() },
   repositories: {
     userRepository: new MongodbUserRepository()
   }

@@ -8,8 +8,8 @@ export const makePostgres = {
     const dataSource = process.env.NODE_ENV === 'test' ? testDataSource() : defaultDataSource()
     await postgres.connect(await dataSource)
   },
-  clear: async () => await postgres.client.clearDatabase(),
-  close: async () => await postgres.client.close(),
+  clear: async () => { await postgres.client.clearDatabase() },
+  close: async () => { await postgres.client.close() },
   repositories: {
     userRepository: new PostgresUserRepository()
   }

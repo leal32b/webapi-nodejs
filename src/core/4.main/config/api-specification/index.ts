@@ -1,4 +1,4 @@
-import { makeSwagger } from '@/core/4.main/config/api-specification/make-swagger'
+import { makeSwagger } from '@/core/4.main/config/documentation/make-swagger'
 
 type ApiSpecification = {
   path: string
@@ -6,6 +6,6 @@ type ApiSpecification = {
 }
 
 export const apiSpecification: ApiSpecification = {
-  path: makeSwagger.path,
-  middlewares: makeSwagger.middlewares
+  path: makeSwagger().path,
+  middlewares: makeSwagger().middlewares
 }
