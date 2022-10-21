@@ -1,18 +1,19 @@
+// 2.869s
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { config } from '@/core/4.main/config'
+import { app, cryptography, persistence } from '@/core/4.main/config'
 import { factories } from '@/core/4.main/setup/factories'
 import { authMiddlewareFactory } from '@/core/4.main/setup/middlewares/auth-middle-factory'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
-import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password-route'
+import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 const makeAuthorizationFake = async (): Promise<string> => {
-  const token = await config.cryptography.encrypter.encrypt({
+  const token = await cryptography.encrypter.encrypt({
     type: TokenType.access,
     payload: {
       id: 'any_id',
@@ -36,7 +37,7 @@ const makeSut = async (): Promise<SutTypes> => {
   }
   const collaborators = {
     userFactory: factories.userFactory,
-    webApp: config.app.webApp
+    webApp: app.webApp
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())
   collaborators.webApp.setRouter({
@@ -50,12 +51,12 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('ChangePasswordRoute', () => {
   beforeAll(async () => {
-    await config.persistence.connect()
+    await persistence.actual.client.connect()
   })
 
   afterAll(async () => {
-    await config.persistence.clear()
-    await config.persistence.close()
+    await persistence.actual.client.clearDatabase()
+    await persistence.actual.client.close()
   })
 
   describe('success', () => {
@@ -63,7 +64,7 @@ describe('ChangePasswordRoute', () => {
       const { userFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
-      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
+      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFactory.createFixture({ id, password: hashedPassword })
 
       await request(webApp.app)
@@ -81,7 +82,7 @@ describe('ChangePasswordRoute', () => {
       const { userFactory, webApp, authorizationFake } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
-      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
+      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFactory.createFixture({ id, password: hashedPassword })
 
       const result = await request(webApp.app)

@@ -20,7 +20,6 @@ services:
       - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
     volumes:
       - ./data-postgres:/var/lib/postgresql/data
-      - ./docker-postgres.sh:/docker-entrypoint-initdb.d/docker-postgres.sh
     ports:
       - 5432:5432
 

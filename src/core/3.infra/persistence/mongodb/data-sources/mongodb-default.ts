@@ -10,7 +10,7 @@ const CONNECTION_STRING = process.env.NODE_ENV === 'development'
   ? `mongodb://${USERNAME}:${PASSWORD}@${HOST}:${PORT}`
   : `mongodb+srv://${USERNAME}:${PASSWORD}@${HOST}/?retryWrites=true&w=majority`
 
-export const defaultDataSource: MongodbDataSource = {
+export const mongodbDefaultDataSource: MongodbDataSource = {
   name: 'default',
   database: DATABASE,
   connectionString: CONNECTION_STRING

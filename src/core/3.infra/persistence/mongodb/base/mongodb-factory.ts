@@ -1,6 +1,6 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { persistence } from '@/core/4.main/config'
 
 type Props<T> = {
   createDefault: () => T
@@ -16,7 +16,7 @@ export abstract class MongodbFactory<T> implements DatabaseFactory<T> {
   private async create <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
   private async create <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, collectionName } = this.props
-    const collection = await mongodb.client.getCollection(collectionName)
+    const collection = await persistence.mongodb.client.getCollection(collectionName)
 
     if (typeof amountOrEntityOrEntities === 'number') {
       const entities: T[] = []

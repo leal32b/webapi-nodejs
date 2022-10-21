@@ -1,25 +1,26 @@
+// unit test 1.98s
 import { Collection } from 'mongodb'
 
-import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { makeMongodb } from '@/core/4.main/config/persistence/make-mongodb'
+import { MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { persistence } from '@/core/4.main/config'
 
 type SutTypes = {
-  sut: typeof mongodb.client
+  sut: MongodbClient
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = mongodb.client
+  const sut = persistence.mongodb.client
 
   return { sut }
 }
 
 describe('MongodbAdapter', () => {
   beforeAll(async () => {
-    await makeMongodb.connect()
+    await persistence.mongodb.client.connect()
   })
 
   afterAll(async () => {
-    await makeMongodb.close()
+    await persistence.mongodb.client.close()
   })
 
   describe('success', () => {
@@ -71,16 +72,14 @@ describe('MongodbAdapter', () => {
 
   describe('failure', () => {
     it('returns Left when close throws', async () => {
-      const { sut } = await makeSut()
-      await sut.close()
-
-      await mongodb.connect({
+      const dataSource = {
         name: 'any_name',
         database: 'any_database',
         connectionString: 'invalid_connectionString'
-      })
+      }
+      const mongodbClient = new MongodbClient({ dataSource })
 
-      const result = await mongodb.client.close()
+      const result = await mongodbClient.close()
 
       expect(result.isLeft()).toBe(true)
     })
@@ -89,20 +88,20 @@ describe('MongodbAdapter', () => {
       const { sut } = await makeSut()
       await sut.close()
 
-      const result = await mongodb.client.clearDatabase()
+      const result = await sut.clearDatabase()
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when connect throws', async () => {
-      const { sut } = await makeSut()
-      await sut.close()
-
-      const result = await mongodb.connect({
+      const dataSource = {
         name: 'any_name',
         database: 'any_database',
         connectionString: 'invalid_connectionString'
-      })
+      }
+      const mongodbClient = new MongodbClient({ dataSource })
+
+      const result = await mongodbClient.connect()
 
       expect(result.isLeft()).toBe(true)
     })

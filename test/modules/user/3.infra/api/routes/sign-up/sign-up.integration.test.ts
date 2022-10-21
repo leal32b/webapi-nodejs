@@ -1,12 +1,13 @@
+// 3.01s
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { config } from '@/core/4.main/config'
+import { app, persistence } from '@/core/4.main/config'
 import { factories } from '@/core/4.main/setup/factories'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
-import { signUpRoute } from '@/user/3.infra/api/routes/sign-up-route'
+import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
 import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
 
 type SutTypes = {
@@ -18,7 +19,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const collaborators = {
     userFactory: factories.userFactory,
-    webApp: config.app.webApp
+    webApp: app.webApp
   }
   const sut = signUpRoute(signUpControllerFactory())
   collaborators.webApp.setRouter({
@@ -32,12 +33,12 @@ const makeSut = (): SutTypes => {
 
 describe('SignUpRoute', () => {
   beforeAll(async () => {
-    await config.persistence.connect()
+    await persistence.actual.client.connect()
   })
 
   afterAll(async () => {
-    await config.persistence.clear()
-    await config.persistence.close()
+    await persistence.actual.client.clearDatabase()
+    await persistence.actual.client.close()
   })
 
   describe('success', () => {

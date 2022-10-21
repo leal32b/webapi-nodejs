@@ -1,6 +1,6 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { persistence } from '@/core/4.main/config'
 
 type Props<T> = {
   createDefault: () => T
@@ -14,31 +14,31 @@ export abstract class PostgresFactory<T> implements DatabaseFactory<T> {
   private async create (entity: Partial<T>): Promise<T>
   private async create (entities: Array<Partial<T>>): Promise<T[]>
   private async create <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
-  private async create <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
+  private async create <N extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, repositoryName } = this.props
-    const repository = await postgres.client.getRepository(repositoryName)
+    const repository = await persistence.postgres.client.getRepository(repositoryName)
 
-    if (typeof amountOrEntityOrEntities === 'number') {
+    if (typeof entityOrEntitiesOrAmount === 'number') {
       const entities: T[] = []
 
-      for (let i = 0; i < amountOrEntityOrEntities; i++) {
-        entities.push(createDefault())
+      for (let i = 0; i < entityOrEntitiesOrAmount; i++) {
+        entities.push(repository.create(createDefault()))
       }
 
-      await postgres.client.manager.save(entities)
+      await persistence.postgres.client.manager.save(entities)
 
       return entities
     }
 
-    if (!Array.isArray(amountOrEntityOrEntities)) {
-      const entity = repository.create({ ...createDefault(), ...amountOrEntityOrEntities })
-      await postgres.client.manager.save(entity)
+    if (!Array.isArray(entityOrEntitiesOrAmount)) {
+      const entity = repository.create({ ...createDefault(), ...entityOrEntitiesOrAmount })
+      await persistence.postgres.client.manager.save(entity)
 
       return entity
     }
 
-    const entities = amountOrEntityOrEntities.map(entity => ({ ...createDefault(), ...entity }))
-    await postgres.client.manager.save(entities)
+    const entities = entityOrEntitiesOrAmount.map(entity => repository.create({ ...createDefault(), ...entity }))
+    await persistence.postgres.client.manager.save(entities)
 
     return entities
   }

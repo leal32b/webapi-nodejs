@@ -1,9 +1,8 @@
+// unit test 2.945s
 import { faker } from '@faker-js/faker'
 
 import { MongodbFactory } from '@/core/3.infra/persistence/mongodb/base/mongodb-factory'
-import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { testDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/test'
-import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { persistence } from '@/core/4.main/config'
 import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
 
 class FakeFactory extends MongodbFactory<MongodbUser> {
@@ -23,7 +22,7 @@ class FakeFactory extends MongodbFactory<MongodbUser> {
 }
 
 type SutTypes = {
-  sut: MongodbFactory<UserAggregateCreateParams>
+  sut: MongodbFactory<MongodbUser>
 }
 
 const makeSut = async (): Promise<SutTypes> => {
@@ -34,11 +33,12 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('MongodbFactory', () => {
   beforeAll(async () => {
-    await mongodb.connect(testDataSource)
+    await persistence.mongodb.client.connect()
   })
 
   afterAll(async () => {
-    await mongodb.client.close()
+    await persistence.mongodb.client.clearDatabase()
+    await persistence.mongodb.client.close()
   })
 
   describe('success', () => {

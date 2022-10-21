@@ -29,6 +29,7 @@ module.exports = {
     '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
     '^~/(.*)$': '<rootDir>/test/$1'
   },
+  testSequencer: '<rootDir>/jest-sequencer.js',
   coverageThreshold: {
     global: {
       branches: 100,
@@ -36,6 +37,5 @@ module.exports = {
       lines: 100,
       statements: 100
     }
-  },
-  testTimeout: 10000
+  }
 }

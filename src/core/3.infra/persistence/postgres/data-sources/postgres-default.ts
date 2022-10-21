@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { DataSource } from 'typeorm'
 
-export const defaultDataSource = async (): Promise<DataSource> => new DataSource({
+export const postgresDefaultDataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_POSTGRES_HOST,
   port: parseInt(process.env.DB_POSTGRES_PORT),
@@ -10,6 +10,6 @@ export const defaultDataSource = async (): Promise<DataSource> => new DataSource
   database: process.env.DB_POSTGRES_DATABASE,
   logging: false,
   synchronize: false,
-  entities: ['**/postgres/entities/**/*.{js,ts}'],
-  migrations: ['**/postgres/migrations/**/*.{js,ts}']
+  entities: ['src/modules/**/postgres/entities/**/*.ts'],
+  migrations: ['src/modules/**/postgres/migrations/**/*.ts']
 })

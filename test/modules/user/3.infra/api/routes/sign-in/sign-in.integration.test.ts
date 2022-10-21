@@ -1,12 +1,13 @@
+// 2.856s
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { config } from '@/core/4.main/config'
+import { app, cryptography, persistence } from '@/core/4.main/config'
 import { factories } from '@/core/4.main/setup/factories'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
-import { signInRoute } from '@/user/3.infra/api/routes/sign-in-route'
+import { signInRoute } from '@/user/3.infra/api/routes/sign-in/sign-in-route'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
 
 type SutTypes = {
@@ -18,7 +19,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const collaborators = {
     userFactory: factories.userFactory,
-    webApp: config.app.webApp
+    webApp: app.webApp
   }
   const sut = signInRoute(signInControllerFactory())
   collaborators.webApp.setRouter({
@@ -32,12 +33,12 @@ const makeSut = (): SutTypes => {
 
 describe('SignInRoute', () => {
   beforeAll(async () => {
-    await config.persistence.connect()
+    await persistence.actual.client.connect()
   })
 
   afterAll(async () => {
-    await config.persistence.clear()
-    await config.persistence.close()
+    await persistence.actual.client.clearDatabase()
+    await persistence.actual.client.close()
   })
 
   describe('success', () => {
@@ -45,7 +46,7 @@ describe('SignInRoute', () => {
       const { userFactory, webApp } = makeSut()
       const email = 'any@mail.com'
       const password = 'any_password'
-      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
+      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFactory.createFixture({ email, password: hashedPassword })
       userFactory.createFixture({})
 
@@ -62,7 +63,7 @@ describe('SignInRoute', () => {
       const { userFactory, webApp } = makeSut()
       const email = 'any2@mail.com'
       const password = 'any_password'
-      const hashedPassword = (await config.cryptography.hasher.hash(password)).value as string
+      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFactory.createFixture({ email, password: hashedPassword })
 
       const result = await request(webApp.app)

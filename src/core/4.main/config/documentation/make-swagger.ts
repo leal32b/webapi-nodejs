@@ -1,12 +1,8 @@
 import { serve, setup } from 'swagger-ui-express'
 
+import { ApiSpecification } from '@/core/4.main/config/types'
 import { signUpPath } from '@/user/3.infra/api/routes/sign-up/sign-up-path'
 import { userSchemas } from '@/user/4.main/setup/user-schemas'
-
-type ApiSpecification = {
-  path: string
-  middlewares: any[]
-}
 
 const swaggerConfig = {
   openapi: '3.0.0',
@@ -30,7 +26,7 @@ const swaggerConfig = {
   }
 }
 
-export const makeSwagger = (): ApiSpecification => ({
+export const makeSwagger: ApiSpecification = {
   path: '/api-docs',
   middlewares: [serve, setup(swaggerConfig)]
-})
+}

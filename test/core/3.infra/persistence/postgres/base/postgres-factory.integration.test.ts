@@ -1,18 +1,9 @@
+// unit test 2.507s
 import { faker } from '@faker-js/faker'
-import { DataSource } from 'typeorm'
 
 import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
-import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { persistence } from '@/core/4.main/config'
 import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
-
-const makeDataSourceMock = (): DataSource => ({
-  initialize: jest.fn(async (): Promise<void> => {}),
-  isInitialized: true,
-  manager: { save: () => {} },
-  getRepository: jest.fn(async (): Promise<any> => ({
-    create: (entity) => entity
-  }))
-}) as any
 
 class FakeFactory extends PostgresFactory<PostgresUser> {
   static create (): PostgresFactory<PostgresUser> {
@@ -32,18 +23,24 @@ class FakeFactory extends PostgresFactory<PostgresUser> {
 
 type SutTypes = {
   sut: PostgresFactory<PostgresUser>
-  dataSourceMock: DataSource
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const dataSourceMock = makeDataSourceMock()
-  await postgres.connect(dataSourceMock)
   const sut = FakeFactory.create()
 
-  return { sut, dataSourceMock }
+  return { sut }
 }
 
 describe('PostgresFactory', () => {
+  beforeAll(async () => {
+    await persistence.postgres.client.connect()
+  })
+
+  afterAll(async () => {
+    await persistence.postgres.client.clearDatabase()
+    await persistence.postgres.client.close()
+  })
+
   describe('success', () => {
     it('returns the created entity when no params are provided', async () => {
       const { sut } = await makeSut()

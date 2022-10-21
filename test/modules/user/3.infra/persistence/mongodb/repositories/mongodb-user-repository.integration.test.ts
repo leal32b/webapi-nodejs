@@ -1,7 +1,7 @@
+// 2.561s
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { mongodb } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { testDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/test'
-import { mongodbFactories } from '@/core/4.main/setup/factories/mongodb-factory'
+import { persistence } from '@/core/4.main/config'
+import { makeMongodbFactories } from '@/core/4.main/setup/factories/make-mongodb-factory'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
@@ -27,7 +27,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFactory: mongodbFactories.userFactory
+    userFactory: makeMongodbFactories.userFactory
   }
   const sut = new MongodbUserRepository()
 
@@ -36,12 +36,12 @@ const makeSut = (): SutTypes => {
 
 describe('UserMongodbRepository', () => {
   beforeAll(async () => {
-    await mongodb.connect(testDataSource)
+    await persistence.mongodb.client.connect()
   })
 
   afterAll(async () => {
-    await mongodb.client.clearDatabase()
-    await mongodb.client.close()
+    await persistence.mongodb.client.clearDatabase()
+    await persistence.mongodb.client.close()
   })
 
   describe('success', () => {
@@ -105,7 +105,7 @@ describe('UserMongodbRepository', () => {
   describe('failure', () => {
     it('returns Left when create throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
 
       const result = await sut.create(userAggregateFake)
 
@@ -115,7 +115,7 @@ describe('UserMongodbRepository', () => {
     it('returns Left when readByEmail throws', async () => {
       const { sut } = makeSut()
       const email = 'any@mail.com'
-      jest.spyOn(mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
 
       const result = await sut.readByEmail(email)
 
@@ -125,7 +125,7 @@ describe('UserMongodbRepository', () => {
     it('returns Left when readById throws', async () => {
       const { sut } = makeSut()
       const id = 'any_id'
-      jest.spyOn(mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
 
       const result = await sut.readById(id)
 
@@ -134,7 +134,7 @@ describe('UserMongodbRepository', () => {
 
     it('returns Left on update when it throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.mongodb.client, 'getCollection').mockRejectedValueOnce(new Error())
 
       const result = await sut.update(userAggregateFake)
 

@@ -1,4 +1,4 @@
-import { Path } from '@/core/3.infra/api/api-specification/path'
+import { Path } from '@/core/3.infra/documentation/api-specification/path'
 
 export const signUpPath: Path = {
   post: {

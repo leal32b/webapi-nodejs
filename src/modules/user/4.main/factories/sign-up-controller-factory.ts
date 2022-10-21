@@ -1,10 +1,10 @@
-import { config } from '@/core/4.main/config'
+import { cryptography, persistence } from '@/core/4.main/config'
 import { CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
 export const signUpControllerFactory = (): SignUpController => {
-  const { userRepository } = config.persistence.repositories
-  const { hasher, encrypter } = config.cryptography
+  const { userRepository } = persistence.actual.repositories
+  const { hasher, encrypter } = cryptography
   const createUserUseCase = new CreateUserUseCase({ userRepository, hasher, encrypter })
 
   return new SignUpController({ createUserUseCase })

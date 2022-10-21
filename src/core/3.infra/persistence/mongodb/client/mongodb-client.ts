@@ -1,6 +1,7 @@
 import { MongoClient, Collection } from 'mongodb'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 export type MongodbDataSource = {
   name: string
@@ -12,7 +13,7 @@ type ConstructParams = {
   dataSource: MongodbDataSource
 }
 
-class MongodbClient {
+export class MongodbClient implements PersistenceClient {
   mongoClient: MongoClient
 
   constructor (private readonly props: ConstructParams) { }
@@ -67,16 +68,5 @@ class MongodbClient {
     } catch (error) {
       return left(error)
     }
-  }
-}
-
-export const mongodb = {
-  client: null as MongodbClient,
-
-  async connect (dataSource: MongodbDataSource): Promise<Either<Error, void>> {
-    this.client = new MongodbClient({ dataSource })
-    const result = await this.client.connect()
-
-    return result
   }
 }

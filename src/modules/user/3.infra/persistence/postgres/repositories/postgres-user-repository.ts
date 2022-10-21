@@ -1,7 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { persistence } from '@/core/4.main/config'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
@@ -9,7 +9,7 @@ export class PostgresUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
       const { email, emailConfirmed, id, name, password, token } = userAggregate
-      const repository = await postgres.client.getRepository('PostgresUser')
+      const repository = await persistence.postgres.client.getRepository('PostgresUser')
 
       const postgresUser = repository.create({
         email: email.value,
@@ -20,7 +20,7 @@ export class PostgresUserRepository implements UserRepository {
         token: token.value
       })
 
-      await postgres.client.manager.save(postgresUser)
+      await persistence.postgres.client.manager.save(postgresUser)
 
       return right()
     } catch (error) {
@@ -63,7 +63,7 @@ export class PostgresUserRepository implements UserRepository {
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
       const { email, emailConfirmed, id, name, password, token } = userAggregate
-      const repository = await postgres.client.getRepository('PostgresUser')
+      const repository = await persistence.postgres.client.getRepository('PostgresUser')
 
       const postgresUser = repository.create({
         email: email.value,
@@ -73,7 +73,7 @@ export class PostgresUserRepository implements UserRepository {
         token: token.value
       })
 
-      const result = await postgres.client.manager.update('PostgresUser', { id: id.value }, postgresUser)
+      const result = await persistence.postgres.client.manager.update('PostgresUser', { id: id.value }, postgresUser)
 
       return right(result)
     } catch (error) {
@@ -82,7 +82,8 @@ export class PostgresUserRepository implements UserRepository {
   }
 
   private async readByFilter (filter: { [key: string]: any }): Promise<any> {
-    const repository = await postgres.client.getRepository('PostgresUser')
+    const repository = await persistence.postgres.client.getRepository('PostgresUser')
+
     const user = await repository.findOneBy(filter)
 
     return user
