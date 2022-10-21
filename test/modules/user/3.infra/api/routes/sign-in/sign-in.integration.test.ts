@@ -135,7 +135,7 @@ describe('SignInRoute', () => {
         error: {
           input: 'not_in_base@mail.com',
           field: 'email',
-          message: 'email "not_in_base@mail.com" not found'
+          message: "email 'not_in_base@mail.com' not found"
         }
       })
     })
