@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker'
 
 import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
-import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
+import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
-export class PostgresUserFactory extends PostgresFactory<PostgresUser> {
-  static create (): PostgresFactory<PostgresUser> {
+export class PostgresUserFactory extends PostgresFactory<PostgresUserEntity> {
+  static create (): PostgresFactory<PostgresUserEntity> {
     return new PostgresUserFactory({
-      repositoryName: 'PostgresUser',
-      createDefault: (): PostgresUser => ({
+      repositoryName: 'users',
+      createDefault: (): PostgresUserEntity => ({
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),

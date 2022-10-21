@@ -17,7 +17,8 @@ module.exports = {
     '<rootDir>/data-.*'
   ],
   transform: {
-    '.+\\.ts$': 'ts-jest'
+    '.+\\postgres.*entity.ts$': 'ts-jest',
+    '.+\\.ts$': '@swc/jest'
   },
   testMatch: [
     '<rootDir>/test/**/*.test.ts'

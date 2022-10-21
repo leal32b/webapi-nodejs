@@ -53,7 +53,7 @@ describe('PostgresClient', () => {
     it('gets a repository', async () => {
       const { sut } = await makeSut()
 
-      const result = await sut.getRepository('PostgresUser')
+      const result = await sut.getRepository('users')
 
       expect(result).toBeInstanceOf(Repository)
     })

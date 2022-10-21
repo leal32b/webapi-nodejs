@@ -1,4 +1,3 @@
-// 2.561s
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { persistence } from '@/core/4.main/config'
 import { makeMongodbFactories } from '@/core/4.main/setup/factories/make-mongodb-factory'

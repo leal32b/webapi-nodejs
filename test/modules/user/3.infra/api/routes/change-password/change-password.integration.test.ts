@@ -1,4 +1,3 @@
-// 2.869s
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'

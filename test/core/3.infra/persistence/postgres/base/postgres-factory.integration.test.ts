@@ -3,13 +3,13 @@ import { faker } from '@faker-js/faker'
 
 import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
 import { persistence } from '@/core/4.main/config'
-import { PostgresUser } from '@/user/3.infra/persistence/postgres/entities/postgres-user'
+import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
-class FakeFactory extends PostgresFactory<PostgresUser> {
-  static create (): PostgresFactory<PostgresUser> {
+class FakeFactory extends PostgresFactory<PostgresUserEntity> {
+  static create (): PostgresFactory<PostgresUserEntity> {
     return new FakeFactory({
-      repositoryName: 'PostgresUser',
-      createDefault: (): PostgresUser => ({
+      repositoryName: 'users',
+      createDefault: (): PostgresUserEntity => ({
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),
@@ -22,7 +22,7 @@ class FakeFactory extends PostgresFactory<PostgresUser> {
 }
 
 type SutTypes = {
-  sut: PostgresFactory<PostgresUser>
+  sut: PostgresFactory<PostgresUserEntity>
 }
 
 const makeSut = async (): Promise<SutTypes> => {

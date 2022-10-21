@@ -1,4 +1,3 @@
-// 3.01s
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'

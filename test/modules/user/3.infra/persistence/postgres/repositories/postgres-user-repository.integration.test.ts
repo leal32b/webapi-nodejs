@@ -1,4 +1,3 @@
-// 2.7s
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { persistence } from '@/core/4.main/config'
 import { makePostgresFactories } from '@/core/4.main/setup/factories/make-postgres-factory'
