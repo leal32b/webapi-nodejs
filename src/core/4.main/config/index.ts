@@ -9,7 +9,7 @@ import { makePostgres } from '@/core/4.main/config/persistence/make-postgres'
 import { App, Cryptography, Documentation, Persistence, Validators } from '@/core/4.main/config/types'
 import { makeAjv } from '@/core/4.main/config/validators/make-ajv'
 
-const DATABASE = process.env.DATABASE
+const PERSISTENCE = process.env.PERSISTENCE
 
 export const app: App = {
   webApp: makeExpress
@@ -33,7 +33,7 @@ const persistenceChoices = {
 }
 
 export const persistence: Persistence = {
-  actual: persistenceChoices[DATABASE],
+  actual: persistenceChoices[PERSISTENCE],
   ...persistenceChoices
 }
 
