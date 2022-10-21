@@ -1,6 +1,6 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { persistence } from '@/core/4.main/config'
+import { persistence } from '@/core/4.main/container'
 
 type Props<T> = {
   createDefault: () => T

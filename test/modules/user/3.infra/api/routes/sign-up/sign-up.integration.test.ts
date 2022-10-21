@@ -2,7 +2,7 @@ import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { app, persistence } from '@/core/4.main/config'
+import { app, persistence } from '@/core/4.main/container'
 import { factories } from '@/core/4.main/setup/factories'
 import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'

@@ -1,5 +1,5 @@
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { persistence } from '@/core/4.main/config'
+import { persistence } from '@/core/4.main/container'
 import { makeMongodbFactories } from '@/core/4.main/setup/factories/make-mongodb-factory'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'

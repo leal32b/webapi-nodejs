@@ -2,7 +2,7 @@
 import { faker } from '@faker-js/faker'
 
 import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
-import { persistence } from '@/core/4.main/config'
+import { persistence } from '@/core/4.main/container'
 import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 class FakeFactory extends PostgresFactory<PostgresUserEntity> {

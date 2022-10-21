@@ -1,4 +1,4 @@
-import { cryptography, persistence } from '@/core/4.main/config'
+import { cryptography, persistence } from '@/core/4.main/container'
 import { CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 

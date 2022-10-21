@@ -1,44 +1,43 @@
-// unit test 1.98s
-import { Collection } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
-import { MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { persistence } from '@/core/4.main/config'
+import { MongodbClient, MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+
+const mongoClientMock: MongoClient = ({
+  db: jest.fn(() => ({
+    collection: jest.fn(() => 'any_collection'),
+    dropDatabase: jest.fn()
+  })),
+  close: jest.fn()
+}) as any
 
 type SutTypes = {
   sut: MongodbClient
+  mongoClientMock: MongoClient
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = persistence.mongodb.client
+  const dataSourceFake: MongodbDataSource = {
+    connectionString: 'any_connection_string',
+    database: 'any_database',
+    name: 'any_name'
+  }
+  const sut = new MongodbClient({
+    dataSource: dataSourceFake
+  })
+  jest.spyOn(MongoClient, 'connect').mockResolvedValueOnce(mongoClientMock as never)
+  await sut.connect()
 
-  return { sut }
+  return { sut, mongoClientMock }
 }
 
 describe('MongodbAdapter', () => {
-  beforeAll(async () => {
-    await persistence.mongodb.client.connect()
-  })
-
-  afterAll(async () => {
-    await persistence.mongodb.client.close()
-  })
-
   describe('success', () => {
-    it('connects to dataSource', async () => {
-      const { sut } = await makeSut()
-      await sut.close()
-
-      const result = await sut.connect()
-
-      expect(result.isRight()).toBe(true)
-    })
-
     it('gets collection', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.getCollection('any_collection')
 
-      expect(result).toBeInstanceOf(Collection)
+      expect(result).toBeDefined()
     })
 
     it('returns Right on clearDatabase', async () => {
@@ -72,21 +71,17 @@ describe('MongodbAdapter', () => {
 
   describe('failure', () => {
     it('returns Left when close throws', async () => {
-      const dataSource = {
-        name: 'any_name',
-        database: 'any_database',
-        connectionString: 'invalid_connectionString'
-      }
-      const mongodbClient = new MongodbClient({ dataSource })
+      const { sut, mongoClientMock } = await makeSut()
+      jest.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
 
-      const result = await mongodbClient.close()
+      const result = await sut.close()
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when clearDatabase throws', async () => {
-      const { sut } = await makeSut()
-      await sut.close()
+      const { sut, mongoClientMock } = await makeSut()
+      jest.spyOn(mongoClientMock, 'db').mockResolvedValueOnce(null as never)
 
       const result = await sut.clearDatabase()
 
@@ -94,11 +89,13 @@ describe('MongodbAdapter', () => {
     })
 
     it('returns Left when connect throws', async () => {
+      const { mongoClientMock } = await makeSut()
       const dataSource = {
         name: 'any_name',
         database: 'any_database',
         connectionString: 'invalid_connectionString'
       }
+      jest.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
       const mongodbClient = new MongodbClient({ dataSource })
 
       const result = await mongodbClient.connect()

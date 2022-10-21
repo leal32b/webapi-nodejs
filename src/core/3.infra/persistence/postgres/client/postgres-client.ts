@@ -10,13 +10,13 @@ type ConstructParams = {
 export class PostgresClient implements PersistenceClient {
   constructor (private readonly props: ConstructParams) {}
 
-  async connect (message?: string): Promise<Either<Error, void>> {
+  async connect (): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.initialize()
       const dataSource = this.props.dataSource.name
       const database = this.props.dataSource.options.database as string
 
-      console.log(message || `connected to ${database} (dataSource: ${dataSource})`)
+      console.log(`connected to ${database} (dataSource: ${dataSource})`)
 
       return right()
     } catch (error) {
@@ -26,12 +26,6 @@ export class PostgresClient implements PersistenceClient {
 
       return left(error)
     }
-  }
-
-  async reconnect (): Promise<Either<Error, void>> {
-    const result = await this.connect('reconnected to dataSource')
-
-    return result
   }
 
   async close (): Promise<Either<Error, void>> {
@@ -48,8 +42,6 @@ export class PostgresClient implements PersistenceClient {
   }
 
   async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
-    await this.reconnect()
-
     return this.props.dataSource.getRepository(entity)
   }
 

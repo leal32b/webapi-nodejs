@@ -2,7 +2,7 @@
 import { faker } from '@faker-js/faker'
 
 import { MongodbFactory } from '@/core/3.infra/persistence/mongodb/base/mongodb-factory'
-import { persistence } from '@/core/4.main/config'
+import { persistence } from '@/core/4.main/container'
 import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
 
 class FakeFactory extends MongodbFactory<MongodbUser> {

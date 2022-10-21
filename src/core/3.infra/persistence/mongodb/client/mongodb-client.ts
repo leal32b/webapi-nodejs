@@ -18,14 +18,14 @@ export class MongodbClient implements PersistenceClient {
 
   constructor (private readonly props: ConstructParams) { }
 
-  async connect (message?: string): Promise<Either<Error, void>> {
+  async connect (): Promise<Either<Error, void>> {
     const { connectionString } = this.props.dataSource
 
     try {
       this.mongoClient = await MongoClient.connect(connectionString)
       const { name, database } = this.props.dataSource
 
-      console.log(message || `connected to ${database} (dataSource: ${name})`)
+      console.log(`connected to ${database} (dataSource: ${name})`)
 
       return right()
     } catch (error) {

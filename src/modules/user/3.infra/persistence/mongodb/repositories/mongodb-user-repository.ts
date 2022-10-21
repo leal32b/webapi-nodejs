@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { persistence } from '@/core/4.main/config'
+import { persistence } from '@/core/4.main/container'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
