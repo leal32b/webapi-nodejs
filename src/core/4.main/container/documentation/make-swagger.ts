@@ -16,7 +16,7 @@ const swaggerConfig = {
   },
   servers: [{
     url: '/api',
-    description: 'development'
+    description: process.env.NODE_ENV
   }],
   tags: [{
     name: 'user'

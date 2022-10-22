@@ -9,8 +9,6 @@ import { makeMongodb } from '@/core/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/core/4.main/container/persistence/make-postgres'
 import { makeAjv } from '@/core/4.main/container/validators/make-ajv'
 
-const PERSISTENCE = process.env.PERSISTENCE
-
 export const app: App = {
   webApp: makeExpress
 }
@@ -33,7 +31,7 @@ const persistenceChoices = {
 }
 
 export const persistence: Persistence = {
-  actual: persistenceChoices[PERSISTENCE],
+  actual: persistenceChoices[process.env.PERSISTENCE],
   ...persistenceChoices
 }
 
