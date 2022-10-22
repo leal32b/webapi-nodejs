@@ -10,6 +10,13 @@ export const signUpRequestSchema = {
   additionalProperties: false
 }
 
+export const signUpRequestSchemaExample = {
+  name: 'John',
+  email: 'john.doe@mail.com',
+  password: 'abc123',
+  passwordRetype: 'abc123'
+}
+
 export const signUpResponseSchema = {
   type: 'object',
   properties: {
@@ -18,4 +25,9 @@ export const signUpResponseSchema = {
   },
   required: ['email', 'message'],
   additionalProperties: false
+}
+
+export const signUpResponseSchemaExample = {
+  email: 'john.doe@mail.com',
+  message: 'user created successfully'
 }

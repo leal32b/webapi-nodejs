@@ -75,7 +75,7 @@ describe('SignUpRoute', () => {
   })
 
   describe('failure', () => {
-    it('returns 400 when schema is invalid', async () => {
+    it('returns 422 when schema is invalid', async () => {
       const { webApp } = makeSut()
 
       await request(webApp.app)
