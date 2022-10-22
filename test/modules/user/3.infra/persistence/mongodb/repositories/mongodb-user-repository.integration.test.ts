@@ -1,6 +1,6 @@
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container'
-import { makeMongodbFactories } from '@/core/4.main/setup/factories/make-mongodb-factory'
+import { makeMongodbFixtures } from '@/core/4.main/setup/fixtures/make-mongodb-fixtures'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
@@ -17,7 +17,7 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: MongodbUserRepository
-  userFactory: DatabaseFactory<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateCreateParams>
   userAggregateFake: UserAggregate
 }
 
@@ -26,7 +26,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFactory: makeMongodbFactories.userFactory
+    userFixture: makeMongodbFixtures.userFixture
   }
   const sut = new MongodbUserRepository()
 
@@ -62,9 +62,9 @@ describe('UserMongodbRepository', () => {
     })
 
     it('returns an UserAggregate on readByEmail success', async () => {
-      const { sut, userFactory } = makeSut()
+      const { sut, userFixture } = makeSut()
       const email = 'any2@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       const result = await sut.readByEmail(email)
 
@@ -81,9 +81,9 @@ describe('UserMongodbRepository', () => {
     })
 
     it('returns an UserAggregate on readById success', async () => {
-      const { sut, userFactory } = makeSut()
+      const { sut, userFixture } = makeSut()
       const id = '000000000000000000000001'
-      await userFactory.createFixture({ id })
+      await userFixture.createFixture({ id })
 
       const result = await sut.readById(id)
 

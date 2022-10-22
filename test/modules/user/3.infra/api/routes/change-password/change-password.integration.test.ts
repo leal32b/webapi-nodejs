@@ -2,9 +2,9 @@ import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, cryptography, persistence } from '@/core/4.main/container'
-import { factories } from '@/core/4.main/setup/factories'
+import { fixtures } from '@/core/4.main/setup/fixtures'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
@@ -25,7 +25,7 @@ const makeAuthorizationFake = async (): Promise<string> => {
 
 type SutTypes = {
   sut: Route
-  userFactory: DatabaseFactory<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateCreateParams>
   webApp: WebApp
   authorizationFake: string
 }
@@ -35,7 +35,7 @@ const makeSut = async (): Promise<SutTypes> => {
     authorizationFake: await makeAuthorizationFake()
   }
   const collaborators = {
-    userFactory: factories.userFactory,
+    userFixture: fixtures.userFixture,
     webApp: app.webApp
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())
@@ -60,11 +60,11 @@ describe('ChangePasswordRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { userFactory, webApp, authorizationFake } = await makeSut()
+      const { userFixture, webApp, authorizationFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFactory.createFixture({ id, password: hashedPassword })
+      await userFixture.createFixture({ id, password: hashedPassword })
 
       await request(webApp.app)
         .post('/api/user/change-password')
@@ -78,11 +78,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct message on success', async () => {
-      const { userFactory, webApp, authorizationFake } = await makeSut()
+      const { userFixture, webApp, authorizationFake } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFactory.createFixture({ id, password: hashedPassword })
+      await userFixture.createFixture({ id, password: hashedPassword })
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')

@@ -1,9 +1,9 @@
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, cryptography, persistence } from '@/core/4.main/container'
-import { factories } from '@/core/4.main/setup/factories'
+import { fixtures } from '@/core/4.main/setup/fixtures'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in/sign-in-route'
@@ -11,13 +11,13 @@ import { signInControllerFactory } from '@/user/4.main/factories/sign-in-control
 
 type SutTypes = {
   sut: Route
-  userFactory: DatabaseFactory<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateCreateParams>
   webApp: WebApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    userFactory: factories.userFactory,
+    userFixture: fixtures.userFixture,
     webApp: app.webApp
   }
   const sut = signInRoute(signInControllerFactory())
@@ -42,12 +42,12 @@ describe('SignInRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any@mail.com'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFactory.createFixture({ email, password: hashedPassword })
-      userFactory.createFixture({})
+      await userFixture.createFixture({ email, password: hashedPassword })
+      userFixture.createFixture({})
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -59,11 +59,11 @@ describe('SignInRoute', () => {
     })
 
     it('returns an accessToken on success', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any2@mail.com'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFactory.createFixture({ email, password: hashedPassword })
+      await userFixture.createFixture({ email, password: hashedPassword })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')
@@ -140,9 +140,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns 401 when when password is invalid', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any3@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       await request(webApp.app)
         .post('/api/user/sign-in')
@@ -154,9 +154,9 @@ describe('SignInRoute', () => {
     })
 
     it('returns invalid password error message', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any4@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-in')

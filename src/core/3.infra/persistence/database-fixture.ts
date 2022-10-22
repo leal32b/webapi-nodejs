@@ -1,6 +1,6 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 
-export interface DatabaseFactory<T> {
+export interface DatabaseFixture<T> {
   createFixture: (entity: Partial<T>) => Promise<T>
   createFixtures: (entities: Array<Partial<T>>) => Promise<T[]>
   createRandomFixture: () => Promise<T>

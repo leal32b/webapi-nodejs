@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
 
-import { MongodbFactory } from '@/core/3.infra/persistence/mongodb/base/mongodb-factory'
+import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
 import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
 
-export class MongodbUserFactory extends MongodbFactory<MongodbUser> {
-  static create (): MongodbFactory<MongodbUser> {
-    return new MongodbUserFactory({
+export class MongodbUserFixture extends MongodbFixture<MongodbUser> {
+  static create (): MongodbFixture<MongodbUser> {
+    return new MongodbUserFixture({
       collectionName: 'users',
       createDefault: (): MongodbUser => ({
         id: faker.random.alphaNumeric(12),

@@ -1,5 +1,5 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container'
 
 type Props<T> = {
@@ -7,7 +7,7 @@ type Props<T> = {
   repositoryName: string
 }
 
-export abstract class PostgresFactory<T> implements DatabaseFactory<T> {
+export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
   protected constructor (private readonly props: Props<T>) {}
 
   private async create (): Promise<T>

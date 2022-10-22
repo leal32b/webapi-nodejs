@@ -1,13 +1,13 @@
 // unit test 2.945s
 import { faker } from '@faker-js/faker'
 
-import { MongodbFactory } from '@/core/3.infra/persistence/mongodb/base/mongodb-factory'
+import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
 import { persistence } from '@/core/4.main/container'
 import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
 
-class FakeFactory extends MongodbFactory<MongodbUser> {
-  static create (): MongodbFactory<MongodbUser> {
-    return new FakeFactory({
+class FakeFixture extends MongodbFixture<MongodbUser> {
+  static create (): MongodbFixture<MongodbUser> {
+    return new FakeFixture({
       collectionName: 'users',
       createDefault: (): any => ({
         id: faker.random.alphaNumeric(12),
@@ -22,16 +22,16 @@ class FakeFactory extends MongodbFactory<MongodbUser> {
 }
 
 type SutTypes = {
-  sut: MongodbFactory<MongodbUser>
+  sut: MongodbFixture<MongodbUser>
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = FakeFactory.create()
+  const sut = FakeFixture.create()
 
   return { sut }
 }
 
-describe('MongodbFactory', () => {
+describe('MongodbFixture', () => {
   beforeAll(async () => {
     await persistence.mongodb.client.connect()
   })

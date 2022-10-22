@@ -1,9 +1,9 @@
 import request from 'supertest'
 
 import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, persistence } from '@/core/4.main/container'
-import { factories } from '@/core/4.main/setup/factories'
+import { fixtures } from '@/core/4.main/setup/fixtures'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
@@ -11,13 +11,13 @@ import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-control
 
 type SutTypes = {
   sut: Route
-  userFactory: DatabaseFactory<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateCreateParams>
   webApp: WebApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    userFactory: factories.userFactory,
+    userFixture: fixtures.userFixture,
     webApp: app.webApp
   }
   const sut = signUpRoute(signUpControllerFactory())
@@ -137,9 +137,9 @@ describe('SignUpRoute', () => {
     })
 
     it('returns 400 when email is already in use', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any2@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       await request(webApp.app)
         .post('/api/user/sign-up')
@@ -153,9 +153,9 @@ describe('SignUpRoute', () => {
     })
 
     it('returns email already in use error message', async () => {
-      const { userFactory, webApp } = makeSut()
+      const { userFixture, webApp } = makeSut()
       const email = 'any3@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       const result = await request(webApp.app)
         .post('/api/user/sign-up')

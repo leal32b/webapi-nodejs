@@ -1,13 +1,13 @@
 // unit test 2.507s
 import { faker } from '@faker-js/faker'
 
-import { PostgresFactory } from '@/core/3.infra/persistence/postgres/base/postgres-factory'
+import { PostgresFixture } from '@/core/3.infra/persistence/postgres/base/postgres-fixture'
 import { persistence } from '@/core/4.main/container'
 import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
-class FakeFactory extends PostgresFactory<PostgresUserEntity> {
-  static create (): PostgresFactory<PostgresUserEntity> {
-    return new FakeFactory({
+class FakeFixture extends PostgresFixture<PostgresUserEntity> {
+  static create (): PostgresFixture<PostgresUserEntity> {
+    return new FakeFixture({
       repositoryName: 'users',
       createDefault: (): PostgresUserEntity => ({
         email: faker.internet.email(),
@@ -22,16 +22,16 @@ class FakeFactory extends PostgresFactory<PostgresUserEntity> {
 }
 
 type SutTypes = {
-  sut: PostgresFactory<PostgresUserEntity>
+  sut: PostgresFixture<PostgresUserEntity>
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = FakeFactory.create()
+  const sut = FakeFixture.create()
 
   return { sut }
 }
 
-describe('PostgresFactory', () => {
+describe('PostgresFixture', () => {
   beforeAll(async () => {
     await persistence.postgres.client.connect()
   })
