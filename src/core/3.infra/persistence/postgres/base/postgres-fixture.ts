@@ -10,11 +10,11 @@ type Props<T> = {
 export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
   protected constructor (private readonly props: Props<T>) {}
 
-  private async create (): Promise<T>
-  private async create (entity: Partial<T>): Promise<T>
-  private async create (entities: Array<Partial<T>>): Promise<T[]>
-  private async create <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
-  private async create <N extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
+  private async createPostgresFixture (): Promise<T>
+  private async createPostgresFixture (entity: Partial<T>): Promise<T>
+  private async createPostgresFixture (entities: Array<Partial<T>>): Promise<T[]>
+  private async createPostgresFixture <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
+  private async createPostgresFixture <N extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, repositoryName } = this.props
     const repository = await persistence.postgres.client.getRepository(repositoryName)
 
@@ -44,18 +44,18 @@ export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
   }
 
   async createFixture (entity: Partial<T>): Promise<T> {
-    return await this.create(entity)
+    return await this.createPostgresFixture(entity)
   }
 
   async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
-    return await this.create(entities)
+    return await this.createPostgresFixture(entities)
   }
 
   async createRandomFixture (): Promise<T> {
-    return await this.create()
+    return await this.createPostgresFixture()
   }
 
   async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
-    return await this.create(amount)
+    return await this.createPostgresFixture(amount)
   }
 }
