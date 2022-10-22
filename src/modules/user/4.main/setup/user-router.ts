@@ -1,6 +1,6 @@
 import { WebApp } from '@/core/3.infra/api/app/web-app'
-import { authMiddlewareFactory } from '@/core/4.main/setup/middlewares/auth-middle-factory'
-import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
+import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
+import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in/sign-in-route'
 import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
@@ -16,6 +16,6 @@ export const userRouter = (webApp: WebApp): void => {
       signInRoute(signInControllerFactory()),
       changePasswordRoute(changePasswordControllerFactory())
     ],
-    middlewares: [schemaValidatorMiddlewareFactory(), authMiddlewareFactory()]
+    middlewares: [schemaValidatorMiddleware, authMiddleware]
   })
 }

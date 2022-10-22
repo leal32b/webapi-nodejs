@@ -5,8 +5,8 @@ import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { app, cryptography, persistence } from '@/core/4.main/container'
 import { factories } from '@/core/4.main/setup/factories'
-import { authMiddlewareFactory } from '@/core/4.main/setup/middlewares/auth-middle-factory'
-import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
+import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
+import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
@@ -42,7 +42,7 @@ const makeSut = async (): Promise<SutTypes> => {
   collaborators.webApp.setRouter({
     path: '/user',
     routes: [sut],
-    middlewares: [authMiddlewareFactory(), schemaValidatorMiddlewareFactory()]
+    middlewares: [authMiddleware, schemaValidatorMiddleware]
   })
 
   return { sut, ...collaborators, ...doubles }

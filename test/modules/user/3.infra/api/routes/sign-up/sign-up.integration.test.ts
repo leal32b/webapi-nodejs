@@ -4,7 +4,7 @@ import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
 import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
 import { app, persistence } from '@/core/4.main/container'
 import { factories } from '@/core/4.main/setup/factories'
-import { schemaValidatorMiddlewareFactory } from '@/core/4.main/setup/middlewares/schema-validator-middleware-factory'
+import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
 import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
@@ -24,7 +24,7 @@ const makeSut = (): SutTypes => {
   collaborators.webApp.setRouter({
     path: '/user',
     routes: [sut],
-    middlewares: [schemaValidatorMiddlewareFactory()]
+    middlewares: [schemaValidatorMiddleware]
   })
 
   return { sut, ...collaborators }
