@@ -11,7 +11,7 @@ import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggre
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
-const makeAuthorizationFake = async (): Promise<string> => {
+const makeAccessTokenFake = async (): Promise<string> => {
   const token = await cryptography.encrypter.encrypt({
     type: TokenType.access,
     payload: {
@@ -27,12 +27,12 @@ type SutTypes = {
   sut: Route
   userFixture: DatabaseFixture<UserAggregateCreateParams>
   webApp: WebApp
-  authorizationFake: string
+  accessTokenFake: string
 }
 
 const makeSut = async (): Promise<SutTypes> => {
   const doubles = {
-    authorizationFake: await makeAuthorizationFake()
+    accessTokenFake: await makeAccessTokenFake()
   }
   const collaborators = {
     userFixture: fixtures.userFixture,
@@ -60,7 +60,7 @@ describe('ChangePasswordRoute', () => {
 
   describe('success', () => {
     it('returns 200 on success', async () => {
-      const { userFixture, webApp, authorizationFake } = await makeSut()
+      const { userFixture, webApp, accessTokenFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
@@ -68,7 +68,7 @@ describe('ChangePasswordRoute', () => {
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessTokenFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -78,7 +78,7 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns correct message on success', async () => {
-      const { userFixture, webApp, authorizationFake } = await makeSut()
+      const { userFixture, webApp, accessTokenFake } = await makeSut()
       const id = 'any_id2'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
@@ -86,7 +86,7 @@ describe('ChangePasswordRoute', () => {
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessTokenFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -131,22 +131,57 @@ describe('ChangePasswordRoute', () => {
       })
     })
 
-    it('returns 400 when schema is invalid', async () => {
-      const { webApp, authorizationFake } = await makeSut()
+    it('returns 401 when accessToken is invalid', async () => {
+      const { webApp } = await makeSut()
+      const accessToken = 'invalid_token'
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessToken)
+        .send({
+          id: 'any_id',
+          password: 'any_password',
+          passwordRetype: 'another_password'
+        })
+        .expect(401)
+    })
+
+    it('returns correct error message when accessToken is invalid', async () => {
+      const { webApp } = await makeSut()
+      const accessToken = 'invalid_token'
+
+      const result = await request(webApp.app)
+        .post('/api/user/change-password')
+        .set('Authorization', accessToken)
+        .send({
+          id: 'any_id',
+          password: 'any_password',
+          passwordRetype: 'another_password'
+        })
+
+      expect(result.body).toEqual({
+        error: {
+          message: 'token is invalid (type: Bearer)'
+        }
+      })
+    })
+
+    it('returns 422 when schema is invalid', async () => {
+      const { webApp, accessTokenFake } = await makeSut()
+
+      await request(webApp.app)
+        .post('/api/user/change-password')
+        .set('Authorization', accessTokenFake)
         .send({})
         .expect(422)
     })
 
     it('returns schema error message when schema is invalid', async () => {
-      const { webApp, authorizationFake } = await makeSut()
+      const { webApp, accessTokenFake } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessTokenFake)
         .send({})
 
       expect(result.body).toEqual({
@@ -161,11 +196,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns 400 when passwords do not match', async () => {
-      const { webApp, authorizationFake } = await makeSut()
+      const { webApp, accessTokenFake } = await makeSut()
 
       await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessTokenFake)
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -175,11 +210,11 @@ describe('ChangePasswordRoute', () => {
     })
 
     it('returns passwords should match error message', async () => {
-      const { webApp, authorizationFake } = await makeSut()
+      const { webApp, accessTokenFake } = await makeSut()
 
       const result = await request(webApp.app)
         .post('/api/user/change-password')
-        .set('Authorization', authorizationFake)
+        .set('Authorization', accessTokenFake)
         .send({
           id: 'any_id',
           password: 'any_password',

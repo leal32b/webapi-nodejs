@@ -19,7 +19,7 @@ export const signInResponseSchema = {
     accessToken: { type: 'string' },
     message: { type: 'string' }
   },
-  required: ['email', 'accessToken'],
+  required: ['accessToken', 'message'],
   additionalProperties: false
 }
 

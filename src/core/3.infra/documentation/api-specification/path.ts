@@ -24,10 +24,15 @@ type Content = {
   }
 }
 
+type Security = {
+  [key: string]: any
+}
+
 export type Path = {
   [index: string]: {
     tags: string[]
     summary: string
+    security?: Security[]
     requestBody: {
       required: boolean
       content: Content
