@@ -1,7 +1,19 @@
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { Either, Left, left, Right, right } from '@/core/0.domain/utils/either'
 
 describe('Either', () => {
   describe('success', () => {
+    it('creates Left', () => {
+      const result = new Left<number, number>(9)
+
+      expect(result).toBeInstanceOf(Left)
+    })
+
+    it('creates Right', () => {
+      const result = new Right<number, number>(9)
+
+      expect(result).toBeInstanceOf(Right)
+    })
+
     it('returns true on isRight when it is right', () => {
       const result: Either<any, any> = right('anything')
 

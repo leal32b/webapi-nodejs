@@ -32,7 +32,7 @@ describe('InvalidDateError', () => {
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'invalid_date',
-        message: 'should have format: "yyyy-MM-ddTHH:mm:ss.fffZ"'
+        message: "should have format: 'yyyy-MM-ddTHH:mm:ss.fffZ'"
       })
     })
   })

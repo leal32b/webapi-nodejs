@@ -32,7 +32,7 @@ describe('NotFoundError', () => {
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'any_input',
-        message: 'any_field "any_input" not found'
+        message: "any_field 'any_input' not found"
       })
     })
   })

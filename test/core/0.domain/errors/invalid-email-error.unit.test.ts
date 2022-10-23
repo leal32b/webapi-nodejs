@@ -32,7 +32,7 @@ describe('InvalidEmailError', () => {
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'invalid_mail',
-        message: 'should have format: "name@mail.com"'
+        message: "should have format: 'name@mail.com'"
       })
     })
   })

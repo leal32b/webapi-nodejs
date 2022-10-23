@@ -20,8 +20,15 @@ export type Router = {
   middlewares: Middleware[]
 }
 
+export type Header = {
+  field: string
+  value: string
+}
 export interface WebApp {
   app: any
-  listen: (port: number, callback: () => void) => void
+  listen: (port: number) => void
+  setApiSpecification: (path: string, middlewares: any[]) => void
+  setContentType: (type: string) => void
+  setHeaders: (headers: Header[]) => void
   setRouter: (router: Router) => void
 }

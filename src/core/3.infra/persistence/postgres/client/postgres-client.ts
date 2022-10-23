@@ -1,21 +1,22 @@
 import { DataSource, EntityManager, EntityTarget, Repository, CannotConnectAlreadyConnectedError } from 'typeorm'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 type ConstructParams = {
   dataSource: DataSource
 }
 
-class PostgresClient {
+export class PostgresClient implements PersistenceClient {
   constructor (private readonly props: ConstructParams) {}
 
-  async connect (message?: string): Promise<Either<Error, void>> {
+  async connect (): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.initialize()
       const dataSource = this.props.dataSource.name
       const database = this.props.dataSource.options.database as string
 
-      console.log(message || `connected to ${database} (dataSource: ${dataSource})`)
+      console.log(`connected to ${database} (dataSource: ${dataSource})`)
 
       return right()
     } catch (error) {
@@ -25,12 +26,6 @@ class PostgresClient {
 
       return left(error)
     }
-  }
-
-  async reconnect (): Promise<Either<Error, void>> {
-    const result = await this.connect('reconnected to dataSource')
-
-    return result
   }
 
   async close (): Promise<Either<Error, void>> {
@@ -46,13 +41,7 @@ class PostgresClient {
     }
   }
 
-  isInitialized (): boolean {
-    return this.props.dataSource.isInitialized
-  }
-
   async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
-    await this.reconnect()
-
     return this.props.dataSource.getRepository(entity)
   }
 
@@ -76,16 +65,5 @@ class PostgresClient {
 
   get manager (): EntityManager {
     return this.props.dataSource.manager
-  }
-}
-
-export const postgres = {
-  client: null as PostgresClient,
-
-  async connect (dataSource: DataSource): Promise<Either<Error, void>> {
-    this.client = new PostgresClient({ dataSource })
-    const result = await this.client.connect()
-
-    return result
   }
 }

@@ -1,3 +1,5 @@
+import request from 'supertest'
+
 import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
 import { Middleware } from '@/core/2.presentation/middleware/middleware'
 import { RouteType } from '@/core/3.infra/api/app/web-app'
@@ -45,6 +47,92 @@ const makeSut = (): SutTypes => {
 
 describe('ExpressAdapter', () => {
   describe('success', () => {
+    it('parses body as json', async () => {
+      const { sut } = makeSut()
+      sut.setRouter({
+        path: '/express',
+        routes: [{
+          path: '/test_body_parser',
+          type: RouteType.POST,
+          schema: 'any_schema',
+          controller: makeControllerStub()
+        }],
+        middlewares: []
+      })
+      const body = { key: 'any_value' }
+
+      await request(sut.app)
+        .post('/api/express/test_body_parser')
+        .send(body)
+        .expect(body)
+    })
+
+    it('returns Right on setApiSpecification', () => {
+      const { sut } = makeSut()
+      const path = 'any_path'
+      const middlewares = [() => {}, () => {}]
+
+      const result = sut.setApiSpecification(path, middlewares)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('returns Right on setContentType', () => {
+      const { sut } = makeSut()
+      const type = 'any_type'
+
+      const result = sut.setContentType(type)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('returns default contentType as json', async () => {
+      const { sut } = makeSut()
+      sut.setContentType('json')
+      sut.setRouter({
+        path: '/express',
+        routes: [{
+          path: '/test_content_type',
+          type: RouteType.GET,
+          schema: 'any_schema',
+          controller: makeControllerStub()
+        }],
+        middlewares: []
+      })
+
+      await request(sut.app)
+        .get('/api/express/test_content_type')
+        .expect('content-type', /json/)
+    })
+
+    it('returns Right on setHeaders', () => {
+      const { sut } = makeSut()
+      const headers = [{ field: 'any_field', value: 'any_value' }]
+
+      const result = sut.setHeaders(headers)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('enables CORS', async () => {
+      const { sut } = makeSut()
+      sut.setHeaders([{ field: 'access-control-allow-origin', value: '*' }])
+      sut.setRouter({
+        path: '/express',
+        routes: [{
+          path: '/test_cors',
+          type: RouteType.GET,
+          schema: 'any_schema',
+          controller: makeControllerStub()
+        }],
+        middlewares: []
+      })
+
+      await request(sut.app)
+        .get('/api/express/test_cors')
+        .expect('access-control-allow-origin', '*')
+    })
+
     it('returns Right on setRouter when route has only a controller', () => {
       const { sut, controller } = makeSut()
 
@@ -99,6 +187,43 @@ describe('ExpressAdapter', () => {
   })
 
   describe('failure', () => {
+    it('returns Left when setApiSpecification throws', () => {
+      const { sut } = makeSut()
+      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const path = 'any_path'
+      const middlewares = [() => {}, () => {}]
+
+      const result = sut.setApiSpecification(path, middlewares)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left when setContentType throws', () => {
+      const { sut } = makeSut()
+      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const type = 'any_type'
+
+      const result = sut.setContentType(type)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
+    it('returns Left when setHeaders throws', () => {
+      const { sut } = makeSut()
+      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const headers = [{ field: 'any_field', value: 'any_value' }]
+
+      const result = sut.setHeaders(headers)
+
+      expect(result.isLeft()).toBe(true)
+    })
+
     it('returns Left when setRouter throws', () => {
       const { sut, controller } = makeSut()
       jest.spyOn(sut.app, 'get').mockImplementationOnce(() => {

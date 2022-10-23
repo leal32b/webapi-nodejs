@@ -1,5 +1,24 @@
 module.exports = {
   roots: ['<rootDir>'],
+  testMatch: [
+    '<rootDir>/test/**/*.test.ts'
+  ],
+  watchPathIgnorePatterns: [
+    '<rootDir>/globalConfig',
+    '<rootDir>/data-.*'
+  ],
+  transform: {
+    '.+\\postgres.*entity.ts$': 'ts-jest',
+    '.+\\.ts$': '@swc/jest'
+  },
+  preset: '@shelf/jest-mongodb',
+  testSequencer: '<rootDir>/jest-sequencer.js',
+  moduleNameMapper: {
+    '^@/core/(.*)$': '<rootDir>/src/core/$1',
+    '^@/communication/(.*)$': '<rootDir>/src/modules/communication/$1',
+    '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
+    '^~/(.*)$': '<rootDir>/test/$1'
+  },
   collectCoverage: false,
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
@@ -12,30 +31,12 @@ module.exports = {
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
-  watchPathIgnorePatterns: [
-    '<rootDir>/globalConfig',
-    '<rootDir>/data-.*'
-  ],
-  transform: {
-    '.+\\.ts$': 'ts-jest'
-  },
-  testMatch: [
-    '<rootDir>/test/**/*.test.ts'
-  ],
-  preset: '@shelf/jest-mongodb',
-  moduleNameMapper: {
-    '^@/core/(.*)$': '<rootDir>/src/core/$1',
-    '^@/communication/(.*)$': '<rootDir>/src/modules/communication/$1',
-    '^@/user/(.*)$': '<rootDir>/src/modules/user/$1',
-    '^~/(.*)$': '<rootDir>/test/$1'
-  },
   coverageThreshold: {
     global: {
+      statements: 100,
       branches: 100,
       functions: 100,
-      lines: 100,
-      statements: 100
+      lines: 100
     }
-  },
-  testTimeout: 10000
+  }
 }

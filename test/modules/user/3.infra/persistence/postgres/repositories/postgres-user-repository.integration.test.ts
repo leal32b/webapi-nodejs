@@ -1,7 +1,6 @@
-import { DatabaseFactory } from '@/core/3.infra/persistence/database-factory'
-import { postgres } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { postgresFactories } from '@/core/4.main/config/database-factories/postgres-factory'
-import { postgresPersistence } from '@/core/4.main/config/persistence/postgres-persistence'
+import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { persistence } from '@/core/4.main/container'
+import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
@@ -18,7 +17,7 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: PostgresUserRepository
-  userFactory: DatabaseFactory<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateCreateParams>
   userAggregateFake: UserAggregate
 }
 
@@ -27,7 +26,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFactory: postgresFactories.userFactory
+    userFixture: makePostgresFixtures.userFixture
   }
   const sut = new PostgresUserRepository()
 
@@ -36,12 +35,12 @@ const makeSut = (): SutTypes => {
 
 describe('UserPostgresRepository', () => {
   beforeAll(async () => {
-    await postgresPersistence.connect()
+    await persistence.postgres.client.connect()
   })
 
   afterAll(async () => {
-    await postgresPersistence.clear()
-    await postgresPersistence.close()
+    await persistence.postgres.client.clearDatabase()
+    await persistence.postgres.client.close()
   })
 
   describe('success', () => {
@@ -63,9 +62,9 @@ describe('UserPostgresRepository', () => {
     })
 
     it('returns an UserAggregate on readByEmail success', async () => {
-      const { sut, userFactory } = makeSut()
+      const { sut, userFixture } = makeSut()
       const email = 'any2@mail.com'
-      await userFactory.createFixture({ email })
+      await userFixture.createFixture({ email })
 
       const result = await sut.readByEmail(email)
 
@@ -82,9 +81,9 @@ describe('UserPostgresRepository', () => {
     })
 
     it('returns an UserAggregate on readById success', async () => {
-      const { sut, userFactory } = makeSut()
+      const { sut, userFixture } = makeSut()
       const id = 'any_id2'
-      await userFactory.createFixture({ id })
+      await userFixture.createFixture({ id })
 
       const result = await sut.readById(id)
 
@@ -105,7 +104,7 @@ describe('UserPostgresRepository', () => {
   describe('failure', () => {
     it('returns Left when create throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.create(userAggregateFake)
 
@@ -115,7 +114,7 @@ describe('UserPostgresRepository', () => {
     it('returns Left when readByEmail throws', async () => {
       const { sut } = makeSut()
       const email = 'any@mail.com'
-      jest.spyOn(postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.readByEmail(email)
 
@@ -125,7 +124,7 @@ describe('UserPostgresRepository', () => {
     it('returns Left when readById throws', async () => {
       const { sut } = makeSut()
       const id = 'any_id'
-      jest.spyOn(postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.readById(id)
 
@@ -134,7 +133,7 @@ describe('UserPostgresRepository', () => {
 
     it('returns Left on update when it throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.update(userAggregateFake)
 
