@@ -6,9 +6,7 @@ import { invalidSchemaSchema } from '@/core/3.infra/documentation/api-specificat
 import { notFoundSchema } from '@/core/3.infra/documentation/api-specification/schemas/not-found-schema'
 import { passwordMismatchSchema } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'
 import { ApiSpecification } from '@/core/4.main/container/container-types'
-import { signInPath } from '@/user/3.infra/api/routes/sign-in/sign-in-path'
-import { signUpPath } from '@/user/3.infra/api/routes/sign-up/sign-up-path'
-import { userSchemas } from '@/user/4.main/setup/user-schemas'
+import { userPaths, userSchemas } from '@/user/4.main/setup/user-api-specification'
 
 const swaggerConfig = {
   openapi: '3.0.0',
@@ -25,8 +23,7 @@ const swaggerConfig = {
     name: 'user'
   }],
   paths: {
-    ...signUpPath,
-    ...signInPath
+    ...userPaths
   },
   schemas: {
     ...userSchemas,

@@ -5,64 +5,62 @@ import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/api-
 import { signUpRequestSchemaExample, signUpResponseSchemaExample } from '@/user/3.infra/api/routes/sign-up/sign-up-schemas'
 
 export const signUpPath: Path = {
-  '/user/sign-up': {
-    post: {
-      tags: ['user'],
-      summary: 'Signs up a new user',
-      requestBody: {
-        required: true,
+  post: {
+    tags: ['user'],
+    summary: 'Signs up a new user',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/signUpRequestSchema'
+          },
+          example: signUpRequestSchemaExample
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'OK',
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/signUpRequestSchema'
+              $ref: '#/schemas/signUpResponseSchema'
             },
-            example: signUpRequestSchemaExample
+            example: signUpResponseSchemaExample
           }
         }
       },
-      responses: {
-        200: {
-          description: 'OK',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/schemas/signUpResponseSchema'
+      400: {
+        description: 'Bad Request',
+        content: {
+          'application/json': {
+            schema: {
+              oneOf: [{
+                $ref: '#/schemas/emailTakenSchema'
+              }, {
+                $ref: '#/schemas/passwordMismatchSchema'
+              }]
+            },
+            examples: {
+              emailTakenSchema: {
+                value: emailTakenSchemaExample
               },
-              example: signUpResponseSchemaExample
-            }
-          }
-        },
-        400: {
-          description: 'Bad Request',
-          content: {
-            'application/json': {
-              schema: {
-                oneOf: [{
-                  $ref: '#/schemas/emailTakenSchema'
-                }, {
-                  $ref: '#/schemas/passwordMismatchSchema'
-                }]
-              },
-              examples: {
-                emailTakenSchema: {
-                  value: emailTakenSchemaExample
-                },
-                passwordMismatchSchema: {
-                  value: passwordMismatchSchemaExample
-                }
+              passwordMismatchSchema: {
+                value: passwordMismatchSchemaExample
               }
             }
           }
-        },
-        422: {
-          description: 'Unprocessable Entity',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/schemas/invalidSchemaSchema'
-              },
-              example: invalidSchemaSchemaExample
-            }
+        }
+      },
+      422: {
+        description: 'Unprocessable Entity',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/invalidSchemaSchema'
+            },
+            example: invalidSchemaSchemaExample
           }
         }
       }

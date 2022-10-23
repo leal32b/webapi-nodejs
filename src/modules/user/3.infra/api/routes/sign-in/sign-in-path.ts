@@ -5,64 +5,62 @@ import { notFoundSchemaExample } from '@/core/3.infra/documentation/api-specific
 import { signInRequestSchemaExample, signInResponseSchemaExample } from '@/user/3.infra/api/routes/sign-in/sign-in-schemas'
 
 export const signInPath: Path = {
-  '/user/sign-in': {
-    post: {
-      tags: ['user'],
-      summary: 'Signs in an user',
-      requestBody: {
-        required: true,
+  post: {
+    tags: ['user'],
+    summary: 'Signs in an user',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/signInRequestSchema'
+          },
+          example: signInRequestSchemaExample
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'OK',
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/signInRequestSchema'
+              $ref: '#/schemas/signInResponseSchema'
             },
-            example: signInRequestSchemaExample
+            example: signInResponseSchemaExample
           }
         }
       },
-      responses: {
-        200: {
-          description: 'OK',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/schemas/signInResponseSchema'
+      401: {
+        description: 'Unauthorized',
+        content: {
+          'application/json': {
+            schema: {
+              oneOf: [{
+                $ref: '#/schemas/invalidPasswordSchema'
+              }, {
+                $ref: '#/schemas/notFoundSchema'
+              }]
+            },
+            examples: {
+              invalidPasswordSchema: {
+                value: invalidPasswordSchemaExample
               },
-              example: signInResponseSchemaExample
-            }
-          }
-        },
-        401: {
-          description: 'Unauthorized',
-          content: {
-            'application/json': {
-              schema: {
-                oneOf: [{
-                  $ref: '#/schemas/invalidPasswordSchema'
-                }, {
-                  $ref: '#/schemas/notFoundSchema'
-                }]
-              },
-              examples: {
-                invalidPasswordSchema: {
-                  value: invalidPasswordSchemaExample
-                },
-                notFoundSchema: {
-                  value: notFoundSchemaExample
-                }
+              notFoundSchema: {
+                value: notFoundSchemaExample
               }
             }
           }
-        },
-        422: {
-          description: 'Unprocessable Entity',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/schemas/invalidSchemaSchema'
-              },
-              example: invalidSchemaSchemaExample
-            }
+        }
+      },
+      422: {
+        description: 'Unprocessable Entity',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/invalidSchemaSchema'
+            },
+            example: invalidSchemaSchemaExample
           }
         }
       }

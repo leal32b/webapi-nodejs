@@ -26,18 +26,16 @@ type Content = {
 
 export type Path = {
   [index: string]: {
-    [index: string]: {
-      tags: string[]
-      summary: string
-      requestBody: {
-        required: boolean
+    tags: string[]
+    summary: string
+    requestBody: {
+      required: boolean
+      content: Content
+    }
+    responses: {
+      [key: number]: {
+        description: string
         content: Content
-      }
-      responses: {
-        [key: number]: {
-          description: string
-          content: Content
-        }
       }
     }
   }
