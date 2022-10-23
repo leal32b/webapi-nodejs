@@ -1,22 +1,22 @@
 import { Path } from '@/core/3.infra/documentation/api-specification/path'
-import { emailTakenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/email-taken-schema'
+import { invalidPasswordSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-password-schema'
 import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
-import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'
-import { signUpRequestSchemaExample, signUpResponseSchemaExample } from '@/user/3.infra/api/routes/sign-up/sign-up-schemas'
+import { notFoundSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/not-found-schema'
+import { signInRequestSchemaExample, signInResponseSchemaExample } from '@/user/3.infra/api/routes/sign-in/sign-in-schemas'
 
-export const signUpPath: Path = {
-  '/user/sign-up': {
+export const signInPath: Path = {
+  '/user/sign-in': {
     post: {
       tags: ['user'],
-      summary: 'Signs up a new user',
+      summary: 'Signs in an user',
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/signUpRequestSchema'
+              $ref: '#/schemas/signInRequestSchema'
             },
-            example: signUpRequestSchemaExample
+            example: signInRequestSchemaExample
           }
         }
       },
@@ -26,29 +26,29 @@ export const signUpPath: Path = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/schemas/signUpResponseSchema'
+                $ref: '#/schemas/signInResponseSchema'
               },
-              example: signUpResponseSchemaExample
+              example: signInResponseSchemaExample
             }
           }
         },
-        400: {
-          description: 'Bad Request',
+        401: {
+          description: 'Unauthorized',
           content: {
             'application/json': {
               schema: {
                 oneOf: [{
-                  $ref: '#/schemas/emailTakenSchema'
+                  $ref: '#/schemas/invalidPasswordSchema'
                 }, {
-                  $ref: '#/schemas/passwordMismatchSchema'
+                  $ref: '#/schemas/notFoundSchema'
                 }]
               },
               examples: {
-                emailTakenSchema: {
-                  value: emailTakenSchemaExample
+                invalidPasswordSchema: {
+                  value: invalidPasswordSchemaExample
                 },
-                passwordMismatchSchema: {
-                  value: passwordMismatchSchemaExample
+                notFoundSchema: {
+                  value: notFoundSchemaExample
                 }
               }
             }
