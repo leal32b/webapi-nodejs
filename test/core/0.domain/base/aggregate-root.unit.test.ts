@@ -7,13 +7,17 @@ type ConstructParams = {
   anyKey: string
 }
 
+type PayloadFake = {
+  anyKey: string
+}
+
 class AggregateFake extends AggregateRoot<ConstructParams> {
-  testAddEvent (event: DomainEvent): void {
+  testAddEvent (event: DomainEvent<PayloadFake>): void {
     this.addEvent(event)
   }
 }
 
-class DomainEventFake extends DomainEvent {}
+class DomainEventFake extends DomainEvent<PayloadFake> {}
 
 const makeAggregateFake = (): UserAggregate => UserAggregate.create({
   email: 'any@mail.com',
@@ -29,7 +33,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const domainEventFake = new DomainEventFake(makeAggregateFake().id)
+  const domainEventFake = new DomainEventFake({
+    aggregateId: makeAggregateFake().id,
+    payload: {
+      anyKey: 'any_value'
+    }
+  })
   const sut = new AggregateFake({ anyKey: 'any_value' })
 
   return { sut, domainEventFake }

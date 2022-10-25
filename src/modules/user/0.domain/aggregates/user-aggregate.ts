@@ -44,7 +44,13 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
 
     const constructParams = constructParamsOrError.value
     const userAggregate = new UserAggregate(constructParams, id)
-    userAggregate.addEvent(new UserCreatedEvent(userAggregate.id))
+    userAggregate.addEvent(new UserCreatedEvent({
+      aggregateId: userAggregate.id,
+      payload: {
+        email: userAggregate.email.value,
+        token: userAggregate.token.value
+      }
+    }))
 
     return right(userAggregate)
   }

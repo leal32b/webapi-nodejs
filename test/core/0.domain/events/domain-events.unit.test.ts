@@ -12,14 +12,19 @@ const makeAggregateFake = (): UserAggregate => UserAggregate.create({
   token: 'any_token'
 }).value as UserAggregate
 
+type PayloadFake = {
+  anyKey: string
+}
+
 const handlerFunction = jest.fn()
-const makeHandlerFake = (): (event: DomainEvent) => void => handlerFunction
+
+const makeHandlerFake = (): (event: DomainEvent<PayloadFake>) => void => handlerFunction
 
 type SutTypes = {
   sut: typeof DomainEvents
   aggregateFake: UserAggregate
   handlerFunction: Function
-  handlerFake: (event: DomainEvent) => void
+  handlerFake: (event: DomainEvent<PayloadFake>) => void
 }
 
 const makeSut = (): SutTypes => {

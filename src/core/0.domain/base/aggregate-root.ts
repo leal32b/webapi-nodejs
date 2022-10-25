@@ -4,9 +4,9 @@ import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
 export abstract class AggregateRoot<T> extends Entity<T> {
-  private readonly _events: DomainEvent[] = []
+  private readonly _events: Array<DomainEvent<any>> = []
 
-  protected addEvent (event: DomainEvent): void {
+  protected addEvent (event: DomainEvent<any>): void {
     this._events.push(event)
     DomainEvents.markAggregateForDispatch(this)
   }
@@ -19,7 +19,7 @@ export abstract class AggregateRoot<T> extends Entity<T> {
     return this.props.id
   }
 
-  get events (): DomainEvent[] {
+  get events (): Array<DomainEvent<any>> {
     return this._events
   }
 }
