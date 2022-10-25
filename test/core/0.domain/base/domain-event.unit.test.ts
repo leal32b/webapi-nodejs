@@ -10,7 +10,11 @@ const makeAggregateFake = (): UserAggregate => UserAggregate.create({
   token: 'any_token'
 }).value as UserAggregate
 
-class EventFake extends DomainEvent {}
+type PayloadFake = {
+  anyKey: string
+}
+
+class EventFake extends DomainEvent<PayloadFake> {}
 
 type SutTypes = {
   sut: EventFake
@@ -19,19 +23,42 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const aggregateFake = makeAggregateFake()
-  const sut = new EventFake(aggregateFake.id)
+  const sut = new EventFake({
+    aggregateId: aggregateFake.id,
+    payload: {
+      anyKey: 'any_value'
+    }
+  })
 
   return { sut, aggregateFake }
 }
 
 describe('DomainEvent', () => {
   describe('success', () => {
-    it('gets the aggregateId', () => {
+    it('gets aggregateId', () => {
       const { sut } = makeSut()
 
       const result = sut.aggregateId
 
       expect(result).toBeInstanceOf(Identifier)
+    })
+
+    it('gets createdAt', () => {
+      const { sut } = makeSut()
+
+      const result = sut.createdAt
+
+      expect(result).toBeInstanceOf(Date)
+    })
+
+    it('gets payload', () => {
+      const { sut } = makeSut()
+
+      const result = sut.payload
+
+      expect(result).toEqual({
+        anyKey: 'any_value'
+      })
     })
   })
 })

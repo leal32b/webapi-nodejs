@@ -1,3 +1,4 @@
+import { EmailSender } from '@/communication/1.application/email/email-sender'
 import { Encrypter } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
 import { WebApp } from '@/core/3.infra/api/app/web-app'
@@ -14,6 +15,10 @@ export type ApiSpecification = {
 
 export type App = {
   webApp: WebApp
+}
+
+export type Communication = {
+  emailSender: EmailSender
 }
 
 export type Cryptography = {

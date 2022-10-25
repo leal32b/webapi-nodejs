@@ -1,7 +1,8 @@
 import 'dotenv/config'
 
 import { makeExpress } from '@/core/4.main/container/app/make-express'
-import { App, Cryptography, Documentation, Persistence, Validators } from '@/core/4.main/container/container-types'
+import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
+import { App, Communication, Cryptography, Documentation, Persistence, Validators } from '@/core/4.main/container/container-types'
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/core/4.main/container/documentation/make-swagger'
@@ -11,6 +12,10 @@ import { makeAjv } from '@/core/4.main/container/validators/make-ajv'
 
 export const app: App = {
   webApp: makeExpress
+}
+
+export const communication: Communication = {
+  emailSender: makeNodemailer
 }
 
 export const cryptography: Cryptography = {

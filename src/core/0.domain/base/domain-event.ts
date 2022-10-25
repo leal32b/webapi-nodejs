@@ -1,13 +1,26 @@
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
-export abstract class DomainEvent {
-  private readonly createdAt: Date
+type ConstructorParams<T> = {
+  aggregateId: Identifier
+  payload: T
+}
 
-  constructor (private readonly _aggregateId: Identifier) {
-    this.createdAt = new Date()
+export abstract class DomainEvent<T> {
+  private readonly _createdAt: Date
+
+  constructor (private readonly props: ConstructorParams<T>) {
+    this._createdAt = new Date()
   }
 
   get aggregateId (): Identifier {
-    return this._aggregateId
+    return this.props.aggregateId
+  }
+
+  get createdAt (): Date {
+    return this._createdAt
+  }
+
+  get payload (): T {
+    return this.props.payload
   }
 }

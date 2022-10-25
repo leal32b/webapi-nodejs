@@ -14,7 +14,7 @@ export class DomainEvents {
     aggregate.events.forEach(event => this.dispatch(event))
   }
 
-  private static dispatch (event: DomainEvent): void {
+  private static dispatch (event: DomainEvent<any>): void {
     const eventClassName = event.constructor.name
     const handlers = this.handlers[eventClassName]
 
@@ -31,7 +31,7 @@ export class DomainEvents {
     this.markedAggregates.splice(index, 1)
   }
 
-  static register (callback: (event: DomainEvent) => void, eventClassName: string): void {
+  static register (callback: (event: DomainEvent<any>) => void, eventClassName: string): void {
     if (!this.handlers[eventClassName]) {
       this.handlers[eventClassName] = []
     }
