@@ -14,8 +14,7 @@
     "paths": {
       "@/core/*": ["src/core/*"],
       "@/communication/*": [ "src/modules/communication/*"],
-      "@/user/*": ["src/modules/user/*"],
-      "~/*": ["test/*"]
+      "@/user/*": ["src/modules/user/*"]
     },
   },
   "include": [

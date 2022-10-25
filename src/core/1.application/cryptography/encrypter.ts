@@ -6,7 +6,7 @@ export enum TokenType {
   access = 'access'
 }
 
-export type TokenData<> = {
+export type TokenData = {
   type: TokenType
   payload?: {
     id: string
