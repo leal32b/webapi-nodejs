@@ -1,5 +1,7 @@
 import { newDb } from 'pg-mem'
 
+import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
+
 const mem = newDb()
 mem.public.registerFunction({
   name: 'current_database',
@@ -14,5 +16,6 @@ export const postgresTestDataSource = mem.adapters.createTypeormDataSource({
   type: 'postgres',
   database: 'postgres_test',
   synchronize: true,
-  entities: ['src/modules/**/postgres/entities/**/*.ts']
+  // entities: ['src/modules/**/postgres/entities/**/*.ts']
+  entities: [PostgresUserEntity]
 })

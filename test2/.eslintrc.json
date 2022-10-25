@@ -1,0 +1,6 @@
+{
+  "extends": "../.eslintrc.json",
+  "rules": {
+    "max-lines-per-function": "off"
+  }
+}

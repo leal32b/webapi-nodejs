@@ -15,10 +15,11 @@
       "@/core/*": ["src/core/*"],
       "@/communication/*": [ "src/modules/communication/*"],
       "@/user/*": ["src/modules/user/*"]
-    },
+    }
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "test2/**/*.ts"
   ]
 }

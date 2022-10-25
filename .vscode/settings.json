@@ -6,6 +6,7 @@
     "cimg",
     "codecov",
     "Encrypter",
+    "esbuild",
     "Fastify",
     "Metadatas",
     "Middlewares",

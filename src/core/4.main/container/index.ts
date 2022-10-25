@@ -1,5 +1,6 @@
 import 'dotenv/config'
 
+import { getVar } from '@/core/0.domain/utils/var'
 import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
 import { App, Communication, Cryptography, Documentation, Persistence, Validators } from '@/core/4.main/container/container-types'
@@ -36,7 +37,7 @@ const persistenceChoices = {
 }
 
 export const persistence: Persistence = {
-  actual: persistenceChoices[process.env.PERSISTENCE],
+  actual: persistenceChoices[getVar('PERSISTENCE')],
   ...persistenceChoices
 }
 
