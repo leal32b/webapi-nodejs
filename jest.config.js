@@ -23,10 +23,7 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/4.main/**',
     '!<rootDir>/**/migrations/**',
-    '!<rootDir>/**/data-sources/**',
-    // remove after implementation:
-    '!<rootDir>/**/*handler.ts',
-    '!<rootDir>/**/mongodb-user.ts'
+    '!<rootDir>/**/data-sources/**'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
