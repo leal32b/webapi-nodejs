@@ -3,10 +3,10 @@ import { faker } from '@faker-js/faker'
 
 import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
 import { persistence } from '@/core/4.main/container'
-import { MongodbUser } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user'
+import { MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
 
-class FakeFixture extends MongodbFixture<MongodbUser> {
-  static create (): MongodbFixture<MongodbUser> {
+class FakeFixture extends MongodbFixture<MongodbUserEntity> {
+  static create (): MongodbFixture<MongodbUserEntity> {
     return new FakeFixture({
       collectionName: 'users',
       createDefault: (): any => ({
@@ -22,7 +22,7 @@ class FakeFixture extends MongodbFixture<MongodbUser> {
 }
 
 type SutTypes = {
-  sut: MongodbFixture<MongodbUser>
+  sut: MongodbFixture<MongodbUserEntity>
 }
 
 const makeSut = async (): Promise<SutTypes> => {

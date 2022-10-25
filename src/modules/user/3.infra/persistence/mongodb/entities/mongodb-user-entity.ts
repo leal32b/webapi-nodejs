@@ -1,4 +1,4 @@
-export class MongodbUser {
+export class MongodbUserEntity {
   id: string
   name: string
   email: string
