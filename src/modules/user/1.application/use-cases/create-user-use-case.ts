@@ -29,7 +29,44 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
   }) { super() }
 
   async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
-    const { userRepository } = this.props
+    const { email, password } = createUserData
+
+    const validOrError = await this.initialValidation(createUserData)
+
+    if (validOrError.isLeft()) {
+      return left(validOrError.value)
+    }
+
+    const hashedPasswordOrError = await this.hashPassword(password)
+
+    if (hashedPasswordOrError.isLeft()) {
+      return left(hashedPasswordOrError.value)
+    }
+
+    const tokenOrError = await this.createToken()
+
+    if (tokenOrError.isLeft()) {
+      return left(tokenOrError.value)
+    }
+
+    const hashedPassword = hashedPasswordOrError.value
+    const token = tokenOrError.value
+    const userAggregateOrError = await this.createUserAggregate(createUserData, hashedPassword, token)
+
+    if (userAggregateOrError.isLeft()) {
+      return left(userAggregateOrError.value)
+    }
+
+    const userAggregate = userAggregateOrError.value
+    DomainEvents.dispatchEventsForAggregate(userAggregate.id)
+
+    return right({
+      email,
+      message: 'user created successfully'
+    })
+  }
+
+  private async initialValidation (createUserData: CreateUserData): Promise<Either<DomainError[], void>> {
     const { email, password, passwordRetype } = createUserData
 
     if (password !== passwordRetype) {
@@ -42,25 +79,7 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
       return left(emailAvailableOrError.value)
     }
 
-    const userAggregateOrError = await this.createUserAggregate(createUserData)
-
-    if (userAggregateOrError.isLeft()) {
-      return left(userAggregateOrError.value)
-    }
-
-    const userAggregate = userAggregateOrError.value
-    const createdUserOrError = await userRepository.create(userAggregate)
-
-    if (createdUserOrError.isLeft()) {
-      return left(createdUserOrError.value)
-    }
-
-    DomainEvents.dispatchEventsForAggregate(userAggregate.id)
-
-    return right({
-      email,
-      message: 'user created successfully'
-    })
+    return right()
   }
 
   private async isEmailAvailable (email: string): Promise<Either<DomainError[], void>> {
@@ -78,9 +97,9 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     return right()
   }
 
-  private async createUserAggregate (createUserData: CreateUserData): Promise<Either<DomainError[], UserAggregate>> {
-    const { hasher, encrypter } = this.props
-    const { password } = createUserData
+  private async hashPassword (password: string): Promise<Either<DomainError[], string>> {
+    const { hasher } = this.props
+
     const hashedPasswordOrError = await hasher.hash(password)
 
     if (hashedPasswordOrError.isLeft()) {
@@ -88,6 +107,13 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     }
 
     const hashedPassword = hashedPasswordOrError.value
+
+    return right(hashedPassword)
+  }
+
+  private async createToken (): Promise<Either<DomainError[], string>> {
+    const { encrypter } = this.props
+
     const tokenOrError = await encrypter.encrypt({ type: TokenType.email })
 
     if (tokenOrError.isLeft()) {
@@ -95,6 +121,13 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     }
 
     const token = tokenOrError.value
+
+    return right(token)
+  }
+
+  private async createUserAggregate (createUserData: CreateUserData, hashedPassword: string, token: string): Promise<Either<DomainError[], UserAggregate>> {
+    const { userRepository } = this.props
+
     const userAggregateOrError = UserAggregate.create({
       ...createUserData,
       password: hashedPassword,
@@ -105,6 +138,13 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
       return left(userAggregateOrError.value)
     }
 
-    return userAggregateOrError
+    const userAggregate = userAggregateOrError.value
+    const createdUserOrError = await userRepository.create(userAggregate)
+
+    if (createdUserOrError.isLeft()) {
+      return left(createdUserOrError.value)
+    }
+
+    return right(userAggregate)
   }
 }

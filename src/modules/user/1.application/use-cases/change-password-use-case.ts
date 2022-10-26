@@ -25,29 +25,29 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
   }) { super() }
 
   async execute (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], ChangePasswordResultDTO>> {
-    const { userRepository } = this.props
-    const { id, password, passwordRetype } = changePasswordData
+    const { id, password } = changePasswordData
 
-    if (password !== passwordRetype) {
-      return left([new PasswordMismatchError('password')])
+    const validOrError = await this.initialValidation(changePasswordData)
+
+    if (validOrError.isLeft()) {
+      return left(validOrError.value)
     }
 
-    const userAggregateOrError = await this.getUserAggregate(id)
+    const userAggregateOrError = await this.readUserAggregate(id)
 
     if (userAggregateOrError.isLeft()) {
       return left(userAggregateOrError.value)
     }
 
     const userAggregate = userAggregateOrError.value
-    const passwordOrError = await this.createPassword(password)
+    const passwordOrError = await this.hashPassword(password)
 
     if (passwordOrError.isLeft()) {
       return left(passwordOrError.value)
     }
 
     const newPassword = passwordOrError.value
-    userAggregate.password = newPassword
-    const updatedOrError = await userRepository.update(userAggregate)
+    const updatedOrError = await this.updateUserAggregate(userAggregate, newPassword)
 
     if (updatedOrError.isLeft()) {
       return left(updatedOrError.value)
@@ -58,7 +58,17 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     })
   }
 
-  private async getUserAggregate (id: string): Promise<Either<DomainError[], UserAggregate>> {
+  private async initialValidation (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], void>> {
+    const { password, passwordRetype } = changePasswordData
+
+    if (password !== passwordRetype) {
+      return left([new PasswordMismatchError('password')])
+    }
+
+    return right()
+  }
+
+  private async readUserAggregate (id: string): Promise<Either<DomainError[], UserAggregate>> {
     const { userRepository } = this.props
     const userAggregateOrError = await userRepository.readById(id)
 
@@ -75,7 +85,7 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     return right(userAggregate)
   }
 
-  private async createPassword (password: string): Promise<Either<DomainError[], Password>> {
+  private async hashPassword (password: string): Promise<Either<DomainError[], Password>> {
     const { hasher } = this.props
 
     const hashedPasswordOrError = await hasher.hash(password)
@@ -92,5 +102,18 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     }
 
     return right(passwordOrError.value)
+  }
+
+  private async updateUserAggregate (userAggregate: UserAggregate, password: Password): Promise<Either<DomainError[], UserAggregate>> {
+    const { userRepository } = this.props
+
+    userAggregate.password = password
+    const updatedOrError = await userRepository.update(userAggregate)
+
+    if (updatedOrError.isLeft()) {
+      return left(updatedOrError.value)
+    }
+
+    return right()
   }
 }
