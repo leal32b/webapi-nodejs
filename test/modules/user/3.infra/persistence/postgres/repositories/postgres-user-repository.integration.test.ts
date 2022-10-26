@@ -1,5 +1,5 @@
 import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
-import { persistence } from '@/core/4.main/container'
+import { persistence } from '@/core/4.main/container/index'
 import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
 import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
@@ -104,7 +104,7 @@ describe('UserPostgresRepository', () => {
   describe('failure', () => {
     it('returns Left when create throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.create(userAggregateFake)
 
@@ -114,7 +114,7 @@ describe('UserPostgresRepository', () => {
     it('returns Left when readByEmail throws', async () => {
       const { sut } = makeSut()
       const email = 'any@mail.com'
-      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.readByEmail(email)
 
@@ -124,7 +124,7 @@ describe('UserPostgresRepository', () => {
     it('returns Left when readById throws', async () => {
       const { sut } = makeSut()
       const id = 'any_id'
-      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.readById(id)
 
@@ -133,7 +133,7 @@ describe('UserPostgresRepository', () => {
 
     it('returns Left on update when it throws', async () => {
       const { sut, userAggregateFake } = makeSut()
-      jest.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+      vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
       const result = await sut.update(userAggregateFake)
 

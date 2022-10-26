@@ -1,14 +1,17 @@
 import { DataSource } from 'typeorm'
 
+import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+
+const NODE_ENV = getVar('NODE_ENV')
 
 const makeDataSourceMock = (): DataSource => ({
   name: 'any_data_source',
   options: { database: 'any_database' },
-  destroy: jest.fn(),
-  manager: { save: jest.fn() },
-  getRepository: jest.fn(() => ({
-    clear: jest.fn()
+  destroy: vi.fn(),
+  manager: { save: vi.fn() },
+  getRepository: vi.fn(() => ({
+    clear: vi.fn()
   })),
   entityMetadatas: [
     { name: 'any_entity_name' }
@@ -30,6 +33,10 @@ const makeSut = (): SutTypes => {
 }
 
 describe('PostgresClient', () => {
+  afterEach(() => {
+    setVar('NODE_ENV', NODE_ENV)
+  })
+
   describe('success', () => {
     it('gets dataSource manager', async () => {
       const { sut } = makeSut()
@@ -57,20 +64,18 @@ describe('PostgresClient', () => {
 
     it('returns Left on clearDatabase when not in test environment', async () => {
       const { sut } = makeSut()
-      process.env.NODE_ENV = 'any_environment'
+      setVar('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
-      process.env.NODE_ENV = 'test'
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns an Error on clearDatabase when not in test environment', async () => {
       const { sut } = makeSut()
-      process.env.NODE_ENV = 'any_environment'
+      setVar('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
-      process.env.NODE_ENV = 'test'
 
       expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
     })
@@ -79,7 +84,7 @@ describe('PostgresClient', () => {
   describe('failure', () => {
     it('returns Left when close throws', async () => {
       const { sut, dataSourceMock } = makeSut()
-      jest.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
+      vi.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
 
       const result = await sut.close()
 
@@ -88,7 +93,7 @@ describe('PostgresClient', () => {
 
     it('returns Left when clearDatabase throws', async () => {
       const { sut, dataSourceMock } = makeSut()
-      jest.spyOn(dataSourceMock, 'getRepository').mockImplementationOnce(jest.fn())
+      vi.spyOn(dataSourceMock, 'getRepository').mockImplementationOnce((vi.fn() as any))
 
       const result = await sut.clearDatabase()
 
@@ -96,15 +101,7 @@ describe('PostgresClient', () => {
     })
 
     it('returns Left when connect throws', async () => {
-      const dataSource = new DataSource({
-        type: 'postgres',
-        host: 'invalid_host',
-        port: 5432,
-        username: 'any_username',
-        password: 'any_password',
-        database: 'any_database'
-      })
-      const postgresClient = new PostgresClient({ dataSource })
+      const postgresClient = new PostgresClient({ dataSource: null })
 
       const result = await postgresClient.connect()
 

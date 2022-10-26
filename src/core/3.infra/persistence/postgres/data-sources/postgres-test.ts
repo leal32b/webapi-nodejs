@@ -16,6 +16,5 @@ export const postgresTestDataSource = mem.adapters.createTypeormDataSource({
   type: 'postgres',
   database: 'postgres_test',
   synchronize: true,
-  // entities: ['src/modules/**/postgres/entities/**/*.ts']
   entities: [PostgresUserEntity]
 })

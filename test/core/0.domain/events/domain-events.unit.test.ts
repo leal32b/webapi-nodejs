@@ -16,7 +16,7 @@ type PayloadFake = {
   anyKey: string
 }
 
-const handlerFunction = jest.fn()
+const handlerFunction = vi.fn()
 
 const makeHandlerFake = (): (event: DomainEvent<PayloadFake>) => void => handlerFunction
 
@@ -61,7 +61,7 @@ describe('DomainEvents', () => {
 
     it('returns when there is no aggregate to dispatch events on dispatchEventsForAggregate', () => {
       const { sut, aggregateFake } = makeSut()
-      const clearEventsSpy = jest.spyOn(aggregateFake, 'clearEvents')
+      const clearEventsSpy = vi.spyOn(aggregateFake, 'clearEvents')
       sut.clearMarkedAggregates()
 
       sut.dispatchEventsForAggregate(aggregateFake.id)

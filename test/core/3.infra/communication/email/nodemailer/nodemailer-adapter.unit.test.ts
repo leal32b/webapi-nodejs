@@ -4,12 +4,14 @@ import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { NodemailerAdapter } from '@/core/3.infra/communication/email/nodemailer/nodemailer-adapter'
 
-jest.mock('nodemailer', () => ({
-  createTransport: () => ({
-    sendMail: () => ({
-      messageId: '<01ab23cd-45ef-01ab-23cd-45ef01ab23cd@mail.com>'
+vi.mock('nodemailer', () => ({
+  default: {
+    createTransport: () => ({
+      sendMail: () => ({
+        messageId: '<01ab23cd-45ef-01ab-23cd-45ef01ab23cd@mail.com>'
+      })
     })
-  })
+  }
 }))
 
 const makeEmailFake = (): EmailEntity => EmailEntity.create({
@@ -35,7 +37,7 @@ describe('NodemailerAdapter', () => {
   describe('success', () => {
     it('calls nodemailer.createTransport with correct params', async () => {
       const { sut, emailFake } = makeSut()
-      const createTransportSpy = jest.spyOn(nodemailer, 'createTransport')
+      const createTransportSpy = vi.spyOn(nodemailer, 'createTransport')
 
       await sut.send(emailFake)
 
@@ -43,16 +45,16 @@ describe('NodemailerAdapter', () => {
         host: process.env.EMAIL_HOST,
         port: parseInt(process.env.EMAIL_PORT),
         auth: {
-          pass: process.env.EMAIL_USERNAME,
-          user: process.env.EMAIL_PASSWORD
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD
         }
       })
     })
 
     it('calls nodemailer.sendMail with correct params', async () => {
       const { sut, emailFake } = makeSut()
-      const sendMailMock = jest.fn()
-      jest.spyOn(nodemailer, 'createTransport').mockImplementationOnce(() => ({
+      const sendMailMock = vi.fn()
+      vi.spyOn(nodemailer, 'createTransport').mockImplementationOnce(() => ({
         sendMail: sendMailMock
       }) as any)
 
@@ -78,7 +80,7 @@ describe('NodemailerAdapter', () => {
   describe('failure', () => {
     it('returns Left when send throws', async () => {
       const { sut, emailFake } = makeSut()
-      jest.spyOn(nodemailer, 'createTransport').mockImplementationOnce(jest.fn())
+      vi.spyOn(nodemailer, 'createTransport').mockImplementationOnce(vi.fn() as any)
 
       const result = await sut.send(emailFake)
 
@@ -87,7 +89,7 @@ describe('NodemailerAdapter', () => {
 
     it('returns an error when send throws', async () => {
       const { sut, emailFake } = makeSut()
-      jest.spyOn(nodemailer, 'createTransport').mockImplementationOnce(jest.fn())
+      vi.spyOn(nodemailer, 'createTransport').mockImplementationOnce(vi.fn() as any)
 
       const result = await sut.send(emailFake)
 

@@ -5,21 +5,27 @@ export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: ['test2/**/*.test.ts'],
-    exclude: [
-      // 'test2/core/3.infra/persistence/**/*.test.ts',
-      'test2/core/3.infra/validators/**/*.test.ts',
-      'test2/modules/user/1.application/use-cases/**/*.test.ts',
-      // 'test2/modules/user/3.infra/**/*.test.ts',
-    ],
+    include: ['test/**/*.test.ts'],
     globalSetup: 'vitest.setup.ts',
+    threads: false,
+    watch: false,
     silent: true,
     logHeapUsage: true,
     coverage: {
-      provider: 'istanbul'
+      include: ['src/**/*.ts'],
+      exclude: [
+        'src/**/4.main/**',
+        'src/**/persistence/**/entities/**',
+        'src/**/persistence/**/migrations/**',
+        'src/**/data-sources/**',
+        'src/**/auth-middleware.ts',
+      ],
+      provider: 'istanbul',
+      reporter: ['text-summary', 'html', 'lcov'],
+      statements: 100
     },
     deps: {
-      inline: ["typeorm"]
+      inline: ['typeorm']
     }
   },
   resolve: {
@@ -27,10 +33,10 @@ export default defineConfig({
       '@/core': 'src/core',
       '@/communication': 'src/modules/communication',
       '@/user': 'src/modules/user'
-    },
+    }
   },
   esbuild: false,
   plugins: [
     Swc()
-  ],
+  ]
 })

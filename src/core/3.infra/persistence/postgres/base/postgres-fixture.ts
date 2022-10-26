@@ -17,7 +17,6 @@ export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
   private async createPostgresFixture <N extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
     const { createDefault, repositoryName } = this.props
     const repository = await persistence.postgres.client.getRepository(repositoryName)
-    // console.log('repository >>>', repository)
 
     if (typeof entityOrEntitiesOrAmount === 'number') {
       const entities: T[] = []
@@ -26,22 +25,22 @@ export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
         entities.push(repository.create(createDefault()))
       }
 
-      // await persistence.postgres.client.manager.save(entities)
+      await persistence.postgres.client.manager.save(entities)
 
-      // return entities
+      return entities
     }
 
-    // if (!Array.isArray(entityOrEntitiesOrAmount)) {
-    //   const entity = repository.create({ ...createDefault(), ...entityOrEntitiesOrAmount })
-    //   await persistence.postgres.client.manager.save(entity)
+    if (!Array.isArray(entityOrEntitiesOrAmount)) {
+      const entity = repository.create({ ...createDefault(), ...entityOrEntitiesOrAmount })
+      await persistence.postgres.client.manager.save(entity)
 
-    //   return entity
-    // }
+      return entity
+    }
 
-    // const entities = entityOrEntitiesOrAmount.map(entity => repository.create({ ...createDefault(), ...entity }))
-    // await persistence.postgres.client.manager.save(entities)
+    const entities = entityOrEntitiesOrAmount.map(entity => repository.create({ ...createDefault(), ...entity }))
+    await persistence.postgres.client.manager.save(entities)
 
-    // return entities
+    return entities
   }
 
   async createFixture (entity: Partial<T>): Promise<T> {

@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import Ajv from 'ajv'
+
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { AjvAdapter } from '@/core/3.infra/validators/ajv/ajv-adapter'
+
+vi.mock('ajv', () => ({
+  default: vi.fn(() => ({
+    compile: vi.fn(() => vi.fn(() => true))
+  }))
+}))
 
 const makeErrorFake = (): DomainError => {
   class ErrorFake extends DomainError {
@@ -17,11 +25,6 @@ type SutTypes = {
   errorFake: DomainError
 }
 
-type SutMockedTypes = SutTypes & {
-  compile: jest.Mock
-  validate: jest.Mock
-}
-
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake()
@@ -31,33 +34,16 @@ const makeSut = (): SutTypes => {
   return { sut, ...doubles }
 }
 
-const makeSutMocked = (): SutMockedTypes => {
-  const validate = jest.fn()
-  const compile = jest.fn(() => validate)
-  const fakes = {
-    errorFake: makeErrorFake(),
-    compile,
-    validate
-  }
-  jest.mock('ajv', () => jest.fn().mockImplementation(() => ({ compile })))
-  const { AjvAdapter } = require('@/core/3.infra/validators/ajv/ajv-adapter')
-  const sut = new AjvAdapter()
-
-  return { sut, ...fakes }
-}
-
 describe('AjvAdapter', () => {
-  beforeEach(() => {
-    jest.resetModules()
-  })
-
   describe('success', () => {
     it('calls ajv.compile with correct params', async () => {
-      const { sut, compile } = makeSutMocked()
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const compile = vi.fn()
+      vi.mocked(Ajv).mockImplementationOnce(() => ({ compile } as any))
 
       await sut.validate(fakeRequest, schema)
 
@@ -65,11 +51,15 @@ describe('AjvAdapter', () => {
     })
 
     it('calls ajv.validate with correct params', async () => {
-      const { sut, validate } = makeSutMocked()
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const validate = vi.fn()
+      vi.mocked(Ajv).mockImplementationOnce(() => ({
+        compile: vi.fn(() => validate)
+      } as any))
 
       await sut.validate(fakeRequest, schema)
 
@@ -129,6 +119,22 @@ describe('AjvAdapter', () => {
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      vi.mocked(Ajv).mockImplementationOnce(() => ({
+        compile: vi.fn(() => {
+          const validate = (): boolean => false
+          validate.errors = [{
+            instancePath: '/anyKey',
+            keyword: 'type',
+            message: 'must be number',
+            params: {
+              type: 'number'
+            },
+            schemaPath: '#/properties/anyKey/type'
+          }]
+
+          return validate
+        })
+      } as any))
 
       const result = await sut.validate(fakeRequest, schema)
 
@@ -149,12 +155,13 @@ describe('AjvAdapter', () => {
 
   describe('failure', () => {
     it('returns Left when compile throws', async () => {
-      const { sut, compile } = makeSutMocked()
-      compile.mockImplementation(() => { throw new Error() })
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const compile = vi.fn(() => { throw new Error() })
+      vi.mocked(Ajv).mockImplementationOnce(() => ({ compile } as any))
 
       const result = await sut.validate(fakeRequest, schema)
 
@@ -162,12 +169,13 @@ describe('AjvAdapter', () => {
     })
 
     it('returns an error when compile throws', async () => {
-      const { sut, compile } = makeSutMocked()
-      compile.mockImplementation(() => { throw new Error() })
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const compile = vi.fn(() => { throw new Error() })
+      vi.mocked(Ajv).mockImplementationOnce(() => ({ compile } as any))
 
       const result = await sut.validate(fakeRequest, schema)
 
@@ -175,12 +183,15 @@ describe('AjvAdapter', () => {
     })
 
     it('returns Left when validate throws', async () => {
-      const { sut, validate } = makeSutMocked()
-      validate.mockImplementation(() => { throw new Error() })
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const validate = vi.fn(() => { throw new Error() })
+      vi.mocked(Ajv).mockImplementationOnce(() => ({
+        compile: validate
+      } as any))
 
       const result = await sut.validate(fakeRequest, schema)
 
@@ -188,12 +199,15 @@ describe('AjvAdapter', () => {
     })
 
     it('returns an error when validate throws', async () => {
-      const { sut, validate } = makeSutMocked()
-      validate.mockImplementation(() => { throw new Error() })
+      const { sut } = makeSut()
       const schema = 'any_schema'
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
+      const validate = vi.fn(() => { throw new Error() })
+      vi.mocked(Ajv).mockImplementationOnce(() => ({
+        compile: validate
+      } as any))
 
       const result = await sut.validate(fakeRequest, schema)
 

@@ -6,21 +6,21 @@ import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 
 const makeAuthStub = (): Controller => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+  handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
 })
 
 const makeControllerStub = (): Controller => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+  handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
 })
 
 const makeMiddlewareStub = (): Middleware => ({
-  handle: jest.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
+  handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
@@ -177,7 +177,7 @@ describe('ExpressAdapter', () => {
 
     it('returns Right when listen succeeds', () => {
       const { sut } = makeSut()
-      jest.spyOn(sut.app, 'listen').mockReturnValueOnce(null)
+      vi.spyOn(sut.app, 'listen').mockReturnValueOnce(null)
       const port = 0
 
       const result = sut.listen(port)
@@ -189,7 +189,7 @@ describe('ExpressAdapter', () => {
   describe('failure', () => {
     it('returns Left when setApiSpecification throws', () => {
       const { sut } = makeSut()
-      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+      vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
       })
       const path = 'any_path'
@@ -202,7 +202,7 @@ describe('ExpressAdapter', () => {
 
     it('returns Left when setContentType throws', () => {
       const { sut } = makeSut()
-      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+      vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
       })
       const type = 'any_type'
@@ -214,7 +214,7 @@ describe('ExpressAdapter', () => {
 
     it('returns Left when setHeaders throws', () => {
       const { sut } = makeSut()
-      jest.spyOn(sut.app, 'use').mockImplementationOnce(() => {
+      vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
       })
       const headers = [{ field: 'any_field', value: 'any_value' }]
@@ -226,7 +226,7 @@ describe('ExpressAdapter', () => {
 
     it('returns Left when setRouter throws', () => {
       const { sut, controller } = makeSut()
-      jest.spyOn(sut.app, 'get').mockImplementationOnce(() => {
+      vi.spyOn(sut.app, 'get').mockImplementationOnce(() => {
         throw new Error()
       })
 
@@ -246,7 +246,7 @@ describe('ExpressAdapter', () => {
 
     it('returns Left when listen throws', () => {
       const { sut } = makeSut()
-      jest.spyOn(sut.app, 'listen').mockImplementationOnce(() => {
+      vi.spyOn(sut.app, 'listen').mockImplementationOnce(() => {
         throw new Error()
       })
       const port = 0

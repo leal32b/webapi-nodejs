@@ -1,13 +1,16 @@
 import { MongoClient } from 'mongodb'
 
+import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { MongodbClient, MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 
+const NODE_ENV = getVar('NODE_ENV')
+
 const mongoClientMock: MongoClient = ({
-  db: jest.fn(() => ({
-    collection: jest.fn(() => 'any_collection'),
-    dropDatabase: jest.fn()
+  db: vi.fn(() => ({
+    collection: vi.fn(() => 'any_collection'),
+    dropDatabase: vi.fn()
   })),
-  close: jest.fn()
+  close: vi.fn()
 }) as any
 
 type SutTypes = {
@@ -24,13 +27,17 @@ const makeSut = async (): Promise<SutTypes> => {
   const sut = new MongodbClient({
     dataSource: dataSourceFake
   })
-  jest.spyOn(MongoClient, 'connect').mockResolvedValueOnce(mongoClientMock as never)
+  vi.spyOn(MongoClient, 'connect').mockResolvedValueOnce(mongoClientMock as never)
   await sut.connect()
 
   return { sut, mongoClientMock }
 }
 
 describe('MongodbAdapter', () => {
+  afterEach(() => {
+    setVar('NODE_ENV', NODE_ENV)
+  })
+
   describe('success', () => {
     it('gets collection', async () => {
       const { sut } = await makeSut()
@@ -50,20 +57,18 @@ describe('MongodbAdapter', () => {
 
     it('returns Left on clearDatabase when not in test environment', async () => {
       const { sut } = await makeSut()
-      process.env.NODE_ENV = 'any_environment'
+      setVar('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
-      process.env.NODE_ENV = 'test'
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns an Error on clearDatabase when not in test environment', async () => {
       const { sut } = await makeSut()
-      process.env.NODE_ENV = 'any_environment'
+      setVar('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
-      process.env.NODE_ENV = 'test'
 
       expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
     })
@@ -72,7 +77,7 @@ describe('MongodbAdapter', () => {
   describe('failure', () => {
     it('returns Left when close throws', async () => {
       const { sut, mongoClientMock } = await makeSut()
-      jest.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
+      vi.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
 
       const result = await sut.close()
 
@@ -81,7 +86,7 @@ describe('MongodbAdapter', () => {
 
     it('returns Left when clearDatabase throws', async () => {
       const { sut, mongoClientMock } = await makeSut()
-      jest.spyOn(mongoClientMock, 'db').mockResolvedValueOnce(null as never)
+      vi.spyOn(mongoClientMock, 'db').mockResolvedValueOnce(null as never)
 
       const result = await sut.clearDatabase()
 
@@ -95,7 +100,7 @@ describe('MongodbAdapter', () => {
         database: 'any_database',
         connectionString: 'invalid_connectionString'
       }
-      jest.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
+      vi.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
       const mongodbClient = new MongodbClient({ dataSource })
 
       const result = await mongodbClient.connect()

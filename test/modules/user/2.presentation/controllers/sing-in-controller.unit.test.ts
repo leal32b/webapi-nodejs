@@ -28,7 +28,7 @@ const makeRequestFake = (): AppRequest<AuthenticateUserData> => ({
 })
 
 const makeAuthenticateUserUseCaseStub = (): AuthenticateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], AuthenticateUserResultDTO>> => right({
+  execute: vi.fn(async (): Promise<Either<DomainError[], AuthenticateUserResultDTO>> => right({
     accessToken: 'access_token',
     message: 'user authenticated successfully'
   }))
@@ -92,7 +92,7 @@ describe('SignInController', () => {
   describe('failure', () => {
     it('returns 401 when invalid credentials are provided', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -101,7 +101,7 @@ describe('SignInController', () => {
 
     it('returns error in body when invalid credentials are provided', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -114,7 +114,7 @@ describe('SignInController', () => {
 
     it('returns 500 when anything throws', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+      vi.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -123,7 +123,7 @@ describe('SignInController', () => {
 
     it('returns ServerError in body when anything throws', async () => {
       const { sut, authenticateUserUseCase, systemErrorFake, requestFake } = makeSut()
-      jest.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+      vi.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
 
       const result = await sut.handle(requestFake)
 

@@ -33,15 +33,15 @@ const makeChangePasswordDataFake = (): ChangePasswordData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right())
+  create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
+  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
+  readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: jest.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
+  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
+  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 type SutTypes = {
@@ -114,7 +114,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when UserRepository.readById fails', async () => {
       const { sut, userRepository, errorFake, changePasswordDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readById').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(userRepository, 'readById').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
@@ -123,7 +123,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns NotFoundError when userRepository.readById returns null', async () => {
       const { sut, userRepository, changePasswordDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readById').mockResolvedValueOnce(right())
+      vi.spyOn(userRepository, 'readById').mockResolvedValueOnce(right())
 
       const result = await sut.execute(changePasswordDataFake)
 
@@ -132,7 +132,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when Hasher.hash fails', async () => {
       const { sut, hasher, errorFake, changePasswordDataFake } = makeSut()
-      jest.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(changePasswordDataFake)
 
@@ -141,8 +141,9 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when Password.create fails', async () => {
       const { sut, errorFake, changePasswordDataFake } = makeSut()
-      jest.spyOn(Password, 'create').mockReturnValueOnce(right(Password.create('any_password').value as Password))
-      jest.spyOn(Password, 'create').mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(Password, 'create')
+        .mockReturnValueOnce(right(Password.create('any_password').value as Password))
+        .mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
@@ -151,7 +152,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when UserRepository.update fails', async () => {
       const { sut, userRepository, errorFake, changePasswordDataFake } = makeSut()
-      jest.spyOn(userRepository, 'update').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(userRepository, 'update').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
