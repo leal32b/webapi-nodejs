@@ -16,7 +16,7 @@ const makeEmailFake = (): EmailEntity => EmailEntity.create({
   from: 'sender@mail.com',
   to: 'recipient@mail.com',
   subject: 'any_subject',
-  text: 'any_text'
+  html: '<p>any_text</p>'
 }).value as EmailEntity
 
 type SutTypes = {
@@ -49,7 +49,7 @@ describe('NodemailerAdapter', () => {
       })
     })
 
-    it('calls nodemailer.createTransport with correct params', async () => {
+    it('calls nodemailer.sendMail with correct params', async () => {
       const { sut, emailFake } = makeSut()
       const sendMailMock = jest.fn()
       jest.spyOn(nodemailer, 'createTransport').mockImplementationOnce(() => ({
@@ -62,7 +62,7 @@ describe('NodemailerAdapter', () => {
         from: 'sender@mail.com',
         to: 'recipient@mail.com',
         subject: 'any_subject',
-        text: 'any_text'
+        html: '<p>any_text</p>'
       })
     })
 
