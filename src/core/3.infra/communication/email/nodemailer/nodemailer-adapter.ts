@@ -14,9 +14,8 @@ export class NodemailerAdapter implements EmailSender {
         from: email.from.value,
         to: email.to.value,
         subject: email.subject.value,
-        text: email.text.value
+        html: email.html.value
       })
-
       console.log(`Email sent: ${info.messageId as string}`)
 
       return right()

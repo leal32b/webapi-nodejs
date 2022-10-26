@@ -13,7 +13,7 @@ export class UserCreatedHandler extends Handler {
   }
 
   setupSubscriptions (): void {
-    DomainEvents.register(this.onUserCreatedEvent.bind(this), UserCreatedEvent.name)
+    DomainEvents.register(UserCreatedEvent.name, this.onUserCreatedEvent.bind(this))
   }
 
   private async onUserCreatedEvent (event: UserCreatedEvent): Promise<void> {

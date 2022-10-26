@@ -27,10 +27,9 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
   }) { super() }
 
   async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
-    const { userRepository } = this.props
     const { email, password } = authenticateUserData
 
-    const userAggregateOrError = await this.getUserAggregate(email)
+    const userAggregateOrError = await this.readUserAggregate(email)
 
     if (userAggregateOrError.isLeft()) {
       return left(userAggregateOrError.value)
@@ -51,8 +50,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     }
 
     const token = tokenOrError.value
-    userAggregate.token = token
-    const updatedOrError = await userRepository.update(userAggregate)
+    const updatedOrError = await this.updateUserAggregate(userAggregate, token)
 
     if (updatedOrError.isLeft()) {
       return left(updatedOrError.value)
@@ -64,7 +62,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     })
   }
 
-  private async getUserAggregate (email: string): Promise<Either<DomainError[], UserAggregate>> {
+  private async readUserAggregate (email: string): Promise<Either<DomainError[], UserAggregate>> {
     const { userRepository } = this.props
     const userAggregateOrError = await userRepository.readByEmail(email)
 
@@ -120,5 +118,18 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     }
 
     return right(tokenOrError.value)
+  }
+
+  private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], UserAggregate>> {
+    const { userRepository } = this.props
+
+    userAggregate.token = token
+    const updatedUserOrError = await userRepository.update(userAggregate)
+
+    if (updatedUserOrError.isLeft()) {
+      return left(updatedUserOrError.value)
+    }
+
+    return right()
   }
 }
