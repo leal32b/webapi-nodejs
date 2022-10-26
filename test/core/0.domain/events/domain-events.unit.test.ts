@@ -44,7 +44,7 @@ describe('DomainEvents', () => {
       const { sut, aggregateFake, handlerFake } = makeSut()
       sut.markAggregateForDispatch(aggregateFake)
 
-      sut.register(handlerFake, UserCreatedEvent.name)
+      sut.register(UserCreatedEvent.name, handlerFake)
       const result = sut.handlers
 
       expect(result).toEqual({ UserCreatedEvent: expect.any(Array) })
@@ -81,7 +81,7 @@ describe('DomainEvents', () => {
     it('dispatches events for aggregate', () => {
       const { sut, aggregateFake, handlerFunction, handlerFake } = makeSut()
       sut.markAggregateForDispatch(aggregateFake)
-      sut.register(handlerFake, UserCreatedEvent.name)
+      sut.register(UserCreatedEvent.name, handlerFake)
 
       sut.dispatchEventsForAggregate(aggregateFake.id)
 
@@ -121,7 +121,7 @@ describe('DomainEvents', () => {
     it('clears handlers', () => {
       const { sut, aggregateFake, handlerFake } = makeSut()
       sut.markAggregateForDispatch(aggregateFake)
-      sut.register(handlerFake, UserCreatedEvent.name)
+      sut.register(UserCreatedEvent.name, handlerFake)
 
       sut.clearHandlers()
       const result = sut.handlers

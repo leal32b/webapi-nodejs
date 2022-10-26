@@ -31,13 +31,13 @@ export class DomainEvents {
     this.markedAggregates.splice(index, 1)
   }
 
-  static register (callback: (event: DomainEvent<any>) => void, eventClassName: string): void {
-    if (!this.handlers[eventClassName]) {
-      this.handlers[eventClassName] = []
+  static register (eventName: string, callback: (event: DomainEvent<any>) => void): void {
+    if (!this.handlers[eventName]) {
+      this.handlers[eventName] = []
     }
 
-    this.handlers[eventClassName].push(callback)
-    console.log(`handler for ${eventClassName}`)
+    this.handlers[eventName].push(callback)
+    console.log(`${eventName} registered`)
   }
 
   static markAggregateForDispatch (aggregate: AggregateRoot<any>): void {
