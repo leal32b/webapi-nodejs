@@ -11,6 +11,7 @@ export default defineConfig({
     watch: false,
     silent: true,
     logHeapUsage: true,
+    passWithNoTests: true,
     coverage: {
       include: ['src/**/*.ts'],
       exclude: [
