@@ -1,36 +1,29 @@
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Identifier } from '@/core/0.domain/utils/identifier'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-
-const makeAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
 
 type PayloadFake = {
   anyKey: string
 }
 
-class EventFake extends DomainEvent<PayloadFake> {}
+class DomainEventFake extends DomainEvent<PayloadFake> {
+  public static create (): DomainEventFake {
+    return new DomainEventFake({
+      aggregateId: Identifier.create(),
+      payload: {
+        anyKey: 'any_value'
+      }
+    })
+  }
+}
 
 type SutTypes = {
-  sut: EventFake
-  aggregateFake: UserAggregate
+  sut: DomainEventFake
 }
 
 const makeSut = (): SutTypes => {
-  const aggregateFake = makeAggregateFake()
-  const sut = new EventFake({
-    aggregateId: aggregateFake.id,
-    payload: {
-      anyKey: 'any_value'
-    }
-  })
+  const sut = DomainEventFake.create()
 
-  return { sut, aggregateFake }
+  return { sut }
 }
 
 describe('DomainEvent', () => {

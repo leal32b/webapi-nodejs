@@ -8,7 +8,7 @@ type ConstructorParams<T> = {
 export abstract class DomainEvent<T> {
   private readonly _createdAt: Date
 
-  constructor (private readonly props: ConstructorParams<T>) {
+  protected constructor (private readonly props: ConstructorParams<T>) {
     this._createdAt = new Date()
   }
 

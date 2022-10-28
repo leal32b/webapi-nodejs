@@ -7,17 +7,17 @@ type Params = {
   [key: string]: Either<DomainError[], ValueObject<any>>
 }
 
-export abstract class Entity<T> {
-  protected readonly props: T & { id: Identifier }
+export abstract class Entity<ConstructParamsType> {
+  protected readonly props: ConstructParamsType & { id: Identifier }
 
-  constructor (props: T, id?: string) {
+  protected constructor (props: ConstructParamsType, id?: string) {
     this.props = {
       ...props,
-      id: new Identifier({ id })
+      id: Identifier.create({ id })
     }
   }
 
-  static validateParams <T>(params: Params): Either<DomainError[], T> {
+  static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
     const errors = Object.values(params)
       .map(param => param.isLeft() ? param.value : [])
       .reduce((acc, curVal) => acc.concat(curVal))
@@ -31,6 +31,6 @@ export abstract class Entity<T> {
         .map(([param, result]) => [param, result.value])
     )
 
-    return right(validatedParams as T)
+    return right(validatedParams as ParamsType)
   }
 }
