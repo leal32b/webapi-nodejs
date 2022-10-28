@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { DomainError } from '@/core/0.domain/base/domain-error'
+import { getVar } from '@/core/0.domain/utils/var'
 import { NodemailerAdapter } from '@/core/3.infra/communication/email/nodemailer/nodemailer-adapter'
 
 vi.mock('nodemailer', () => ({
@@ -42,11 +43,11 @@ describe('NodemailerAdapter', () => {
       await sut.send(emailFake)
 
       expect(createTransportSpy).toHaveBeenCalledWith({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT),
+        host: getVar('EMAIL_HOST'),
+        port: parseInt(getVar('EMAIL_PORT')),
         auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD
+          user: getVar('EMAIL_USERNAME'),
+          pass: getVar('EMAIL_PASSWORD')
         }
       })
     })

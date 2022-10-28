@@ -1,5 +1,6 @@
 import { serve, setup } from 'swagger-ui-express'
 
+import { getVar } from '@/core/0.domain/utils/var'
 import { emailTakenSchema } from '@/core/3.infra/documentation/api-specification/schemas/email-taken-schema'
 import { invalidPasswordSchema } from '@/core/3.infra/documentation/api-specification/schemas/invalid-password-schema'
 import { invalidSchemaSchema } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
@@ -28,7 +29,7 @@ const swaggerConfig = {
   },
   servers: [{
     url: '/api',
-    description: process.env.NODE_ENV
+    description: getVar('NODE_ENV')
   }],
   tags: [{
     name: 'user'

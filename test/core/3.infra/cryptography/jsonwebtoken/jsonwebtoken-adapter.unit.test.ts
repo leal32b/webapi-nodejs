@@ -61,7 +61,6 @@ describe('JsonwebtokenAdapter', () => {
   describe('success', () => {
     it('calls encrypt with correct params', async () => {
       const { sut, dataFake } = makeSut()
-      // const signSpy = vi.spyOn(jwt, 'sign')
       const signSpy = vi.spyOn(vi.mocked(jwt), 'sign')
 
       await sut.encrypt(dataFake)
