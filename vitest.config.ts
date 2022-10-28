@@ -16,10 +16,10 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: [
         'src/**/4.main/**',
-        'src/**/persistence/**/entities/**',
-        'src/**/persistence/**/migrations/**',
-        'src/**/data-sources/**',
         'src/**/auth-middleware.ts',
+        'src/**/data-sources/**',
+        'src/**/persistence/**/entities/**',
+        'src/**/persistence/**/migrations/**'
       ],
       provider: 'istanbul',
       reporter: ['text-summary', 'html', 'lcov'],
