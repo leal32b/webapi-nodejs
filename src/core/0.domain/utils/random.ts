@@ -17,19 +17,23 @@ const defaultOptions = {
 
 export class Random {
   private readonly props: Options
-  private seed: number
+  private _seed: number
 
-  constructor (params?: ConstructParams) {
+  private constructor (params?: ConstructParams) {
     this.props = Object.assign(defaultOptions, params?.options)
-    this.seed = params?.seed || Date.now()
+    this._seed = params?.seed || Date.now()
+  }
+
+  public static create (params?: ConstructParams): Random {
+    return new Random(params)
   }
 
   nextInt (): number {
     const { incrementer, modulus, multiplier } = this.props
 
-    this.seed = (this.seed * multiplier + incrementer) % modulus
+    this._seed = (this._seed * multiplier + incrementer) % modulus
 
-    return this.seed
+    return this._seed
   }
 
   nextDouble (): number {

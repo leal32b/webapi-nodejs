@@ -17,16 +17,20 @@ const defaultOptions = {
 
 export class Identifier {
   private readonly props: Options
-  private readonly random: Random
+  private readonly _random: Random
   private readonly _value: string
 
-  constructor (params?: ConstructParams) {
+  private constructor (params?: ConstructParams) {
     this.props = Object.assign(defaultOptions, params?.options)
-    this.random = new Random()
-    this._value = params?.id || this.create()
+    this._random = Random.create()
+    this._value = params?.id || this.createId()
   }
 
-  private create (): string {
+  public static create (params?: ConstructParams): Identifier {
+    return new Identifier(params)
+  }
+
+  private createId (): string {
     const { length } = this.props
     const id = Array
       .from({ length }, () => this.randomCharacter())
@@ -38,7 +42,7 @@ export class Identifier {
   private randomCharacter (): string {
     const { alphabet } = this.props
 
-    return alphabet[this.random.nextInt() % alphabet.length]
+    return alphabet[this._random.nextInt() % alphabet.length]
   }
 
   get value (): string {

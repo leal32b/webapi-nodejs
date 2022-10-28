@@ -15,16 +15,16 @@ describe('Identifier', () => {
     it('returns an Identifier with a new generated id when none is provided', () => {
       const { sut } = makeSut()
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(result.value).toEqual(expect.any(String))
     })
 
-    it('returns an Identifier with the same provided id when it is provided', () => {
+    it('returns an Identifier with the same provided id', () => {
       const { sut } = makeSut()
       const id = 'any_id'
 
-      const result = new sut({ id })
+      const result = sut.create({ id })
 
       expect(result.value).toBe('any_id')
     })
@@ -33,7 +33,7 @@ describe('Identifier', () => {
       const { sut } = makeSut()
       const id = ''
 
-      const result = new sut({ id })
+      const result = sut.create({ id })
 
       expect(result.value).toEqual(expect.any(String))
     })
@@ -42,7 +42,7 @@ describe('Identifier', () => {
       const { sut } = makeSut()
       const id = null
 
-      const result = new sut({ id })
+      const result = sut.create({ id })
 
       expect(result.value).toEqual(expect.any(String))
     })
@@ -51,7 +51,7 @@ describe('Identifier', () => {
       const { sut } = makeSut()
       const id = undefined
 
-      const result = new sut({ id })
+      const result = sut.create({ id })
 
       expect(result.value).toEqual(expect.any(String))
     })
@@ -60,7 +60,7 @@ describe('Identifier', () => {
       const { sut } = makeSut()
       const regex = /^[a-zA-Z0-9]{24}$/
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(regex.test(result.value)).toBe(true)
     })
@@ -71,7 +71,7 @@ describe('Identifier', () => {
       const length = 6
       const regex = /^[a-c1-3]{6}$/
 
-      const result = new sut({
+      const result = sut.create({
         options: { alphabet, length }
       })
 
