@@ -11,7 +11,7 @@ const makeErrorFake = (): any => ({
 })
 
 const makeSchemaValidatorStub = (): SchemaValidator => ({
-  validate: jest.fn(async (): Promise<Either<Error, SchemaValidatorResult>> => {
+  validate: vi.fn(async (): Promise<Either<Error, SchemaValidatorResult>> => {
     return right({ isValid: true })
   })
 })
@@ -63,7 +63,7 @@ describe('SchemaValidatorMiddleware', () => {
   describe('failure', () => {
     it('returns error and statusCode 500 when schemaValidator.validate fails', async () => {
       const { sut, schemaValidator, errorFake } = makeSut()
-      jest.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         schema: 'any_schema',
         payload: { anyKey: 'any_value' }
@@ -83,7 +83,7 @@ describe('SchemaValidatorMiddleware', () => {
 
     it('returns error and statusCode 422 when schema is invalid', async () => {
       const { sut, schemaValidator, errorFake } = makeSut()
-      jest.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(right({
+      vi.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(right({
         isValid: false,
         errors: [errorFake]
       }))

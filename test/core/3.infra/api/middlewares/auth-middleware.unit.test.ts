@@ -14,8 +14,8 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => right('token')),
-  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => right({
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
+  decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
     type: TokenType.access,
     payload: {
       auth: ['any_role']
@@ -95,7 +95,7 @@ describe('AuthMiddleware', () => {
   describe('failure', () => {
     it('returns error and statusCode 401 when encrypter.decrypt fails', async () => {
       const { sut, encrypter, errorFake } = makeSut()
-      jest.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         accessToken: 'Bearer invalid_token',
         payload: { anyKey: 'any_value' },

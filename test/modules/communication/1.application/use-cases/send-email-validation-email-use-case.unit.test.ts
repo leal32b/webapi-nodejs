@@ -20,7 +20,7 @@ const makeSendEmailValidationEmailDataFake = (): SendEmailValidationEmailData =>
 })
 
 const makeEmailSenderStub = (): EmailSender => ({
-  send: jest.fn(async (): Promise<Either<DomainError, void>> => right())
+  send: vi.fn(async (): Promise<Either<DomainError, void>> => right())
 })
 
 type SutTypes = {
@@ -79,7 +79,7 @@ describe('SendEmailValidationEmailUseCase', () => {
 
     it('returns an Error when EmailSender.send fails', async () => {
       const { sut, emailSender, errorFake, sendEmailValidationEmailDataFake } = makeSut()
-      jest.spyOn(emailSender, 'send').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(emailSender, 'send').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(sendEmailValidationEmailDataFake)
 

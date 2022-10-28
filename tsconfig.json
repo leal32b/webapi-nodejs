@@ -11,11 +11,12 @@
     "baseUrl": ".",
     "rootDir": ".",
     "skipLibCheck": true,
+    "types": ["vitest/globals"],
     "paths": {
       "@/core/*": ["src/core/*"],
-      "@/communication/*": [ "src/modules/communication/*"],
+      "@/communication/*": ["src/modules/communication/*"],
       "@/user/*": ["src/modules/user/*"]
-    },
+    }
   },
   "include": [
     "src/**/*.ts",

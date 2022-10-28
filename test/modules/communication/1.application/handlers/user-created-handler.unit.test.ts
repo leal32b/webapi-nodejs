@@ -24,7 +24,7 @@ class AggregateFake extends AggregateRoot<ConstructParamsFake> {
 }
 
 const makeSendEmailValidationEmailUseCaseStub = (): SendEmailValidationEmailUseCase => ({
-  execute: jest.fn()
+  execute: vi.fn()
 } as any)
 
 type SutTypes = {
@@ -49,7 +49,7 @@ describe('UserCreatedHandler', () => {
   describe('success', () => {
     it('executes SendEmailValidationEmailUseCase on dispatchEventsForAggregate', () => {
       const { aggregateFake, sendEmailValidationEmailUseCase } = makeSut()
-      const executeSpy = jest.spyOn(sendEmailValidationEmailUseCase, 'execute')
+      const executeSpy = vi.spyOn(sendEmailValidationEmailUseCase, 'execute')
 
       DomainEvents.dispatchEventsForAggregate(aggregateFake.id)
 

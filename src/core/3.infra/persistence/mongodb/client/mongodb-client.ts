@@ -1,6 +1,7 @@
 import { MongoClient, Collection } from 'mongodb'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { getVar } from '@/core/0.domain/utils/var'
 import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 export type MongodbDataSource = {
@@ -56,7 +57,9 @@ export class MongodbClient implements PersistenceClient {
   }
 
   async clearDatabase (): Promise<Either<Error, void>> {
-    if (process.env.NODE_ENV !== 'test') {
+    const isTest = getVar('NODE_ENV') === 'test'
+
+    if (!isTest) {
       return left(new Error('Clear database is allowed only in test environment'))
     }
 

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="210"
+   height="200"
+   clip-rule="evenodd"
+   version="1.1"
+   id="svg1122"
+   sodipodi:docname="jscpd.svg"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1126" />
+  <sodipodi:namedview
+     id="namedview1124"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.264"
+     inkscape:cx="60.522152"
+     inkscape:cy="60.522152"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="1440"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1122" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke-width:9.50948"
+     id="rect1550"
+     width="210"
+     height="200"
+     x="0"
+     y="0" />
+  <g
+     id="g1210"
+     transform="translate(-397.47119,-8.9317859)">
+    <g
+       id="g1106">
+      <title
+         transform="translate(398,110) "
+         id="title1100">jscpd</title>
+      <g
+         id="svg_5">
+        <text
+           fill="#007bff"
+           stroke="#000000"
+           stroke-width="0"
+           x="398"
+           y="168.5"
+           id="svg_1"
+           font-size="70px"
+           font-family="'Courier New', Courier, monospace"
+           text-anchor="start"
+           xml:space="preserve"
+           font-weight="normal">js</text>
+        <text
+           fill="#b200b2"
+           stroke="#000000"
+           stroke-width="0"
+           x="476"
+           y="168.5"
+           id="svg_3"
+           font-size="70px"
+           font-family="'Courier New', Courier, monospace"
+           text-anchor="start"
+           xml:space="preserve"
+           font-weight="normal">cpd</text>
+        <!--<text fill="#c0c0c0" stroke="#000" stroke-width="0" x="545" y="180.5" id="version" font-size="10" font-family="'Courier New', Courier, monospace" text-anchor="start" xml:space="preserve">v1.0.0</text>-->
+        <text
+           font-weight="normal"
+           xml:space="preserve"
+           text-anchor="start"
+           font-family="'Courier New', Courier, monospace"
+           font-size="15px"
+           id="svg_2"
+           y="200"
+           x="420"
+           stroke-width="0"
+           stroke="#000000"
+           fill="#b2b2b2">Copy/Paste Detector</text>
+      </g>
+    </g>
+    <rect
+       stroke="#000000"
+       id="svg_4"
+       height="78"
+       width="105"
+       y="38.437496"
+       x="451.50781"
+       stroke-width="0"
+       fill="#666666" />
+    <rect
+       stroke="#000000"
+       id="svg_7"
+       height="66"
+       width="92.999992"
+       y="44.4375"
+       x="457.50781"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#f0f0f0" />
+    <rect
+       stroke="#000000"
+       id="svg_11"
+       height="4"
+       width="39"
+       y="54.4375"
+       x="465.5"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#007bff" />
+    <rect
+       stroke="#000000"
+       id="svg_13"
+       height="4"
+       width="59"
+       y="64.4375"
+       x="477.5"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#b200b2" />
+    <rect
+       stroke="#000000"
+       id="svg_14"
+       height="4"
+       width="45.999996"
+       y="76.4375"
+       x="480.5"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#ffaa56" />
+    <rect
+       stroke="#000000"
+       id="svg_15"
+       height="4"
+       width="45.999996"
+       y="88.4375"
+       x="469.5"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#b2b2b2" />
+    <rect
+       stroke="#000000"
+       id="svg_16"
+       height="4"
+       width="64"
+       y="100.4375"
+       x="467.5"
+       stroke-opacity="null"
+       stroke-width="0"
+       fill="#00dd00" />
+    <rect
+       stroke-width="0"
+       transform="rotate(-32.232784)"
+       stroke="#000000"
+       id="svg_18"
+       height="28"
+       width="5"
+       y="259.13425"
+       x="377.3623"
+       stroke-opacity="null"
+       fill="#666666" />
+    <rect
+       stroke-width="0"
+       transform="rotate(29.680899)"
+       stroke="#000000"
+       id="svg_19"
+       height="28"
+       width="5"
+       y="-226.97475"
+       x="428.60376"
+       stroke-opacity="null"
+       fill="#666666" />
+  </g>
+</svg>

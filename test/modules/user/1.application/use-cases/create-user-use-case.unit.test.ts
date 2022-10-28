@@ -28,20 +28,20 @@ const makeCreateUserDataFake = (): CreateUserData => ({
 })
 
 const makeUserRepositoryStub = (): UserRepository => ({
-  create: jest.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readByEmail: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  readById: jest.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  update: jest.fn(async (): Promise<Either<DomainError[], void>> => right())
+  create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
+  readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: jest.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: jest.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
+  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
+  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: jest.fn(async (): Promise<Either<DomainError, string>> => right('token')),
-  decrypt: jest.fn(async (): Promise<Either<DomainError, any>> => right({
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
+  decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
     type: TokenType.access,
     payload: {
       anyKey: 'any_value'
@@ -109,7 +109,7 @@ describe('CreateUserUseCase', () => {
 
     it('calls DomainEvents.dispatchEventsForAggregate with correct params', async () => {
       const { sut, createUserDataFake } = makeSut()
-      const dispatchEventsForAggregateSpy = jest.spyOn(DomainEvents, 'dispatchEventsForAggregate')
+      const dispatchEventsForAggregateSpy = vi.spyOn(DomainEvents, 'dispatchEventsForAggregate')
 
       await sut.execute(createUserDataFake)
 
@@ -131,7 +131,7 @@ describe('CreateUserUseCase', () => {
   describe('failure', () => {
     it('returns an Error when UserRepository fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 
@@ -140,7 +140,7 @@ describe('CreateUserUseCase', () => {
 
     it('returns EmailTakenError when email is already in use', async () => {
       const { sut, userRepository, createUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(
+      vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(
         right(UserAggregate.create({
           ...makeCreateUserDataFake(),
           id: 'any_id',
@@ -163,7 +163,7 @@ describe('CreateUserUseCase', () => {
 
     it('returns an Error when Hasher.hash fails', async () => {
       const { sut, hasher, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(createUserDataFake)
 
@@ -172,7 +172,7 @@ describe('CreateUserUseCase', () => {
 
     it('returns an Error when Encrypter.encrypt fails', async () => {
       const { sut, encrypter, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
+      vi.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(createUserDataFake)
 
@@ -189,7 +189,7 @@ describe('CreateUserUseCase', () => {
 
     it('returns an Error when UserRepository.create fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
-      jest.spyOn(userRepository, 'create').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(userRepository, 'create').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 

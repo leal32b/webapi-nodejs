@@ -1,6 +1,6 @@
 import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
-import { persistence } from '@/core/4.main/container'
+import { persistence } from '@/core/4.main/container/index'
 
 type Props<T> = {
   createDefault: () => T

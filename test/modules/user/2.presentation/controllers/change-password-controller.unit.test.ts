@@ -29,7 +29,7 @@ const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
 })
 
 const makeChangePasswordUseCaseStub = (): ChangePasswordUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => right({
+  execute: vi.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => right({
     message: 'password updated successfully'
   }))
 } as any)
@@ -92,7 +92,7 @@ describe('ChangePasswordController', () => {
   describe('failure', () => {
     it('returns 400 when passwords do not match', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -101,7 +101,7 @@ describe('ChangePasswordController', () => {
 
     it('returns error in body when invalid params are provided', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -114,7 +114,7 @@ describe('ChangePasswordController', () => {
 
     it('returns 500 when anything throws', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+      vi.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -123,7 +123,7 @@ describe('ChangePasswordController', () => {
 
     it('returns ServerError in body when anything throws', async () => {
       const { sut, changePasswordUseCase, systemErrorFake, requestFake } = makeSut()
-      jest.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+      vi.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
 
       const result = await sut.handle(requestFake)
 

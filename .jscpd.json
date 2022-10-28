@@ -1,0 +1,7 @@
+{
+  "pattern": "src/**/*.ts",
+  "ignore": [
+    "**/*-schema.ts"
+  ],
+  "threshold": 2.85
+}

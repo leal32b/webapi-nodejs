@@ -30,7 +30,7 @@ const makeRequestFake = (): AppRequest<CreateUserData> => ({
 })
 
 const makeCreateUserUseCaseStub = (): CreateUserUseCase => ({
-  execute: jest.fn(async (): Promise<Either<DomainError[], CreateUserResultDTO>> => right({
+  execute: vi.fn(async (): Promise<Either<DomainError[], CreateUserResultDTO>> => right({
     email: 'any@mail.com',
     message: 'user created successfully'
   }))
@@ -96,7 +96,7 @@ describe('SignUpController', () => {
   describe('failure', () => {
     it('returns 400 when CreateUserUseCase returns any error', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -105,7 +105,7 @@ describe('SignUpController', () => {
 
     it('returns error in body when CreateUserUseCase returns errors', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -118,7 +118,7 @@ describe('SignUpController', () => {
 
     it('returns 500 when anything throws', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+      vi.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -127,7 +127,7 @@ describe('SignUpController', () => {
 
     it('returns ServerError in body when anything throws', async () => {
       const { sut, createUserUseCase, systemErrorFake, requestFake } = makeSut()
-      jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+      vi.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
 
       const result = await sut.handle(requestFake)
 

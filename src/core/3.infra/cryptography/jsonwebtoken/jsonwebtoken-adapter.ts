@@ -2,11 +2,12 @@ import jwt from 'jsonwebtoken'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { getVar } from '@/core/0.domain/utils/var'
 import { Encrypter, TokenData } from '@/core/1.application/cryptography/encrypter'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 export class JsonwebtokenAdapter implements Encrypter {
-  private readonly secret = process.env.JWT_SECRET
+  private readonly secret = getVar('JWT_SECRET')
 
   async encrypt (data: TokenData, expiresIn: string | number = '1d'): Promise<Either<DomainError, string>> {
     try {

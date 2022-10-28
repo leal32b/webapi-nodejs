@@ -1,3 +1,6 @@
 {
-  "*.ts": ["npm run eslint", "npm run test"]
+  "*.ts": [
+    "npm run eslint", 
+    "npm run test"
+  ]
 }

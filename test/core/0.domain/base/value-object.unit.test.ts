@@ -14,7 +14,7 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeValidatorStub = (): Validator<any> => ({
-  validate: jest.fn((): Either<DomainError, void> => {
+  validate: vi.fn((): Either<DomainError, void> => {
     return right()
   })
 })
@@ -69,7 +69,7 @@ describe('ValueObject', () => {
     it('returns Left when any validator fails', () => {
       const { sut, validator, errorFake } = makeSut()
       const input = 'short'
-      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
 
       const result = sut.validate(input, [validator])
 
@@ -79,7 +79,7 @@ describe('ValueObject', () => {
     it('returns Left when input is an array and any validator fails', () => {
       const { sut, validator, errorFake } = makeSut()
       const input = ['short', 'short']
-      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
 
       const result = sut.validate(input, [validator])
 
@@ -89,7 +89,7 @@ describe('ValueObject', () => {
     it('returns an array of errors when any validator fails', () => {
       const { sut, validator, errorFake } = makeSut()
       const input = 'short'
-      jest.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
 
       const result = sut.validate(input, [validator])
 
