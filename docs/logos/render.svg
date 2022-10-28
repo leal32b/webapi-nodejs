@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   role="img"
+   viewBox="0 0 30 30"
+   version="1.1"
+   id="svg861"
+   sodipodi:docname="render.svg"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   width="30"
+   height="30"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs865" />
+  <sodipodi:namedview
+     id="namedview863"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="13.683254"
+     inkscape:cx="5.7369397"
+     inkscape:cy="10.7796"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="1440"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg861" />
+  <title
+     id="title857">Render</title>
+  <path
+     d="m 16.586001,3.0000167 v 3.172 h -6.063 a 4.528,4.528 0 0 0 -3.0179998,1.305 4.498,4.498 0 0 0 -1.333,2.9900003 v 11.326 h -3.172 v -11.284 a 7.472,7.472 0 0 1 2.204,-5.3050003 7.471,7.471 0 0 1 2.384,-1.615 7.432,7.432 0 0 1 2.9219998,-0.589 z m 5.207,0 v 3.158 h -3.173 v -3.158 z m 5.207,0 v 3.158 h -3.172 v -3.158 z m 0,5.207 v 3.1720003 h -3.172 V 8.2070167 Z m 0,5.2070003 v 3.172 h -3.172 v -3.172 z m 0,5.207 v 3.172 h -3.172 v -3.173 z m 0,5.207 v 3.172 h -3.172 v -3.172 z m -5.207,0 v 3.172 h -3.173 v -3.172 z m -5.207,0 v 3.172 h -3.172 v -3.172 z m -5.207,0 v 3.172 H 8.2070012 v -3.172 z m -5.2209998,0 v 3.172 h -3.158 v -3.172 z"
+     id="path859"
+     style="fill:#46e3b7;fill-opacity:1" />
+  <metadata
+     id="metadata947">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Render</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
