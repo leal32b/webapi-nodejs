@@ -17,7 +17,7 @@ describe('NullError', () => {
       const field = 'any_field'
       const input = null
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(NullError)
     })
@@ -27,7 +27,7 @@ describe('NullError', () => {
       const field = 'any_field'
       const input = null
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result.props).toEqual({
         field: 'any_field',
@@ -41,7 +41,7 @@ describe('NullError', () => {
       const field = 'any_field'
       const input = undefined
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result.props).toEqual({
         message: 'should not be undefined',

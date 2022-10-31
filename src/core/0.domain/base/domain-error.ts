@@ -6,5 +6,5 @@ type ConstructParams = {
 }
 
 export abstract class DomainError {
-  constructor (readonly props: ConstructParams) {}
+  protected constructor (readonly props: ConstructParams) {}
 }

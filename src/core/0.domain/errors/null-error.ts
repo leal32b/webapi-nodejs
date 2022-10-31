@@ -1,8 +1,8 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
 export class NullError extends DomainError {
-  constructor (field: string, input: string) {
-    super({
+  public static create (field: string, input: string): NullError {
+    return new NullError({
       message: `should not be ${input}`,
       field,
       input

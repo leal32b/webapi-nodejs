@@ -17,7 +17,7 @@ describe('InvalidDateError', () => {
       const field = 'any_field'
       const input = 'invalid_date'
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(InvalidDateError)
     })
@@ -27,7 +27,7 @@ describe('InvalidDateError', () => {
       const field = 'any_field'
       const input = 'invalid_date'
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result.props).toEqual({
         field: 'any_field',

@@ -17,7 +17,7 @@ describe('EmptyError', () => {
       const field = 'any_field'
       const input = ''
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(EmptyError)
     })
@@ -27,7 +27,7 @@ describe('EmptyError', () => {
       const field = 'any_field'
       const input = ''
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result.props).toEqual({
         field: 'any_field',
