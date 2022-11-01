@@ -1,37 +1,19 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 
-const makeAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
-
-type PayloadFake = {
-  anyKey: string
-}
-
-const handlerFunction = vi.fn()
-
-const makeHandlerFake = (): (event: DomainEvent<PayloadFake>) => void => handlerFunction
+import { makeAggregateFake } from '~/doubles/fakes/aggregate-fake'
 
 type SutTypes = {
   sut: typeof DomainEvents
-  aggregateFake: UserAggregate
-  handlerFunction: Function
-  handlerFake: (event: DomainEvent<PayloadFake>) => void
+  aggregateFake: AggregateRoot<any>
+  handlerFake: (event: DomainEvent<any>) => void
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
     aggregateFake: makeAggregateFake(),
-    handlerFunction,
-    handlerFake: makeHandlerFake()
+    handlerFake: vi.fn()
   }
   const sut = DomainEvents
 
@@ -41,22 +23,19 @@ const makeSut = (): SutTypes => {
 describe('DomainEvents', () => {
   describe('success', () => {
     it('register callbacks for an eventClassName', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, handlerFake } = makeSut()
 
-      sut.register(UserCreatedEvent.name, handlerFake)
-      const result = sut.handlers
+      sut.register('DomainEventFake', handlerFake)
 
-      expect(result).toEqual({ UserCreatedEvent: expect.any(Array) })
+      expect(sut.handlers).toEqual({ DomainEventFake: expect.any(Array) })
     })
 
     it('marks an aggregate to dispatch', () => {
       const { sut, aggregateFake } = makeSut()
 
       sut.markAggregateForDispatch(aggregateFake)
-      const result = sut.markedAggregates
 
-      expect(result.every(item => item instanceof AggregateRoot)).toBe(true)
+      expect(sut.markedAggregates.every(item => item instanceof AggregateRoot)).toBe(true)
     })
 
     it('returns when there is no aggregate to dispatch events on dispatchEventsForAggregate', () => {
@@ -70,22 +49,22 @@ describe('DomainEvents', () => {
     })
 
     it('returns when there is no handler to execute on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake, handlerFunction } = makeSut()
+      const { sut, aggregateFake, handlerFake } = makeSut()
       sut.clearHandlers()
 
       sut.dispatchEventsForAggregate(aggregateFake.id)
 
-      expect(handlerFunction).not.toBeCalled()
+      expect(handlerFake).not.toBeCalled()
     })
 
     it('dispatches events for aggregate', () => {
-      const { sut, aggregateFake, handlerFunction, handlerFake } = makeSut()
+      const { sut, aggregateFake, handlerFake } = makeSut()
       sut.markAggregateForDispatch(aggregateFake)
-      sut.register(UserCreatedEvent.name, handlerFake)
+      sut.register('DomainEventFake', handlerFake)
 
       sut.dispatchEventsForAggregate(aggregateFake.id)
 
-      expect(handlerFunction).toBeCalled()
+      expect(handlerFake).toBeCalled()
     })
 
     it('removes aggregate from markedAggregates on dispatchEventsForAggregate', () => {
@@ -93,9 +72,8 @@ describe('DomainEvents', () => {
       sut.markAggregateForDispatch(aggregateFake)
 
       sut.dispatchEventsForAggregate(aggregateFake.id)
-      const result = sut.markedAggregates
 
-      expect(result).toEqual([])
+      expect(sut.markedAggregates).toEqual([])
     })
 
     it('calls aggregate.clearEvents on dispatchEventsForAggregate', () => {
@@ -103,9 +81,8 @@ describe('DomainEvents', () => {
       sut.markAggregateForDispatch(aggregateFake)
 
       sut.dispatchEventsForAggregate(aggregateFake.id)
-      const result = aggregateFake.events
 
-      expect(result).toEqual([])
+      expect(aggregateFake.events).toEqual([])
     })
 
     it('clears markedAggregates', () => {
@@ -113,20 +90,18 @@ describe('DomainEvents', () => {
       sut.markAggregateForDispatch(aggregateFake)
 
       sut.clearMarkedAggregates()
-      const result = sut.markedAggregates
 
-      expect(result).toEqual([])
+      expect(sut.markedAggregates).toEqual([])
     })
 
     it('clears handlers', () => {
       const { sut, aggregateFake, handlerFake } = makeSut()
       sut.markAggregateForDispatch(aggregateFake)
-      sut.register(UserCreatedEvent.name, handlerFake)
+      sut.register('DomainEventFake', handlerFake)
 
       sut.clearHandlers()
-      const result = sut.handlers
 
-      expect(result).toEqual({})
+      expect(sut.handlers).toEqual({})
     })
   })
 })

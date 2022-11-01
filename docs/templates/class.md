@@ -45,7 +45,7 @@ public static create (param: ParamType): Example {
 
 ## Methods
 - [ ] Methods grouped by group hierarchy, subgroup hierarchy and alphabetically
-- [ ] Group hierarchy order: `public`, `protected`, `abstract`, `private`, `get`
+- [ ] Group hierarchy order: `public`, `get`, `protected`, `abstract`, `private`, 
 - [ ] Subgroup hierarchy order: `static`, non-static
 - [ ] Types for params and returns
 ```typescript
@@ -53,11 +53,11 @@ public static method1 (param: ParamType): ReturnType {}
 
 public method2 (param: ParamType): ReturnType {}
 
+public get property1 (): ReturnType {}
+
 protected method3 (param: ParamType): ReturnType {}
 
 abstract method4 (param: ParamType): RerunType {}
 
 private method5 (param: ParamType): RerunType {}
-
-get property1 (): ReturnType {}
 ```
