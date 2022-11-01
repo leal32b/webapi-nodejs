@@ -41,5 +41,23 @@ describe('EmailValidation', () => {
     expect(result.isRight()).toBe(false)
     expect(result.value).toEqual(new InvalidEmailError('email', email))
   })
+
+  it('Should return InvalidEmailError if no pass email param', () => {
+    const { sut } = makeSut()
+    const email = null as any
+    const result = sut.build({ email })
+    expect(result.isLeft()).toBe(true)
+    expect(result.isRight()).toBe(false)
+    expect(result.value).toEqual(new InvalidEmailError('email', email))
+  })
+
+  it('Should return EmailValidation instance  if  pass correct email', () => {
+    const { sut, clientParam } = makeSut()
+    const email = clientParam.correct
+    const result = sut.build({ email })
+    expect(result.isLeft()).toBe(false)
+    expect(result.value).toHaveProperty('email')
+    expect(result.value.email).toBe(email)
+  })
 })
 
