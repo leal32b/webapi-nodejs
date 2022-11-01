@@ -6,7 +6,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new NotEmptyValidator()
+  const sut = NotEmptyValidator.create()
 
   return { sut }
 }

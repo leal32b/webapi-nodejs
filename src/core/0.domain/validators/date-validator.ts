@@ -4,15 +4,19 @@ import { InvalidDateError } from '@/core/0.domain/errors/invalid-date-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
 export class DateValidator extends Validator<null> {
-  validate (field: string, input: string): Either<DomainError, void> {
+  public static create (): DateValidator {
+    return new DateValidator()
+  }
+
+  public validate (field: string, input: string): Either<DomainError, void> {
     if (!input) {
-      return left(new InvalidDateError(field, input))
+      return left(InvalidDateError.create(field, input))
     }
 
     const date = new Date(input)
 
     if (isNaN(date.getTime())) {
-      return left(new InvalidDateError(field, input))
+      return left(InvalidDateError.create(field, input))
     }
 
     return right()

@@ -10,7 +10,7 @@ const makeSut = (): SutTypes => {
   const params = {
     minLength: 7
   }
-  const sut = new MinLengthValidator(params)
+  const sut = MinLengthValidator.create(params)
 
   return { sut, ...params }
 }

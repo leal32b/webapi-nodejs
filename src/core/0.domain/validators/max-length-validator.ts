@@ -7,11 +7,15 @@ type Props = {
 }
 
 export class MaxLengthValidator extends Validator<Props> {
-  validate (field: string, input: string): Either<MaxLengthError, void> {
+  public static create (props: Props): MaxLengthValidator {
+    return new MaxLengthValidator(props)
+  }
+
+  public validate (field: string, input: string): Either<MaxLengthError, void> {
     const { maxLength } = this.props
 
     if (input?.length > maxLength) {
-      return left(new MaxLengthError(field, maxLength, input))
+      return left(MaxLengthError.create(field, maxLength, input))
     }
 
     return right()

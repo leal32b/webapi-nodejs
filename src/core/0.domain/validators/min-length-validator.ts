@@ -7,11 +7,15 @@ type Props = {
 }
 
 export class MinLengthValidator extends Validator<Props> {
-  validate (field: string, input: string): Either<MinLengthError, void> {
+  public static create (props: Props): MinLengthValidator {
+    return new MinLengthValidator(props)
+  }
+
+  public validate (field: string, input: string): Either<MinLengthError, void> {
     const { minLength } = this.props
 
     if (!input || input.length < minLength) {
-      return left(new MinLengthError(field, minLength, input))
+      return left(MinLengthError.create(field, minLength, input))
     }
 
     return right()

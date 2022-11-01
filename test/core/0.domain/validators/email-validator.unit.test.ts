@@ -6,7 +6,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new EmailValidator()
+  const sut = EmailValidator.create()
 
   return { sut }
 }
