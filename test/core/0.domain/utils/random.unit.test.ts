@@ -34,13 +34,5 @@ describe('Random', () => {
 
       expect(result).toBe(13)
     })
-
-    it('returns a random double', () => {
-      const { sut } = makeSut()
-
-      const result = sut.nextDouble()
-
-      expect(result % 1).not.toBe(0)
-    })
   })
 })

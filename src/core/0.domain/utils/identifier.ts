@@ -30,6 +30,10 @@ export class Identifier {
     return new Identifier(params)
   }
 
+  public get value (): string {
+    return this._value
+  }
+
   private createId (): string {
     const { length } = this.props
     const id = Array
@@ -43,9 +47,5 @@ export class Identifier {
     const { alphabet } = this.props
 
     return alphabet[this._random.nextInt() % alphabet.length]
-  }
-
-  get value (): string {
-    return this._value
   }
 }

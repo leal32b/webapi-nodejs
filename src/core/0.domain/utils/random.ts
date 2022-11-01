@@ -28,17 +28,11 @@ export class Random {
     return new Random(params)
   }
 
-  nextInt (): number {
+  public nextInt (): number {
     const { incrementer, modulus, multiplier } = this.props
 
     this._seed = (this._seed * multiplier + incrementer) % modulus
 
     return this._seed
-  }
-
-  nextDouble (): number {
-    const { modulus } = this.props
-
-    return this.nextInt() / modulus
   }
 }
