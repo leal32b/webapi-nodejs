@@ -24,5 +24,13 @@ describe('EmailValidation', () => {
     expect(result.isRight()).toBe(false)
     expect(result.value).toEqual(new InvalidEmailError('email', email))
   })
+  it('Should return InvalidEmailError of pass email without @', () => {
+    const { sut, clientParam } = makeSut()
+    const email = clientParam.incorrectTree
+    const result = sut.build({ email })
+    expect(result.isLeft()).toBe(true)
+    expect(result.isRight()).toBe(false)
+    expect(result.value).toEqual(new InvalidEmailError('email', email))
+  })
 })
 
