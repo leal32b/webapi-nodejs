@@ -4,6 +4,10 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 
+export type ConstructParams = {
+  emailSender: EmailSender
+}
+
 export type SendEmailValidationEmailData = {
   recipientEmail: string
   token: string
@@ -13,12 +17,12 @@ export type SendEmailValidationEmailResultDTO = {
   message: string
 }
 
-export class SendEmailValidationEmailUseCase extends UseCase<SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
-  constructor (private readonly props: {
-    emailSender: EmailSender
-  }) { super() }
+export class SendEmailValidationEmailUseCase extends UseCase<ConstructParams, SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
+  public static create (props: ConstructParams): SendEmailValidationEmailUseCase {
+    return new SendEmailValidationEmailUseCase(props)
+  }
 
-  async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
+  public async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
     const { emailSender } = this.props
     const { recipientEmail, token } = sendEmailValidationEmailData
 

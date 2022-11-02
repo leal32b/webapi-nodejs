@@ -17,7 +17,7 @@ export abstract class Entity<ConstructParamsType> {
     }
   }
 
-  static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
+  public static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
     const errors = Object.values(params)
       .map(param => param.isLeft() ? param.value : [])
       .reduce((acc, curVal) => acc.concat(curVal))

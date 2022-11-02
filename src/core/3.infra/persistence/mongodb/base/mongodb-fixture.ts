@@ -2,46 +2,46 @@ import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-th
 import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container/index'
 
-type Props<T> = {
-  createDefault: () => T
+type Props<ReturnType> = {
+  createDefault: () => ReturnType
   collectionName: string
 }
 
-export abstract class MongodbFixture<T> implements DatabaseFixture<T> {
-  protected constructor (private readonly props: Props<T>) {}
+export abstract class MongodbFixture<EntityType> implements DatabaseFixture<EntityType> {
+  protected constructor (private readonly props: Props<EntityType>) {}
 
-  async createFixture (entity: Partial<T>): Promise<T> {
+  async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
     return await this.createMongodbFixture(entity)
   }
 
-  async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
+  async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
     return await this.createMongodbFixture(entities)
   }
 
-  async createRandomFixture (): Promise<T> {
+  async createRandomFixture (): Promise<EntityType> {
     return await this.createMongodbFixture()
   }
 
-  async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
+  async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
     return await this.createMongodbFixture(amount)
   }
 
-  private adaptId (entity: any): T {
+  private adaptId (entity: any): EntityType {
     const { id, ...entityWithoutId } = entity
 
     return { ...entityWithoutId, _id: id }
   }
 
-  private async createMongodbFixture (): Promise<T>
-  private async createMongodbFixture (entity: Partial<T>): Promise<T>
-  private async createMongodbFixture (entities: Array<Partial<T>>): Promise<T[]>
-  private async createMongodbFixture <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
-  private async createMongodbFixture <N extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
+  private async createMongodbFixture (): Promise<EntityType>
+  private async createMongodbFixture (entity: Partial<EntityType>): Promise<EntityType>
+  private async createMongodbFixture (entities: Array<Partial<EntityType>>): Promise<EntityType[]>
+  private async createMongodbFixture <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]>
+  private async createMongodbFixture <NumberType extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZero<NumberType> | Partial<EntityType> | Array<Partial<EntityType>>): Promise<EntityType | EntityType[]> {
     const { createDefault, collectionName } = this.props
     const collection = await persistence.mongodb.client.getCollection(collectionName)
 
     if (typeof amountOrEntityOrEntities === 'number') {
-      const entities: T[] = []
+      const entities: EntityType[] = []
 
       for (let i = 0; i < amountOrEntityOrEntities; i++) {
         entities.push(createDefault())

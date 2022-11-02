@@ -1,5 +1,5 @@
-export type IntegerGreaterThanZero<T extends number> = number extends T
+export type IntegerGreaterThanZero<NumberType extends number> = number extends NumberType
   ? never
-  : `${T}` extends `-${string}` | '0' | `${string}.${string}`
+  : `${NumberType}` extends `-${string}` | '0' | `${string}.${string}`
     ? never
-    : T
+    : NumberType
