@@ -7,7 +7,6 @@ import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities
 class FakeFixture extends PostgresFixture<PostgresUserEntity> {
   static create (): PostgresFixture<PostgresUserEntity> {
     return new FakeFixture({
-      repositoryName: 'users',
       createDefault: (): PostgresUserEntity => ({
         email: faker.internet.email(),
         emailConfirmed: false,
@@ -15,7 +14,8 @@ class FakeFixture extends PostgresFixture<PostgresUserEntity> {
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
-      })
+      }),
+      repositoryName: 'users'
     })
   }
 }

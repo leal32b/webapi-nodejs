@@ -14,6 +14,18 @@ export class ExpressAdapter implements WebApp {
     this._app.use(json())
   }
 
+  listen (port: number, callback = null): Either<ServerError, void> {
+    try {
+      this.app.listen(port, callback)
+
+      return right()
+    } catch (error) {
+      console.log('listen', error)
+
+      return left(new ServerError(error.message, error.stack))
+    }
+  }
+
   setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
     try {
       this.app.use(path, ...middlewares)
@@ -79,16 +91,8 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  listen (port: number, callback = null): Either<ServerError, void> {
-    try {
-      this.app.listen(port, callback)
-
-      return right()
-    } catch (error) {
-      console.log('listen', error)
-
-      return left(new ServerError(error.message, error.stack))
-    }
+  get app (): Express {
+    return this._app
   }
 
   private expressController (controller: Controller): RequestHandler {
@@ -109,8 +113,8 @@ export class ExpressAdapter implements WebApp {
     return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
       const httpRequest = {
         accessToken: request.headers.authorization,
-        payload: request.body,
         auth,
+        payload: request.body,
         schema
       }
       const appResponse = await middleware.handle(httpRequest)
@@ -123,9 +127,5 @@ export class ExpressAdapter implements WebApp {
         response.status(statusCode).json(payload)
       }
     }
-  }
-
-  get app (): Express {
-    return this._app
   }
 }

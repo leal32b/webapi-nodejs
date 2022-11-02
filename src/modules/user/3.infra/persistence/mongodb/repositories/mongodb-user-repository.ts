@@ -38,9 +38,9 @@ export class MongodbUserRepository implements UserRepository {
       }
 
       const userAggregateOrError = UserAggregate.create({
-        id: user._id.toString(),
         email: user.email,
         emailConfirmed: user.emailConfirmed,
+        id: user._id.toString(),
         name: user.name,
         password: user.password,
         token: user.token
@@ -61,9 +61,9 @@ export class MongodbUserRepository implements UserRepository {
       }
 
       const userAggregateOrError = UserAggregate.create({
-        id: user._id.toString(),
         email: user.email,
         emailConfirmed: user.emailConfirmed,
+        id: user._id.toString(),
         name: user.name,
         password: user.password,
         token: user.token

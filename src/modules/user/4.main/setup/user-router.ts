@@ -10,12 +10,12 @@ import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-control
 
 export const userRouter = (webApp: WebApp): void => {
   webApp.setRouter({
+    middlewares: [schemaValidatorMiddleware, authMiddleware],
     path: '/user',
     routes: [
       signUpRoute(signUpControllerFactory()),
       signInRoute(signInControllerFactory()),
       changePasswordRoute(changePasswordControllerFactory())
-    ],
-    middlewares: [schemaValidatorMiddleware, authMiddleware]
+    ]
   })
 }

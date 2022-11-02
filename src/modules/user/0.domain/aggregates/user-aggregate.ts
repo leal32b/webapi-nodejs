@@ -27,7 +27,7 @@ export type UserAggregateCreateParams = {
 }
 
 export class UserAggregate extends AggregateRoot<ConstructParams> {
-  static create (params: UserAggregateCreateParams): Either<DomainError[], UserAggregate> {
+  public static create (params: UserAggregateCreateParams): Either<DomainError[], UserAggregate> {
     const { email, name, password, token, id, emailConfirmed } = params
 
     const constructParamsOrError = this.validateParams<ConstructParams>({
@@ -44,7 +44,7 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
 
     const constructParams = constructParamsOrError.value
     const userAggregate = new UserAggregate(constructParams, id)
-    userAggregate.addEvent(new UserCreatedEvent({
+    userAggregate.addEvent(UserCreatedEvent.create({
       aggregateId: userAggregate.id,
       payload: {
         email: userAggregate.email.value,
@@ -55,39 +55,39 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
     return right(userAggregate)
   }
 
-  get email (): Email {
+  public get email (): Email {
     return this.props.email
   }
 
-  get emailConfirmed (): EmailConfirmed {
+  public get emailConfirmed (): EmailConfirmed {
     return this.props.emailConfirmed
   }
 
-  set emailConfirmed (value: EmailConfirmed) {
-    this.props.emailConfirmed = value
-  }
-
-  get id (): Identifier {
+  public get id (): Identifier {
     return this.props.id
   }
 
-  get name (): Name {
+  public get name (): Name {
     return this.props.name
   }
 
-  get password (): Password {
+  public get password (): Password {
     return this.props.password
   }
 
-  set password (value: Password) {
-    this.props.password = value
-  }
-
-  get token (): Token {
+  public get token (): Token {
     return this.props.token
   }
 
-  set token (value: Token) {
+  public set emailConfirmed (value: EmailConfirmed) {
+    this.props.emailConfirmed = value
+  }
+
+  public set password (value: Password) {
+    this.props.password = value
+  }
+
+  public set token (value: Token) {
     this.props.token = value
   }
 }

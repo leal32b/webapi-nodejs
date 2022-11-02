@@ -10,6 +10,28 @@ type Props<T> = {
 export abstract class MongodbFixture<T> implements DatabaseFixture<T> {
   protected constructor (private readonly props: Props<T>) {}
 
+  async createFixture (entity: Partial<T>): Promise<T> {
+    return await this.createMongodbFixture(entity)
+  }
+
+  async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
+    return await this.createMongodbFixture(entities)
+  }
+
+  async createRandomFixture (): Promise<T> {
+    return await this.createMongodbFixture()
+  }
+
+  async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
+    return await this.createMongodbFixture(amount)
+  }
+
+  private adaptId (entity: any): T {
+    const { id, ...entityWithoutId } = entity
+
+    return { ...entityWithoutId, _id: id }
+  }
+
   private async createMongodbFixture (): Promise<T>
   private async createMongodbFixture (entity: Partial<T>): Promise<T>
   private async createMongodbFixture (entities: Array<Partial<T>>): Promise<T[]>
@@ -41,27 +63,5 @@ export abstract class MongodbFixture<T> implements DatabaseFixture<T> {
     await collection.insertMany(entities.map(entity => this.adaptId(entity)))
 
     return entities
-  }
-
-  private adaptId (entity: any): T {
-    const { id, ...entityWithoutId } = entity
-
-    return { ...entityWithoutId, _id: id }
-  }
-
-  async createFixture (entity: Partial<T>): Promise<T> {
-    return await this.createMongodbFixture(entity)
-  }
-
-  async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
-    return await this.createMongodbFixture(entities)
-  }
-
-  async createRandomFixture (): Promise<T> {
-    return await this.createMongodbFixture()
-  }
-
-  async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
-    return await this.createMongodbFixture(amount)
   }
 }

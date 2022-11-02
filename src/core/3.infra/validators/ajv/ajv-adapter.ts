@@ -16,8 +16,8 @@ export class AjvAdapter implements SchemaValidator {
       }
 
       return right({
-        isValid,
-        errors: validate.errors
+        errors: validate.errors,
+        isValid
       })
     } catch (error) {
       return left(error)

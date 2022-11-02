@@ -12,11 +12,11 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeSchemaErrorFake = (): any => ({
-  type: 'object',
   properties: {
     anyKey: { type: 'string' }
   },
-  required: ['anyKey']
+  required: ['anyKey'],
+  type: 'object'
 })
 
 type SutTypes = {
@@ -112,11 +112,11 @@ describe('clientError', () => {
         expect(result).toEqual({
           payload: {
             error: {
-              type: 'object',
               properties: {
                 anyKey: { type: 'string' }
               },
-              required: ['anyKey']
+              required: ['anyKey'],
+              type: 'object'
             }
           },
           statusCode: 422
@@ -132,14 +132,14 @@ describe('clientError', () => {
           payload: {
             errors: [
               {
-                type: 'object',
                 properties: { anyKey: { type: 'string' } },
-                required: ['anyKey']
+                required: ['anyKey'],
+                type: 'object'
               },
               {
-                type: 'object',
                 properties: { anyKey: { type: 'string' } },
-                required: ['anyKey']
+                required: ['anyKey'],
+                type: 'object'
               }
             ]
           },

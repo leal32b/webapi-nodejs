@@ -12,9 +12,9 @@ export class NodemailerAdapter implements EmailSender {
       const transporter = this.createTransporter()
       const info = await transporter.sendMail({
         from: email.from.value,
-        to: email.to.value,
+        html: email.html.value,
         subject: email.subject.value,
-        html: email.html.value
+        to: email.to.value
       })
       console.log(`Email sent: ${info.messageId as string}`)
 
@@ -28,12 +28,12 @@ export class NodemailerAdapter implements EmailSender {
     const { EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD } = process.env
 
     const transporter = nodemailer.createTransport({
-      host: EMAIL_HOST,
-      port: parseInt(EMAIL_PORT),
       auth: {
-        user: EMAIL_USERNAME,
-        pass: EMAIL_PASSWORD
-      }
+        pass: EMAIL_PASSWORD,
+        user: EMAIL_USERNAME
+      },
+      host: EMAIL_HOST,
+      port: parseInt(EMAIL_PORT)
     })
 
     return transporter

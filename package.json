@@ -33,7 +33,7 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "npm run typeorm -- migration:generate -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
-    "eslint": "eslint 'src/**' --fix",
+    "eslint": "eslint '{src,test}/**' --fix",
     "jscpd": "jscpd",
     "test": "vitest",
     "test:verbose": "vitest --silent=false",

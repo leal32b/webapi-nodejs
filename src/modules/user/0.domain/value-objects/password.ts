@@ -5,10 +5,10 @@ import { NotEmptyValidator } from '@/core/0.domain/validators/not-empty-validato
 import { NotNullValidator } from '@/core/0.domain/validators/not-null-validator'
 
 export class Password extends ValueObject<string> {
-  static create (input: string): Either<DomainError[], Password> {
+  public static create (input: string): Either<DomainError[], Password> {
     const validOrError = this.validate(input, [
-      new NotEmptyValidator(),
-      new NotNullValidator()
+      NotEmptyValidator.create(),
+      NotNullValidator.create()
     ])
 
     return validOrError.applyOnRight(() => new Password(input))

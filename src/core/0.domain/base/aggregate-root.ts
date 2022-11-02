@@ -10,16 +10,16 @@ export abstract class AggregateRoot<ParamsType> extends Entity<ParamsType> {
     this._events.splice(0, this._events.length)
   }
 
-  protected addEvent (event: DomainEvent<any>): void {
-    this._events.push(event)
-    DomainEvents.markAggregateForDispatch(this)
-  }
-
-  get events (): Array<DomainEvent<any>> {
+  public get events (): Array<DomainEvent<any>> {
     return this._events
   }
 
-  get id (): Identifier {
+  public get id (): Identifier {
     return this.props.id
+  }
+
+  protected addEvent (event: DomainEvent<any>): void {
+    this._events.push(event)
+    DomainEvents.markAggregateForDispatch(this)
   }
 }

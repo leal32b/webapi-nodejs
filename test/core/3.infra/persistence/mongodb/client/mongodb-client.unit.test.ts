@@ -6,11 +6,11 @@ import { MongodbClient, MongodbDataSource } from '@/core/3.infra/persistence/mon
 const NODE_ENV = getVar('NODE_ENV')
 
 const mongoClientMock: MongoClient = ({
+  close: vi.fn(),
   db: vi.fn(() => ({
     collection: vi.fn(() => 'any_collection'),
     dropDatabase: vi.fn()
-  })),
-  close: vi.fn()
+  }))
 }) as any
 
 type SutTypes = {
@@ -30,7 +30,7 @@ const makeSut = async (): Promise<SutTypes> => {
   vi.spyOn(MongoClient, 'connect').mockResolvedValueOnce(mongoClientMock as never)
   await sut.connect()
 
-  return { sut, mongoClientMock }
+  return { mongoClientMock, sut }
 }
 
 describe('MongodbAdapter', () => {
@@ -96,9 +96,9 @@ describe('MongodbAdapter', () => {
     it('returns Left when connect throws', async () => {
       const { mongoClientMock } = await makeSut()
       const dataSource = {
-        name: 'any_name',
+        connectionString: 'invalid_connectionString',
         database: 'any_database',
-        connectionString: 'invalid_connectionString'
+        name: 'any_name'
       }
       vi.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
       const mongodbClient = new MongodbClient({ dataSource })

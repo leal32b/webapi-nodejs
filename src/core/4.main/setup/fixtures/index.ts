@@ -8,8 +8,8 @@ export type DatabaseFixtures = {
 }
 
 const fixtureChoices: { [key: string]: DatabaseFixtures } = {
-  postgres: makePostgresFixtures,
-  mongodb: makeMongodbFixtures
+  mongodb: makeMongodbFixtures,
+  postgres: makePostgresFixtures
 }
 
 export const fixtures = fixtureChoices[getVar('PERSISTENCE')]

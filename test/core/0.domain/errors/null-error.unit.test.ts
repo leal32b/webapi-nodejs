@@ -44,9 +44,9 @@ describe('NullError', () => {
       const result = sut.create(field, input)
 
       expect(result.props).toEqual({
-        message: 'should not be undefined',
         field: 'any_field',
-        input: undefined
+        input: undefined,
+        message: 'should not be undefined'
       })
     })
   })

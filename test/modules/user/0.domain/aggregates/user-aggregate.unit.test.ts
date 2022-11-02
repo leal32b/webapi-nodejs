@@ -66,17 +66,6 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).emailConfirmed).toBeInstanceOf(EmailConfirmed)
     })
 
-    it('sets emailConfirmed prop', () => {
-      const { sut, paramsFake } = makeSut()
-      const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
-
-      const result = sut.create(paramsFake)
-      const userEntity = result.value as UserAggregate
-      userEntity.emailConfirmed = emailConfirmed
-
-      expect(userEntity.emailConfirmed.value).toBe(true)
-    })
-
     it('gets id prop', () => {
       const { sut, paramsFake } = makeSut()
 
@@ -101,6 +90,25 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).password).toBeInstanceOf(Password)
     })
 
+    it('gets token prop', () => {
+      const { sut, paramsFake } = makeSut()
+
+      const result = sut.create(paramsFake)
+
+      expect((result.value as UserAggregate).token).toBeInstanceOf(Token)
+    })
+
+    it('sets emailConfirmed prop', () => {
+      const { sut, paramsFake } = makeSut()
+      const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
+
+      const result = sut.create(paramsFake)
+      const userEntity = result.value as UserAggregate
+      userEntity.emailConfirmed = emailConfirmed
+
+      expect(userEntity.emailConfirmed.value).toBe(true)
+    })
+
     it('sets password prop', () => {
       const { sut, paramsFake } = makeSut()
       const password = Password.create('any_password').value as Token
@@ -110,14 +118,6 @@ describe('UserAggregate', () => {
       userEntity.password = password
 
       expect(userEntity.token.value).toBe('any_token')
-    })
-
-    it('gets token prop', () => {
-      const { sut, paramsFake } = makeSut()
-
-      const result = sut.create(paramsFake)
-
-      expect((result.value as UserAggregate).token).toBeInstanceOf(Token)
     })
 
     it('sets token prop', () => {

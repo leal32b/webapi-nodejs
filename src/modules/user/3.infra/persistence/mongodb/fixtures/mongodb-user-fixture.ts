@@ -8,9 +8,9 @@ export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
     return new MongodbUserFixture({
       collectionName: 'users',
       createDefault: (): MongodbUserEntity => ({
-        id: faker.random.alphaNumeric(12),
         email: faker.internet.email(),
         emailConfirmed: false,
+        id: faker.random.alphaNumeric(12),
         name: faker.name.firstName(),
         password: `$argon2id$v=19$m=4096,t=3,p=1$${faker.random.alphaNumeric(16)}$${faker.random.alphaNumeric(32)}`,
         token: faker.random.alphaNumeric(12)

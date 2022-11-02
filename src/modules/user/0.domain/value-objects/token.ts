@@ -5,10 +5,10 @@ import { NotEmptyValidator } from '@/core/0.domain/validators/not-empty-validato
 import { NotNullValidator } from '@/core/0.domain/validators/not-null-validator'
 
 export class Token extends ValueObject<string> {
-  static create (input: string): Either<DomainError[], Token> {
+  public static create (input: string): Either<DomainError[], Token> {
     const validOrError = this.validate(input, [
-      new NotEmptyValidator(),
-      new NotNullValidator()
+      NotEmptyValidator.create(),
+      NotNullValidator.create()
     ])
 
     return validOrError.applyOnRight(() => new Token(input))

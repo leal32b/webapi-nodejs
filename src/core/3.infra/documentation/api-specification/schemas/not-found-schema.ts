@@ -24,8 +24,8 @@ export const notFoundSchema = {
 
 export const notFoundSchemaExample = {
   error: {
-    input: 'john.doe@mail.com',
     field: 'email',
+    input: 'john.doe@mail.com',
     message: "email 'john.doe@mail.com' not found"
   }
 }

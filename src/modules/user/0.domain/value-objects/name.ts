@@ -5,10 +5,10 @@ import { MaxLengthValidator } from '@/core/0.domain/validators/max-length-valida
 import { MinLengthValidator } from '@/core/0.domain/validators/min-length-validator'
 
 export class Name extends ValueObject<string> {
-  static create (input: string): Either<DomainError[], Name> {
+  public static create (input: string): Either<DomainError[], Name> {
     const validOrError = this.validate(input, [
-      new MinLengthValidator({ minLength: 3 }),
-      new MaxLengthValidator({ maxLength: 32 })
+      MinLengthValidator.create({ minLength: 3 }),
+      MaxLengthValidator.create({ maxLength: 32 })
     ])
 
     return validOrError.applyOnRight(() => new Name(input))

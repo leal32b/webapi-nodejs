@@ -3,11 +3,11 @@ import { SchemaValidatorMiddleware } from '@/core/3.infra/api/middlewares/schema
 import { SchemaValidator, SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
 
 const makeErrorFake = (): any => ({
-  type: 'object',
   properties: {
     anyKey: { type: 'string' }
   },
-  required: ['anyKey']
+  required: ['anyKey'],
+  type: 'object'
 })
 
 const makeSchemaValidatorStub = (): SchemaValidator => ({
@@ -24,9 +24,9 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const params = {
-    schemaValidator: makeSchemaValidatorStub(),
+    errorFake: makeErrorFake(),
     role: 'any_role',
-    errorFake: makeErrorFake()
+    schemaValidator: makeSchemaValidatorStub()
   }
 
   const sut = new SchemaValidatorMiddleware(params)
@@ -39,16 +39,16 @@ describe('SchemaValidatorMiddleware', () => {
     it('returns payload and statusCode 200 when schema is valid', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'string' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
-        schema,
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        schema
       }
 
       const result = await sut.handle(fakeRequest)
@@ -65,8 +65,8 @@ describe('SchemaValidatorMiddleware', () => {
       const { sut, schemaValidator, errorFake } = makeSut()
       vi.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
-        schema: 'any_schema',
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        schema: 'any_schema'
       }
 
       const result = await sut.handle(fakeRequest)
@@ -84,12 +84,12 @@ describe('SchemaValidatorMiddleware', () => {
     it('returns error and statusCode 422 when schema is invalid', async () => {
       const { sut, schemaValidator, errorFake } = makeSut()
       vi.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(right({
-        isValid: false,
-        errors: [errorFake]
+        errors: [errorFake],
+        isValid: false
       }))
       const fakeRequest = {
-        schema: 'invalid_schema',
-        payload: { anyKey: 'any_value' }
+        payload: { anyKey: 'any_value' },
+        schema: 'invalid_schema'
       }
 
       const result = await sut.handle(fakeRequest)
@@ -97,9 +97,9 @@ describe('SchemaValidatorMiddleware', () => {
       expect(result).toEqual({
         payload: {
           error: {
-            type: 'object',
             properties: { anyKey: { type: 'string' } },
-            required: ['anyKey']
+            required: ['anyKey'],
+            type: 'object'
           }
         },
         statusCode: 422

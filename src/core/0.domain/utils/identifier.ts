@@ -16,9 +16,9 @@ const defaultOptions = {
 }
 
 export class Identifier {
-  private readonly props: Options
   private readonly _random: Random
   private readonly _value: string
+  private readonly props: Options
 
   private constructor (params?: ConstructParams) {
     this.props = Object.assign(defaultOptions, params?.options)

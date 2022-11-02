@@ -15,8 +15,8 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeSystemErrorFake = (): Error => ({
-  name: 'any_name',
   message: 'any_message',
+  name: 'any_name',
   stack: 'any_stack'
 })
 
@@ -45,8 +45,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    systemErrorFake: makeSystemErrorFake(),
-    requestFake: makeRequestFake()
+    requestFake: makeRequestFake(),
+    systemErrorFake: makeSystemErrorFake()
   }
   const params = {
     changePasswordUseCase: makeChangePasswordUseCaseStub() as any

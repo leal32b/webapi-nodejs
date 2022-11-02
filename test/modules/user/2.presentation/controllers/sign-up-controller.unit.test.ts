@@ -15,8 +15,8 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeSystemErrorFake = (): Error => ({
-  name: 'any_name',
   message: 'any_message',
+  name: 'any_name',
   stack: 'any_stack'
 })
 
@@ -47,8 +47,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    systemErrorFake: makeSystemErrorFake(),
-    requestFake: makeRequestFake()
+    requestFake: makeRequestFake(),
+    systemErrorFake: makeSystemErrorFake()
   }
   const params = {
     createUserUseCase: makeCreateUserUseCaseStub()
@@ -66,8 +66,8 @@ describe('SignUpController', () => {
       await sut.handle(requestFake)
 
       expect(createUserUseCase.execute).toHaveBeenCalledWith({
-        name: 'any_name',
         email: 'any@mail.com',
+        name: 'any_name',
         password: 'any_password',
         passwordRetype: 'any_password'
       })

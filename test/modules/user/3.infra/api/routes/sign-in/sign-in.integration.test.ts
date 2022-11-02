@@ -22,9 +22,9 @@ const makeSut = (): SutTypes => {
   }
   const sut = signInRoute(signInControllerFactory())
   collaborators.webApp.setRouter({
+    middlewares: [schemaValidatorMiddleware],
     path: '/user',
-    routes: [sut],
-    middlewares: [schemaValidatorMiddleware]
+    routes: [sut]
   })
 
   return { sut, ...collaborators }
@@ -132,8 +132,8 @@ describe('SignInRoute', () => {
 
       expect(result.body).toEqual({
         error: {
-          input: 'not_in_base@mail.com',
           field: 'email',
+          input: 'not_in_base@mail.com',
           message: "email 'not_in_base@mail.com' not found"
         }
       })

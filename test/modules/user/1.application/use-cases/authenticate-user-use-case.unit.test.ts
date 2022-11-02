@@ -33,25 +33,25 @@ const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
 
 const makeUserRepositoryStub = (): UserRepository => ({
   create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
   readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeUserAggregateFake())),
+  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
   update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
+  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true)),
+  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password'))
 })
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
   decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    type: TokenType.access,
     payload: {
-      id: 'any_id',
-      auth: ['any_auth']
-    }
-  }))
+      auth: ['any_auth'],
+      id: 'any_id'
+    },
+    type: TokenType.access
+  })),
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -69,9 +69,9 @@ const makeSut = (): SutTypes => {
     errorFake: makeErrorFake()
   }
   const params = {
-    userRepository: makeUserRepositoryStub(),
+    encrypter: makeEncrypterStub(),
     hasher: makeHasherStub(),
-    encrypter: makeEncrypterStub()
+    userRepository: makeUserRepositoryStub()
   }
   const sut = new AuthenticateUserUseCase(params)
 

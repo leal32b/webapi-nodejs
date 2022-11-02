@@ -38,11 +38,11 @@ export const invalidSchemaSchema = {
 export const invalidSchemaSchemaExample = {
   error: {
     instancePath: '',
-    schemaPath: '#/required',
     keyword: 'required',
+    message: "must have required property 'email'",
     params: {
       missingProperty: 'email'
     },
-    message: "must have required property 'email'"
+    schemaPath: '#/required'
   }
 }

@@ -9,9 +9,9 @@ class FakeFixture extends MongodbFixture<MongodbUserEntity> {
     return new FakeFixture({
       collectionName: 'users',
       createDefault: (): any => ({
-        id: faker.random.alphaNumeric(12),
         email: faker.internet.email(),
         emailConfirmed: false,
+        id: faker.random.alphaNumeric(12),
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)

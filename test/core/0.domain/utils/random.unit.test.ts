@@ -22,12 +22,12 @@ describe('Random', () => {
 
     it('returns a random number with options applied when it is provided', () => {
       const sut = Random.create({
-        seed: 1,
         options: {
           incrementer: 0,
           modulus: 64,
           multiplier: 13
-        }
+        },
+        seed: 1
       })
 
       const result = sut.nextInt()

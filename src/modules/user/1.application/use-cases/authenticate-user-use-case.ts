@@ -62,21 +62,29 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     })
   }
 
-  private async readUserAggregate (email: string): Promise<Either<DomainError[], UserAggregate>> {
-    const { userRepository } = this.props
-    const userAggregateOrError = await userRepository.readByEmail(email)
+  private async createAccessToken (id: string): Promise<Either<DomainError[], Token>> {
+    const { encrypter } = this.props
 
-    if (userAggregateOrError.isLeft()) {
-      return left(userAggregateOrError.value)
+    const accessTokenOrError = await encrypter.encrypt({
+      payload: {
+        auth: ['user'],
+        id
+      },
+      type: TokenType.access
+    })
+
+    if (accessTokenOrError.isLeft()) {
+      return left([accessTokenOrError.value])
     }
 
-    const userAggregate = userAggregateOrError.value
+    const accessToken = accessTokenOrError.value
+    const tokenOrError = Token.create(accessToken)
 
-    if (!userAggregate) {
-      return left([new NotFoundError('email', email)])
+    if (tokenOrError.isLeft()) {
+      return left(tokenOrError.value)
     }
 
-    return right(userAggregate)
+    return right(tokenOrError.value)
   }
 
   private async isPasswordValid (hashedPassword: string, password: string): Promise<Either<DomainError[], void>> {
@@ -95,29 +103,21 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     return right()
   }
 
-  private async createAccessToken (id: string): Promise<Either<DomainError[], Token>> {
-    const { encrypter } = this.props
+  private async readUserAggregate (email: string): Promise<Either<DomainError[], UserAggregate>> {
+    const { userRepository } = this.props
+    const userAggregateOrError = await userRepository.readByEmail(email)
 
-    const accessTokenOrError = await encrypter.encrypt({
-      type: TokenType.access,
-      payload: {
-        id,
-        auth: ['user']
-      }
-    })
-
-    if (accessTokenOrError.isLeft()) {
-      return left([accessTokenOrError.value])
+    if (userAggregateOrError.isLeft()) {
+      return left(userAggregateOrError.value)
     }
 
-    const accessToken = accessTokenOrError.value
-    const tokenOrError = Token.create(accessToken)
+    const userAggregate = userAggregateOrError.value
 
-    if (tokenOrError.isLeft()) {
-      return left(tokenOrError.value)
+    if (!userAggregate) {
+      return left([new NotFoundError('email', email)])
     }
 
-    return right(tokenOrError.value)
+    return right(userAggregate)
   }
 
   private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], UserAggregate>> {

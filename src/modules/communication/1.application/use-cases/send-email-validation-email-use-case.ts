@@ -24,9 +24,9 @@ export class SendEmailValidationEmailUseCase extends UseCase<SendEmailValidation
 
     const emailEntityOrError = EmailEntity.create({
       from: 'from@mail.com',
+      html: `<html>token: ${token}</html>`,
       subject: 'Validate e-mail',
-      to: recipientEmail,
-      html: `<html>token: ${token}</html>`
+      to: recipientEmail
     })
 
     if (emailEntityOrError.isLeft()) {

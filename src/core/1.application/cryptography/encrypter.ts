@@ -15,6 +15,6 @@ export type TokenData = {
 }
 
 export interface Encrypter {
-  encrypt: (data: TokenData) => Promise<Either<DomainError, string>>
   decrypt: (token: string) => Promise<Either<DomainError, TokenData>>
+  encrypt: (data: TokenData) => Promise<Either<DomainError, string>>
 }

@@ -1,6 +1,6 @@
 {
   "*.ts": [
-    "npm run eslint", 
+    "npx eslint --fix", 
     "npm run test"
   ]
 }

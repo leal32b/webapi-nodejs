@@ -24,8 +24,8 @@ export const emailTakenSchema = {
 
 export const emailTakenSchemaExample = {
   error: {
-    input: 'john.doe@mail.com',
     field: 'email',
+    input: 'john.doe@mail.com',
     message: 'email already in use'
   }
 }

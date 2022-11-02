@@ -5,7 +5,10 @@ import { ChangePasswordController } from '@/user/2.presentation/controllers/chan
 export const changePasswordControllerFactory = (): ChangePasswordController => {
   const { userRepository } = persistence.actual.repositories
   const { hasher } = cryptography
-  const changePasswordUseCase = new ChangePasswordUseCase({ userRepository, hasher })
+  const changePasswordUseCase = new ChangePasswordUseCase({
+    hasher,
+    userRepository
+  })
 
   return new ChangePasswordController({ changePasswordUseCase })
 }

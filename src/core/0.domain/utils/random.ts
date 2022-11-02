@@ -5,8 +5,8 @@ type Options = {
 }
 
 type ConstructParams = {
-  seed?: number
   options?: Options
+  seed?: number
 }
 
 const defaultOptions = {
@@ -16,8 +16,8 @@ const defaultOptions = {
 }
 
 export class Random {
-  private readonly props: Options
   private _seed: number
+  private readonly props: Options
 
   private constructor (params?: ConstructParams) {
     this.props = Object.assign(defaultOptions, params?.options)

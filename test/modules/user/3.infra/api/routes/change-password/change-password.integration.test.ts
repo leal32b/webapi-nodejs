@@ -13,11 +13,11 @@ import { changePasswordControllerFactory } from '@/user/4.main/factories/change-
 
 const makeAccessTokenFake = async (): Promise<string> => {
   const token = await cryptography.encrypter.encrypt({
-    type: TokenType.access,
     payload: {
-      id: 'any_id',
-      auth: ['user']
-    }
+      auth: ['user'],
+      id: 'any_id'
+    },
+    type: TokenType.access
   })
 
   return `Bearer ${token.value as string}`
@@ -40,9 +40,9 @@ const makeSut = async (): Promise<SutTypes> => {
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())
   collaborators.webApp.setRouter({
+    middlewares: [authMiddleware, schemaValidatorMiddleware],
     path: '/user',
-    routes: [sut],
-    middlewares: [authMiddleware, schemaValidatorMiddleware]
+    routes: [sut]
   })
 
   return { sut, ...collaborators, ...doubles }

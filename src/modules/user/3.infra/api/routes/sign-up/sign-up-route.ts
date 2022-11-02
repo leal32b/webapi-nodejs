@@ -3,8 +3,8 @@ import { SignUpController } from '@/user/2.presentation/controllers/sign-up-cont
 import { signUpRequestSchema } from '@/user/3.infra/api/routes/sign-up/sign-up-schemas'
 
 export const signUpRoute = (controller: SignUpController): Route => ({
-  type: RouteType.POST,
+  controller,
   path: '/sign-up',
   schema: signUpRequestSchema,
-  controller
+  type: RouteType.POST
 })

@@ -14,13 +14,13 @@ const makeErrorFake = (): DomainError => {
 }
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
   decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    type: TokenType.access,
     payload: {
       auth: ['any_role']
-    }
-  }))
+    },
+    type: TokenType.access
+  })),
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -33,8 +33,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const params = {
     encrypter: makeEncrypterStub(),
-    role: 'any_role',
-    errorFake: makeErrorFake()
+    errorFake: makeErrorFake(),
+    role: 'any_role'
   }
 
   const sut = new AuthMiddleware(params)
@@ -63,8 +63,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: []
+        auth: [],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -79,8 +79,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any_role']
+        auth: ['any_role'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -98,8 +98,8 @@ describe('AuthMiddleware', () => {
       vi.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         accessToken: 'Bearer invalid_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -118,8 +118,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -138,8 +138,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -158,8 +158,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: null,
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -178,8 +178,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)

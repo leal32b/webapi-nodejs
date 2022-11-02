@@ -69,12 +69,12 @@ describe('AjvAdapter', () => {
     it('returns Right when schema is successfully validated', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'string' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -88,12 +88,12 @@ describe('AjvAdapter', () => {
     it('returns isValid=true when schema is valid', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'string' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -109,12 +109,12 @@ describe('AjvAdapter', () => {
     it('returns isValid=false and errors when schema is invalid', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'number' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -139,7 +139,6 @@ describe('AjvAdapter', () => {
       const result = await sut.validate(fakeRequest, schema)
 
       expect(result.value).toEqual({
-        isValid: false,
         errors: [{
           instancePath: '/anyKey',
           keyword: 'type',
@@ -148,7 +147,8 @@ describe('AjvAdapter', () => {
             type: 'number'
           },
           schemaPath: '#/properties/anyKey/type'
-        }]
+        }],
+        isValid: false
       })
     })
   })

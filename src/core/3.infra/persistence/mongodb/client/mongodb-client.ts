@@ -19,19 +19,19 @@ export class MongodbClient implements PersistenceClient {
 
   constructor (private readonly props: ConstructParams) { }
 
-  async connect (): Promise<Either<Error, void>> {
-    const { connectionString } = this.props.dataSource
+  async clearDatabase (): Promise<Either<Error, void>> {
+    const isTest = getVar('NODE_ENV') === 'test'
+
+    if (!isTest) {
+      return left(new Error('Clear database is allowed only in test environment'))
+    }
 
     try {
-      this.mongoClient = await MongoClient.connect(connectionString)
-      const { name, database } = this.props.dataSource
-
-      console.log(`connected to ${database} (dataSource: ${name})`)
+      const { database } = this.props.dataSource
+      await this.mongoClient.db(database).dropDatabase()
 
       return right()
     } catch (error) {
-      console.log('connect', error)
-
       return left(error)
     }
   }
@@ -50,26 +50,26 @@ export class MongodbClient implements PersistenceClient {
     }
   }
 
+  async connect (): Promise<Either<Error, void>> {
+    const { connectionString } = this.props.dataSource
+
+    try {
+      this.mongoClient = await MongoClient.connect(connectionString)
+      const { name, database } = this.props.dataSource
+
+      console.log(`connected to ${database} (dataSource: ${name})`)
+
+      return right()
+    } catch (error) {
+      console.log('connect', error)
+
+      return left(error)
+    }
+  }
+
   async getCollection (name: string): Promise<Collection> {
     const { database } = this.props.dataSource
 
     return this.mongoClient.db(database).collection(name)
-  }
-
-  async clearDatabase (): Promise<Either<Error, void>> {
-    const isTest = getVar('NODE_ENV') === 'test'
-
-    if (!isTest) {
-      return left(new Error('Clear database is allowed only in test environment'))
-    }
-
-    try {
-      const { database } = this.props.dataSource
-      await this.mongoClient.db(database).dropDatabase()
-
-      return right()
-    } catch (error) {
-      return left(error)
-    }
   }
 }

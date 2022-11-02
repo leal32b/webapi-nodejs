@@ -6,16 +6,16 @@ import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postg
 const NODE_ENV = getVar('NODE_ENV')
 
 const makeDataSourceMock = (): DataSource => ({
-  name: 'any_data_source',
-  options: { database: 'any_database' },
   destroy: vi.fn(),
-  manager: { save: vi.fn() },
+  entityMetadatas: [
+    { name: 'any_entity_name' }
+  ],
   getRepository: vi.fn(() => ({
     clear: vi.fn()
   })),
-  entityMetadatas: [
-    { name: 'any_entity_name' }
-  ]
+  manager: { save: vi.fn() },
+  name: 'any_data_source',
+  options: { database: 'any_database' }
 }) as any
 
 type SutTypes = {
@@ -29,7 +29,7 @@ const makeSut = (): SutTypes => {
     dataSource: dataSourceMock
   })
 
-  return { sut, dataSourceMock }
+  return { dataSourceMock, sut }
 }
 
 describe('PostgresClient', () => {

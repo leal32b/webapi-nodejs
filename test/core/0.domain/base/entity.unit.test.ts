@@ -68,8 +68,8 @@ describe('Entity', () => {
       const { sut, errorFake, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectStub,
-        invalidValueObject: left([errorFake])
+        invalidValueObject: left([errorFake]),
+        valueObject: valueObjectStub
       })
 
       expect(result.isLeft()).toBe(true)
@@ -79,8 +79,8 @@ describe('Entity', () => {
       const { sut, errorFake, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectStub,
-        invalidValueObject: left([errorFake])
+        invalidValueObject: left([errorFake]),
+        valueObject: valueObjectStub
       })
 
       expect((result.value as DomainError[])

@@ -34,14 +34,14 @@ const makeChangePasswordDataFake = (): ChangePasswordData => ({
 
 const makeUserRepositoryStub = (): UserRepository => ({
   create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
   readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
+  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
   update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
+  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true)),
+  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password'))
 })
 
 type SutTypes = {
@@ -58,8 +58,8 @@ const makeSut = (): SutTypes => {
     errorFake: makeErrorFake()
   }
   const params = {
-    userRepository: makeUserRepositoryStub(),
-    hasher: makeHasherStub()
+    hasher: makeHasherStub(),
+    userRepository: makeUserRepositoryStub()
   }
   const sut = new ChangePasswordUseCase(params)
 

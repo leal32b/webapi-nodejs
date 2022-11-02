@@ -11,41 +11,6 @@ type ConstructParams = {
 export class PostgresClient implements PersistenceClient {
   constructor (private readonly props: ConstructParams) {}
 
-  async connect (): Promise<Either<Error, void>> {
-    try {
-      await this.props.dataSource.initialize()
-      const dataSource = this.props.dataSource.name
-      const database = this.props.dataSource.options.database as string
-
-      console.log(`connected to ${database} (dataSource: ${dataSource})`)
-
-      return right()
-    } catch (error) {
-      if (!(error instanceof CannotConnectAlreadyConnectedError)) {
-        console.log('connect', error)
-      }
-
-      return left(error)
-    }
-  }
-
-  async close (): Promise<Either<Error, void>> {
-    try {
-      await this.props.dataSource.destroy()
-      console.log('disconnected from dataSource')
-
-      return right()
-    } catch (error) {
-      console.log('close', error)
-
-      return left(error)
-    }
-  }
-
-  async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
-    return this.props.dataSource.getRepository(entity)
-  }
-
   async clearDatabase (): Promise<Either<Error, void>> {
     const isTest = getVar('NODE_ENV') === 'test'
 
@@ -64,6 +29,41 @@ export class PostgresClient implements PersistenceClient {
     } catch (error) {
       return left(error)
     }
+  }
+
+  async close (): Promise<Either<Error, void>> {
+    try {
+      await this.props.dataSource.destroy()
+      console.log('disconnected from dataSource')
+
+      return right()
+    } catch (error) {
+      console.log('close', error)
+
+      return left(error)
+    }
+  }
+
+  async connect (): Promise<Either<Error, void>> {
+    try {
+      await this.props.dataSource.initialize()
+      const dataSource = this.props.dataSource.name
+      const database = this.props.dataSource.options.database as string
+
+      console.log(`connected to ${database} (dataSource: ${dataSource})`)
+
+      return right()
+    } catch (error) {
+      if (!(error instanceof CannotConnectAlreadyConnectedError)) {
+        console.log('connect', error)
+      }
+
+      return left(error)
+    }
+  }
+
+  async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
+    return this.props.dataSource.getRepository(entity)
   }
 
   get manager (): EntityManager {

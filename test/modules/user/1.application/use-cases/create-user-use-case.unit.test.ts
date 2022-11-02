@@ -35,18 +35,18 @@ const makeUserRepositoryStub = (): UserRepository => ({
 })
 
 const makeHasherStub = (): Hasher => ({
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
+  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true)),
+  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password'))
 })
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
   decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    type: TokenType.access,
     payload: {
       anyKey: 'any_value'
-    }
-  }))
+    },
+    type: TokenType.access
+  })),
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -60,13 +60,13 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    errorFake: makeErrorFake(),
-    createUserDataFake: makeCreateUserDataFake()
+    createUserDataFake: makeCreateUserDataFake(),
+    errorFake: makeErrorFake()
   }
   const params = {
-    userRepository: makeUserRepositoryStub(),
+    encrypter: makeEncrypterStub(),
     hasher: makeHasherStub(),
-    encrypter: makeEncrypterStub()
+    userRepository: makeUserRepositoryStub()
   }
   const sut = new CreateUserUseCase(params)
 
