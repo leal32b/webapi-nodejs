@@ -5,9 +5,9 @@ type PayloadFake = {
   anyKey: string
 }
 
-class DomainEventFake extends DomainEvent<PayloadFake> {
-  public static create (): DomainEventFake {
-    return new DomainEventFake({
+class DomainEventStub extends DomainEvent<PayloadFake> {
+  public static create (): DomainEventStub {
+    return new DomainEventStub({
       aggregateId: Identifier.create(),
       payload: {
         anyKey: 'any_value'
@@ -17,11 +17,11 @@ class DomainEventFake extends DomainEvent<PayloadFake> {
 }
 
 type SutTypes = {
-  sut: DomainEventFake
+  sut: DomainEventStub
 }
 
 const makeSut = (): SutTypes => {
-  const sut = DomainEventFake.create()
+  const sut = DomainEventStub.create()
 
   return { sut }
 }

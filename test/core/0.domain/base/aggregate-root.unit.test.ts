@@ -2,7 +2,7 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
-import { makeDomainEventFake } from '~/doubles/fakes/domain-event-fake'
+import { makeDomainEventStub } from '~/stubs/domain-event-stub'
 
 type ConstructParamsFake = {
   anyKey: string
@@ -12,9 +12,9 @@ type PayloadFake = {
   anyKey: string
 }
 
-class AggregateRootFake extends AggregateRoot<ConstructParamsFake> {
-  public static create (params: any): AggregateRootFake {
-    return new AggregateRootFake(params)
+class AggregateRootStub extends AggregateRoot<ConstructParamsFake> {
+  public static create (params: any): AggregateRootStub {
+    return new AggregateRootStub(params)
   }
 
   testAddEvent (event: DomainEvent<PayloadFake>): void {
@@ -23,15 +23,15 @@ class AggregateRootFake extends AggregateRoot<ConstructParamsFake> {
 }
 
 type SutTypes = {
-  sut: AggregateRootFake
-  domainEventFake: DomainEvent<any>
+  sut: AggregateRootStub
+  domainEventStub: DomainEvent<any>
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    domainEventFake: makeDomainEventFake()
+    domainEventStub: makeDomainEventStub()
   }
-  const sut = AggregateRootFake.create({ anyKey: 'any_value' })
+  const sut = AggregateRootStub.create({ anyKey: 'any_value' })
 
   return { sut, ...doubles }
 }
@@ -39,8 +39,8 @@ const makeSut = (): SutTypes => {
 describe('AggregateRoot', () => {
   describe('success', () => {
     it('adds an events', () => {
-      const { sut, domainEventFake } = makeSut()
-      sut.testAddEvent(domainEventFake)
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
 
       const result = sut.events
 
@@ -48,8 +48,8 @@ describe('AggregateRoot', () => {
     })
 
     it('clears the events', () => {
-      const { sut, domainEventFake } = makeSut()
-      sut.testAddEvent(domainEventFake)
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
       sut.clearEvents()
 
       const result = sut.events
@@ -66,8 +66,8 @@ describe('AggregateRoot', () => {
     })
 
     it('gets the events', () => {
-      const { sut, domainEventFake } = makeSut()
-      sut.testAddEvent(domainEventFake)
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
 
       const result = sut.events
 

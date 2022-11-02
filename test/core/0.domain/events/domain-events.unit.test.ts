@@ -2,18 +2,18 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
 
-import { makeAggregateFake } from '~/doubles/fakes/aggregate-fake'
+import { makeAggregateStub } from '~/stubs/aggregate-stub'
 
 type SutTypes = {
   sut: typeof DomainEvents
-  aggregateFake: AggregateRoot<any>
-  handlerFake: (event: DomainEvent<any>) => void
+  aggregateStub: AggregateRoot<any>
+  handlerStub: (event: DomainEvent<any>) => void
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    aggregateFake: makeAggregateFake(),
-    handlerFake: vi.fn()
+    aggregateStub: makeAggregateStub(),
+    handlerStub: vi.fn()
   }
   const sut = DomainEvents
 
@@ -23,71 +23,71 @@ const makeSut = (): SutTypes => {
 describe('DomainEvents', () => {
   describe('success', () => {
     it('register callbacks for an eventClassName', () => {
-      const { sut, handlerFake } = makeSut()
+      const { sut, handlerStub } = makeSut()
 
-      sut.register('DomainEventFake', handlerFake)
+      sut.register('DomainEventStub', handlerStub)
 
-      expect(sut.handlers).toEqual({ DomainEventFake: expect.any(Array) })
+      expect(sut.handlers).toEqual({ DomainEventStub: expect.any(Array) })
     })
 
     it('marks an aggregate to dispatch', () => {
-      const { sut, aggregateFake } = makeSut()
+      const { sut, aggregateStub } = makeSut()
 
-      sut.markAggregateForDispatch(aggregateFake)
+      sut.markAggregateForDispatch(aggregateStub)
 
       expect(sut.markedAggregates.every(item => item instanceof AggregateRoot)).toBe(true)
     })
 
     it('returns when there is no aggregate to dispatch events on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      const clearEventsSpy = vi.spyOn(aggregateFake, 'clearEvents')
+      const { sut, aggregateStub } = makeSut()
+      const clearEventsSpy = vi.spyOn(aggregateStub, 'clearEvents')
       sut.clearMarkedAggregates()
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
       expect(clearEventsSpy).not.toBeCalled()
     })
 
     it('returns when there is no handler to execute on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
+      const { sut, aggregateStub, handlerStub } = makeSut()
       sut.clearHandlers()
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(handlerFake).not.toBeCalled()
+      expect(handlerStub).not.toBeCalled()
     })
 
     it('dispatches events for aggregate', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
-      sut.register('DomainEventFake', handlerFake)
+      const { sut, aggregateStub, handlerStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
+      sut.register('DomainEventStub', handlerStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(handlerFake).toBeCalled()
+      expect(handlerStub).toBeCalled()
     })
 
     it('removes aggregate from markedAggregates on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
       expect(sut.markedAggregates).toEqual([])
     })
 
     it('calls aggregate.clearEvents on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(aggregateFake.events).toEqual([])
+      expect(aggregateStub.events).toEqual([])
     })
 
     it('clears markedAggregates', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
       sut.clearMarkedAggregates()
 
@@ -95,9 +95,9 @@ describe('DomainEvents', () => {
     })
 
     it('clears handlers', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
-      sut.register('DomainEventFake', handlerFake)
+      const { sut, aggregateStub, handlerStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
+      sut.register('DomainEventStub', handlerStub)
 
       sut.clearHandlers()
 

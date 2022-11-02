@@ -1,10 +1,10 @@
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
-export const makeDomainEventFake = (): DomainEvent<any> => {
-  class DomainEventFake extends DomainEvent<any> {
-    public static create (): DomainEventFake {
-      return new DomainEventFake({
+export const makeDomainEventStub = (): DomainEvent<any> => {
+  class DomainEventStub extends DomainEvent<any> {
+    public static create (): DomainEventStub {
+      return new DomainEventStub({
         aggregateId: Identifier.create(),
         payload: {
           anyKey: 'any_value'
@@ -13,5 +13,5 @@ export const makeDomainEventFake = (): DomainEvent<any> => {
     }
   }
 
-  return DomainEventFake.create()
+  return DomainEventStub.create()
 }

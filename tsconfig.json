@@ -16,7 +16,8 @@
       "@/core/*": ["src/core/*"],
       "@/communication/*": ["src/modules/communication/*"],
       "@/user/*": ["src/modules/user/*"],
-      "~/doubles/*": ["test/_doubles/*"]
+      "~/fakes/*": ["test/_doubles/fakes/*"],
+      "~/stubs/*": ["test/_doubles/stubs/*"]
     }
   },
   "include": [
