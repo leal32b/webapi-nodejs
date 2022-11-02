@@ -26,7 +26,7 @@ export type EmailEntityCreateParams =
   EmailEntityBaseParams & { html?: never, text: string }
 
 export class EmailEntity extends Entity<ConstructParams> {
-  static create (params: EmailEntityCreateParams): Either<DomainError[], EmailEntity> {
+  public static create (params: EmailEntityCreateParams): Either<DomainError[], EmailEntity> {
     const { from, subject, to, html, text } = params
 
     const htmlOrText = html
@@ -50,23 +50,23 @@ export class EmailEntity extends Entity<ConstructParams> {
     return right(emailEntity)
   }
 
-  get from (): From {
+  public get from (): From {
     return this.props.from
   }
 
-  get subject (): Subject {
+  public get html (): Html {
+    return this.props.html
+  }
+
+  public get subject (): Subject {
     return this.props.subject
   }
 
-  get to (): To {
-    return this.props.to
-  }
-
-  get text (): Text {
+  public get text (): Text {
     return this.props.text
   }
 
-  get html (): Html {
-    return this.props.html
+  public get to (): To {
+    return this.props.to
   }
 }

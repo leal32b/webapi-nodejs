@@ -6,7 +6,7 @@ import { NotHtmlValidator } from '@/core/0.domain/validators/not-html-validator'
 export class Html extends ValueObject<string> {
   static create (input: string): Either<DomainError[], Html> {
     const validOrError = this.validate(input, [
-      new NotHtmlValidator()
+      NotHtmlValidator.create()
     ])
 
     return validOrError.applyOnRight(() => new Html(input))

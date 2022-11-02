@@ -9,8 +9,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 const makeParamsFake = (): EmailEntityCreateParams => ({
   from: 'sender@mail.com',
   subject: 'any_subject',
-  to: 'recipient@email.com',
-  text: 'any_text'
+  text: 'any_text',
+  to: 'recipient@email.com'
 })
 
 type SutTypes = {
@@ -54,20 +54,21 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).from).toBeInstanceOf(From)
     })
 
+    it('gets html prop', () => {
+      const { sut, paramsFake } = makeSut()
+      paramsFake.html = '<html>any_html</html>'
+
+      const result = sut.create(paramsFake)
+
+      expect((result.value as EmailEntity).html).toBeInstanceOf(Html)
+    })
+
     it('gets subject prop', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
 
       expect((result.value as EmailEntity).subject).toBeInstanceOf(Subject)
-    })
-
-    it('gets to prop', () => {
-      const { sut, paramsFake } = makeSut()
-
-      const result = sut.create(paramsFake)
-
-      expect((result.value as EmailEntity).to).toBeInstanceOf(To)
     })
 
     it('gets text prop', () => {
@@ -78,13 +79,12 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).text).toBeInstanceOf(Text)
     })
 
-    it('gets html prop', () => {
+    it('gets to prop', () => {
       const { sut, paramsFake } = makeSut()
-      paramsFake.html = '<html>any_html</html>'
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as EmailEntity).html).toBeInstanceOf(Html)
+      expect((result.value as EmailEntity).to).toBeInstanceOf(To)
     })
   })
 

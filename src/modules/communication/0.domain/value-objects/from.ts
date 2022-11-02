@@ -6,11 +6,11 @@ import { MaxLengthValidator } from '@/core/0.domain/validators/max-length-valida
 import { MinLengthValidator } from '@/core/0.domain/validators/min-length-validator'
 
 export class From extends ValueObject<string> {
-  static create (input: string): Either<DomainError[], From> {
+  public static create (input: string): Either<DomainError[], From> {
     const validOrError = this.validate(input, [
-      new MinLengthValidator({ minLength: 12 }),
-      new MaxLengthValidator({ maxLength: 64 }),
-      new EmailValidator()
+      MinLengthValidator.create({ minLength: 12 }),
+      MaxLengthValidator.create({ maxLength: 64 }),
+      EmailValidator.create()
     ])
 
     return validOrError.applyOnRight(() => new From(input))
