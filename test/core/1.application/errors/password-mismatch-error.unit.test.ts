@@ -16,7 +16,7 @@ describe('PasswordMismatchError', () => {
       const { sut } = makeSut()
       const field = 'any_field'
 
-      const result = new sut(field)
+      const result = sut.create(field)
 
       expect(result).toBeInstanceOf(PasswordMismatchError)
     })
@@ -25,7 +25,7 @@ describe('PasswordMismatchError', () => {
       const { sut } = makeSut()
       const field = 'any_field'
 
-      const result = new sut(field)
+      const result = sut.create(field)
 
       expect(result.props).toEqual({
         field: 'any_field',

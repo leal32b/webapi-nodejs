@@ -11,7 +11,7 @@ type ConstructParamsFake = {
 class AggregateFake extends AggregateRoot<ConstructParamsFake> {
   static create (): AggregateFake {
     const aggregateFake = new AggregateFake({ anyKey: 'any_value' })
-    aggregateFake.addEvent(new UserCreatedEvent({
+    aggregateFake.addEvent(UserCreatedEvent.create({
       aggregateId: aggregateFake.id,
       payload: {
         email: 'any@mail.com',

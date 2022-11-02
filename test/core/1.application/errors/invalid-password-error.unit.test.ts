@@ -15,7 +15,7 @@ describe('InvalidPasswordError', () => {
     it('returns an InvalidPasswordError', () => {
       const { sut } = makeSut()
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(result).toBeInstanceOf(InvalidPasswordError)
     })
@@ -23,7 +23,7 @@ describe('InvalidPasswordError', () => {
     it('returns props with correct values', () => {
       const { sut } = makeSut()
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(result.props).toEqual({
         message: 'invalid username or password'
