@@ -2,7 +2,7 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, right } from '@/core/0.domain/utils/either'
 
-import { makeDomainEventStub } from '~/stubs/domain-event-stub'
+import { makeDomainEventStub } from '~/core/stubs/domain-event-stub'
 
 export const makeAggregateStub = (): AggregateRoot<any> => {
   class AggregateStub extends AggregateRoot<any> {

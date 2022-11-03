@@ -1,57 +1,23 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { left, right } from '@/core/0.domain/utils/either'
+import { Encrypter } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { InvalidPasswordError } from '@/core/1.application/errors/invalid-password-error'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { AuthenticateUserData, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeUserAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
+import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeEncrypterStub } from '~/core/stubs/encrypter-stub'
+import { makeHasherStub } from '~/core/stubs/hasher-stub'
+import { makeUserAggregateFake } from '~/user/user-aggregate-fake'
+import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
   email: 'any@mail.com',
   password: 'any_password'
-})
-
-const makeUserRepositoryStub = (): UserRepository => ({
-  create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeUserAggregateFake())),
-  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
-})
-
-const makeHasherStub = (): Hasher => ({
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true)),
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password'))
-})
-
-const makeEncrypterStub = (): Encrypter => ({
-  decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    payload: {
-      auth: ['any_auth'],
-      id: 'any_id'
-    },
-    type: TokenType.access
-  })),
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -73,7 +39,8 @@ const makeSut = (): SutTypes => {
     hasher: makeHasherStub(),
     userRepository: makeUserRepositoryStub()
   }
-  const sut = new AuthenticateUserUseCase(params)
+  const sut = AuthenticateUserUseCase.create(params)
+  vi.spyOn(params.userRepository, 'readByEmail').mockResolvedValue(right(makeUserAggregateFake()))
 
   return { sut, ...params, ...doubles }
 }
@@ -158,6 +125,15 @@ describe('AuthenticateUserUseCase', () => {
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
+    it('returns an InvalidPasswordError when password is invalid', async () => {
+      const { sut, hasher, authenticateUserDataFake } = makeSut()
+      vi.spyOn(hasher, 'compare').mockResolvedValueOnce(right(false))
+
+      const result = await sut.execute(authenticateUserDataFake)
+
+      expect(result.value[0]).toBeInstanceOf(InvalidPasswordError)
+    })
+
     it('returns an Error when Encrypter.encrypt fails', async () => {
       const { sut, encrypter, errorFake, authenticateUserDataFake } = makeSut()
       vi.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
@@ -169,9 +145,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when Token.create fails', async () => {
       const { sut, errorFake, authenticateUserDataFake } = makeSut()
-      vi.spyOn(Token, 'create')
-        .mockReturnValueOnce(right(Token.create('any_token').value as Token))
-        .mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(Token, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(authenticateUserDataFake)
 

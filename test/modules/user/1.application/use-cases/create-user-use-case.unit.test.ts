@@ -1,6 +1,6 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { left, right } from '@/core/0.domain/utils/either'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { Hasher } from '@/core/1.application/cryptography/hasher'
@@ -10,43 +10,16 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 import { CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeEncrypterStub } from '~/core/stubs/encrypter-stub'
+import { makeHasherStub } from '~/core/stubs/hasher-stub'
+import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
   name: 'any_name',
   password: 'any_password',
   passwordRetype: 'any_password'
-})
-
-const makeUserRepositoryStub = (): UserRepository => ({
-  create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
-})
-
-const makeHasherStub = (): Hasher => ({
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true)),
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password'))
-})
-
-const makeEncrypterStub = (): Encrypter => ({
-  decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    payload: {
-      anyKey: 'any_value'
-    },
-    type: TokenType.access
-  })),
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -68,7 +41,7 @@ const makeSut = (): SutTypes => {
     hasher: makeHasherStub(),
     userRepository: makeUserRepositoryStub()
   }
-  const sut = new CreateUserUseCase(params)
+  const sut = CreateUserUseCase.create(params)
 
   return { sut, ...params, ...doubles }
 }

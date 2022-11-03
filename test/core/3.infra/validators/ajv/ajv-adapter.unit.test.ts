@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import Ajv from 'ajv'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'

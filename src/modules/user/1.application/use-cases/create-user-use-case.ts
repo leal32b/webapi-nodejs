@@ -9,6 +9,12 @@ import { PasswordMismatchError } from '@/core/1.application/errors/password-mism
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
+type ConstructParams = {
+  userRepository: UserRepository
+  hasher: Hasher
+  encrypter: Encrypter
+}
+
 export type CreateUserData = {
   name: string
   email: string
@@ -21,14 +27,12 @@ export type CreateUserResultDTO = {
   message: string
 }
 
-export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultDTO> {
-  constructor (private readonly props: {
-    userRepository: UserRepository
-    hasher: Hasher
-    encrypter: Encrypter
-  }) { super() }
+export class CreateUserUseCase extends UseCase<ConstructParams, CreateUserData, CreateUserResultDTO> {
+  public static create (params: ConstructParams): CreateUserUseCase {
+    return new CreateUserUseCase(params)
+  }
 
-  async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
+  public async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
     const { email, password } = createUserData
 
     const validOrError = await this.initialValidation(createUserData)
@@ -121,7 +125,7 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     const { email, password, passwordRetype } = createUserData
 
     if (password !== passwordRetype) {
-      return left([new PasswordMismatchError('password')])
+      return left([PasswordMismatchError.create('password')])
     }
 
     const emailAvailableOrError = await this.isEmailAvailable(email)
@@ -142,7 +146,7 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     }
 
     if (userAggregateByEmailOrError.value) {
-      return left([new EmailTakenError('email', email)])
+      return left([EmailTakenError.create('email', email)])
     }
 
     return right()

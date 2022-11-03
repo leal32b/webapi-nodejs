@@ -40,7 +40,7 @@ const makeSut = (): SutTypes => {
   const params = {
     sendEmailValidationEmailUseCase: makeSendEmailValidationEmailUseCaseStub()
   }
-  const sut = new UserCreatedHandler(params)
+  const sut = UserCreatedHandler.create(params)
 
   return { sut, ...params, ...doubles }
 }

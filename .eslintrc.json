@@ -21,7 +21,8 @@
     }],
     "@typescript-eslint/naming-convention": ["error",
       { "selector": ["variable"], "format": ["camelCase", "UPPER_CASE"], "leadingUnderscore": "allow" },
-      { "selector": ["classMethod"], "format": ["camelCase"] },
+      { "selector": ["classMethod", "typeProperty"], "format": ["camelCase"] },
+      { "selector": ["typeAlias"], "format": ["PascalCase"] },
       { "selector": ["typeParameter"], "format": ["PascalCase"], "suffix": ["Type"] }
     ],
     "@typescript-eslint/no-extraneous-class": "off",

@@ -2,7 +2,7 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
-import { makeDomainEventStub } from '~/stubs/domain-event-stub'
+import { makeDomainEventStub } from '~/core/stubs/domain-event-stub'
 
 type ConstructParamsFake = {
   anyKey: string

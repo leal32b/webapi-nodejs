@@ -4,10 +4,10 @@ import { Plugin } from 'vite'
 export function Swc (): Plugin {
   return {
     name: 'rollup-plugin-swc',
-    async transform (code, id) {
+    async transform (code: string, id: string) {
       const result = await transform(code, {
         jsc: {
-          target: 'es2019',
+          target: 'es2022',
           parser: {
             syntax: 'typescript',
             decorators: true

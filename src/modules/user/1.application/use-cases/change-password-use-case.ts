@@ -8,6 +8,11 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
+type ConstructParams = {
+  userRepository: UserRepository
+  hasher: Hasher
+}
+
 export type ChangePasswordData = {
   id: string
   password: string
@@ -18,13 +23,12 @@ export type ChangePasswordResultDTO = {
   message: string
 }
 
-export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePasswordResultDTO> {
-  constructor (private readonly props: {
-    userRepository: UserRepository
-    hasher: Hasher
-  }) { super() }
+export class ChangePasswordUseCase extends UseCase<ConstructParams, ChangePasswordData, ChangePasswordResultDTO> {
+  public static create (params: ConstructParams): ChangePasswordUseCase {
+    return new ChangePasswordUseCase(params)
+  }
 
-  async execute (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], ChangePasswordResultDTO>> {
+  public async execute (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], ChangePasswordResultDTO>> {
     const { id, password } = changePasswordData
 
     const validOrError = await this.initialValidation(changePasswordData)
@@ -81,7 +85,7 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     const { password, passwordRetype } = changePasswordData
 
     if (password !== passwordRetype) {
-      return left([new PasswordMismatchError('password')])
+      return left([PasswordMismatchError.create('password')])
     }
 
     return right()
@@ -98,7 +102,7 @@ export class ChangePasswordUseCase extends UseCase<ChangePasswordData, ChangePas
     const userAggregate = userAggregateOrError.value
 
     if (!userAggregate) {
-      return left([new NotFoundError('id', id)])
+      return left([NotFoundError.create('id', id)])
     }
 
     return right(userAggregate)

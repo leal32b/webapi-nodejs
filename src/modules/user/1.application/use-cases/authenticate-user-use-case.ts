@@ -9,6 +9,12 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
+type ConstructParams = {
+  userRepository: UserRepository
+  hasher: Hasher
+  encrypter: Encrypter
+}
+
 export type AuthenticateUserData = {
   email: string
   password: string
@@ -19,14 +25,12 @@ export type AuthenticateUserResultDTO = {
   message: string
 }
 
-export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, AuthenticateUserResultDTO> {
-  constructor (private readonly props: {
-    userRepository: UserRepository
-    hasher: Hasher
-    encrypter: Encrypter
-  }) { super() }
+export class AuthenticateUserUseCase extends UseCase<ConstructParams, AuthenticateUserData, AuthenticateUserResultDTO> {
+  public static create (params: ConstructParams): AuthenticateUserUseCase {
+    return new AuthenticateUserUseCase(params)
+  }
 
-  async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
+  public async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
     const { email, password } = authenticateUserData
 
     const userAggregateOrError = await this.readUserAggregate(email)
@@ -97,7 +101,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
 
     const passwordIsValid = passwordIsValidOrError.value
     if (!passwordIsValid) {
-      return left([new InvalidPasswordError()])
+      return left([InvalidPasswordError.create()])
     }
 
     return right()
@@ -114,7 +118,7 @@ export class AuthenticateUserUseCase extends UseCase<AuthenticateUserData, Authe
     const userAggregate = userAggregateOrError.value
 
     if (!userAggregate) {
-      return left([new NotFoundError('email', email)])
+      return left([NotFoundError.create('email', email)])
     }
 
     return right(userAggregate)

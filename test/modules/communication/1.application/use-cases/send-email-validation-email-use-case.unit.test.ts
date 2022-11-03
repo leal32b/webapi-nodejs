@@ -39,7 +39,7 @@ const makeSut = (): SutTypes => {
     emailSender: makeEmailSenderStub()
   }
 
-  const sut = new SendEmailValidationEmailUseCase(params)
+  const sut = SendEmailValidationEmailUseCase.create(params)
 
   return { sut, ...params, ...doubles }
 }
