@@ -9,6 +9,8 @@ export type AppResponse<PayloadType> = {
   statusCode: number
 }
 
-export abstract class Controller {
+export abstract class Controller<ConstructParamsType> {
+  protected constructor (protected readonly props: ConstructParamsType) {}
+
   abstract handle (request: AppRequest<any>): Promise<AppResponse<any>>
 }

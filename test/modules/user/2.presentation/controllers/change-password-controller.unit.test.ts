@@ -1,24 +1,11 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeSystemErrorFake = (): Error => ({
-  message: 'any_message',
-  name: 'any_name',
-  stack: 'any_stack'
-})
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
   payload: {
@@ -38,7 +25,7 @@ type SutTypes = {
   sut: ChangePasswordController
   changePasswordUseCase: ChangePasswordUseCase
   errorFake: DomainError
-  systemErrorFake: Error
+  serverErrorFake: ServerError
   requestFake: AppRequest<ChangePasswordData>
 }
 
@@ -46,12 +33,12 @@ const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
     requestFake: makeRequestFake(),
-    systemErrorFake: makeSystemErrorFake()
+    serverErrorFake: ServerError.create('server_error')
   }
   const params = {
     changePasswordUseCase: makeChangePasswordUseCaseStub() as any
   }
-  const sut = new ChangePasswordController(params)
+  const sut = ChangePasswordController.create(params)
 
   return { sut, ...params, ...doubles }
 }
@@ -90,13 +77,13 @@ describe('ChangePasswordController', () => {
   })
 
   describe('failure', () => {
-    it('returns 400 when passwords do not match', async () => {
+    it('returns 401 when passwords do not match', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(400)
+      expect(result.statusCode).toBe(401)
     })
 
     it('returns error in body when invalid params are provided', async () => {
@@ -112,18 +99,18 @@ describe('ChangePasswordController', () => {
       })
     })
 
-    it('returns 500 when anything throws', async () => {
-      const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+    it('returns 500 when ChangePasswordUseCase returns a serverError', async () => {
+      const { sut, changePasswordUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
       expect(result.statusCode).toBe(500)
     })
 
-    it('returns ServerError in body when anything throws', async () => {
-      const { sut, changePasswordUseCase, systemErrorFake, requestFake } = makeSut()
-      vi.spyOn(changePasswordUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+    it('returns error in body when ChangePasswordUseCase returns a serverError', async () => {
+      const { sut, changePasswordUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 

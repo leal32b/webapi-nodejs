@@ -1,15 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { success } from '@/core/2.presentation/factories/success-factory'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 type SutTypes = {
   sut: typeof success

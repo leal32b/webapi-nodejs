@@ -1,24 +1,11 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { AppRequest } from '@/core/2.presentation/base/controller'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { CreateUserData, CreateUserResultDTO, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeSystemErrorFake = (): Error => ({
-  message: 'any_message',
-  name: 'any_name',
-  stack: 'any_stack'
-})
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<CreateUserData> => ({
   payload: {
@@ -34,13 +21,13 @@ const makeCreateUserUseCaseStub = (): CreateUserUseCase => ({
     email: 'any@mail.com',
     message: 'user created successfully'
   }))
-} as unknown as CreateUserUseCase)
+} as any)
 
 type SutTypes = {
   sut: SignUpController
   createUserUseCase: CreateUserUseCase
   errorFake: DomainError
-  systemErrorFake: Error
+  serverErrorFake: ServerError
   requestFake: AppRequest<CreateUserData>
 }
 
@@ -48,12 +35,12 @@ const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
     requestFake: makeRequestFake(),
-    systemErrorFake: makeSystemErrorFake()
+    serverErrorFake: ServerError.create('server_error')
   }
   const params = {
     createUserUseCase: makeCreateUserUseCaseStub()
   }
-  const sut = new SignUpController(params)
+  const sut = SignUpController.create(params)
 
   return { sut, ...params, ...doubles }
 }
@@ -94,7 +81,7 @@ describe('SignUpController', () => {
   })
 
   describe('failure', () => {
-    it('returns 400 when CreateUserUseCase returns any error', async () => {
+    it('returns 400 when CreateUserUseCase returns a clientError', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
@@ -103,7 +90,7 @@ describe('SignUpController', () => {
       expect(result.statusCode).toBe(400)
     })
 
-    it('returns error in body when CreateUserUseCase returns errors', async () => {
+    it('returns error in body when CreateUserUseCase returns a clientError', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
@@ -116,18 +103,18 @@ describe('SignUpController', () => {
       })
     })
 
-    it('returns 500 when anything throws', async () => {
-      const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+    it('returns 500 when CreateUserUseCase returns a serverError', async () => {
+      const { sut, createUserUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
       expect(result.statusCode).toBe(500)
     })
 
-    it('returns ServerError in body when anything throws', async () => {
-      const { sut, createUserUseCase, systemErrorFake, requestFake } = makeSut()
-      vi.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+    it('returns error in body when CreateUserUseCase returns a serverError', async () => {
+      const { sut, createUserUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 

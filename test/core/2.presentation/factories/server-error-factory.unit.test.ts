@@ -1,9 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 
-const makeErrorFake = (): any => {
-  return new Error('any_message')
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 type SutTypes = {
   sut: typeof serverError

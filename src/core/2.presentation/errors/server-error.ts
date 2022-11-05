@@ -1,10 +1,10 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
 export class ServerError extends DomainError {
-  constructor (message: string, stack?: string) {
-    super({
+  public static create (message: string, stack?: string): ServerError {
+    return new ServerError({
       message,
-      stack
+      ...(stack && { stack })
     })
   }
 }
