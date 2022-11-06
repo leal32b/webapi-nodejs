@@ -29,7 +29,7 @@ const makeSut = (): SutTypes => {
     schemaValidator: makeSchemaValidatorStub()
   }
 
-  const sut = new SchemaValidatorMiddleware(params)
+  const sut = SchemaValidatorMiddleware.create(params)
 
   return { sut, ...params }
 }

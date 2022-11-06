@@ -29,7 +29,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const emailFake = makeEmailFake()
-  const sut = new NodemailerAdapter()
+  const sut = NodemailerAdapter.create()
 
   return { emailFake, sut }
 }

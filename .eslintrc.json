@@ -11,7 +11,7 @@
       "default": {
         "memberTypes": [
           "signature", "field", "static-initialization", "constructor",
-          "public-method", "public-get", "public-set",
+          "public-static-method", "public-method", "public-get", "public-set",
           "protected-method", "private-method", "protected-get",
           "private-get", "protected-set", "private-set"
         ],

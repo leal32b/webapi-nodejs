@@ -6,6 +6,8 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 
+import { makeErrorFake } from '~/core/fakes/error-fake'
+
 vi.mock('jsonwebtoken', () => ({
   default: {
     async sign (): Promise<string> {
@@ -22,16 +24,6 @@ vi.mock('jsonwebtoken', () => ({
     }
   }
 }))
-
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
 
 const makeFakeData = (): TokenData => ({
   payload: {
@@ -52,7 +44,7 @@ const makeSut = (): SutTypes => {
     dataFake: makeFakeData(),
     errorFake: makeErrorFake()
   }
-  const sut = new JsonwebtokenAdapter()
+  const sut = JsonwebtokenAdapter.create()
 
   return { sut, ...doubles }
 }

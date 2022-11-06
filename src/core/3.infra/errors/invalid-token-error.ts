@@ -1,8 +1,8 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
 export class InvalidTokenError extends DomainError {
-  constructor (type: string) {
-    super({
+  public static create (type: string): InvalidTokenError {
+    return new InvalidTokenError({
       message: `token is invalid (type: ${type})`
     })
   }

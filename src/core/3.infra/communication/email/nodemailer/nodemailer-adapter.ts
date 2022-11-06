@@ -7,7 +7,13 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 export class NodemailerAdapter implements EmailSender {
-  async send (email: EmailEntity): Promise<Either<DomainError, void>> {
+  private constructor () {}
+
+  public static create (): NodemailerAdapter {
+    return new NodemailerAdapter()
+  }
+
+  public async send (email: EmailEntity): Promise<Either<DomainError, void>> {
     try {
       const transporter = this.createTransporter()
       const info = await transporter.sendMail({
@@ -20,7 +26,7 @@ export class NodemailerAdapter implements EmailSender {
 
       return right()
     } catch (error) {
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 

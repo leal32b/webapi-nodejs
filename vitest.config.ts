@@ -1,11 +1,19 @@
 import { defineConfig } from 'vitest/config'
+
 import { Swc } from './vitest.swc'
 
 export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: ['test/**/*.test.ts'],
+    include: [
+      'test/**'
+      // 'test/**/{0.domain,1.application,2.presentation}/**/*.test.ts'
+      // 'test/core/3.infra/errors/**'
+    ],
+    exclude: [
+      'test/**/_doubles/**'
+    ],
     globalSetup: 'vitest.setup.ts',
     threads: false,
     watch: false,
@@ -13,13 +21,15 @@ export default defineConfig({
     logHeapUsage: true,
     passWithNoTests: true,
     coverage: {
-      include: ['src/**/*.ts'],
+      include: [
+        'src/**'
+        // 'src/**/{0.domain,1.application,2.presentation}/**/*.ts'
+        // 'src/core/3.infra/errors/**'
+      ],
       exclude: [
         'src/**/4.main/**',
-        'src/**/auth-middleware.ts',
         'src/**/data-sources/**',
-        'src/**/persistence/**/entities/**',
-        'src/**/persistence/**/migrations/**'
+        'src/**/persistence/**/{entities,migration}/**'
       ],
       provider: 'istanbul',
       reporter: ['text-summary', 'html', 'lcov'],
@@ -33,11 +43,12 @@ export default defineConfig({
     alias: {
       '@/core': 'src/core',
       '@/communication': 'src/modules/communication',
-      '@/user': 'src/modules/user'
+      '@/user': 'src/modules/user',
+      '~/core': 'test/core/_doubles',
+      '~/communication': 'test/modules/communication/_doubles',
+      '~/user': 'test/modules/user/_doubles'
     }
   },
   esbuild: false,
-  plugins: [
-    Swc()
-  ]
+  plugins: [Swc()]
 })

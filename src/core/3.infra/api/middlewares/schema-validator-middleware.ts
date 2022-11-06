@@ -5,14 +5,18 @@ import { success } from '@/core/2.presentation/factories/success-factory'
 import { Middleware, MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
 import { SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
 
-type ConstructProps = {
+type Props = {
   schemaValidator: SchemaValidator
 }
 
 export class SchemaValidatorMiddleware implements Middleware {
-  constructor (private readonly props: ConstructProps) {}
+  private constructor (private readonly props: Props) {}
 
-  async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
+  public static create (props: Props): SchemaValidatorMiddleware {
+    return new SchemaValidatorMiddleware(props)
+  }
+
+  public async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
     const { schemaValidator } = this.props
     const { schema } = request
 

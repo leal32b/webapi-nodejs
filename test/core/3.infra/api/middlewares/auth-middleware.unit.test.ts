@@ -3,21 +3,11 @@ import { Either, left, right } from '@/core/0.domain/utils/either'
 import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { AuthMiddleware } from '@/core/3.infra/api/middlewares/auth-middleware'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeEncrypterStub = (): Encrypter => ({
   decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    payload: {
-      auth: ['any_role']
-    },
+    payload: { auth: ['any_role'] },
     type: TokenType.access
   })),
   encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
@@ -37,7 +27,7 @@ const makeSut = (): SutTypes => {
     role: 'any_role'
   }
 
-  const sut = new AuthMiddleware(params)
+  const sut = AuthMiddleware.create(params)
 
   return { sut, ...params }
 }

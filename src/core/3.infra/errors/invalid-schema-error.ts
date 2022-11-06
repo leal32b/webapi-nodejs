@@ -1,8 +1,8 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
 export class InvalidSchemaError extends DomainError {
-  constructor () {
-    super({
+  public static create (): InvalidSchemaError {
+    return new InvalidSchemaError({
       message: 'schema is invalid'
     })
   }
