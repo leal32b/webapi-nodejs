@@ -7,7 +7,7 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Entity } from '@/core/0.domain/base/entity'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
-type ConstructParams = {
+type Props = {
   from: From
   subject: Subject
   to: To
@@ -15,25 +15,25 @@ type ConstructParams = {
   text?: Text
 }
 
-type EmailEntityBaseParams = {
+type EmailEntityBaseProps = {
   from: string
   subject: string
   to: string | string[]
 }
 
-export type EmailEntityCreateParams =
-  EmailEntityBaseParams & { html: string, text?: never } |
-  EmailEntityBaseParams & { html?: never, text: string }
+export type EmailEntityProps =
+  EmailEntityBaseProps & { html: string, text?: never } |
+  EmailEntityBaseProps & { html?: never, text: string }
 
-export class EmailEntity extends Entity<ConstructParams> {
-  public static create (params: EmailEntityCreateParams): Either<DomainError[], EmailEntity> {
-    const { from, subject, to, html, text } = params
+export class EmailEntity extends Entity<Props> {
+  public static create (props: EmailEntityProps): Either<DomainError[], EmailEntity> {
+    const { from, subject, to, html, text } = props
 
     const htmlOrText = html
       ? { html: Html.create(html) }
       : { text: Text.create(text) }
 
-    const constructParamsOrError = this.validateParams<ConstructParams>({
+    const constructParamsOrError = this.validateParams<Props>({
       from: From.create(from),
       subject: Subject.create(subject),
       to: To.create(to),

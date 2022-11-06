@@ -4,15 +4,7 @@ import { SendEmailValidationEmailData, SendEmailValidationEmailUseCase } from '@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Either, left, right } from '@/core/0.domain/utils/either'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeSendEmailValidationEmailDataFake = (): SendEmailValidationEmailData => ({
   recipientEmail: 'recipient@mail.com',

@@ -7,10 +7,10 @@ type Params = {
   [key: string]: Either<DomainError[], ValueObject<any>>
 }
 
-export abstract class Entity<ConstructParamsType> {
-  protected readonly props: ConstructParamsType & { id: Identifier }
+export abstract class Entity<PropsType> {
+  protected readonly props: PropsType & { id: Identifier }
 
-  protected constructor (props: ConstructParamsType, id?: string) {
+  protected constructor (props: PropsType, id?: string) {
     this.props = {
       ...props,
       id: Identifier.create({ id })

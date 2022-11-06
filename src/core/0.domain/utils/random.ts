@@ -4,7 +4,7 @@ type Options = {
   multiplier: number
 }
 
-type ConstructParams = {
+type PropsType = {
   options?: Options
   seed?: number
 }
@@ -19,13 +19,13 @@ export class Random {
   private _seed: number
   private readonly props: Options
 
-  private constructor (params?: ConstructParams) {
-    this.props = Object.assign(defaultOptions, params?.options)
-    this._seed = params?.seed || Date.now()
+  private constructor (props?: PropsType) {
+    this.props = Object.assign(defaultOptions, props?.options)
+    this._seed = props?.seed || Date.now()
   }
 
-  public static create (params?: ConstructParams): Random {
-    return new Random(params)
+  public static create (props?: PropsType): Random {
+    return new Random(props)
   }
 
   public nextInt (): number {

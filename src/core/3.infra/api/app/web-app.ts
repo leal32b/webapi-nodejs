@@ -10,7 +10,7 @@ export type Route = {
   path: string
   type: RouteType
   schema: Object
-  controller: Controller
+  controller: Controller<any>
   auth?: string[]
 }
 

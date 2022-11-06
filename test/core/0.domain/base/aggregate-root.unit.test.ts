@@ -4,7 +4,7 @@ import { Identifier } from '@/core/0.domain/utils/identifier'
 
 import { makeDomainEventStub } from '~/core/stubs/domain-event-stub'
 
-type ConstructParamsFake = {
+type PropsFake = {
   anyKey: string
 }
 
@@ -12,9 +12,9 @@ type PayloadFake = {
   anyKey: string
 }
 
-class AggregateRootStub extends AggregateRoot<ConstructParamsFake> {
-  public static create (params: any): AggregateRootStub {
-    return new AggregateRootStub(params)
+class AggregateRootStub extends AggregateRoot<PropsFake> {
+  public static create (props: any): AggregateRootStub {
+    return new AggregateRootStub(props)
   }
 
   testAddEvent (event: DomainEvent<PayloadFake>): void {

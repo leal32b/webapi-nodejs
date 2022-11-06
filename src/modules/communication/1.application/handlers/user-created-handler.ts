@@ -2,12 +2,12 @@ import { SendEmailValidationEmailUseCase } from '@/communication/1.application/u
 import { Handler } from '@/core/0.domain/base/handler'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 
-type ConstructParams = {
+type Props = {
   sendEmailValidationEmailUseCase: SendEmailValidationEmailUseCase
 }
-export class UserCreatedHandler extends Handler<ConstructParams> {
-  public static create (params: ConstructParams): UserCreatedHandler {
-    const userCreatedHandler = new UserCreatedHandler(params)
+export class UserCreatedHandler extends Handler<Props> {
+  public static create (props: Props): UserCreatedHandler {
+    const userCreatedHandler = new UserCreatedHandler(props)
     userCreatedHandler.setupSubscriptions(UserCreatedEvent.name, userCreatedHandler.onUserCreatedEvent.bind(userCreatedHandler))
 
     return userCreatedHandler

@@ -5,7 +5,7 @@ type Options = {
   length: number
 }
 
-type ConstructParams = {
+type PropsType = {
   id?: string
   options?: Options
 }
@@ -20,14 +20,14 @@ export class Identifier {
   private readonly _value: string
   private readonly props: Options
 
-  private constructor (params?: ConstructParams) {
-    this.props = Object.assign(defaultOptions, params?.options)
+  private constructor (props?: PropsType) {
+    this.props = Object.assign(defaultOptions, props?.options)
     this._random = Random.create()
-    this._value = params?.id || this.createId()
+    this._value = props?.id || this.createId()
   }
 
-  public static create (params?: ConstructParams): Identifier {
-    return new Identifier(params)
+  public static create (props?: PropsType): Identifier {
+    return new Identifier(props)
   }
 
   public get value (): string {

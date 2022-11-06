@@ -5,8 +5,8 @@ export type Result<OutputType> = {
   message: string
 } & OutputType
 
-export abstract class UseCase<ConstructParamsType, InputType, OutputType> {
-  protected constructor (protected readonly props: ConstructParamsType) {}
+export abstract class UseCase<PropsType, InputType, OutputType> {
+  protected constructor (protected readonly props: PropsType) {}
 
   abstract execute (input: InputType): Promise<Either<DomainError[], Result<OutputType>>>
 }

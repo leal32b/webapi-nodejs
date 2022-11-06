@@ -1,13 +1,13 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Identifier } from '@/core/0.domain/utils/identifier'
-import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserAggregate, UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { Name } from '@/user/0.domain/value-objects/name'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { Token } from '@/user/0.domain/value-objects/token'
 
-const makeParamsFake = (): UserAggregateCreateParams => ({
+const makeParamsFake = (): UserAggregateProps => ({
   email: 'any@mail.com',
   id: 'any_id',
   name: 'any_name',
@@ -17,7 +17,7 @@ const makeParamsFake = (): UserAggregateCreateParams => ({
 
 type SutTypes = {
   sut: typeof UserAggregate
-  paramsFake: UserAggregateCreateParams
+  paramsFake: UserAggregateProps
 }
 
 const makeSut = (): SutTypes => {

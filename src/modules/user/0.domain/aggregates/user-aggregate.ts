@@ -9,7 +9,7 @@ import { Name } from '@/user/0.domain/value-objects/name'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { Token } from '@/user/0.domain/value-objects/token'
 
-type ConstructParams = {
+type Props = {
   email: Email
   emailConfirmed: EmailConfirmed
   name: Name
@@ -17,7 +17,7 @@ type ConstructParams = {
   token: Token
 }
 
-export type UserAggregateCreateParams = {
+export type UserAggregateProps = {
   email: string
   name: string
   password: string
@@ -26,11 +26,11 @@ export type UserAggregateCreateParams = {
   id?: string
 }
 
-export class UserAggregate extends AggregateRoot<ConstructParams> {
-  public static create (params: UserAggregateCreateParams): Either<DomainError[], UserAggregate> {
-    const { email, name, password, token, id, emailConfirmed } = params
+export class UserAggregate extends AggregateRoot<Props> {
+  public static create (props: UserAggregateProps): Either<DomainError[], UserAggregate> {
+    const { email, name, password, token, id, emailConfirmed } = props
 
-    const constructParamsOrError = this.validateParams<ConstructParams>({
+    const constructParamsOrError = this.validateParams<Props>({
       email: Email.create(email),
       emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
       name: Name.create(name),

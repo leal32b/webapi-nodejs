@@ -5,13 +5,13 @@ import { serverError } from '@/core/2.presentation/factories/server-error-factor
 import { success } from '@/core/2.presentation/factories/success-factory'
 import { CreateUserUseCase, CreateUserResultDTO, CreateUserData } from '@/user/1.application/use-cases/create-user-use-case'
 
-type ConstructParams = {
+type Props = {
   createUserUseCase: CreateUserUseCase
 }
 
-export class SignUpController extends Controller<ConstructParams> {
-  public static create (params: ConstructParams): SignUpController {
-    return new SignUpController(params)
+export class SignUpController extends Controller<Props> {
+  public static create (props: Props): SignUpController {
+    return new SignUpController(props)
   }
 
   public async handle (request: AppRequest<CreateUserData>): Promise<AppResponse<CreateUserResultDTO>> {

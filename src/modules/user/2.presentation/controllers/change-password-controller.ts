@@ -5,13 +5,13 @@ import { serverError } from '@/core/2.presentation/factories/server-error-factor
 import { success } from '@/core/2.presentation/factories/success-factory'
 import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-type ConstructParams = {
+type Props = {
   changePasswordUseCase: ChangePasswordUseCase
 }
 
-export class ChangePasswordController extends Controller<ConstructParams> {
-  public static create (params: ConstructParams): ChangePasswordController {
-    return new ChangePasswordController(params)
+export class ChangePasswordController extends Controller<Props> {
+  public static create (props: Props): ChangePasswordController {
+    return new ChangePasswordController(props)
   }
 
   public async handle (request: AppRequest<ChangePasswordData>): Promise<AppResponse<ChangePasswordResultDTO>> {

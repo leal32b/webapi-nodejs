@@ -9,7 +9,7 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Token } from '@/user/0.domain/value-objects/token'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
-type ConstructParams = {
+type Props = {
   userRepository: UserRepository
   hasher: Hasher
   encrypter: Encrypter
@@ -25,9 +25,9 @@ export type AuthenticateUserResultDTO = {
   message: string
 }
 
-export class AuthenticateUserUseCase extends UseCase<ConstructParams, AuthenticateUserData, AuthenticateUserResultDTO> {
-  public static create (params: ConstructParams): AuthenticateUserUseCase {
-    return new AuthenticateUserUseCase(params)
+export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData, AuthenticateUserResultDTO> {
+  public static create (props: Props): AuthenticateUserUseCase {
+    return new AuthenticateUserUseCase(props)
   }
 
   public async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {

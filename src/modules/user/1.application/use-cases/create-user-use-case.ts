@@ -9,7 +9,7 @@ import { PasswordMismatchError } from '@/core/1.application/errors/password-mism
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
-type ConstructParams = {
+type Props = {
   userRepository: UserRepository
   hasher: Hasher
   encrypter: Encrypter
@@ -27,9 +27,9 @@ export type CreateUserResultDTO = {
   message: string
 }
 
-export class CreateUserUseCase extends UseCase<ConstructParams, CreateUserData, CreateUserResultDTO> {
-  public static create (params: ConstructParams): CreateUserUseCase {
-    return new CreateUserUseCase(params)
+export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUserResultDTO> {
+  public static create (props: Props): CreateUserUseCase {
+    return new CreateUserUseCase(props)
   }
 
   public async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {

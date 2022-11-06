@@ -8,7 +8,7 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { UserRepository } from '@/user/1.application/repositories/user-repository'
 
-type ConstructParams = {
+type Props = {
   userRepository: UserRepository
   hasher: Hasher
 }
@@ -23,9 +23,9 @@ export type ChangePasswordResultDTO = {
   message: string
 }
 
-export class ChangePasswordUseCase extends UseCase<ConstructParams, ChangePasswordData, ChangePasswordResultDTO> {
-  public static create (params: ConstructParams): ChangePasswordUseCase {
-    return new ChangePasswordUseCase(params)
+export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, ChangePasswordResultDTO> {
+  public static create (props: Props): ChangePasswordUseCase {
+    return new ChangePasswordUseCase(props)
   }
 
   public async execute (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], ChangePasswordResultDTO>> {

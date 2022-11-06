@@ -1,4 +1,4 @@
-import { EmailEntity, EmailEntityCreateParams } from '@/communication/0.domain/entities/email-entity'
+import { EmailEntity, EmailEntityProps } from '@/communication/0.domain/entities/email-entity'
 import { From } from '@/communication/0.domain/value-objects/from'
 import { Html } from '@/communication/0.domain/value-objects/html'
 import { Subject } from '@/communication/0.domain/value-objects/subject'
@@ -6,7 +6,7 @@ import { Text } from '@/communication/0.domain/value-objects/text'
 import { To } from '@/communication/0.domain/value-objects/to'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
-const makeParamsFake = (): EmailEntityCreateParams => ({
+const makeParamsFake = (): EmailEntityProps => ({
   from: 'sender@mail.com',
   subject: 'any_subject',
   text: 'any_text',
@@ -15,7 +15,7 @@ const makeParamsFake = (): EmailEntityCreateParams => ({
 
 type SutTypes = {
   sut: typeof EmailEntity
-  paramsFake: EmailEntityCreateParams
+  paramsFake: EmailEntityProps
 }
 
 const makeSut = (): SutTypes => {

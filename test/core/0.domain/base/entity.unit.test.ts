@@ -50,14 +50,14 @@ describe('Entity', () => {
 
     it('creates a new Entity with a concrete class', async () => {
       const { sut } = makeSut()
-      const params = { anyKey: 'any_value' }
+      const props = { anyKey: 'any_value' }
       class EntityFake extends sut<any> {
-        public static create (params: any): EntityFake {
-          return new EntityFake(params)
+        public static create (props: any): EntityFake {
+          return new EntityFake(props)
         }
       }
 
-      const result = EntityFake.create(params)
+      const result = EntityFake.create(props)
 
       expect(result).toBeInstanceOf(Entity)
     })
