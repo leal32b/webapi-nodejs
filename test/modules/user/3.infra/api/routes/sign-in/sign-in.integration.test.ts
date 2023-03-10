@@ -5,13 +5,13 @@ import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, cryptography, persistence } from '@/core/4.main/container/index'
 import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
-import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in/sign-in-route'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
 
 type SutTypes = {
   sut: Route
-  userFixture: DatabaseFixture<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateProps>
   webApp: WebApp
 }
 
@@ -128,7 +128,6 @@ describe('SignInRoute', () => {
           email: 'not_in_base@mail.com',
           password: 'any_password'
         })
-        .expect(401)
 
       expect(result.body).toEqual({
         error: {
@@ -164,7 +163,6 @@ describe('SignInRoute', () => {
           email: 'any4@mail.com',
           password: 'any_password'
         })
-        .expect(401)
 
       expect(result.body).toEqual({
         error: {

@@ -10,16 +10,20 @@ export type MongodbDataSource = {
   connectionString: string
 }
 
-type ConstructParams = {
+type Props = {
   dataSource: MongodbDataSource
 }
 
 export class MongodbClient implements PersistenceClient {
-  mongoClient: MongoClient
+  private mongoClient: MongoClient
 
-  constructor (private readonly props: ConstructParams) { }
+  private constructor (private readonly props: Props) {}
 
-  async clearDatabase (): Promise<Either<Error, void>> {
+  public static create (props: Props): MongodbClient {
+    return new MongodbClient(props)
+  }
+
+  public async clearDatabase (): Promise<Either<Error, void>> {
     const isTest = getVar('NODE_ENV') === 'test'
 
     if (!isTest) {
@@ -36,7 +40,7 @@ export class MongodbClient implements PersistenceClient {
     }
   }
 
-  async close (): Promise<Either<Error, void>> {
+  public async close (): Promise<Either<Error, void>> {
     try {
       await this.mongoClient.close()
 
@@ -50,11 +54,16 @@ export class MongodbClient implements PersistenceClient {
     }
   }
 
-  async connect (): Promise<Either<Error, void>> {
+  public async connect (): Promise<Either<Error, void>> {
     const { connectionString } = this.props.dataSource
 
     try {
       this.mongoClient = await MongoClient.connect(connectionString)
+
+      if (!this.mongoClient) {
+        throw new Error('mongodb connection error')
+      }
+
       const { name, database } = this.props.dataSource
 
       console.log(`connected to ${database} (dataSource: ${name})`)
@@ -67,7 +76,7 @@ export class MongodbClient implements PersistenceClient {
     }
   }
 
-  async getCollection (name: string): Promise<Collection> {
+  public async getCollection (name: string): Promise<Collection> {
     const { database } = this.props.dataSource
 
     return this.mongoClient.db(database).collection(name)

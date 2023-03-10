@@ -13,6 +13,7 @@ const makeDataSourceMock = (): DataSource => ({
   getRepository: vi.fn(() => ({
     clear: vi.fn()
   })),
+  initialize: vi.fn(),
   manager: { save: vi.fn() },
   name: 'any_data_source',
   options: { database: 'any_database' }
@@ -25,7 +26,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const dataSourceMock = makeDataSourceMock()
-  const sut = new PostgresClient({
+  const sut = PostgresClient.create({
     dataSource: dataSourceMock
   })
 
@@ -38,6 +39,22 @@ describe('PostgresClient', () => {
   })
 
   describe('success', () => {
+    it('connects to dataSource', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.connect()
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('closes connection to dataSource', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.close()
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('gets dataSource manager', async () => {
       const { sut } = makeSut()
 
@@ -101,7 +118,7 @@ describe('PostgresClient', () => {
     })
 
     it('returns Left when connect throws', async () => {
-      const postgresClient = new PostgresClient({ dataSource: null })
+      const postgresClient = PostgresClient.create({ dataSource: null })
 
       const result = await postgresClient.connect()
 

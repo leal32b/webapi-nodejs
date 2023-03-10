@@ -1,6 +1,7 @@
 import express, { Express, json, NextFunction, Request, RequestHandler, Response } from 'express'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
+import { UseCase } from '@/core/1.application/base/use-case'
 import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { Middleware } from '@/core/2.presentation/middleware/middleware'
@@ -22,7 +23,7 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('listen', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
@@ -34,7 +35,7 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setApiSpecification', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
@@ -49,7 +50,7 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setContentType', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
@@ -66,7 +67,7 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setHeaders', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
@@ -87,7 +88,7 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setRouter', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
@@ -95,7 +96,7 @@ export class ExpressAdapter implements WebApp {
     return this._app
   }
 
-  private expressController (controller: Controller): RequestHandler {
+  private expressController (controller: Controller<{ [key: string]: UseCase<any, any, any> }>): RequestHandler {
     return async (request: Request, response: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
         payload: request.body

@@ -10,19 +10,19 @@ type Props<ReturnType> = {
 export abstract class MongodbFixture<EntityType> implements DatabaseFixture<EntityType> {
   protected constructor (private readonly props: Props<EntityType>) {}
 
-  async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
+  public async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
     return await this.createMongodbFixture(entity)
   }
 
-  async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
+  public async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
     return await this.createMongodbFixture(entities)
   }
 
-  async createRandomFixture (): Promise<EntityType> {
+  public async createRandomFixture (): Promise<EntityType> {
     return await this.createMongodbFixture()
   }
 
-  async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
+  public async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
     return await this.createMongodbFixture(amount)
   }
 

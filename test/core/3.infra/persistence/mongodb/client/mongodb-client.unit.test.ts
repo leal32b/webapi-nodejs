@@ -1,36 +1,37 @@
-import { MongoClient } from 'mongodb'
+import { Collection } from 'mongodb'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { MongodbClient, MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 
-const NODE_ENV = getVar('NODE_ENV')
+vi.mock('mongodb', () => ({
+  Collection: vi.fn(),
+  MongoClient: {
+    connect: vi.fn(() => ({
+      close: vi.fn(),
+      db: vi.fn(() => ({
+        collection: vi.fn(() => new Collection()),
+        dropDatabase: vi.fn()
+      }))
+    }))
+  }
+}))
 
-const mongoClientMock: MongoClient = ({
-  close: vi.fn(),
-  db: vi.fn(() => ({
-    collection: vi.fn(() => 'any_collection'),
-    dropDatabase: vi.fn()
-  }))
-}) as any
+const NODE_ENV = getVar('NODE_ENV')
 
 type SutTypes = {
   sut: MongodbClient
-  mongoClientMock: MongoClient
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const dataSourceFake: MongodbDataSource = {
+  const dataSource: MongodbDataSource = {
     connectionString: 'any_connection_string',
     database: 'any_database',
     name: 'any_name'
   }
-  const sut = new MongodbClient({
-    dataSource: dataSourceFake
-  })
-  vi.spyOn(MongoClient, 'connect').mockResolvedValueOnce(mongoClientMock as never)
+  const sut = MongodbClient.create({ dataSource })
   await sut.connect()
 
-  return { mongoClientMock, sut }
+  return { sut }
 }
 
 describe('MongodbAdapter', () => {
@@ -72,12 +73,31 @@ describe('MongodbAdapter', () => {
 
       expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
     })
+
+    it('returns Right on close', async () => {
+      const { sut } = await makeSut()
+
+      const result = await sut.close()
+
+      expect(result.isRight()).toBe(true)
+    })
   })
 
   describe('failure', () => {
+    beforeAll(() => {
+      vi.resetAllMocks()
+      vi.mock('mongodb', () => ({
+        MongoClient: {
+          connect: vi.fn(() => ({
+            close: vi.fn(() => { throw new Error() }),
+            dropDatabase: vi.fn(() => { throw new Error() })
+          }))
+        }
+      }))
+    })
+
     it('returns Left when close throws', async () => {
-      const { sut, mongoClientMock } = await makeSut()
-      vi.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
+      const { sut } = await makeSut()
 
       const result = await sut.close()
 
@@ -85,8 +105,7 @@ describe('MongodbAdapter', () => {
     })
 
     it('returns Left when clearDatabase throws', async () => {
-      const { sut, mongoClientMock } = await makeSut()
-      vi.spyOn(mongoClientMock, 'db').mockResolvedValueOnce(null as never)
+      const { sut } = await makeSut()
 
       const result = await sut.clearDatabase()
 
@@ -94,14 +113,12 @@ describe('MongodbAdapter', () => {
     })
 
     it('returns Left when connect throws', async () => {
-      const { mongoClientMock } = await makeSut()
       const dataSource = {
         connectionString: 'invalid_connectionString',
         database: 'any_database',
         name: 'any_name'
       }
-      vi.spyOn(mongoClientMock, 'close').mockRejectedValueOnce(new Error() as never)
-      const mongodbClient = new MongodbClient({ dataSource })
+      const mongodbClient = MongodbClient.create({ dataSource })
 
       const result = await mongodbClient.connect()
 

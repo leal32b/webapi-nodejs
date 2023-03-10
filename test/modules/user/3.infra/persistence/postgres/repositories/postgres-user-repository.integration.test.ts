@@ -1,7 +1,7 @@
 import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container/index'
 import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
-import { UserAggregate, UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserAggregate, UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
@@ -17,7 +17,7 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: PostgresUserRepository
-  userFixture: DatabaseFixture<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateProps>
   userAggregateFake: UserAggregate
 }
 

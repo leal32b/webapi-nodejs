@@ -8,7 +8,7 @@ import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repo
 const dataSource = getVar('NODE_ENV') === 'test' ? postgresTestDataSource : postgresDefaultDataSource
 
 export const makePostgres: Postgres = {
-  client: new PostgresClient({ dataSource }),
+  client: PostgresClient.create({ dataSource }),
   repositories: {
     userRepository: new PostgresUserRepository()
   }

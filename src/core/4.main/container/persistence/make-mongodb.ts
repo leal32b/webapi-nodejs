@@ -8,7 +8,7 @@ import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/reposi
 const dataSource = getVar('NODE_ENV') === 'test' ? mongodbTestDataSource : mongodbDefaultDataSource
 
 export const makeMongodb: Mongodb = {
-  client: new MongodbClient({ dataSource }),
+  client: MongodbClient.create({ dataSource }),
   repositories: {
     userRepository: new MongodbUserRepository()
   }

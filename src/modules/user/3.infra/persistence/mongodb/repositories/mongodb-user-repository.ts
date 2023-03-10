@@ -25,7 +25,7 @@ export class MongodbUserRepository implements UserRepository {
 
       return right()
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -48,7 +48,7 @@ export class MongodbUserRepository implements UserRepository {
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -71,7 +71,7 @@ export class MongodbUserRepository implements UserRepository {
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -92,7 +92,7 @@ export class MongodbUserRepository implements UserRepository {
 
       return right(result)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 

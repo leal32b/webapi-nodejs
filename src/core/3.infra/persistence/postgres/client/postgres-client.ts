@@ -1,17 +1,21 @@
-import { DataSource, EntityManager, EntityTarget, Repository, CannotConnectAlreadyConnectedError } from 'typeorm'
+import { DataSource, EntityManager, EntityTarget, Repository } from 'typeorm'
 
 import { Either, left, right } from '@/core/0.domain/utils/either'
 import { getVar } from '@/core/0.domain/utils/var'
 import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
-type ConstructParams = {
+type Props = {
   dataSource: DataSource
 }
 
 export class PostgresClient implements PersistenceClient {
-  constructor (private readonly props: ConstructParams) {}
+  private constructor (private readonly props: Props) {}
 
-  async clearDatabase (): Promise<Either<Error, void>> {
+  public static create (props: Props): PostgresClient {
+    return new PostgresClient(props)
+  }
+
+  public async clearDatabase (): Promise<Either<Error, void>> {
     const isTest = getVar('NODE_ENV') === 'test'
 
     if (!isTest) {
@@ -31,9 +35,10 @@ export class PostgresClient implements PersistenceClient {
     }
   }
 
-  async close (): Promise<Either<Error, void>> {
+  public async close (): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.destroy()
+
       console.log('disconnected from dataSource')
 
       return right()
@@ -44,7 +49,7 @@ export class PostgresClient implements PersistenceClient {
     }
   }
 
-  async connect (): Promise<Either<Error, void>> {
+  public async connect (): Promise<Either<Error, void>> {
     try {
       await this.props.dataSource.initialize()
       const dataSource = this.props.dataSource.name
@@ -54,19 +59,17 @@ export class PostgresClient implements PersistenceClient {
 
       return right()
     } catch (error) {
-      if (!(error instanceof CannotConnectAlreadyConnectedError)) {
-        console.log('connect', error)
-      }
+      console.log('connect', error)
 
       return left(error)
     }
   }
 
-  async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
+  public async getRepository (entity: EntityTarget<any>): Promise<Repository<any>> {
     return this.props.dataSource.getRepository(entity)
   }
 
-  get manager (): EntityManager {
+  public get manager (): EntityManager {
     return this.props.dataSource.manager
   }
 }

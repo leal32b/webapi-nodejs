@@ -4,9 +4,9 @@ import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-
 import { persistence } from '@/core/4.main/container/index'
 import { MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
 
-class FakeFixture extends MongodbFixture<MongodbUserEntity> {
+class FixtureFake extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {
-    return new FakeFixture({
+    return new FixtureFake({
       collectionName: 'users',
       createDefault: (): any => ({
         email: faker.internet.email(),
@@ -25,7 +25,7 @@ type SutTypes = {
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = FakeFixture.create()
+  const sut = FixtureFake.create()
 
   return { sut }
 }

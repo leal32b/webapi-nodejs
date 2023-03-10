@@ -1,6 +1,5 @@
+import swc from 'rollup-plugin-swc';
 import { defineConfig } from 'vitest/config'
-
-import { Swc } from './vitest.swc'
 
 export default defineConfig({
   test: {
@@ -35,9 +34,6 @@ export default defineConfig({
       reporter: ['text-summary', 'html', 'lcov'],
       statements: 100
     },
-    deps: {
-      inline: ['typeorm']
-    }
   },
   resolve: {
     alias: {
@@ -50,5 +46,19 @@ export default defineConfig({
     }
   },
   esbuild: false,
-  plugins: [Swc()]
+  plugins: [
+    swc({
+      jsc: {
+        parser: {
+          syntax: 'typescript',
+          dynamicImport: true,
+          decorators: true,
+        },
+        target: 'es2021',
+        transform: {
+          decoratorMetadata: true,
+        },
+      },
+    }),
+  ]
 })

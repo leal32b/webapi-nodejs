@@ -24,7 +24,7 @@ export class PostgresUserRepository implements UserRepository {
 
       return right()
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -40,7 +40,7 @@ export class PostgresUserRepository implements UserRepository {
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -56,7 +56,7 @@ export class PostgresUserRepository implements UserRepository {
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 
@@ -77,7 +77,7 @@ export class PostgresUserRepository implements UserRepository {
 
       return right(result)
     } catch (error) {
-      return left([new ServerError(error.message, error.stack)])
+      return left([ServerError.create(error.message, error.stack)])
     }
   }
 

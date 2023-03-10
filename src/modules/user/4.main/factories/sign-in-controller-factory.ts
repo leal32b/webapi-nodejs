@@ -5,11 +5,11 @@ import { SignInController } from '@/user/2.presentation/controllers/sign-in-cont
 export const signInControllerFactory = (): SignInController => {
   const { userRepository } = persistence.actual.repositories
   const { hasher, encrypter } = cryptography
-  const authenticateUserUseCase = new AuthenticateUserUseCase({
+  const authenticateUserUseCase = AuthenticateUserUseCase.create({
     encrypter,
     hasher,
     userRepository
   })
 
-  return new SignInController({ authenticateUserUseCase })
+  return SignInController.create({ authenticateUserUseCase })
 }

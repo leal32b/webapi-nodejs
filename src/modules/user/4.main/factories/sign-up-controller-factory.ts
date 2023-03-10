@@ -5,11 +5,11 @@ import { SignUpController } from '@/user/2.presentation/controllers/sign-up-cont
 export const signUpControllerFactory = (): SignUpController => {
   const { userRepository } = persistence.actual.repositories
   const { hasher, encrypter } = cryptography
-  const createUserUseCase = new CreateUserUseCase({
+  const createUserUseCase = CreateUserUseCase.create({
     encrypter,
     hasher,
     userRepository
   })
 
-  return new SignUpController({ createUserUseCase })
+  return SignUpController.create({ createUserUseCase })
 }
