@@ -1,8 +1,8 @@
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { SendEmailValidationEmailData, SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type SendEmailValidationEmailData, SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'
 

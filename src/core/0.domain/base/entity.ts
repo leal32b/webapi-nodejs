@@ -1,11 +1,9 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type ValueObject } from '@/core/0.domain/base/value-object'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { Identifier } from '@/core/0.domain/utils/identifier'
 
-type Params = {
-  [key: string]: Either<DomainError[], ValueObject<any>>
-}
+type Params = Record<string, Either<DomainError[], ValueObject<any>>>
 
 export abstract class Entity<PropsType> {
   protected readonly props: PropsType & { id: Identifier }

@@ -1,7 +1,7 @@
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
+import { type DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Entity } from '@/core/0.domain/base/entity'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { type Identifier } from '@/core/0.domain/utils/identifier'
 
 export abstract class AggregateRoot<ParamsType> extends Entity<ParamsType> {
   private readonly _events: Array<DomainEvent<any>> = []

@@ -1,8 +1,8 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { AppRequest } from '@/core/2.presentation/base/controller'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
+import { type AuthenticateUserData, type AuthenticateUserResultDTO, type AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 import { SignInController } from '@/user/2.presentation/controllers/sign-in-controller'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'

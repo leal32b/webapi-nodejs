@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 
 import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
-import { MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
+import { type MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
 
 export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {

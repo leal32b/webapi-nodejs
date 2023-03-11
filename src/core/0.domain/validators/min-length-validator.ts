@@ -1,6 +1,6 @@
 import { Validator } from '@/core/0.domain/base/validator'
 import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 type Props = {
   minLength: number

@@ -1,6 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either, right } from '@/core/0.domain/utils/either'
+import { type Either, right } from '@/core/0.domain/utils/either'
 
 export const makeValueObjectStub = (): Either<DomainError[], ValueObject<any>> => {
   class ValueObjectStub extends ValueObject<any> {

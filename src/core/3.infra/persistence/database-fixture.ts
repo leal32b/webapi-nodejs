@@ -1,4 +1,4 @@
-import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
+import { type IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
 
 export interface DatabaseFixture<EntityType> {
   createFixture: (entity: Partial<EntityType>) => Promise<EntityType>

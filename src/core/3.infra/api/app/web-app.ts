@@ -1,5 +1,5 @@
-import { Controller } from '@/core/2.presentation/base/controller'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
+import { type Controller } from '@/core/2.presentation/base/controller'
+import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 
 export enum RouteType {
   POST = 'post',
@@ -9,8 +9,8 @@ export enum RouteType {
 export type Route = {
   path: string
   type: RouteType
-  schema: Object
-  controller: Controller<any>
+  schema: Record<string, unknown>
+  controller: Controller<Record<string, unknown>>
   auth?: string[]
 }
 

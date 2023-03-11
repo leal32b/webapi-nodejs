@@ -1,7 +1,7 @@
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container/index'
 import { makeMongodbFixtures } from '@/core/4.main/setup/fixtures/make-mongodb-fixtures'
-import { UserAggregate, UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 

@@ -1,6 +1,6 @@
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { SchemaValidatorMiddleware } from '@/core/3.infra/api/middlewares/schema-validator-middleware'
-import { SchemaValidator, SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
+import { type SchemaValidator, type SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
 
 const makeErrorFake = (): any => ({
   properties: {

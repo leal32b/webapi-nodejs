@@ -1,6 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Validator } from '@/core/0.domain/base/validator'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Validator } from '@/core/0.domain/base/validator'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 export abstract class ValueObject<ValueType> {
   protected constructor (readonly value: ValueType) {}

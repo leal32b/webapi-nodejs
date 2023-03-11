@@ -1,4 +1,4 @@
-import { DomainEvent, DomainEventProps } from '@/core/0.domain/base/domain-event'
+import { DomainEvent, type DomainEventProps } from '@/core/0.domain/base/domain-event'
 
 type UserCreatedPayload = {
   email: string

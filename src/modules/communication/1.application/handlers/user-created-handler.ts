@@ -1,4 +1,4 @@
-import { SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
 import { Handler } from '@/core/0.domain/base/handler'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 

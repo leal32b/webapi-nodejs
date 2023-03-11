@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
-import { MongodbClient, MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { MongodbClient, type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 
 vi.mock('mongodb', () => ({
   Collection: vi.fn(),

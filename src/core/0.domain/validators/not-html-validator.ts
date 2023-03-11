@@ -1,6 +1,6 @@
 import { Validator } from '@/core/0.domain/base/validator'
 import { NotHtmlError } from '@/core/0.domain/errors/not-html-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 export class NotHtmlValidator extends Validator<null> {
   public static create (): NotHtmlValidator {

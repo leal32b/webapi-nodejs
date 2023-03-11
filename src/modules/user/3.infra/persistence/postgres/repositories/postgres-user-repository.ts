@@ -1,9 +1,9 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { persistence } from '@/core/4.main/container/index'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export class PostgresUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
@@ -81,7 +81,7 @@ export class PostgresUserRepository implements UserRepository {
     }
   }
 
-  private async readByFilter (filter: { [key: string]: any }): Promise<any> {
+  private async readByFilter (filter: Record<string, any>): Promise<any> {
     const repository = await persistence.postgres.client.getRepository('users')
 
     const user = await repository.findOneBy(filter)

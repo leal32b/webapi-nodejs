@@ -1,8 +1,8 @@
-import { MongoClient, Collection } from 'mongodb'
+import { MongoClient, type Collection } from 'mongodb'
 
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { getVar } from '@/core/0.domain/utils/var'
-import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
+import { type PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 export type MongodbDataSource = {
   name: string

@@ -1,11 +1,11 @@
 import Ajv from 'ajv'
 
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
-import { SchemaValidator, SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
+import { type SchemaValidator, type SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
 
 export class AjvAdapter implements SchemaValidator {
-  async validate (request: MiddlewareRequest, schema: Object): Promise<Either<Error, SchemaValidatorResult>> {
+  async validate (request: MiddlewareRequest, schema: Record<string, unknown>): Promise<Either<Error, SchemaValidatorResult>> {
     try {
       const ajv = new Ajv()
       const validate = ajv.compile(schema)
@@ -23,4 +23,9 @@ export class AjvAdapter implements SchemaValidator {
       return left(error)
     }
   }
+}
+
+export type SchemaValidatorResultx = {
+  isValid: boolean
+  errors?: Array<Record<string, unknown>>
 }

@@ -1,4 +1,4 @@
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
+import { type DomainEvent } from '@/core/0.domain/base/domain-event'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
 
 export abstract class Handler<PropsType> {

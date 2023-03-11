@@ -1,7 +1,7 @@
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 
 type Props = {

@@ -20,3 +20,4 @@
   src/core/2.presentation/factories/success-factory.ts
 [ ] change 'params' to 'props' on makeSut
 [ ] create a mechanism to log errors (maybe in DomainError)
+[ ] adjust types in src/core/0.domain/events/domain-events.ts

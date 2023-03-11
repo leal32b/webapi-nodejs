@@ -1,4 +1,4 @@
-import { Path } from '@/core/3.infra/documentation/api-specification/path'
+import { type Path } from '@/core/3.infra/documentation/api-specification/path'
 import { invalidPasswordSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-password-schema'
 import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
 import { notFoundSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/not-found-schema'

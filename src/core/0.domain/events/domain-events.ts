@@ -1,9 +1,9 @@
-import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { type AggregateRoot } from '@/core/0.domain/base/aggregate-root'
+import { type DomainEvent } from '@/core/0.domain/base/domain-event'
+import { type Identifier } from '@/core/0.domain/utils/identifier'
 
 export class DomainEvents {
-  private static _handlers = {}
+  private static _handlers: Record<string, any> = {}
   private static _markedAggregates: Array<AggregateRoot<any>> = []
 
   public static clearHandlers (): void {
@@ -45,7 +45,7 @@ export class DomainEvents {
     console.log(`${eventName} registered`)
   }
 
-  public static get handlers (): Object {
+  public static get handlers (): Record<string, any> {
     return this._handlers
   }
 
@@ -65,7 +65,7 @@ export class DomainEvents {
   }
 
   private static dispatchAggregateEvents (aggregate: AggregateRoot<any>): void {
-    aggregate.events.forEach(event => this.dispatch(event))
+    aggregate.events.forEach(event => { this.dispatch(event) })
   }
 
   private static findMarkedAggregateById (id: Identifier): AggregateRoot<any> {

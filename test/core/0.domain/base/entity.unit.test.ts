@@ -1,7 +1,7 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Entity } from '@/core/0.domain/base/entity'
 import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either, left } from '@/core/0.domain/utils/either'
+import { type Either, left } from '@/core/0.domain/utils/either'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'
 import { makeValueObjectStub } from '~/core/stubs/value-object-stub'

@@ -1,4 +1,4 @@
-import { EmailEntity, EmailEntityProps } from '@/communication/0.domain/entities/email-entity'
+import { EmailEntity, type EmailEntityProps } from '@/communication/0.domain/entities/email-entity'
 import { From } from '@/communication/0.domain/value-objects/from'
 import { Html } from '@/communication/0.domain/value-objects/html'
 import { Subject } from '@/communication/0.domain/value-objects/subject'

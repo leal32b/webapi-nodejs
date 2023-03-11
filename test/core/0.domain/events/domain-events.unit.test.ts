@@ -1,5 +1,5 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
+import { type DomainEvent } from '@/core/0.domain/base/domain-event'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
 
 import { makeAggregateStub } from '~/core/stubs/aggregate-stub'

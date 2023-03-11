@@ -1,8 +1,8 @@
-import { DataSource, EntityManager, EntityTarget, Repository } from 'typeorm'
+import { type DataSource, type EntityManager, type EntityTarget, type Repository } from 'typeorm'
 
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { getVar } from '@/core/0.domain/utils/var'
-import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
+import { type PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 type Props = {
   dataSource: DataSource

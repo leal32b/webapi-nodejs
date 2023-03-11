@@ -1,11 +1,13 @@
-import { Either } from '@/core/0.domain/utils/either'
-import { MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
+import { type ErrorObject } from 'ajv'
+
+import { type Either } from '@/core/0.domain/utils/either'
+import { type MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
 
 export type SchemaValidatorResult = {
   isValid: boolean
-  errors?: Object[]
+  errors?: Array<ErrorObject<string, Record<string, any>, unknown>>
 }
 
 export interface SchemaValidator {
-  validate: (request: MiddlewareRequest, schema: Object) => Promise<Either<Error, SchemaValidatorResult>>
+  validate: (request: MiddlewareRequest, schema: Record<string, unknown>) => Promise<Either<Error, SchemaValidatorResult>>
 }

@@ -1,5 +1,5 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { AppResponse } from '@/core/2.presentation/base/controller'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type AppResponse } from '@/core/2.presentation/base/controller'
 
 export enum ClientErrorStatus {
   badRequest = 'bad_request',

@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { type DataSource } from 'typeorm'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'

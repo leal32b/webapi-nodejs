@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { getVar } from '@/core/0.domain/utils/var'
-import { Encrypter, TokenData } from '@/core/1.application/cryptography/encrypter'
+import { type Encrypter, type TokenData } from '@/core/1.application/cryptography/encrypter'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 export class JsonwebtokenAdapter implements Encrypter {

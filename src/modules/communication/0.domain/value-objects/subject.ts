@@ -1,6 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either } from '@/core/0.domain/utils/either'
+import { type Either } from '@/core/0.domain/utils/either'
 import { MaxLengthValidator } from '@/core/0.domain/validators/max-length-validator'
 import { MinLengthValidator } from '@/core/0.domain/validators/min-length-validator'
 

@@ -1,9 +1,9 @@
 import 'dotenv/config'
 
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt, { type JwtPayload } from 'jsonwebtoken'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'

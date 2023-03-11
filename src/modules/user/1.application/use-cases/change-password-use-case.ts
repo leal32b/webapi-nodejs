@@ -1,12 +1,12 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
-import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { type UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Password } from '@/user/0.domain/value-objects/password'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 type Props = {
   userRepository: UserRepository

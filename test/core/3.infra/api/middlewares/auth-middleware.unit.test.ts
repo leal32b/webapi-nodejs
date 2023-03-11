@@ -1,6 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { AuthMiddleware } from '@/core/3.infra/api/middlewares/auth-middleware'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'

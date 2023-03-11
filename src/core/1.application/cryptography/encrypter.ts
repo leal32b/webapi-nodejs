@@ -1,5 +1,5 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either } from '@/core/0.domain/utils/either'
 
 export enum TokenType {
   email = 'email',

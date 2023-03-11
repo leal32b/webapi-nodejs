@@ -1,7 +1,7 @@
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container/index'
 import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
-import { UserAggregate, UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 

@@ -1,5 +1,5 @@
 import { UserCreatedHandler } from '@/communication/1.application/handlers/user-created-handler'
-import { SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'

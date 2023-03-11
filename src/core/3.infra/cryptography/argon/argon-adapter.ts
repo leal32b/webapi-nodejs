@@ -1,8 +1,8 @@
 import argon2id from 'argon2'
 
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 type Props = {

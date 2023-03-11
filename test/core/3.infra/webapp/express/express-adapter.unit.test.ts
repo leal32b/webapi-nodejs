@@ -1,23 +1,23 @@
 import request from 'supertest'
 
-import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
+import { type Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
+import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 
-const makeAuthStub = (): Controller => ({
+const makeAuthStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
-})
+} as any)
 
-const makeControllerStub = (): Controller => ({
+const makeControllerStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
-})
+} as any)
 
 const makeMiddlewareStub = (): Middleware => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
@@ -29,7 +29,7 @@ const makeMiddlewareStub = (): Middleware => ({
 type SutTypes = {
   sut: ExpressAdapter
   auth: Middleware
-  controller: Controller
+  controller: Controller<Record<string, unknown>>
   middleware: Middleware
 }
 
@@ -55,7 +55,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller: makeControllerStub(),
           path: '/test_body_parser',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.POST
         }]
       })
@@ -95,7 +95,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller: makeControllerStub(),
           path: '/test_content_type',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.GET
         }]
       })
@@ -123,7 +123,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller: makeControllerStub(),
           path: '/test_cors',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.GET
         }]
       })
@@ -142,7 +142,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller,
           path: 'any_path',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.GET
         }]
       })
@@ -159,7 +159,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller,
           path: 'any_path',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.GET
         }]
       })
@@ -236,7 +236,7 @@ describe('ExpressAdapter', () => {
         routes: [{
           controller,
           path: 'any_path',
-          schema: 'any_schema',
+          schema: {},
           type: RouteType.GET
         }]
       })

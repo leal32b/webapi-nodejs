@@ -1,6 +1,6 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, right } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, right } from '@/core/0.domain/utils/either'
 
 import { makeDomainEventStub } from '~/core/stubs/domain-event-stub'
 

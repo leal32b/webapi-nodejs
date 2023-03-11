@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer'
 
-import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type EmailEntity } from '@/communication/0.domain/entities/email-entity'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 export class NodemailerAdapter implements EmailSender {

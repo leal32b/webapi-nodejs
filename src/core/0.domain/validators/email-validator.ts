@@ -1,6 +1,6 @@
 import { Validator } from '@/core/0.domain/base/validator'
 import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 export class EmailValidator extends Validator<null> {
   public static create (): EmailValidator {

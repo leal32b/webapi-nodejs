@@ -1,5 +1,5 @@
 import { right } from '@/core/0.domain/utils/either'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export const makeUserRepositoryStub = (): UserRepository => ({
   create: vi.fn(() => right()),

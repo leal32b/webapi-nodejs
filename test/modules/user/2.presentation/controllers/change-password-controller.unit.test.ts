@@ -1,8 +1,8 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { AppRequest } from '@/core/2.presentation/base/controller'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
+import { type ChangePasswordData, type ChangePasswordResultDTO, type ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'

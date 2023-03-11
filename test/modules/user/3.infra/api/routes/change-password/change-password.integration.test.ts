@@ -1,13 +1,13 @@
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
-import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type Route, type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, cryptography, persistence } from '@/core/4.main/container/index'
 import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
-import { UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
+import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 

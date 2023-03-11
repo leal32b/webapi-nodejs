@@ -1,11 +1,12 @@
-import express, { Express, json, NextFunction, Request, RequestHandler, Response } from 'express'
+import express, {
+  type Express, json, type NextFunction, type Request, type RequestHandler, type Response
+} from 'express'
 
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { UseCase } from '@/core/1.application/base/use-case'
-import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Controller, type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
-import { WebApp, Router, Route, Header } from '@/core/3.infra/api/app/web-app'
+import { type Middleware } from '@/core/2.presentation/middleware/middleware'
+import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
 
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
@@ -96,7 +97,7 @@ export class ExpressAdapter implements WebApp {
     return this._app
   }
 
-  private expressController (controller: Controller<{ [key: string]: UseCase<any, any, any> }>): RequestHandler {
+  private expressController (controller: Controller<Record<string, unknown>>): RequestHandler {
     return async (request: Request, response: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
         payload: request.body

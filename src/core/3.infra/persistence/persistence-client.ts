@@ -1,4 +1,4 @@
-import { Either } from '@/core/0.domain/utils/either'
+import { type Either } from '@/core/0.domain/utils/either'
 
 export interface PersistenceClient {
   clearDatabase: () => Promise<Either<Error, void>>

@@ -1,7 +1,7 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { Validator } from '@/core/0.domain/base/validator'
 import { InvalidDateError } from '@/core/0.domain/errors/invalid-date-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
 export class DateValidator extends Validator<null> {
   public static create (): DateValidator {

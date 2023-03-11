@@ -1,5 +1,5 @@
 import { right } from '@/core/0.domain/utils/either'
-import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 
 export const makeEncrypterStub = (): Encrypter => ({
   decrypt: vi.fn(() => right({

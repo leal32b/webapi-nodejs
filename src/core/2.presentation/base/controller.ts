@@ -1,11 +1,11 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 
 export type AppRequest<PayloadType> = {
   payload: PayloadType
 }
 
 export type AppResponse<PayloadType> = {
-  payload: PayloadType | { [key: string]: DomainError[] }
+  payload: PayloadType | Record<string, DomainError[]>
   statusCode: number
 }
 

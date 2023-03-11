@@ -1,5 +1,5 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Validator } from '@/core/0.domain/base/validator'
+import { type Validator } from '@/core/0.domain/base/validator'
 import { ValueObject } from '@/core/0.domain/base/value-object'
 import { left } from '@/core/0.domain/utils/either'
 

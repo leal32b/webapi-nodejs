@@ -1,4 +1,4 @@
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { type Identifier } from '@/core/0.domain/utils/identifier'
 
 export type DomainEventProps<PayloadType> = {
   aggregateId: Identifier

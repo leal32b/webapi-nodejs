@@ -1,9 +1,9 @@
-import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
+import { Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
+import { type AuthenticateUserData, type AuthenticateUserResultDTO, type AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
 type Props = {
   authenticateUserUseCase: AuthenticateUserUseCase

@@ -1,4 +1,4 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'
