@@ -16,7 +16,7 @@ describe('InvalidTokenError', () => {
       const { sut } = makeSut()
       const type = 'Bearer'
 
-      const result = new sut(type)
+      const result = sut.create(type)
 
       expect(result).toBeInstanceOf(InvalidTokenError)
     })
@@ -25,7 +25,7 @@ describe('InvalidTokenError', () => {
       const { sut } = makeSut()
       const type = 'Bearer'
 
-      const result = new sut(type)
+      const result = sut.create(type)
 
       expect(result.props).toEqual({
         message: 'token is invalid (type: Bearer)'

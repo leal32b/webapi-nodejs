@@ -1,10 +1,12 @@
 import 'dotenv/config'
 
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt, { type JwtPayload } from 'jsonwebtoken'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
+
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 vi.mock('jsonwebtoken', () => ({
   default: {
@@ -13,32 +15,22 @@ vi.mock('jsonwebtoken', () => ({
     },
     async verify (): Promise<JwtPayload> {
       return await Promise.resolve({
-        type: TokenType.access,
         payload: {
-          id: 'any_id',
-          auth: ['any_auth']
-        }
+          auth: ['any_auth'],
+          id: 'any_id'
+        },
+        type: TokenType.access
       })
     }
   }
 }))
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
 const makeFakeData = (): TokenData => ({
-  type: TokenType.access,
   payload: {
-    id: 'any_id',
-    auth: ['any_auth']
-  }
+    auth: ['any_auth'],
+    id: 'any_id'
+  },
+  type: TokenType.access
 })
 
 type SutTypes = {
@@ -49,10 +41,10 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    errorFake: makeErrorFake(),
-    dataFake: makeFakeData()
+    dataFake: makeFakeData(),
+    errorFake: makeErrorFake()
   }
-  const sut = new JsonwebtokenAdapter()
+  const sut = JsonwebtokenAdapter.create()
 
   return { sut, ...doubles }
 }
@@ -66,11 +58,11 @@ describe('JsonwebtokenAdapter', () => {
       await sut.encrypt(dataFake)
 
       expect(signSpy).toHaveBeenCalledWith({
-        type: TokenType.access,
         payload: {
-          id: 'any_id',
-          auth: ['any_auth']
-        }
+          auth: ['any_auth'],
+          id: 'any_id'
+        },
+        type: TokenType.access
       },
       'any_secret',
       {
@@ -110,11 +102,11 @@ describe('JsonwebtokenAdapter', () => {
       const result = await sut.decrypt(token)
 
       expect(result.value).toEqual({
-        type: TokenType.access,
         payload: {
-          id: 'any_id',
-          auth: ['any_auth']
-        }
+          auth: ['any_auth'],
+          id: 'any_id'
+        },
+        type: TokenType.access
       })
     })
   })

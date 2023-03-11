@@ -3,22 +3,14 @@ import argon2id from 'argon2'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { ArgonAdapter } from '@/core/3.infra/cryptography/argon/argon-adapter'
 
+import { makeErrorFake } from '~/core/fakes/error-fake'
+
 vi.mock('argon2', () => ({
   default: {
     hash: () => 'hashed_value',
     verify: () => true
   }
 }))
-
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
 
 type SutTypes = {
   sut: ArgonAdapter
@@ -33,7 +25,7 @@ const makeSut = (): SutTypes => {
   const params = {
     salt: 12
   }
-  const sut = new ArgonAdapter(params)
+  const sut = ArgonAdapter.create(params)
 
   return { sut, ...params, ...doubles }
 }

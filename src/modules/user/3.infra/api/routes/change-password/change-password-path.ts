@@ -1,4 +1,4 @@
-import { Path } from '@/core/3.infra/documentation/api-specification/path'
+import { type Path } from '@/core/3.infra/documentation/api-specification/path'
 import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
 import { invalidTokenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-token-schema'
 import { missingTokenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/missing-token-schema'

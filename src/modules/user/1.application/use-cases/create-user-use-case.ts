@@ -1,13 +1,19 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
-import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
-import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
+
+type Props = {
+  userRepository: UserRepository
+  hasher: Hasher
+  encrypter: Encrypter
+}
 
 export type CreateUserData = {
   name: string
@@ -21,14 +27,12 @@ export type CreateUserResultDTO = {
   message: string
 }
 
-export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultDTO> {
-  constructor (private readonly props: {
-    userRepository: UserRepository
-    hasher: Hasher
-    encrypter: Encrypter
-  }) { super() }
+export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUserResultDTO> {
+  public static create (props: Props): CreateUserUseCase {
+    return new CreateUserUseCase(props)
+  }
 
-  async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
+  public async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
     const { email, password } = createUserData
 
     const validOrError = await this.initialValidation(createUserData)
@@ -66,51 +70,6 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     })
   }
 
-  private async initialValidation (createUserData: CreateUserData): Promise<Either<DomainError[], void>> {
-    const { email, password, passwordRetype } = createUserData
-
-    if (password !== passwordRetype) {
-      return left([new PasswordMismatchError('password')])
-    }
-
-    const emailAvailableOrError = await this.isEmailAvailable(email)
-
-    if (emailAvailableOrError.isLeft()) {
-      return left(emailAvailableOrError.value)
-    }
-
-    return right()
-  }
-
-  private async isEmailAvailable (email: string): Promise<Either<DomainError[], void>> {
-    const { userRepository } = this.props
-    const userAggregateByEmailOrError = await userRepository.readByEmail(email)
-
-    if (userAggregateByEmailOrError.isLeft()) {
-      return left(userAggregateByEmailOrError.value)
-    }
-
-    if (userAggregateByEmailOrError.value) {
-      return left([new EmailTakenError('email', email)])
-    }
-
-    return right()
-  }
-
-  private async hashPassword (password: string): Promise<Either<DomainError[], string>> {
-    const { hasher } = this.props
-
-    const hashedPasswordOrError = await hasher.hash(password)
-
-    if (hashedPasswordOrError.isLeft()) {
-      return left([hashedPasswordOrError.value])
-    }
-
-    const hashedPassword = hashedPasswordOrError.value
-
-    return right(hashedPassword)
-  }
-
   private async createToken (): Promise<Either<DomainError[], string>> {
     const { encrypter } = this.props
 
@@ -146,5 +105,50 @@ export class CreateUserUseCase extends UseCase<CreateUserData, CreateUserResultD
     }
 
     return right(userAggregate)
+  }
+
+  private async hashPassword (password: string): Promise<Either<DomainError[], string>> {
+    const { hasher } = this.props
+
+    const hashedPasswordOrError = await hasher.hash(password)
+
+    if (hashedPasswordOrError.isLeft()) {
+      return left([hashedPasswordOrError.value])
+    }
+
+    const hashedPassword = hashedPasswordOrError.value
+
+    return right(hashedPassword)
+  }
+
+  private async initialValidation (createUserData: CreateUserData): Promise<Either<DomainError[], void>> {
+    const { email, password, passwordRetype } = createUserData
+
+    if (password !== passwordRetype) {
+      return left([PasswordMismatchError.create('password')])
+    }
+
+    const emailAvailableOrError = await this.isEmailAvailable(email)
+
+    if (emailAvailableOrError.isLeft()) {
+      return left(emailAvailableOrError.value)
+    }
+
+    return right()
+  }
+
+  private async isEmailAvailable (email: string): Promise<Either<DomainError[], void>> {
+    const { userRepository } = this.props
+    const userAggregateByEmailOrError = await userRepository.readByEmail(email)
+
+    if (userAggregateByEmailOrError.isLeft()) {
+      return left(userAggregateByEmailOrError.value)
+    }
+
+    if (userAggregateByEmailOrError.value) {
+      return left([EmailTakenError.create('email', email)])
+    }
+
+    return right()
   }
 }

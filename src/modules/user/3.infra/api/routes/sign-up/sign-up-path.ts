@@ -1,4 +1,4 @@
-import { Path } from '@/core/3.infra/documentation/api-specification/path'
+import { type Path } from '@/core/3.infra/documentation/api-specification/path'
 import { emailTakenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/email-taken-schema'
 import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
 import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'

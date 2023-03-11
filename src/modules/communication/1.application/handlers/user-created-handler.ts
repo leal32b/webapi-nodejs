@@ -1,19 +1,16 @@
-import { SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
 import { Handler } from '@/core/0.domain/base/handler'
-import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 
-type ConstructParams = {
+type Props = {
   sendEmailValidationEmailUseCase: SendEmailValidationEmailUseCase
 }
-export class UserCreatedHandler extends Handler {
-  constructor (private readonly props: ConstructParams) {
-    super()
-    this.setupSubscriptions()
-  }
+export class UserCreatedHandler extends Handler<Props> {
+  public static create (props: Props): UserCreatedHandler {
+    const userCreatedHandler = new UserCreatedHandler(props)
+    userCreatedHandler.setupSubscriptions(UserCreatedEvent.name, userCreatedHandler.onUserCreatedEvent.bind(userCreatedHandler))
 
-  setupSubscriptions (): void {
-    DomainEvents.register(UserCreatedEvent.name, this.onUserCreatedEvent.bind(this))
+    return userCreatedHandler
   }
 
   private async onUserCreatedEvent (event: UserCreatedEvent): Promise<void> {

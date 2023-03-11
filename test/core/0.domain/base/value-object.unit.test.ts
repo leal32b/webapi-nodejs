@@ -1,34 +1,21 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Validator } from '@/core/0.domain/base/validator'
+import { type Validator } from '@/core/0.domain/base/validator'
 import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { left } from '@/core/0.domain/utils/either'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeValidatorStub = (): Validator<any> => ({
-  validate: vi.fn((): Either<DomainError, void> => {
-    return right()
-  })
-})
+import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeValidatorStub } from '~/core/stubs/validator-stub'
 
 type SutTypes = {
   sut: typeof ValueObject
-  validator: Validator<any>
   errorFake: DomainError
+  validatorStub: Validator<any>
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    validator: makeValidatorStub()
+    validatorStub: makeValidatorStub()
   }
   const sut = ValueObject
 
@@ -37,61 +24,66 @@ const makeSut = (): SutTypes => {
 
 describe('ValueObject', () => {
   describe('success', () => {
+    it('creates a new ValueObject with a concrete class', async () => {
+      const { sut } = makeSut()
+      const value = 'any_value'
+      class ValueObjectFake extends sut<any> {
+        public static create (value: any): ValueObjectFake {
+          return new ValueObjectFake(value)
+        }
+      }
+
+      const result = ValueObjectFake.create(value)
+
+      expect(result).toBeInstanceOf(ValueObject)
+    })
+
     it('returns Right when all validators pass', () => {
-      const { sut, validator } = makeSut()
+      const { sut, validatorStub } = makeSut()
       const input = 'any_input'
 
-      const result = sut.validate(input, [validator])
+      const result = sut.validate(input, [validatorStub])
 
       expect(result.isRight()).toBe(true)
     })
 
     it('returns Right when input is an array and all validators pass', () => {
-      const { sut, validator } = makeSut()
+      const { sut, validatorStub } = makeSut()
       const input = ['any_input', 'any_input']
 
-      const result = sut.validate(input, [validator])
+      const result = sut.validate(input, [validatorStub])
 
       expect(result.isRight()).toBe(true)
-    })
-
-    it('returns undefined when all validators pass', () => {
-      const { sut, validator } = makeSut()
-      const input = 'any_input'
-
-      const result = sut.validate(input, [validator])
-
-      expect(result.value).toBe(undefined)
     })
   })
 
   describe('failure', () => {
-    it('returns Left when any validator fails', () => {
-      const { sut, validator, errorFake } = makeSut()
+    it('returns Left when any validatorStub fails', () => {
+      const { sut, validatorStub, errorFake } = makeSut()
       const input = 'short'
-      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
 
-      const result = sut.validate(input, [validator])
+      const result = sut.validate(input, [validatorStub])
 
       expect(result.isLeft()).toBe(true)
     })
 
-    it('returns Left when input is an array and any validator fails', () => {
-      const { sut, validator, errorFake } = makeSut()
+    it('returns Left when input is an array and any validatorStub fails', () => {
+      const { sut, validatorStub, errorFake } = makeSut()
       const input = ['short', 'short']
-      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
 
-      const result = sut.validate(input, [validator])
+      const result = sut.validate(input, [validatorStub])
 
       expect(result.isLeft()).toBe(true)
     })
 
-    it('returns an array of errors when any validator fails', () => {
-      const { sut, validator, errorFake } = makeSut()
+    it('returns an array of errors when any validatorStub fails', () => {
+      const { sut, validatorStub, errorFake } = makeSut()
       const input = 'short'
-      vi.spyOn(validator, 'validate').mockReturnValue(left(errorFake))
+      vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
 
-      const result = sut.validate(input, [validator])
+      const result = sut.validate(input, [validatorStub])
 
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)

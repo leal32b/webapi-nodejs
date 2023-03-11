@@ -1,17 +1,17 @@
 import request from 'supertest'
 
-import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type Route, type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, persistence } from '@/core/4.main/container/index'
 import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
-import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
 import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
 
 type SutTypes = {
   sut: Route
-  userFixture: DatabaseFixture<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateProps>
   webApp: WebApp
 }
 
@@ -22,9 +22,9 @@ const makeSut = (): SutTypes => {
   }
   const sut = signUpRoute(signUpControllerFactory())
   collaborators.webApp.setRouter({
+    middlewares: [schemaValidatorMiddleware],
     path: '/user',
-    routes: [sut],
-    middlewares: [schemaValidatorMiddleware]
+    routes: [sut]
   })
 
   return { sut, ...collaborators }
@@ -47,8 +47,8 @@ describe('SignUpRoute', () => {
       await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'any@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
         })
@@ -61,8 +61,8 @@ describe('SignUpRoute', () => {
       const result = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'another@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
         })
@@ -108,8 +108,8 @@ describe('SignUpRoute', () => {
       await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'any@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
         })
@@ -122,8 +122,8 @@ describe('SignUpRoute', () => {
       const result = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'any@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
         })
@@ -144,8 +144,8 @@ describe('SignUpRoute', () => {
       await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'any2@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
         })
@@ -160,16 +160,16 @@ describe('SignUpRoute', () => {
       const result = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
-          name: 'any_name',
           email: 'any3@mail.com',
+          name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
         })
 
       expect(result.body).toEqual({
         error: {
-          input: 'any3@mail.com',
           field: 'email',
+          input: 'any3@mail.com',
           message: 'email already in use'
         }
       })

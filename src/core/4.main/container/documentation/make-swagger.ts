@@ -8,7 +8,7 @@ import { invalidTokenSchema } from '@/core/3.infra/documentation/api-specificati
 import { missingTokenSchema } from '@/core/3.infra/documentation/api-specification/schemas/missing-token-schema'
 import { notFoundSchema } from '@/core/3.infra/documentation/api-specification/schemas/not-found-schema'
 import { passwordMismatchSchema } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'
-import { ApiSpecification } from '@/core/4.main/container/container-types'
+import { type ApiSpecification } from '@/core/4.main/container/container-types'
 import { userPaths, userSchemas } from '@/user/4.main/setup/user-api-specification'
 
 const swaggerConfig = {

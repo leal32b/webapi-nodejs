@@ -1,28 +1,33 @@
-import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
+import { Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
+import { type AuthenticateUserData, type AuthenticateUserResultDTO, type AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
-export class SignInController extends Controller {
-  constructor (private readonly props: {
-    authenticateUserUseCase: AuthenticateUserUseCase
-  }) { super() }
+type Props = {
+  authenticateUserUseCase: AuthenticateUserUseCase
+}
 
-  async handle (request: AppRequest<AuthenticateUserData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
-    try {
-      const { payload: signInData } = request
-      const authenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
+export class SignInController extends Controller<Props> {
+  public static create (props: Props): SignInController {
+    return new SignInController(props)
+  }
 
-      if (authenticateUserResultDtoOrError.isLeft()) {
-        return clientError.unauthorized(authenticateUserResultDtoOrError.value)
-      }
+  public async handle (request: AppRequest<AuthenticateUserData>): Promise<AppResponse<AuthenticateUserResultDTO>> {
+    const { payload: signInData } = request
+    const authenticateUserResultDtoOrError = await this.props.authenticateUserUseCase.execute(signInData)
 
-      const authenticateUserResultDto = authenticateUserResultDtoOrError.value
+    if (authenticateUserResultDtoOrError.isLeft()) {
+      const error = authenticateUserResultDtoOrError.value
 
-      return success.ok(authenticateUserResultDto)
-    } catch (error) {
-      return serverError.internalServerError(error)
+      return error[0] instanceof ServerError
+        ? serverError.internalServerError(error)
+        : clientError.unauthorized(error)
     }
+
+    const authenticateUserResultDto = authenticateUserResultDtoOrError.value
+
+    return success.ok(authenticateUserResultDto)
   }
 }

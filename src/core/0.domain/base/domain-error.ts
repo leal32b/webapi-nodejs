@@ -1,4 +1,4 @@
-type ConstructParams = {
+type Props = {
   message: string
   field?: string
   input?: any
@@ -6,5 +6,5 @@ type ConstructParams = {
 }
 
 export abstract class DomainError {
-  constructor (readonly props: ConstructParams) {}
+  protected constructor (readonly props: Props) {}
 }

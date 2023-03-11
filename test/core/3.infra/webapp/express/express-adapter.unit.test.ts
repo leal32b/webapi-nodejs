@@ -1,23 +1,23 @@
 import request from 'supertest'
 
-import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
+import { type Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
+import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
 
-const makeAuthStub = (): Controller => ({
+const makeAuthStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
-})
+} as any)
 
-const makeControllerStub = (): Controller => ({
+const makeControllerStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
     payload: request.payload,
     statusCode: 200
   }))
-})
+} as any)
 
 const makeMiddlewareStub = (): Middleware => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
@@ -29,7 +29,7 @@ const makeMiddlewareStub = (): Middleware => ({
 type SutTypes = {
   sut: ExpressAdapter
   auth: Middleware
-  controller: Controller
+  controller: Controller<Record<string, unknown>>
   middleware: Middleware
 }
 
@@ -40,7 +40,7 @@ const makeSut = (): SutTypes => {
     middleware: makeMiddlewareStub()
   }
 
-  const sut = new ExpressAdapter()
+  const sut = ExpressAdapter.create()
 
   return { sut, ...doubles }
 }
@@ -50,14 +50,14 @@ describe('ExpressAdapter', () => {
     it('parses body as json', async () => {
       const { sut } = makeSut()
       sut.setRouter({
+        middlewares: [],
         path: '/express',
         routes: [{
+          controller: makeControllerStub(),
           path: '/test_body_parser',
-          type: RouteType.POST,
-          schema: 'any_schema',
-          controller: makeControllerStub()
-        }],
-        middlewares: []
+          schema: {},
+          type: RouteType.POST
+        }]
       })
       const body = { key: 'any_value' }
 
@@ -90,14 +90,14 @@ describe('ExpressAdapter', () => {
       const { sut } = makeSut()
       sut.setContentType('json')
       sut.setRouter({
+        middlewares: [],
         path: '/express',
         routes: [{
+          controller: makeControllerStub(),
           path: '/test_content_type',
-          type: RouteType.GET,
-          schema: 'any_schema',
-          controller: makeControllerStub()
-        }],
-        middlewares: []
+          schema: {},
+          type: RouteType.GET
+        }]
       })
 
       await request(sut.app)
@@ -118,14 +118,14 @@ describe('ExpressAdapter', () => {
       const { sut } = makeSut()
       sut.setHeaders([{ field: 'access-control-allow-origin', value: '*' }])
       sut.setRouter({
+        middlewares: [],
         path: '/express',
         routes: [{
+          controller: makeControllerStub(),
           path: '/test_cors',
-          type: RouteType.GET,
-          schema: 'any_schema',
-          controller: makeControllerStub()
-        }],
-        middlewares: []
+          schema: {},
+          type: RouteType.GET
+        }]
       })
 
       await request(sut.app)
@@ -137,14 +137,14 @@ describe('ExpressAdapter', () => {
       const { sut, controller } = makeSut()
 
       const result = sut.setRouter({
+        middlewares: [],
         path: 'any_path',
         routes: [{
-          type: RouteType.GET,
+          controller,
           path: 'any_path',
-          schema: 'any_schema',
-          controller
-        }],
-        middlewares: []
+          schema: {},
+          type: RouteType.GET
+        }]
       })
 
       expect(result.isRight()).toBe(true)
@@ -154,14 +154,14 @@ describe('ExpressAdapter', () => {
       const { sut, controller, middleware } = makeSut()
 
       const result = sut.setRouter({
+        middlewares: [middleware],
         path: 'any_path',
         routes: [{
-          type: RouteType.GET,
+          controller,
           path: 'any_path',
-          schema: 'any_schema',
-          controller
-        }],
-        middlewares: [middleware]
+          schema: {},
+          type: RouteType.GET
+        }]
       })
 
       expect(result.isRight()).toBe(true)
@@ -231,14 +231,14 @@ describe('ExpressAdapter', () => {
       })
 
       const result = sut.setRouter({
+        middlewares: [],
         path: 'any_path',
         routes: [{
-          type: RouteType.GET,
+          controller,
           path: 'any_path',
-          schema: 'any_schema',
-          controller
-        }],
-        middlewares: []
+          schema: {},
+          type: RouteType.GET
+        }]
       })
 
       expect(result.isLeft()).toBe(true)

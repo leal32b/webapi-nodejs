@@ -16,7 +16,7 @@ describe('MissingAuthError', () => {
       const { sut } = makeSut()
       const auth = ['any']
 
-      const result = new sut(auth)
+      const result = sut.create(auth)
 
       expect(result).toBeInstanceOf(MissingAuthError)
     })
@@ -25,7 +25,7 @@ describe('MissingAuthError', () => {
       const { sut } = makeSut()
       const auth = ['any']
 
-      const result = new sut(auth)
+      const result = sut.create(auth)
 
       expect(result.props).toEqual({
         message: 'user must have at least one of these permissions: any'

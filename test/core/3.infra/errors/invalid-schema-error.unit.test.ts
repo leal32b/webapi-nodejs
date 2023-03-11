@@ -15,7 +15,7 @@ describe('InvalidSchemaError', () => {
     it('returns an InvalidSchemaError', () => {
       const { sut } = makeSut()
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(result).toBeInstanceOf(InvalidSchemaError)
     })
@@ -23,7 +23,7 @@ describe('InvalidSchemaError', () => {
     it('returns props with correct values', () => {
       const { sut } = makeSut()
 
-      const result = new sut()
+      const result = sut.create()
 
       expect(result.props).toEqual({
         message: 'schema is invalid'

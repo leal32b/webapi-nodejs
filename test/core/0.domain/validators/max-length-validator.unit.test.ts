@@ -10,7 +10,7 @@ const makeSut = (): SutTypes => {
   const params = {
     maxLength: 16
   }
-  const sut = new MaxLengthValidator(params)
+  const sut = MaxLengthValidator.create(params)
 
   return { sut, ...params }
 }

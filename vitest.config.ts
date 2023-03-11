@@ -1,43 +1,52 @@
+import swc from 'rollup-plugin-swc';
 import { defineConfig } from 'vitest/config'
-import { Swc } from './vitest.swc'
 
 export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: ['test/**/*.test.ts'],
+    include: ['test/**'],
+    exclude: ['test/**/_doubles/**'],
     globalSetup: 'vitest.setup.ts',
     threads: false,
     watch: false,
     silent: true,
-    logHeapUsage: true,
+    logHeapUsage: false,
     passWithNoTests: true,
     coverage: {
-      include: ['src/**/*.ts'],
+      include: ['src/**'],
       exclude: [
-        'src/**/4.main/**',
-        'src/**/auth-middleware.ts',
-        'src/**/data-sources/**',
-        'src/**/persistence/**/entities/**',
-        'src/**/persistence/**/migrations/**'
+        'src/**/4.main/**', 
+        'src/**/data-sources/**', 
+        'src/**/persistence/**/{entities,migration}/**'
       ],
       provider: 'istanbul',
       reporter: ['text-summary', 'html', 'lcov'],
       statements: 100
     },
-    deps: {
-      inline: ['typeorm']
-    }
   },
   resolve: {
     alias: {
       '@/core': 'src/core',
       '@/communication': 'src/modules/communication',
-      '@/user': 'src/modules/user'
+      '@/user': 'src/modules/user',
+      '~/core': 'test/core/_doubles',
+      '~/communication': 'test/modules/communication/_doubles',
+      '~/user': 'test/modules/user/_doubles'
     }
   },
   esbuild: false,
   plugins: [
-    Swc()
+    swc({
+      jsc: {
+        parser: {
+          syntax: 'typescript',
+          dynamicImport: true,
+          decorators: true,
+        },
+        target: 'es2021',
+        transform: { decoratorMetadata: true },
+      },
+    }),
   ]
 })

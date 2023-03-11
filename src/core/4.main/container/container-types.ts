@@ -1,12 +1,12 @@
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { Encrypter } from '@/core/1.application/cryptography/encrypter'
-import { Hasher } from '@/core/1.application/cryptography/hasher'
-import { WebApp } from '@/core/3.infra/api/app/web-app'
-import { SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
-import { MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
-import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type Encrypter } from '@/core/1.application/cryptography/encrypter'
+import { type Hasher } from '@/core/1.application/cryptography/hasher'
+import { type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
+import { type MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { type PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
+import { type PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export type ApiSpecification = {
   path: string

@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { type DataSource } from 'typeorm'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
@@ -6,16 +6,17 @@ import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postg
 const NODE_ENV = getVar('NODE_ENV')
 
 const makeDataSourceMock = (): DataSource => ({
-  name: 'any_data_source',
-  options: { database: 'any_database' },
   destroy: vi.fn(),
-  manager: { save: vi.fn() },
+  entityMetadatas: [
+    { name: 'any_entity_name' }
+  ],
   getRepository: vi.fn(() => ({
     clear: vi.fn()
   })),
-  entityMetadatas: [
-    { name: 'any_entity_name' }
-  ]
+  initialize: vi.fn(),
+  manager: { save: vi.fn() },
+  name: 'any_data_source',
+  options: { database: 'any_database' }
 }) as any
 
 type SutTypes = {
@@ -25,11 +26,11 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const dataSourceMock = makeDataSourceMock()
-  const sut = new PostgresClient({
+  const sut = PostgresClient.create({
     dataSource: dataSourceMock
   })
 
-  return { sut, dataSourceMock }
+  return { dataSourceMock, sut }
 }
 
 describe('PostgresClient', () => {
@@ -38,6 +39,22 @@ describe('PostgresClient', () => {
   })
 
   describe('success', () => {
+    it('connects to dataSource', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.connect()
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('closes connection to dataSource', async () => {
+      const { sut } = makeSut()
+
+      const result = await sut.close()
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('gets dataSource manager', async () => {
       const { sut } = makeSut()
 
@@ -101,7 +118,7 @@ describe('PostgresClient', () => {
     })
 
     it('returns Left when connect throws', async () => {
-      const postgresClient = new PostgresClient({ dataSource: null })
+      const postgresClient = PostgresClient.create({ dataSource: null })
 
       const result = await postgresClient.connect()
 

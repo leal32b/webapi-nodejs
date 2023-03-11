@@ -1,7 +1,7 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Identifier } from '@/core/0.domain/utils/identifier'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
@@ -9,7 +9,7 @@ import { Name } from '@/user/0.domain/value-objects/name'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { Token } from '@/user/0.domain/value-objects/token'
 
-type ConstructParams = {
+type Props = {
   email: Email
   emailConfirmed: EmailConfirmed
   name: Name
@@ -17,7 +17,7 @@ type ConstructParams = {
   token: Token
 }
 
-export type UserAggregateCreateParams = {
+export type UserAggregateProps = {
   email: string
   name: string
   password: string
@@ -26,11 +26,11 @@ export type UserAggregateCreateParams = {
   id?: string
 }
 
-export class UserAggregate extends AggregateRoot<ConstructParams> {
-  static create (params: UserAggregateCreateParams): Either<DomainError[], UserAggregate> {
-    const { email, name, password, token, id, emailConfirmed } = params
+export class UserAggregate extends AggregateRoot<Props> {
+  public static create (props: UserAggregateProps): Either<DomainError[], UserAggregate> {
+    const { email, name, password, token, id, emailConfirmed } = props
 
-    const constructParamsOrError = this.validateParams<ConstructParams>({
+    const constructParamsOrError = this.validateParams<Props>({
       email: Email.create(email),
       emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
       name: Name.create(name),
@@ -44,7 +44,7 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
 
     const constructParams = constructParamsOrError.value
     const userAggregate = new UserAggregate(constructParams, id)
-    userAggregate.addEvent(new UserCreatedEvent({
+    userAggregate.addEvent(UserCreatedEvent.create({
       aggregateId: userAggregate.id,
       payload: {
         email: userAggregate.email.value,
@@ -55,39 +55,39 @@ export class UserAggregate extends AggregateRoot<ConstructParams> {
     return right(userAggregate)
   }
 
-  get email (): Email {
+  public get email (): Email {
     return this.props.email
   }
 
-  get emailConfirmed (): EmailConfirmed {
+  public get emailConfirmed (): EmailConfirmed {
     return this.props.emailConfirmed
   }
 
-  set emailConfirmed (value: EmailConfirmed) {
-    this.props.emailConfirmed = value
-  }
-
-  get id (): Identifier {
+  public get id (): Identifier {
     return this.props.id
   }
 
-  get name (): Name {
+  public get name (): Name {
     return this.props.name
   }
 
-  get password (): Password {
+  public get password (): Password {
     return this.props.password
   }
 
-  set password (value: Password) {
-    this.props.password = value
-  }
-
-  get token (): Token {
+  public get token (): Token {
     return this.props.token
   }
 
-  set token (value: Token) {
+  public set emailConfirmed (value: EmailConfirmed) {
+    this.props.emailConfirmed = value
+  }
+
+  public set password (value: Password) {
+    this.props.password = value
+  }
+
+  public set token (value: Token) {
     this.props.token = value
   }
 }

@@ -1,18 +1,10 @@
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { SendEmailValidationEmailData, SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type SendEmailValidationEmailData, SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeSendEmailValidationEmailDataFake = (): SendEmailValidationEmailData => ({
   recipientEmail: 'recipient@mail.com',
@@ -39,7 +31,7 @@ const makeSut = (): SutTypes => {
     emailSender: makeEmailSenderStub()
   }
 
-  const sut = new SendEmailValidationEmailUseCase(params)
+  const sut = SendEmailValidationEmailUseCase.create(params)
 
   return { sut, ...params, ...doubles }
 }

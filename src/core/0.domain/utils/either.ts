@@ -1,41 +1,41 @@
-export type Either<L, A> = Left<L, A> | Right<L, A>
+export type Either<FailType, SuccessType> = Left<FailType, SuccessType> | Right<FailType, SuccessType>
 
-export class Left<L, A> {
-  constructor (readonly value: L) {}
+export class Left<FailType, SuccessType> {
+  constructor (readonly value: FailType) {}
 
-  isLeft (): this is Left<L, A> {
-    return true
-  }
-
-  isRight (): this is Right<L, A> {
-    return false
-  }
-
-  applyOnRight<B>(_: (a: A) => B): Either<L, B> {
+  public applyOnRight<ReturnType>(_: (success: SuccessType) => ReturnType): Either<FailType, ReturnType> {
     return this as any
   }
-}
 
-export class Right<L, A> {
-  constructor (readonly value?: A) {}
-
-  isLeft (): this is Left<L, A> {
-    return false
-  }
-
-  isRight (): this is Right<L, A> {
+  public isLeft (): this is Left<FailType, SuccessType> {
     return true
   }
 
-  applyOnRight<B>(func: (a?: A) => B): Either<L, B> {
-    return new Right(func(this.value))
+  public isRight (): this is Right<FailType, SuccessType> {
+    return false
   }
 }
 
-export const left = <L, A>(l: L): Either<L, A> => {
-  return new Left(l)
+export class Right<FailType, SuccessType> {
+  constructor (readonly value?: SuccessType) {}
+
+  public applyOnRight<ReturnType>(func: (success?: SuccessType) => ReturnType): Either<FailType, ReturnType> {
+    return new Right(func(this.value))
+  }
+
+  public isLeft (): this is Left<FailType, SuccessType> {
+    return false
+  }
+
+  public isRight (): this is Right<FailType, SuccessType> {
+    return true
+  }
 }
 
-export const right = <L, A>(a?: A): Either<L, A> => {
-  return new Right<L, A>(a)
+export const left = <FailType, SuccessType>(fail: FailType): Either<FailType, SuccessType> => {
+  return new Left(fail)
+}
+
+export const right = <FailType, SuccessType>(success?: SuccessType): Either<FailType, SuccessType> => {
+  return new Right<FailType, SuccessType>(success)
 }

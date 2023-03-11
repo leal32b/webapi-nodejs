@@ -1,24 +1,11 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { AppRequest } from '@/core/2.presentation/base/controller'
-import { AuthenticateUserData, AuthenticateUserResultDTO, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type AppRequest } from '@/core/2.presentation/base/controller'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
+import { type AuthenticateUserData, type AuthenticateUserResultDTO, type AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 import { SignInController } from '@/user/2.presentation/controllers/sign-in-controller'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeSystemErrorFake = (): Error => ({
-  name: 'any_name',
-  message: 'any_message',
-  stack: 'any_stack'
-})
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<AuthenticateUserData> => ({
   payload: {
@@ -38,20 +25,20 @@ type SutTypes = {
   sut: SignInController
   authenticateUserUseCase: AuthenticateUserUseCase
   errorFake: DomainError
-  systemErrorFake: Error
+  serverErrorFake: ServerError
   requestFake: AppRequest<AuthenticateUserData>
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    systemErrorFake: makeSystemErrorFake(),
-    requestFake: makeRequestFake()
+    requestFake: makeRequestFake(),
+    serverErrorFake: ServerError.create('server_error')
   }
   const params = {
-    authenticateUserUseCase: makeAuthenticateUserUseCaseStub() as any
+    authenticateUserUseCase: makeAuthenticateUserUseCaseStub()
   }
-  const sut = new SignInController(params)
+  const sut = SignInController.create(params)
 
   return { sut, ...params, ...doubles }
 }
@@ -112,18 +99,18 @@ describe('SignInController', () => {
       })
     })
 
-    it('returns 500 when anything throws', async () => {
-      const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(left([errorFake]))
+    it('returns 500 when AuthenticateUserUseCase returns a serverError', async () => {
+      const { sut, authenticateUserUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
       expect(result.statusCode).toBe(500)
     })
 
-    it('returns ServerError in body when anything throws', async () => {
-      const { sut, authenticateUserUseCase, systemErrorFake, requestFake } = makeSut()
-      vi.spyOn(authenticateUserUseCase, 'execute').mockRejectedValueOnce(systemErrorFake)
+    it('returns error in body when AuthenticateUserUseCase returns a serverError', async () => {
+      const { sut, authenticateUserUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 

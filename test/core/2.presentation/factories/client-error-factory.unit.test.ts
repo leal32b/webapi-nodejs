@@ -1,22 +1,14 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeSchemaErrorFake = (): any => ({
-  type: 'object',
   properties: {
     anyKey: { type: 'string' }
   },
-  required: ['anyKey']
+  required: ['anyKey'],
+  type: 'object'
 })
 
 type SutTypes = {
@@ -112,11 +104,11 @@ describe('clientError', () => {
         expect(result).toEqual({
           payload: {
             error: {
-              type: 'object',
               properties: {
                 anyKey: { type: 'string' }
               },
-              required: ['anyKey']
+              required: ['anyKey'],
+              type: 'object'
             }
           },
           statusCode: 422
@@ -132,14 +124,14 @@ describe('clientError', () => {
           payload: {
             errors: [
               {
-                type: 'object',
                 properties: { anyKey: { type: 'string' } },
-                required: ['anyKey']
+                required: ['anyKey'],
+                type: 'object'
               },
               {
-                type: 'object',
                 properties: { anyKey: { type: 'string' } },
-                required: ['anyKey']
+                required: ['anyKey'],
+                type: 'object'
               }
             ]
           },

@@ -18,7 +18,7 @@ describe('MaxLengthError', () => {
       const length = 6
       const input = 'long_string'
 
-      const result = new sut(field, length, input)
+      const result = sut.create(field, length, input)
 
       expect(result).toBeInstanceOf(MaxLengthError)
     })
@@ -29,7 +29,7 @@ describe('MaxLengthError', () => {
       const length = 6
       const input = 'long_string'
 
-      const result = new sut(field, length, input)
+      const result = sut.create(field, length, input)
 
       expect(result.props).toEqual({
         field: 'any_field',

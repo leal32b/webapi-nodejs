@@ -1,4 +1,4 @@
-import { Either, Left, left, Right, right } from '@/core/0.domain/utils/either'
+import { type Either, Left, left, Right, right } from '@/core/0.domain/utils/either'
 
 describe('Either', () => {
   describe('success', () => {

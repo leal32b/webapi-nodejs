@@ -1,8 +1,12 @@
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { EmailSender } from '@/communication/1.application/email/email-sender'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
+
+type Props = {
+  emailSender: EmailSender
+}
 
 export type SendEmailValidationEmailData = {
   recipientEmail: string
@@ -13,20 +17,20 @@ export type SendEmailValidationEmailResultDTO = {
   message: string
 }
 
-export class SendEmailValidationEmailUseCase extends UseCase<SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
-  constructor (private readonly props: {
-    emailSender: EmailSender
-  }) { super() }
+export class SendEmailValidationEmailUseCase extends UseCase<Props, SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
+  public static create (props: Props): SendEmailValidationEmailUseCase {
+    return new SendEmailValidationEmailUseCase(props)
+  }
 
-  async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
+  public async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
     const { emailSender } = this.props
     const { recipientEmail, token } = sendEmailValidationEmailData
 
     const emailEntityOrError = EmailEntity.create({
       from: 'from@mail.com',
+      html: `<html>token: ${token}</html>`,
       subject: 'Validate e-mail',
-      to: recipientEmail,
-      html: `<html>token: ${token}</html>`
+      to: recipientEmail
     })
 
     if (emailEntityOrError.isLeft()) {

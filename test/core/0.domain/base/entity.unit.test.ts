@@ -1,38 +1,25 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { Entity } from '@/core/0.domain/base/entity'
 import { ValueObject } from '@/core/0.domain/base/value-object'
-import { Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either, left } from '@/core/0.domain/utils/either'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-class ValueObjectFake extends ValueObject<any> {
-  static create (): Either<DomainError[], ValueObjectFake> {
-    return right(new ValueObjectFake(null))
-  }
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeValueObjectStub } from '~/core/stubs/value-object-stub'
 
 type Params = {
-  valueObject: ValueObjectFake
+  valueObject: ValueObject<any>
 }
 
 type SutTypes = {
   sut: typeof Entity
   errorFake: DomainError
-  valueObjectFake: Either<DomainError[], ValueObjectFake>
+  valueObjectStub: Either<DomainError[], ValueObject<any>>
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    valueObjectFake: ValueObjectFake.create()
+    valueObjectStub: makeValueObjectStub()
   }
   const sut = Entity
 
@@ -42,44 +29,58 @@ const makeSut = (): SutTypes => {
 describe('Entity', () => {
   describe('success', () => {
     it('returns Right when all params are valid', () => {
-      const { sut, valueObjectFake } = makeSut()
+      const { sut, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectFake
+        valueObject: valueObjectStub
       })
 
       expect(result.isRight()).toBe(true)
     })
 
     it('returns an object with params and valueObjects when all params are valid', () => {
-      const { sut, valueObjectFake } = makeSut()
+      const { sut, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectFake
+        valueObject: valueObjectStub
       })
 
-      expect((result.value as Params).valueObject).toBeInstanceOf(ValueObjectFake)
+      expect((result.value as Params).valueObject).toBeInstanceOf(ValueObject)
+    })
+
+    it('creates a new Entity with a concrete class', async () => {
+      const { sut } = makeSut()
+      const props = { anyKey: 'any_value' }
+      class EntityFake extends sut<any> {
+        public static create (props: any): EntityFake {
+          return new EntityFake(props)
+        }
+      }
+
+      const result = EntityFake.create(props)
+
+      expect(result).toBeInstanceOf(Entity)
     })
   })
 
   describe('failure', () => {
     it('returns Left when any param is invalid', () => {
-      const { sut, errorFake, valueObjectFake } = makeSut()
+      const { sut, errorFake, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectFake,
-        invalidValueObject: left([errorFake])
+        invalidValueObject: left([errorFake]),
+        valueObject: valueObjectStub
       })
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns an array of errors when any param is invalid', () => {
-      const { sut, errorFake, valueObjectFake } = makeSut()
+      const { sut, errorFake, valueObjectStub } = makeSut()
 
       const result = sut.validateParams<Params>({
-        valueObject: valueObjectFake,
-        invalidValueObject: left([errorFake])
+        invalidValueObject: left([errorFake]),
+        valueObject: valueObjectStub
       })
 
       expect((result.value as DomainError[])

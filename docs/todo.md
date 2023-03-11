@@ -14,3 +14,10 @@
 [x] move IntegerGreaterThanZero to a common place
 [ ] segregate express middlewares and their tests
 [x] create tests for aggregate-root
+[ ] create enum for http status codes
+  src/core/2.presentation/factories/client-error-factory.ts
+  src/core/2.presentation/factories/server-error-factory.ts
+  src/core/2.presentation/factories/success-factory.ts
+[ ] change 'params' to 'props' on makeSut
+[ ] create a mechanism to log errors (maybe in DomainError)
+[ ] adjust types in src/core/0.domain/events/domain-events.ts

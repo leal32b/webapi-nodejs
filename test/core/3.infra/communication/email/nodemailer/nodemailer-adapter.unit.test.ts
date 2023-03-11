@@ -17,9 +17,9 @@ vi.mock('nodemailer', () => ({
 
 const makeEmailFake = (): EmailEntity => EmailEntity.create({
   from: 'sender@mail.com',
-  to: 'recipient@mail.com',
+  html: '<p>any_text</p>',
   subject: 'any_subject',
-  html: '<p>any_text</p>'
+  to: 'recipient@mail.com'
 }).value as EmailEntity
 
 type SutTypes = {
@@ -29,9 +29,9 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const emailFake = makeEmailFake()
-  const sut = new NodemailerAdapter()
+  const sut = NodemailerAdapter.create()
 
-  return { sut, emailFake }
+  return { emailFake, sut }
 }
 
 describe('NodemailerAdapter', () => {
@@ -43,12 +43,12 @@ describe('NodemailerAdapter', () => {
       await sut.send(emailFake)
 
       expect(createTransportSpy).toHaveBeenCalledWith({
-        host: getVar('EMAIL_HOST'),
-        port: parseInt(getVar('EMAIL_PORT')),
         auth: {
-          user: getVar('EMAIL_USERNAME'),
-          pass: getVar('EMAIL_PASSWORD')
-        }
+          pass: getVar('EMAIL_PASSWORD'),
+          user: getVar('EMAIL_USERNAME')
+        },
+        host: getVar('EMAIL_HOST'),
+        port: parseInt(getVar('EMAIL_PORT'))
       })
     })
 
@@ -63,9 +63,9 @@ describe('NodemailerAdapter', () => {
 
       expect(sendMailMock).toHaveBeenCalledWith({
         from: 'sender@mail.com',
-        to: 'recipient@mail.com',
+        html: '<p>any_text</p>',
         subject: 'any_subject',
-        html: '<p>any_text</p>'
+        to: 'recipient@mail.com'
       })
     })
 

@@ -1,8 +1,8 @@
 export class MongodbUserEntity {
-  id: string
-  name: string
   email: string
   emailConfirmed: boolean
+  id: string
+  name: string
   password: string
   token: string
 }

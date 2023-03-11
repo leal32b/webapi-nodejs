@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import Ajv from 'ajv'
 
 import { DomainError } from '@/core/0.domain/base/domain-error'
@@ -29,7 +28,7 @@ const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake()
   }
-  const sut = new AjvAdapter()
+  const sut = AjvAdapter.create()
 
   return { sut, ...doubles }
 }
@@ -38,7 +37,7 @@ describe('AjvAdapter', () => {
   describe('success', () => {
     it('calls ajv.compile with correct params', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -47,12 +46,12 @@ describe('AjvAdapter', () => {
 
       await sut.validate(fakeRequest, schema)
 
-      expect(compile).toHaveBeenCalledWith('any_schema')
+      expect(compile).toHaveBeenCalledWith({})
     })
 
     it('calls ajv.validate with correct params', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -69,12 +68,12 @@ describe('AjvAdapter', () => {
     it('returns Right when schema is successfully validated', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'string' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -88,12 +87,12 @@ describe('AjvAdapter', () => {
     it('returns isValid=true when schema is valid', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'string' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -109,12 +108,12 @@ describe('AjvAdapter', () => {
     it('returns isValid=false and errors when schema is invalid', async () => {
       const { sut } = makeSut()
       const schema = {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           anyKey: { type: 'number' }
         },
         required: ['anyKey'],
-        additionalProperties: false
+        type: 'object'
       }
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
@@ -139,7 +138,6 @@ describe('AjvAdapter', () => {
       const result = await sut.validate(fakeRequest, schema)
 
       expect(result.value).toEqual({
-        isValid: false,
         errors: [{
           instancePath: '/anyKey',
           keyword: 'type',
@@ -148,7 +146,8 @@ describe('AjvAdapter', () => {
             type: 'number'
           },
           schemaPath: '#/properties/anyKey/type'
-        }]
+        }],
+        isValid: false
       })
     })
   })
@@ -156,7 +155,7 @@ describe('AjvAdapter', () => {
   describe('failure', () => {
     it('returns Left when compile throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -170,7 +169,7 @@ describe('AjvAdapter', () => {
 
     it('returns an error when compile throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -184,7 +183,7 @@ describe('AjvAdapter', () => {
 
     it('returns Left when validate throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -200,7 +199,7 @@ describe('AjvAdapter', () => {
 
     it('returns an error when validate throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }

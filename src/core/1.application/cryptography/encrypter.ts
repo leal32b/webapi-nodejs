@@ -1,5 +1,5 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either } from '@/core/0.domain/utils/either'
 
 export enum TokenType {
   email = 'email',
@@ -15,6 +15,6 @@ export type TokenData = {
 }
 
 export interface Encrypter {
-  encrypt: (data: TokenData) => Promise<Either<DomainError, string>>
   decrypt: (token: string) => Promise<Either<DomainError, TokenData>>
+  encrypt: (data: TokenData) => Promise<Either<DomainError, string>>
 }

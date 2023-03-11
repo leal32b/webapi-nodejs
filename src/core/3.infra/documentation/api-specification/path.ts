@@ -6,42 +6,30 @@ type Schemas = {
   oneOf: Schema[]
 }
 
-type Example = {
-  [key: string]: any
-}
+type Example = Record<string, any>
 
-type Examples = {
-  [key: string]: {
-    value: Example
+type Examples = Record<string, {
+  value: Example
+}>
+
+type Content = Record<string, {
+  schema: Schema | Schemas
+  example?: Example
+  examples?: Examples
+}>
+
+type Security = Record<string, any>
+
+export type Path = Record<string, {
+  tags: string[]
+  summary: string
+  security?: Security[]
+  requestBody: {
+    required: boolean
+    content: Content
   }
-}
-
-type Content = {
-  [key: string]: {
-    schema: Schema | Schemas
-    example?: Example
-    examples?: Examples
-  }
-}
-
-type Security = {
-  [key: string]: any
-}
-
-export type Path = {
-  [index: string]: {
-    tags: string[]
-    summary: string
-    security?: Security[]
-    requestBody: {
-      required: boolean
-      content: Content
-    }
-    responses: {
-      [key: number]: {
-        description: string
-        content: Content
-      }
-    }
-  }
-}
+  responses: Record<number, {
+    description: string
+    content: Content
+  }>
+}>

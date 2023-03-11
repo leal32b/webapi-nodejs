@@ -1,6 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either } from '@/core/0.domain/utils/either'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either } from '@/core/0.domain/utils/either'
+import { type UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 
 export interface UserRepository {
   create: (userAggregate: UserAggregate) => Promise<Either<DomainError[], void>>

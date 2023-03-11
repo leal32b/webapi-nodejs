@@ -1,20 +1,38 @@
-import express, { Express, json, NextFunction, Request, RequestHandler, Response } from 'express'
+import express, {
+  type Express, json, type NextFunction, type Request, type RequestHandler, type Response
+} from 'express'
 
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Controller, AppRequest } from '@/core/2.presentation/base/controller'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Controller, type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { Middleware } from '@/core/2.presentation/middleware/middleware'
-import { WebApp, Router, Route, Header } from '@/core/3.infra/api/app/web-app'
+import { type Middleware } from '@/core/2.presentation/middleware/middleware'
+import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
 
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
 
-  constructor () {
+  private constructor () {
     this._app = express()
     this._app.use(json())
   }
 
-  setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
+  public static create (): ExpressAdapter {
+    return new ExpressAdapter()
+  }
+
+  public listen (port: number, callback = null): Either<ServerError, void> {
+    try {
+      this.app.listen(port, callback)
+
+      return right()
+    } catch (error) {
+      console.log('listen', error)
+
+      return left(ServerError.create(error.message, error.stack))
+    }
+  }
+
+  public setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
     try {
       this.app.use(path, ...middlewares)
 
@@ -22,11 +40,11 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setApiSpecification', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
-  setContentType (type: string): Either<ServerError, void> {
+  public setContentType (type: string): Either<ServerError, void> {
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         res.type(type)
@@ -37,11 +55,11 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setContentType', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
-  setHeaders (headers: Header[]): Either<ServerError, void> {
+  public setHeaders (headers: Header[]): Either<ServerError, void> {
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         headers.forEach(({ field, value }) => {
@@ -54,11 +72,11 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setHeaders', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
-  setRouter (router: Router): Either<ServerError, void> {
+  public setRouter (router: Router): Either<ServerError, void> {
     try {
       const { path, routes, middlewares } = router
 
@@ -75,23 +93,15 @@ export class ExpressAdapter implements WebApp {
     } catch (error) {
       console.log('setRouter', error)
 
-      return left(new ServerError(error.message, error.stack))
+      return left(ServerError.create(error.message, error.stack))
     }
   }
 
-  listen (port: number, callback = null): Either<ServerError, void> {
-    try {
-      this.app.listen(port, callback)
-
-      return right()
-    } catch (error) {
-      console.log('listen', error)
-
-      return left(new ServerError(error.message, error.stack))
-    }
+  public get app (): Express {
+    return this._app
   }
 
-  private expressController (controller: Controller): RequestHandler {
+  private expressController (controller: Controller<Record<string, unknown>>): RequestHandler {
     return async (request: Request, response: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
         payload: request.body
@@ -109,8 +119,8 @@ export class ExpressAdapter implements WebApp {
     return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
       const httpRequest = {
         accessToken: request.headers.authorization,
-        payload: request.body,
         auth,
+        payload: request.body,
         schema
       }
       const appResponse = await middleware.handle(httpRequest)
@@ -123,9 +133,5 @@ export class ExpressAdapter implements WebApp {
         response.status(statusCode).json(payload)
       }
     }
-  }
-
-  get app (): Express {
-    return this._app
   }
 }

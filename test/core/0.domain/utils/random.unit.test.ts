@@ -5,7 +5,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new Random()
+  const sut = Random.create()
 
   return { sut }
 }
@@ -20,22 +20,14 @@ describe('Random', () => {
       expect(typeof result).toBe('number')
     })
 
-    it('returns a random double', () => {
-      const { sut } = makeSut()
-
-      const result = sut.nextDouble()
-
-      expect(result % 1).not.toBe(0)
-    })
-
     it('returns a random number with options applied when it is provided', () => {
-      const sut = new Random({
-        seed: 1,
+      const sut = Random.create({
         options: {
           incrementer: 0,
           modulus: 64,
           multiplier: 13
-        }
+        },
+        seed: 1
       })
 
       const result = sut.nextInt()

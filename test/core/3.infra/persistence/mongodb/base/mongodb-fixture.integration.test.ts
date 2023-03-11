@@ -2,16 +2,16 @@ import { faker } from '@faker-js/faker'
 
 import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
 import { persistence } from '@/core/4.main/container/index'
-import { MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
+import { type MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
 
-class FakeFixture extends MongodbFixture<MongodbUserEntity> {
+class FixtureFake extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {
-    return new FakeFixture({
+    return new FixtureFake({
       collectionName: 'users',
       createDefault: (): any => ({
-        id: faker.random.alphaNumeric(12),
         email: faker.internet.email(),
         emailConfirmed: false,
+        id: faker.random.alphaNumeric(12),
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
@@ -25,7 +25,7 @@ type SutTypes = {
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const sut = FakeFixture.create()
+  const sut = FixtureFake.create()
 
   return { sut }
 }

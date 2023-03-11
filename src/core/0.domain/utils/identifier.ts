@@ -5,7 +5,7 @@ type Options = {
   length: number
 }
 
-type ConstructParams = {
+type PropsType = {
   id?: string
   options?: Options
 }
@@ -16,17 +16,25 @@ const defaultOptions = {
 }
 
 export class Identifier {
-  private readonly props: Options
-  private readonly random: Random
+  private readonly _random: Random
   private readonly _value: string
+  private readonly props: Options
 
-  constructor (params?: ConstructParams) {
-    this.props = Object.assign(defaultOptions, params?.options)
-    this.random = new Random()
-    this._value = params?.id || this.create()
+  private constructor (props?: PropsType) {
+    this.props = Object.assign(defaultOptions, props?.options)
+    this._random = Random.create()
+    this._value = props?.id || this.createId()
   }
 
-  private create (): string {
+  public static create (props?: PropsType): Identifier {
+    return new Identifier(props)
+  }
+
+  public get value (): string {
+    return this._value
+  }
+
+  private createId (): string {
     const { length } = this.props
     const id = Array
       .from({ length }, () => this.randomCharacter())
@@ -38,10 +46,6 @@ export class Identifier {
   private randomCharacter (): string {
     const { alphabet } = this.props
 
-    return alphabet[this.random.nextInt() % alphabet.length]
-  }
-
-  get value (): string {
-    return this._value
+    return alphabet[this._random.nextInt() % alphabet.length]
   }
 }

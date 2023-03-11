@@ -1,28 +1,33 @@
-import { Controller, AppRequest, AppResponse } from '@/core/2.presentation/base/controller'
+import { Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { serverError } from '@/core/2.presentation/factories/server-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { ChangePasswordData, ChangePasswordResultDTO, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
+import { type ChangePasswordData, type ChangePasswordResultDTO, type ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-export class ChangePasswordController extends Controller {
-  constructor (private readonly props: {
-    changePasswordUseCase: ChangePasswordUseCase
-  }) { super() }
+type Props = {
+  changePasswordUseCase: ChangePasswordUseCase
+}
 
-  async handle (request: AppRequest<ChangePasswordData>): Promise<AppResponse<ChangePasswordResultDTO>> {
-    try {
-      const { payload: changePasswordData } = request
-      const changePasswordResultDtoOrError = await this.props.changePasswordUseCase.execute(changePasswordData)
+export class ChangePasswordController extends Controller<Props> {
+  public static create (props: Props): ChangePasswordController {
+    return new ChangePasswordController(props)
+  }
 
-      if (changePasswordResultDtoOrError.isLeft()) {
-        return clientError.badRequest(changePasswordResultDtoOrError.value)
-      }
+  public async handle (request: AppRequest<ChangePasswordData>): Promise<AppResponse<ChangePasswordResultDTO>> {
+    const { payload: changePasswordData } = request
+    const changePasswordResultDtoOrError = await this.props.changePasswordUseCase.execute(changePasswordData)
 
-      const changePasswordResultDto = changePasswordResultDtoOrError.value
+    if (changePasswordResultDtoOrError.isLeft()) {
+      const error = changePasswordResultDtoOrError.value
 
-      return success.ok(changePasswordResultDto)
-    } catch (error) {
-      return serverError.internalServerError(error)
+      return error[0] instanceof ServerError
+        ? serverError.internalServerError(error)
+        : clientError.unauthorized(error)
     }
+
+    const changePasswordResultDto = changePasswordResultDtoOrError.value
+
+    return success.ok(changePasswordResultDto)
   }
 }

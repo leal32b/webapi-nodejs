@@ -1,14 +1,16 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 
-export type AppRequest<T> = {
-  payload: T
+export type AppRequest<PayloadType> = {
+  payload: PayloadType
 }
 
-export type AppResponse<T> = {
-  payload: T | { [key: string]: DomainError[] }
+export type AppResponse<PayloadType> = {
+  payload: PayloadType | Record<string, DomainError[]>
   statusCode: number
 }
 
-export abstract class Controller {
+export abstract class Controller<PropsType> {
+  protected constructor (protected readonly props: PropsType) {}
+
   abstract handle (request: AppRequest<any>): Promise<AppResponse<any>>
 }

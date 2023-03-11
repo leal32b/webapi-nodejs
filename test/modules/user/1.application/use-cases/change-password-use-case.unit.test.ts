@@ -1,47 +1,22 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Hasher } from '@/core/1.application/cryptography/hasher'
+import { left, right } from '@/core/0.domain/utils/either'
+import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { NotFoundError } from '@/core/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Password } from '@/user/0.domain/value-objects/password'
-import { UserRepository } from '@/user/1.application/repositories/user-repository'
-import { ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
+import { type UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
-
-const makeAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
+import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeHasherStub } from '~/core/stubs/hasher-stub'
+import { makeUserAggregateFake } from '~/user/user-aggregate-fake'
+import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeChangePasswordDataFake = (): ChangePasswordData => ({
   id: 'any_id',
   password: 'any_password',
   passwordRetype: 'any_password'
-})
-
-const makeUserRepositoryStub = (): UserRepository => ({
-  create: vi.fn(async (): Promise<Either<DomainError[], void>> => right()),
-  readById: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right(makeAggregateFake())),
-  readByEmail: vi.fn(async (): Promise<Either<DomainError[], UserAggregate>> => right()),
-  update: vi.fn(async (): Promise<Either<DomainError[], void>> => right())
-})
-
-const makeHasherStub = (): Hasher => ({
-  hash: vi.fn(async (): Promise<Either<DomainError, string>> => right('hashed_password')),
-  compare: vi.fn(async (): Promise<Either<DomainError, boolean>> => right(true))
 })
 
 type SutTypes = {
@@ -58,10 +33,11 @@ const makeSut = (): SutTypes => {
     errorFake: makeErrorFake()
   }
   const params = {
-    userRepository: makeUserRepositoryStub(),
-    hasher: makeHasherStub()
+    hasher: makeHasherStub(),
+    userRepository: makeUserRepositoryStub()
   }
-  const sut = new ChangePasswordUseCase(params)
+  const sut = ChangePasswordUseCase.create(params)
+  vi.spyOn(params.userRepository, 'readById').mockResolvedValue(right(makeUserAggregateFake()))
 
   return { sut, ...params, ...doubles }
 }
@@ -141,9 +117,7 @@ describe('AuthenticateUserUseCase', () => {
 
     it('returns an Error when Password.create fails', async () => {
       const { sut, errorFake, changePasswordDataFake } = makeSut()
-      vi.spyOn(Password, 'create')
-        .mockReturnValueOnce(right(Password.create('any_password').value as Password))
-        .mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(Password, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 

@@ -6,7 +6,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new DateValidator()
+  const sut = DateValidator.create()
 
   return { sut }
 }

@@ -1,25 +1,29 @@
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Encrypter, TokenData } from '@/core/1.application/cryptography/encrypter'
-import { AppResponse } from '@/core/2.presentation/base/controller'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Encrypter, type TokenData } from '@/core/1.application/cryptography/encrypter'
+import { type AppResponse } from '@/core/2.presentation/base/controller'
 import { clientError } from '@/core/2.presentation/factories/client-error-factory'
 import { success } from '@/core/2.presentation/factories/success-factory'
-import { Middleware, MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
+import { type Middleware, type MiddlewareRequest } from '@/core/2.presentation/middleware/middleware'
 import { InvalidTokenError } from '@/core/3.infra/errors/invalid-token-error'
 import { MissingAuthError } from '@/core/3.infra/errors/missing-auth-error'
 import { MissingTokenError } from '@/core/3.infra/errors/missing-token-error'
 
-type ConstructProps = {
+type Props = {
   encrypter: Encrypter
 }
 
 export class AuthMiddleware implements Middleware {
-  constructor (private readonly props: ConstructProps) {}
+  private constructor (private readonly props: Props) {}
 
-  async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
+  public static create (props: Props): AuthMiddleware {
+    return new AuthMiddleware(props)
+  }
+
+  public async handle (request: MiddlewareRequest): Promise<AppResponse<any>> {
     const { auth, accessToken } = request
     const appResponse = success.ok(request.payload)
 
-    if (!auth || !auth.length) {
+    if (!auth?.length) {
       return appResponse
     }
 
@@ -44,19 +48,19 @@ export class AuthMiddleware implements Middleware {
     const { encrypter } = this.props
 
     if (!accessToken) {
-      return left(clientError.unauthorized([new MissingTokenError()]))
+      return left(clientError.unauthorized([MissingTokenError.create()]))
     }
 
     const [type, token] = accessToken?.split(' ')
 
     if (type !== 'Bearer' || !token) {
-      return left(clientError.unauthorized([new InvalidTokenError('Bearer')]))
+      return left(clientError.unauthorized([InvalidTokenError.create('Bearer')]))
     }
 
     const decryptedTokenOrError = await encrypter.decrypt(token)
 
     if (decryptedTokenOrError.isLeft()) {
-      return left(clientError.unauthorized([new InvalidTokenError('Bearer')]))
+      return left(clientError.unauthorized([InvalidTokenError.create('Bearer')]))
     }
 
     return right(decryptedTokenOrError.value)
@@ -64,7 +68,7 @@ export class AuthMiddleware implements Middleware {
 
   private verifyAuth (auth: string[], userAuth: string[]): Either<AppResponse<any>, void> {
     if (!userAuth.some(a => auth.includes(a))) {
-      return left(clientError.unauthorized([new MissingAuthError(auth)]))
+      return left(clientError.unauthorized([MissingAuthError.create(auth)]))
     }
 
     return right()

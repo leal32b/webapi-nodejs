@@ -1,25 +1,41 @@
-import { IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container/index'
 
-type Props<T> = {
-  createDefault: () => T
+type Props<ReturnType> = {
+  createDefault: () => ReturnType
   repositoryName: string
 }
 
-export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
-  protected constructor (private readonly props: Props<T>) {}
+export abstract class PostgresFixture<EntityType> implements DatabaseFixture<EntityType> {
+  protected constructor (private readonly props: Props<EntityType>) {}
 
-  private async createPostgresFixture (): Promise<T>
-  private async createPostgresFixture (entity: Partial<T>): Promise<T>
-  private async createPostgresFixture (entities: Array<Partial<T>>): Promise<T[]>
-  private async createPostgresFixture <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]>
-  private async createPostgresFixture <N extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<N> | Partial<T> | Array<Partial<T>>): Promise<T | T[]> {
+  public async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
+    return await this.createPostgresFixture(entity)
+  }
+
+  public async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
+    return await this.createPostgresFixture(entities)
+  }
+
+  public async createRandomFixture (): Promise<EntityType> {
+    return await this.createPostgresFixture()
+  }
+
+  public async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
+    return await this.createPostgresFixture(amount)
+  }
+
+  private async createPostgresFixture (): Promise<EntityType>
+  private async createPostgresFixture (entity: Partial<EntityType>): Promise<EntityType>
+  private async createPostgresFixture (entities: Array<Partial<EntityType>>): Promise<EntityType[]>
+  private async createPostgresFixture <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]>
+  private async createPostgresFixture <NumberType extends number>(entityOrEntitiesOrAmount?: IntegerGreaterThanZero<NumberType> | Partial<EntityType> | Array<Partial<EntityType>>): Promise<EntityType | EntityType[]> {
     const { createDefault, repositoryName } = this.props
     const repository = await persistence.postgres.client.getRepository(repositoryName)
 
     if (typeof entityOrEntitiesOrAmount === 'number') {
-      const entities: T[] = []
+      const entities: EntityType[] = []
 
       for (let i = 0; i < entityOrEntitiesOrAmount; i++) {
         entities.push(repository.create(createDefault()))
@@ -41,21 +57,5 @@ export abstract class PostgresFixture<T> implements DatabaseFixture<T> {
     await persistence.postgres.client.manager.save(entities)
 
     return entities
-  }
-
-  async createFixture (entity: Partial<T>): Promise<T> {
-    return await this.createPostgresFixture(entity)
-  }
-
-  async createFixtures (entities: Array<Partial<T>>): Promise<T[]> {
-    return await this.createPostgresFixture(entities)
-  }
-
-  async createRandomFixture (): Promise<T> {
-    return await this.createPostgresFixture()
-  }
-
-  async createRandomFixtures <N extends number>(amount: IntegerGreaterThanZero<N>): Promise<T[]> {
-    return await this.createPostgresFixture(amount)
   }
 }

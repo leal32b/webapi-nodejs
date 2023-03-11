@@ -17,7 +17,7 @@ describe('EmailTakenError', () => {
       const field = 'any_field'
       const input = 'any@mail.com'
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(EmailTakenError)
     })
@@ -27,7 +27,7 @@ describe('EmailTakenError', () => {
       const field = 'any_field'
       const input = 'any@mail.com'
 
-      const result = new sut(field, input)
+      const result = sut.create(field, input)
 
       expect(result.props).toEqual({
         field: 'any_field',

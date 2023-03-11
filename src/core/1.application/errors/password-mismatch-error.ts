@@ -1,10 +1,10 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
 
 export class PasswordMismatchError extends DomainError {
-  constructor (field: string) {
-    super({
-      message: 'passwords should match',
-      field
+  public static create (field: string): PasswordMismatchError {
+    return new PasswordMismatchError({
+      field,
+      message: 'passwords should match'
     })
   }
 }

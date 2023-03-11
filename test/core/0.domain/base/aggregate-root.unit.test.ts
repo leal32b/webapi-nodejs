@@ -1,9 +1,10 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvent } from '@/core/0.domain/base/domain-event'
 import { Identifier } from '@/core/0.domain/utils/identifier'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 
-type ConstructParams = {
+import { makeDomainEventStub } from '~/core/stubs/domain-event-stub'
+
+type PropsFake = {
   anyKey: string
 }
 
@@ -11,46 +12,46 @@ type PayloadFake = {
   anyKey: string
 }
 
-class AggregateFake extends AggregateRoot<ConstructParams> {
+class AggregateRootStub extends AggregateRoot<PropsFake> {
+  public static create (props: any): AggregateRootStub {
+    return new AggregateRootStub(props)
+  }
+
   testAddEvent (event: DomainEvent<PayloadFake>): void {
     this.addEvent(event)
   }
 }
 
-class DomainEventFake extends DomainEvent<PayloadFake> {}
-
-const makeAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
-
 type SutTypes = {
-  sut: AggregateFake
-  domainEventFake: DomainEventFake
+  sut: AggregateRootStub
+  domainEventStub: DomainEvent<any>
 }
 
 const makeSut = (): SutTypes => {
-  const domainEventFake = new DomainEventFake({
-    aggregateId: makeAggregateFake().id,
-    payload: {
-      anyKey: 'any_value'
-    }
-  })
-  const sut = new AggregateFake({ anyKey: 'any_value' })
+  const doubles = {
+    domainEventStub: makeDomainEventStub()
+  }
+  const sut = AggregateRootStub.create({ anyKey: 'any_value' })
 
-  return { sut, domainEventFake }
+  return { sut, ...doubles }
 }
 
 describe('AggregateRoot', () => {
   describe('success', () => {
-    it('clears the events', () => {
-      const { sut, domainEventFake } = makeSut()
+    it('adds an events', () => {
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
 
-      sut.testAddEvent(domainEventFake)
+      const result = sut.events
+
+      expect(result[0]).instanceOf(DomainEvent)
+    })
+
+    it('clears the events', () => {
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
       sut.clearEvents()
+
       const result = sut.events
 
       expect(result).toEqual([])
@@ -65,9 +66,9 @@ describe('AggregateRoot', () => {
     })
 
     it('gets the events', () => {
-      const { sut, domainEventFake } = makeSut()
+      const { sut, domainEventStub } = makeSut()
+      sut.testAddEvent(domainEventStub)
 
-      sut.testAddEvent(domainEventFake)
       const result = sut.events
 
       expect(result.every(item => item instanceof DomainEvent)).toBe(true)

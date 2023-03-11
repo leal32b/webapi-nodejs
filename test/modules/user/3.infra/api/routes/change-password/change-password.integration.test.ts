@@ -1,23 +1,23 @@
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
-import { Route, WebApp } from '@/core/3.infra/api/app/web-app'
-import { DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type Route, type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { app, cryptography, persistence } from '@/core/4.main/container/index'
 import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
-import { UserAggregateCreateParams } from '@/user/0.domain/aggregates/user-aggregate'
+import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 const makeAccessTokenFake = async (): Promise<string> => {
   const token = await cryptography.encrypter.encrypt({
-    type: TokenType.access,
     payload: {
-      id: 'any_id',
-      auth: ['user']
-    }
+      auth: ['user'],
+      id: 'any_id'
+    },
+    type: TokenType.access
   })
 
   return `Bearer ${token.value as string}`
@@ -25,7 +25,7 @@ const makeAccessTokenFake = async (): Promise<string> => {
 
 type SutTypes = {
   sut: Route
-  userFixture: DatabaseFixture<UserAggregateCreateParams>
+  userFixture: DatabaseFixture<UserAggregateProps>
   webApp: WebApp
   accessTokenFake: string
 }
@@ -40,9 +40,9 @@ const makeSut = async (): Promise<SutTypes> => {
   }
   const sut = changePasswordRoute(changePasswordControllerFactory())
   collaborators.webApp.setRouter({
+    middlewares: [authMiddleware, schemaValidatorMiddleware],
     path: '/user',
-    routes: [sut],
-    middlewares: [authMiddleware, schemaValidatorMiddleware]
+    routes: [sut]
   })
 
   return { sut, ...collaborators, ...doubles }
@@ -195,7 +195,7 @@ describe('ChangePasswordRoute', () => {
       })
     })
 
-    it('returns 400 when passwords do not match', async () => {
+    it('returns 401 when passwords do not match', async () => {
       const { webApp, accessTokenFake } = await makeSut()
 
       await request(webApp.app)
@@ -206,7 +206,7 @@ describe('ChangePasswordRoute', () => {
           password: 'any_password',
           passwordRetype: 'another_password'
         })
-        .expect(400)
+        .expect(401)
     })
 
     it('returns passwords should match error message', async () => {
@@ -220,7 +220,6 @@ describe('ChangePasswordRoute', () => {
           password: 'any_password',
           passwordRetype: 'another_password'
         })
-        .expect(400)
 
       expect(result.body).toEqual({
         error: {

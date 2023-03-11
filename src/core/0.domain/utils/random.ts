@@ -4,9 +4,9 @@ type Options = {
   multiplier: number
 }
 
-type ConstructParams = {
-  seed?: number
+type PropsType = {
   options?: Options
+  seed?: number
 }
 
 const defaultOptions = {
@@ -16,25 +16,23 @@ const defaultOptions = {
 }
 
 export class Random {
+  private _seed: number
   private readonly props: Options
-  private seed: number
 
-  constructor (params?: ConstructParams) {
-    this.props = Object.assign(defaultOptions, params?.options)
-    this.seed = params?.seed || Date.now()
+  private constructor (props?: PropsType) {
+    this.props = Object.assign(defaultOptions, props?.options)
+    this._seed = props?.seed || Date.now()
   }
 
-  nextInt (): number {
+  public static create (props?: PropsType): Random {
+    return new Random(props)
+  }
+
+  public nextInt (): number {
     const { incrementer, modulus, multiplier } = this.props
 
-    this.seed = (this.seed * multiplier + incrementer) % modulus
+    this._seed = (this._seed * multiplier + incrementer) % modulus
 
-    return this.seed
-  }
-
-  nextDouble (): number {
-    const { modulus } = this.props
-
-    return this.nextInt() / modulus
+    return this._seed
   }
 }

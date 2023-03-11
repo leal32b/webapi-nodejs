@@ -1,37 +1,19 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
+import { type DomainEvent } from '@/core/0.domain/base/domain-event'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
-import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
-import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 
-const makeAggregateFake = (): UserAggregate => UserAggregate.create({
-  email: 'any@mail.com',
-  id: 'any_id',
-  name: 'any_name',
-  password: 'hashed_password',
-  token: 'any_token'
-}).value as UserAggregate
-
-type PayloadFake = {
-  anyKey: string
-}
-
-const handlerFunction = vi.fn()
-
-const makeHandlerFake = (): (event: DomainEvent<PayloadFake>) => void => handlerFunction
+import { makeAggregateStub } from '~/core/stubs/aggregate-stub'
 
 type SutTypes = {
   sut: typeof DomainEvents
-  aggregateFake: UserAggregate
-  handlerFunction: Function
-  handlerFake: (event: DomainEvent<PayloadFake>) => void
+  aggregateStub: AggregateRoot<any>
+  handlerStub: (event: DomainEvent<any>) => void
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    aggregateFake: makeAggregateFake(),
-    handlerFunction,
-    handlerFake: makeHandlerFake()
+    aggregateStub: makeAggregateStub(),
+    handlerStub: vi.fn()
   }
   const sut = DomainEvents
 
@@ -41,92 +23,85 @@ const makeSut = (): SutTypes => {
 describe('DomainEvents', () => {
   describe('success', () => {
     it('register callbacks for an eventClassName', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, handlerStub } = makeSut()
 
-      sut.register(UserCreatedEvent.name, handlerFake)
-      const result = sut.handlers
+      sut.register('DomainEventStub', handlerStub)
 
-      expect(result).toEqual({ UserCreatedEvent: expect.any(Array) })
+      expect(sut.handlers).toEqual({ DomainEventStub: expect.any(Array) })
     })
 
     it('marks an aggregate to dispatch', () => {
-      const { sut, aggregateFake } = makeSut()
+      const { sut, aggregateStub } = makeSut()
 
-      sut.markAggregateForDispatch(aggregateFake)
-      const result = sut.markedAggregates
+      sut.markAggregateForDispatch(aggregateStub)
 
-      expect(result.every(item => item instanceof AggregateRoot)).toBe(true)
+      expect(sut.markedAggregates.every(item => item instanceof AggregateRoot)).toBe(true)
     })
 
     it('returns when there is no aggregate to dispatch events on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      const clearEventsSpy = vi.spyOn(aggregateFake, 'clearEvents')
+      const { sut, aggregateStub } = makeSut()
+      const clearEventsSpy = vi.spyOn(aggregateStub, 'clearEvents')
       sut.clearMarkedAggregates()
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
       expect(clearEventsSpy).not.toBeCalled()
     })
 
     it('returns when there is no handler to execute on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake, handlerFunction } = makeSut()
+      const { sut, aggregateStub, handlerStub } = makeSut()
       sut.clearHandlers()
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(handlerFunction).not.toBeCalled()
+      expect(handlerStub).not.toBeCalled()
     })
 
     it('dispatches events for aggregate', () => {
-      const { sut, aggregateFake, handlerFunction, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
-      sut.register(UserCreatedEvent.name, handlerFake)
+      const { sut, aggregateStub, handlerStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
+      sut.register('DomainEventStub', handlerStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(handlerFunction).toBeCalled()
+      expect(handlerStub).toBeCalled()
     })
 
     it('removes aggregate from markedAggregates on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
-      const result = sut.markedAggregates
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(result).toEqual([])
+      expect(sut.markedAggregates).toEqual([])
     })
 
     it('calls aggregate.clearEvents on dispatchEventsForAggregate', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
-      sut.dispatchEventsForAggregate(aggregateFake.id)
-      const result = aggregateFake.events
+      sut.dispatchEventsForAggregate(aggregateStub.id)
 
-      expect(result).toEqual([])
+      expect(aggregateStub.events).toEqual([])
     })
 
     it('clears markedAggregates', () => {
-      const { sut, aggregateFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
+      const { sut, aggregateStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
 
       sut.clearMarkedAggregates()
-      const result = sut.markedAggregates
 
-      expect(result).toEqual([])
+      expect(sut.markedAggregates).toEqual([])
     })
 
     it('clears handlers', () => {
-      const { sut, aggregateFake, handlerFake } = makeSut()
-      sut.markAggregateForDispatch(aggregateFake)
-      sut.register(UserCreatedEvent.name, handlerFake)
+      const { sut, aggregateStub, handlerStub } = makeSut()
+      sut.markAggregateForDispatch(aggregateStub)
+      sut.register('DomainEventStub', handlerStub)
 
       sut.clearHandlers()
-      const result = sut.handlers
 
-      expect(result).toEqual({})
+      expect(sut.handlers).toEqual({})
     })
   })
 })

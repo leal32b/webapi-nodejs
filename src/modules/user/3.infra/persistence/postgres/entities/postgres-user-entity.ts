@@ -2,21 +2,21 @@ import { Entity, PrimaryColumn, Column } from 'typeorm'
 
 @Entity({ name: 'users' })
 export class PostgresUserEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'text' })
     id: string
 
-  @Column()
+  @Column({ type: 'text' })
     name: string
 
-  @Column({ unique: true })
+  @Column({ type: 'text', unique: true })
     email: string
 
-  @Column()
+  @Column({ type: 'boolean' })
     emailConfirmed: boolean
 
-  @Column()
+  @Column({ type: 'text' })
     password: string
 
-  @Column()
+  @Column({ type: 'text' })
     token: string
 }

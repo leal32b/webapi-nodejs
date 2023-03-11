@@ -4,7 +4,7 @@ import { communication } from '@/core/4.main/container/index'
 
 export const setCommunicationHandlers = (): void => {
   const { emailSender } = communication
-  const sendEmailValidationEmailUseCase = new SendEmailValidationEmailUseCase({ emailSender })
+  const sendEmailValidationEmailUseCase = SendEmailValidationEmailUseCase.create({ emailSender })
 
-  new UserCreatedHandler({ sendEmailValidationEmailUseCase })
+  UserCreatedHandler.create({ sendEmailValidationEmailUseCase })
 }

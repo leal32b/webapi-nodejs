@@ -1,26 +1,16 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Either, left, right } from '@/core/0.domain/utils/either'
-import { Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
+import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { AuthMiddleware } from '@/core/3.infra/api/middlewares/auth-middleware'
 
-const makeErrorFake = (): DomainError => {
-  class ErrorFake extends DomainError {
-    constructor () {
-      super({ message: 'any_message' })
-    }
-  }
-
-  return new ErrorFake()
-}
+import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeEncrypterStub = (): Encrypter => ({
-  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token')),
   decrypt: vi.fn(async (): Promise<Either<DomainError, any>> => right({
-    type: TokenType.access,
-    payload: {
-      auth: ['any_role']
-    }
-  }))
+    payload: { auth: ['any_role'] },
+    type: TokenType.access
+  })),
+  encrypt: vi.fn(async (): Promise<Either<DomainError, string>> => right('token'))
 })
 
 type SutTypes = {
@@ -33,11 +23,11 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const params = {
     encrypter: makeEncrypterStub(),
-    role: 'any_role',
-    errorFake: makeErrorFake()
+    errorFake: makeErrorFake(),
+    role: 'any_role'
   }
 
-  const sut = new AuthMiddleware(params)
+  const sut = AuthMiddleware.create(params)
 
   return { sut, ...params }
 }
@@ -63,8 +53,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: []
+        auth: [],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -79,8 +69,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any_role']
+        auth: ['any_role'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -98,8 +88,8 @@ describe('AuthMiddleware', () => {
       vi.spyOn(encrypter, 'decrypt').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         accessToken: 'Bearer invalid_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -118,8 +108,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -138,8 +128,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'invalid_type',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -158,8 +148,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: null,
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)
@@ -178,8 +168,8 @@ describe('AuthMiddleware', () => {
       const { sut } = makeSut()
       const fakeRequest = {
         accessToken: 'Bearer any_token',
-        payload: { anyKey: 'any_value' },
-        auth: ['any']
+        auth: ['any'],
+        payload: { anyKey: 'any_value' }
       }
 
       const result = await sut.handle(fakeRequest)

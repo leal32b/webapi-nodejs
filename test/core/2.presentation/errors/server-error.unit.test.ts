@@ -17,7 +17,7 @@ describe('ServerError', () => {
       const message = 'any_message'
       const stack = 'any_stack'
 
-      const result = new sut(message, stack)
+      const result = sut.create(message, stack)
 
       expect(result).toBeInstanceOf(ServerError)
     })
@@ -27,7 +27,7 @@ describe('ServerError', () => {
       const message = 'any_message'
       const stack = 'any_stack'
 
-      const result = new sut(message, stack)
+      const result = sut.create(message, stack)
 
       expect(result.props).toEqual({
         message: 'any_message',
