@@ -17,7 +17,7 @@ export default defineConfig({
     threads: false,
     watch: false,
     silent: true,
-    logHeapUsage: true,
+    logHeapUsage: false,
     passWithNoTests: true,
     coverage: {
       include: [
