@@ -9,5 +9,5 @@ export type SchemaValidatorResult = {
 }
 
 export interface SchemaValidator {
-  validate: (request: MiddlewareRequest, schema: Record<string, unknown>) => Promise<Either<Error, SchemaValidatorResult>>
+  validate: (request: MiddlewareRequest, schema: Record<string, unknown>) => Promise<Either<ErrorObject, SchemaValidatorResult>>
 }

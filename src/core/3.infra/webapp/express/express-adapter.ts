@@ -11,12 +11,16 @@ import { type WebApp, type Router, type Route, type Header } from '@/core/3.infr
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
 
-  constructor () {
+  private constructor () {
     this._app = express()
     this._app.use(json())
   }
 
-  listen (port: number, callback = null): Either<ServerError, void> {
+  public static create (): ExpressAdapter {
+    return new ExpressAdapter()
+  }
+
+  public listen (port: number, callback = null): Either<ServerError, void> {
     try {
       this.app.listen(port, callback)
 
@@ -28,7 +32,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
+  public setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
     try {
       this.app.use(path, ...middlewares)
 
@@ -40,7 +44,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  setContentType (type: string): Either<ServerError, void> {
+  public setContentType (type: string): Either<ServerError, void> {
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         res.type(type)
@@ -55,7 +59,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  setHeaders (headers: Header[]): Either<ServerError, void> {
+  public setHeaders (headers: Header[]): Either<ServerError, void> {
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         headers.forEach(({ field, value }) => {
@@ -72,7 +76,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  setRouter (router: Router): Either<ServerError, void> {
+  public setRouter (router: Router): Either<ServerError, void> {
     try {
       const { path, routes, middlewares } = router
 
@@ -93,7 +97,7 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  get app (): Express {
+  public get app (): Express {
     return this._app
   }
 

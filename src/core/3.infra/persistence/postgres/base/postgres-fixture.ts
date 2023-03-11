@@ -10,19 +10,19 @@ type Props<ReturnType> = {
 export abstract class PostgresFixture<EntityType> implements DatabaseFixture<EntityType> {
   protected constructor (private readonly props: Props<EntityType>) {}
 
-  async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
+  public async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
     return await this.createPostgresFixture(entity)
   }
 
-  async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
+  public async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
     return await this.createPostgresFixture(entities)
   }
 
-  async createRandomFixture (): Promise<EntityType> {
+  public async createRandomFixture (): Promise<EntityType> {
     return await this.createPostgresFixture()
   }
 
-  async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
+  public async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZero<NumberType>): Promise<EntityType[]> {
     return await this.createPostgresFixture(amount)
   }
 

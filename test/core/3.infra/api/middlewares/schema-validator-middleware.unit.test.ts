@@ -1,17 +1,19 @@
+import { type ErrorObject } from 'ajv'
+
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { SchemaValidatorMiddleware } from '@/core/3.infra/api/middlewares/schema-validator-middleware'
 import { type SchemaValidator, type SchemaValidatorResult } from '@/core/3.infra/api/validators/schema-validator'
 
-const makeErrorFake = (): any => ({
+const makeErrorFake = (): ErrorObject => ({
   properties: {
     anyKey: { type: 'string' }
   },
   required: ['anyKey'],
   type: 'object'
-})
+} as any)
 
 const makeSchemaValidatorStub = (): SchemaValidator => ({
-  validate: vi.fn(async (): Promise<Either<Error, SchemaValidatorResult>> => {
+  validate: vi.fn(async (): Promise<Either<ErrorObject, SchemaValidatorResult>> => {
     return right({ isValid: true })
   })
 })
@@ -19,7 +21,7 @@ const makeSchemaValidatorStub = (): SchemaValidator => ({
 type SutTypes = {
   sut: SchemaValidatorMiddleware
   schemaValidator: SchemaValidator
-  errorFake: Error
+  errorFake: ErrorObject
 }
 
 const makeSut = (): SutTypes => {
@@ -66,7 +68,7 @@ describe('SchemaValidatorMiddleware', () => {
       vi.spyOn(schemaValidator, 'validate').mockResolvedValueOnce(left(errorFake))
       const fakeRequest = {
         payload: { anyKey: 'any_value' },
-        schema: 'any_schema'
+        schema: {}
       }
 
       const result = await sut.handle(fakeRequest)
@@ -89,7 +91,7 @@ describe('SchemaValidatorMiddleware', () => {
       }))
       const fakeRequest = {
         payload: { anyKey: 'any_value' },
-        schema: 'invalid_schema'
+        schema: {}
       }
 
       const result = await sut.handle(fakeRequest)

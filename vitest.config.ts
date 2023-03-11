@@ -5,14 +5,8 @@ export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: [
-      'test/**'
-      // 'test/**/{0.domain,1.application,2.presentation}/**/*.test.ts'
-      // 'test/core/3.infra/errors/**'
-    ],
-    exclude: [
-      'test/**/_doubles/**'
-    ],
+    include: ['test/**'],
+    exclude: ['test/**/_doubles/**'],
     globalSetup: 'vitest.setup.ts',
     threads: false,
     watch: false,
@@ -20,14 +14,10 @@ export default defineConfig({
     logHeapUsage: false,
     passWithNoTests: true,
     coverage: {
-      include: [
-        'src/**'
-        // 'src/**/{0.domain,1.application,2.presentation}/**/*.ts'
-        // 'src/core/3.infra/errors/**'
-      ],
+      include: ['src/**'],
       exclude: [
-        'src/**/4.main/**',
-        'src/**/data-sources/**',
+        'src/**/4.main/**', 
+        'src/**/data-sources/**', 
         'src/**/persistence/**/{entities,migration}/**'
       ],
       provider: 'istanbul',
@@ -55,9 +45,7 @@ export default defineConfig({
           decorators: true,
         },
         target: 'es2021',
-        transform: {
-          decoratorMetadata: true,
-        },
+        transform: { decoratorMetadata: true },
       },
     }),
   ]

@@ -40,7 +40,7 @@ const makeSut = (): SutTypes => {
     middleware: makeMiddlewareStub()
   }
 
-  const sut = new ExpressAdapter()
+  const sut = ExpressAdapter.create()
 
   return { sut, ...doubles }
 }

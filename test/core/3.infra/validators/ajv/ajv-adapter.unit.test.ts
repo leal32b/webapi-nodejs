@@ -28,7 +28,7 @@ const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake()
   }
-  const sut = new AjvAdapter()
+  const sut = AjvAdapter.create()
 
   return { sut, ...doubles }
 }
@@ -37,7 +37,7 @@ describe('AjvAdapter', () => {
   describe('success', () => {
     it('calls ajv.compile with correct params', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -46,12 +46,12 @@ describe('AjvAdapter', () => {
 
       await sut.validate(fakeRequest, schema)
 
-      expect(compile).toHaveBeenCalledWith('any_schema')
+      expect(compile).toHaveBeenCalledWith({})
     })
 
     it('calls ajv.validate with correct params', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -155,7 +155,7 @@ describe('AjvAdapter', () => {
   describe('failure', () => {
     it('returns Left when compile throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -169,7 +169,7 @@ describe('AjvAdapter', () => {
 
     it('returns an error when compile throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -183,7 +183,7 @@ describe('AjvAdapter', () => {
 
     it('returns Left when validate throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
@@ -199,7 +199,7 @@ describe('AjvAdapter', () => {
 
     it('returns an error when validate throws', async () => {
       const { sut } = makeSut()
-      const schema = 'any_schema'
+      const schema = {}
       const fakeRequest = {
         payload: { anyKey: 'any_value' }
       }
