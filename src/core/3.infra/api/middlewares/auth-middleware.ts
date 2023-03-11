@@ -23,7 +23,7 @@ export class AuthMiddleware implements Middleware {
     const { auth, accessToken } = request
     const appResponse = success.ok(request.payload)
 
-    if (!auth || !auth.length) {
+    if (!auth?.length) {
       return appResponse
     }
 

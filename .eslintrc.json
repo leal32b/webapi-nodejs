@@ -29,6 +29,7 @@
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
     "complexity": ["error", { "max": 5 }],
     "import/export": "warn",
     "import/named": "warn",
