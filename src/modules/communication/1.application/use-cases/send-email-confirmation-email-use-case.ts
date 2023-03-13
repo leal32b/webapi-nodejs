@@ -21,9 +21,9 @@ export type SendEmailValidationEmailResultDTO = {
   message: string
 }
 
-export class SendEmailValidationEmailUseCase extends UseCase<Props, SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
-  public static create (props: Props): SendEmailValidationEmailUseCase {
-    return new SendEmailValidationEmailUseCase(props)
+export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
+  public static create (props: Props): SendEmailConfirmationEmailUseCase {
+    return new SendEmailConfirmationEmailUseCase(props)
   }
 
   public async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {

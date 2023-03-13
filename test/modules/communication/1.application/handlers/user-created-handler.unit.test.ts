@@ -1,5 +1,5 @@
 import { UserCreatedHandler } from '@/communication/1.application/handlers/user-created-handler'
-import { type SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email-use-case'
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
@@ -23,13 +23,13 @@ class AggregateFake extends AggregateRoot<ConstructParamsFake> {
   }
 }
 
-const makeSendEmailValidationEmailUseCaseStub = (): SendEmailValidationEmailUseCase => ({
+const makeSendEmailConfirmationEmailUseCaseStub = (): SendEmailConfirmationEmailUseCase => ({
   execute: vi.fn()
 } as any)
 
 type SutTypes = {
   sut: UserCreatedHandler
-  sendEmailValidationEmailUseCase: SendEmailValidationEmailUseCase
+  sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
   aggregateFake: AggregateRoot<ConstructParamsFake>
 }
 
@@ -38,7 +38,7 @@ const makeSut = (): SutTypes => {
     aggregateFake: AggregateFake.create()
   }
   const params = {
-    sendEmailValidationEmailUseCase: makeSendEmailValidationEmailUseCaseStub()
+    sendEmailConfirmationEmailUseCase: makeSendEmailConfirmationEmailUseCaseStub()
   }
   const sut = UserCreatedHandler.create(params)
 
@@ -47,9 +47,9 @@ const makeSut = (): SutTypes => {
 
 describe('UserCreatedHandler', () => {
   describe('success', () => {
-    it('executes SendEmailValidationEmailUseCase on dispatchEventsForAggregate', () => {
-      const { aggregateFake, sendEmailValidationEmailUseCase } = makeSut()
-      const executeSpy = vi.spyOn(sendEmailValidationEmailUseCase, 'execute')
+    it('executes SendEmailConfirmationEmailUseCase on dispatchEventsForAggregate', () => {
+      const { aggregateFake, sendEmailConfirmationEmailUseCase } = makeSut()
+      const executeSpy = vi.spyOn(sendEmailConfirmationEmailUseCase, 'execute')
 
       DomainEvents.dispatchEventsForAggregate(aggregateFake.id)
 

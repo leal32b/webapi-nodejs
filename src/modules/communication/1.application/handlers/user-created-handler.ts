@@ -1,9 +1,9 @@
-import { type SendEmailValidationEmailUseCase } from '@/communication/1.application/use-cases/send-email-validation-email-use-case'
+import { type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email-use-case'
 import { Handler } from '@/core/0.domain/base/handler'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 
 type Props = {
-  sendEmailValidationEmailUseCase: SendEmailValidationEmailUseCase
+  sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
 }
 export class UserCreatedHandler extends Handler<Props> {
   public static create (props: Props): UserCreatedHandler {
@@ -14,9 +14,9 @@ export class UserCreatedHandler extends Handler<Props> {
   }
 
   private async onUserCreatedEvent (event: UserCreatedEvent): Promise<void> {
-    const { sendEmailValidationEmailUseCase } = this.props
+    const { sendEmailConfirmationEmailUseCase } = this.props
     const { email: recipientEmail, token } = event.payload
 
-    await sendEmailValidationEmailUseCase.execute({ recipientEmail, token })
+    await sendEmailConfirmationEmailUseCase.execute({ recipientEmail, token })
   }
 }
