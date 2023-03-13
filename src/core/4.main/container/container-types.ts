@@ -1,4 +1,5 @@
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
+import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 import { type Encrypter } from '@/core/1.application/cryptography/encrypter'
 import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { type WebApp } from '@/core/3.infra/api/app/web-app'
@@ -19,6 +20,10 @@ export type App = {
 
 export type Communication = {
   emailSender: EmailSender
+}
+
+export type Compilers = {
+  templateCompiler: TemplateCompiler
 }
 
 export type Cryptography = {

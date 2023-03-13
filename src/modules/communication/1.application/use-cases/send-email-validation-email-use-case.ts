@@ -1,11 +1,15 @@
+import path from 'path'
+
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
+import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 
 type Props = {
   emailSender: EmailSender
+  templateCompiler: TemplateCompiler
 }
 
 export type SendEmailValidationEmailData = {
@@ -23,12 +27,19 @@ export class SendEmailValidationEmailUseCase extends UseCase<Props, SendEmailVal
   }
 
   public async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
-    const { emailSender } = this.props
+    const { emailSender, templateCompiler } = this.props
     const { recipientEmail, token } = sendEmailValidationEmailData
 
+    const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), { token })
+
+    if (htmlOrError.isLeft()) {
+      return left([htmlOrError.value])
+    }
+
+    const html = htmlOrError.value
     const emailEntityOrError = EmailEntity.create({
       from: 'from@mail.com',
-      html: `<html>token: ${token}</html>`,
+      html,
       subject: 'Validate e-mail',
       to: recipientEmail
     })
@@ -44,6 +55,6 @@ export class SendEmailValidationEmailUseCase extends UseCase<Props, SendEmailVal
       return left([result.value])
     }
 
-    return right({ message: 'e-mail validation e-mail sent successfully' })
+    return right({ message: 'e-mail confirmation e-mail sent successfully' })
   }
 }
