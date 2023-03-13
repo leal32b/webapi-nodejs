@@ -27,7 +27,7 @@
     "debug": "nodemon dist/core/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
     "build": "rimraf dist && tsc -b tsconfig.build.json && npm run copy:templates",
     "build:watch": "npm run build -- -w",
-    "copy:templates": "copyfiles -u 1 src/**/templates/*.hbs dist/",
+    "copy:templates": "copyfiles -u 1 src/**/templates/* dist/",
     "docker:up": "docker-compose run --rm start_dependencies",
     "docker:down": "docker-compose down",
     "docker:attach": "docker attach --sig-proxy=false webapi-container",
