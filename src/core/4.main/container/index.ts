@@ -3,8 +3,15 @@ import 'dotenv/config'
 import { getVar } from '@/core/0.domain/utils/var'
 import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
+import { makeTemplateCompiler } from '@/core/4.main/container/compilers/make-template-compiler'
 import {
-  type App, type Communication, type Cryptography, type Documentation, type Persistence, type Validators
+  type App,
+  type Communication,
+  type Compilers,
+  type Cryptography,
+  type Documentation,
+  type Persistence,
+  type Validators
 } from '@/core/4.main/container/container-types'
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
@@ -19,6 +26,10 @@ export const app: App = {
 
 export const communication: Communication = {
   emailSender: makeNodemailer
+}
+
+export const compilers: Compilers = {
+  templateCompiler: makeTemplateCompiler
 }
 
 export const cryptography: Cryptography = {
