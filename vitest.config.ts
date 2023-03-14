@@ -1,4 +1,3 @@
-import swc from 'rollup-plugin-swc';
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -34,19 +33,5 @@ export default defineConfig({
       '~/communication': 'test/modules/communication/_doubles',
       '~/user': 'test/modules/user/_doubles'
     }
-  },
-  esbuild: false,
-  plugins: [
-    swc({
-      jsc: {
-        parser: {
-          syntax: 'typescript',
-          dynamicImport: true,
-          decorators: true,
-        },
-        target: 'es2021',
-        transform: { decoratorMetadata: true },
-      },
-    }),
-  ]
+  }
 })

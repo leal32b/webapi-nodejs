@@ -44,7 +44,7 @@ export class MongodbClient implements PersistenceClient {
     try {
       await this.mongoClient.close()
 
-      console.log('disconnected from dataSource')
+      console.log('dataSource disconnected')
 
       return right()
     } catch (error) {
@@ -64,9 +64,9 @@ export class MongodbClient implements PersistenceClient {
         throw new Error('mongodb connection error')
       }
 
-      const { name, database } = this.props.dataSource
+      const { name: dataSource, database } = this.props.dataSource
 
-      console.log(`connected to ${database} (dataSource: ${name})`)
+      console.log(`dataSource connected: [${dataSource}] ${database}`)
 
       return right()
     } catch (error) {

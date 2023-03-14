@@ -1,12 +1,10 @@
 import 'dotenv/config'
 import 'module-alias/register'
 
-import { getVar } from '@/core/0.domain/utils/var'
 import { app, persistence } from '@/core/4.main/container/index'
 import { setHandlers } from '@/core/4.main/setup/handlers/set-handlers'
 import { setupWebApp } from '@/core/4.main/setup/webapp'
 
-const port = parseInt(getVar('PORT'))
 const webApp = app.webApp
 
 const bootstrap = async (): Promise<void> => {
@@ -14,7 +12,7 @@ const bootstrap = async (): Promise<void> => {
   setupWebApp(webApp)
   setHandlers()
 
-  webApp.listen(port)
+  webApp.listen()
 }
 
 bootstrap()

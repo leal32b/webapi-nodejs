@@ -26,7 +26,7 @@ export type Header = {
 }
 export interface WebApp {
   app: any
-  listen: (port: number) => void
+  listen: (callback?: () => void) => void
   setApiSpecification: (path: string, middlewares: any[]) => void
   setContentType: (type: string) => void
   setHeaders: (headers: Header[]) => void

@@ -11,18 +11,21 @@ import { type WebApp, type Router, type Route, type Header } from '@/core/3.infr
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
 
-  private constructor () {
+  private constructor (private readonly port: number) {
     this._app = express()
     this._app.use(json())
+    this._app.use(this.log)
   }
 
-  public static create (): ExpressAdapter {
-    return new ExpressAdapter()
+  public static create (port: number): ExpressAdapter {
+    return new ExpressAdapter(port)
   }
 
-  public listen (port: number, callback = null): Either<ServerError, void> {
+  public listen (callback = null): Either<ServerError, void> {
     try {
-      this.app.listen(port, callback)
+      this.app.listen(this.port, callback)
+
+      console.log(`server running: http://localhost:${this.port}`)
 
       return right()
     } catch (error) {
@@ -35,6 +38,8 @@ export class ExpressAdapter implements WebApp {
   public setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
     try {
       this.app.use(path, ...middlewares)
+
+      console.log(`swagger running: http://localhost:${this.port}${path}`)
 
       return right()
     } catch (error) {
@@ -86,7 +91,7 @@ export class ExpressAdapter implements WebApp {
           middlewares.map(middleware => this.expressMiddleware(route, middleware)),
           this.expressController(route.controller)
         )
-        console.log(`route ${route.type.toUpperCase()} ${path}${route.path}`)
+        console.log(`route registered: [${route.type.toUpperCase()}] ${path}${route.path}`)
       }
 
       return right()
@@ -133,5 +138,11 @@ export class ExpressAdapter implements WebApp {
         response.status(statusCode).json(payload)
       }
     }
+  }
+
+  private log (req: Request, res: Response, next: NextFunction): void {
+    console.log(`[${req.method}] ${req.url}`, req.body)
+
+    next()
   }
 }
