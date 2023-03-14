@@ -67,6 +67,7 @@
     "dist",
     "docs",
     "node_modules",
-    "vitest*.ts"
+    "vitest*",
+    "*.hbs"
   ]
 }

@@ -51,7 +51,7 @@ export class DomainEvents {
       name: handlerName
     })
 
-    console.log(`handler registered: [${eventName}] ${handlerName}`)
+    console.info(`handler registered: [${eventName}] ${handlerName}`)
   }
 
   public static get handlers (): Record<string, RegisteredHandler[]> {
@@ -73,7 +73,7 @@ export class DomainEvents {
     handlers.forEach(handler => {
       handler.callback(event)
 
-      console.log(`handler executed: [${event.constructor.name}] ${handler.name}`, {
+      console.info(`handler executed: [${event.constructor.name}] ${handler.name}`, {
         aggregateId: event.aggregateId.value,
         payload: event.payload
       })

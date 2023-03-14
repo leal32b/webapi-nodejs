@@ -36,7 +36,7 @@ describe('Var', () => {
     it('logs an error message on setVar when variable name is invalid', async () => {
       const varName = null
       const value = 'any_value'
-      const logSpy = vi.spyOn(console, 'log')
+      const logSpy = vi.spyOn(console, 'error')
 
       setVar(varName, value)
 
@@ -46,7 +46,7 @@ describe('Var', () => {
     it('logs an error message on setVar when variable value is invalid', async () => {
       const varName = 'ANY_VAR'
       const value = null
-      const logSpy = vi.spyOn(console, 'log')
+      const logSpy = vi.spyOn(console, 'error')
 
       setVar(varName, value)
 
@@ -63,7 +63,7 @@ describe('Var', () => {
 
     it('logs an error message on getVar when variable do not exist', async () => {
       const varName = 'NOT_EXISTING_VAR'
-      const logSpy = vi.spyOn(console, 'log')
+      const logSpy = vi.spyOn(console, 'error')
 
       getVar(varName)
 
@@ -80,7 +80,7 @@ describe('Var', () => {
 
     it('logs an error message on getIntVar when variable do not exist', async () => {
       const varName = 'NOT_EXISTING_VAR'
-      const logSpy = vi.spyOn(console, 'log')
+      const logSpy = vi.spyOn(console, 'error')
 
       getIntVar(varName)
 

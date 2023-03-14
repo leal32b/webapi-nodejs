@@ -25,11 +25,11 @@ export class ExpressAdapter implements WebApp {
     try {
       this.app.listen(this.port, callback)
 
-      console.log(`server running: http://localhost:${this.port}`)
+      console.info(`server running: http://localhost:${this.port}`)
 
       return right()
     } catch (error) {
-      console.log('listen', error)
+      console.error('listen', error)
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -39,11 +39,11 @@ export class ExpressAdapter implements WebApp {
     try {
       this.app.use(path, ...middlewares)
 
-      console.log(`swagger running: http://localhost:${this.port}${path}`)
+      console.info(`swagger running: http://localhost:${this.port}${path}`)
 
       return right()
     } catch (error) {
-      console.log('setApiSpecification', error)
+      console.error('setApiSpecification', error)
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -58,7 +58,7 @@ export class ExpressAdapter implements WebApp {
 
       return right()
     } catch (error) {
-      console.log('setContentType', error)
+      console.error('setContentType', error)
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -75,7 +75,7 @@ export class ExpressAdapter implements WebApp {
 
       return right()
     } catch (error) {
-      console.log('setHeaders', error)
+      console.error('setHeaders', error)
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -91,12 +91,13 @@ export class ExpressAdapter implements WebApp {
           middlewares.map(middleware => this.expressMiddleware(route, middleware)),
           this.expressController(route.controller)
         )
-        console.log(`route registered: [${route.type.toUpperCase()}] ${path}${route.path}`)
+
+        console.info(`route registered: [${route.type.toUpperCase()}] ${path}${route.path}`)
       }
 
       return right()
     } catch (error) {
-      console.log('setRouter', error)
+      console.error('setRouter', error)
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -141,7 +142,7 @@ export class ExpressAdapter implements WebApp {
   }
 
   private log (req: Request, res: Response, next: NextFunction): void {
-    console.log(`[${req.method}] ${req.url}`, req.body)
+    console.info(`[${req.method}] ${req.url}`, req.body)
 
     next()
   }
