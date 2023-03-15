@@ -54,7 +54,7 @@
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.21",
     "pg": "^8.10.0",
-    "pg-mem": "^2.6.6",
+    "pg-mem": "^2.6.7",
     "swagger-ui-express": "^4.6.2",
     "typeorm": "^0.3.12"
   },
