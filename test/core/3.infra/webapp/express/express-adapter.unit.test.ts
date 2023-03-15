@@ -40,7 +40,7 @@ const makeSut = (): SutTypes => {
     middleware: makeMiddlewareStub()
   }
 
-  const sut = ExpressAdapter.create()
+  const sut = ExpressAdapter.create(0)
 
   return { sut, ...doubles }
 }
@@ -249,10 +249,8 @@ describe('ExpressAdapter', () => {
       vi.spyOn(sut.app, 'listen').mockImplementationOnce(() => {
         throw new Error()
       })
-      const port = 0
-      const callback = (): any => ({})
 
-      const result = sut.listen(port, callback)
+      const result = sut.listen()
 
       expect(result.isLeft()).toBe(true)
     })

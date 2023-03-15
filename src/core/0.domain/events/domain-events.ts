@@ -2,8 +2,13 @@ import { type AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { type DomainEvent } from '@/core/0.domain/base/domain-event'
 import { type Identifier } from '@/core/0.domain/utils/identifier'
 
+type RegisteredHandler = {
+  callback: (event: DomainEvent<any>) => void
+  name: string
+}
+
 export class DomainEvents {
-  private static _handlers: Record<string, any> = {}
+  private static _handlers: Record<string, RegisteredHandler[]> = {}
   private static _markedAggregates: Array<AggregateRoot<any>> = []
 
   public static clearHandlers (): void {
@@ -36,16 +41,20 @@ export class DomainEvents {
     this.markedAggregates.push(aggregate)
   }
 
-  public static register (eventName: string, callback: (event: DomainEvent<any>) => void): void {
+  public static register (handlerName: string, eventName: string, callback: (event: DomainEvent<any>) => void): void {
     if (!this.handlers[eventName]) {
       this.handlers[eventName] = []
     }
 
-    this.handlers[eventName].push(callback)
-    console.log(`${eventName} registered`)
+    this.handlers[eventName].push({
+      callback,
+      name: handlerName
+    })
+
+    console.info(`handler registered: [${eventName}] ${handlerName}`)
   }
 
-  public static get handlers (): Record<string, any> {
+  public static get handlers (): Record<string, RegisteredHandler[]> {
     return this._handlers
   }
 
@@ -61,7 +70,14 @@ export class DomainEvents {
       return
     }
 
-    handlers.forEach(handler => handler(event))
+    handlers.forEach(handler => {
+      handler.callback(event)
+
+      console.info(`handler executed: [${event.constructor.name}] ${handler.name}`, {
+        aggregateId: event.aggregateId.value,
+        payload: event.payload
+      })
+    })
   }
 
   private static dispatchAggregateEvents (aggregate: AggregateRoot<any>): void {

@@ -6,7 +6,7 @@ export enum ServerErrorStatus {
 
 export const serverError = {
   internalServerError (error: any): AppResponse<typeof error> {
-    console.log(error)
+    console.error(error)
 
     return {
       payload: {

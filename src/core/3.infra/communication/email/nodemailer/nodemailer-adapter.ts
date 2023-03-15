@@ -22,7 +22,7 @@ export class NodemailerAdapter implements EmailSender {
         subject: email.subject.value,
         to: email.to.value
       })
-      console.log(`Email sent: ${info.messageId as string}`)
+      console.info(`Email sent: ${info.messageId as string}`)
 
       return right()
     } catch (error) {
