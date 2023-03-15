@@ -11,6 +11,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "types": ["vitest/globals"],
     "paths": {
       "@/core/*": ["src/core/*"],
