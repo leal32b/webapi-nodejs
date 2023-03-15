@@ -2,6 +2,7 @@ import { type EmailSender } from '@/communication/1.application/email/email-send
 import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 import { type Encrypter } from '@/core/1.application/cryptography/encrypter'
 import { type Hasher } from '@/core/1.application/cryptography/hasher'
+import { type I18n } from '@/core/1.application/i18n/i18n'
 import { type WebApp } from '@/core/3.infra/api/app/web-app'
 import { type SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
 import { type MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
@@ -33,6 +34,10 @@ export type Cryptography = {
 
 export type Documentation = {
   apiSpecification: ApiSpecification
+}
+
+export type Internationalization = {
+  i18n: I18n
 }
 
 export type Mongodb = {
