@@ -2,22 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Reset Your Password</title>
+    <title>{{ i18n 'communication.emailConfirmation.title' language }}</title>
   </head>
   
   <body>
-    <p>Hi there!</p>
+    <p>{{ i18n 'communication.emailConfirmation.hi_there' language }}</p>
     <br/>
 
-    <p>Thank you for signing up.</p>
-    <p>To get you started, please click on the button below to confirm your email address. It will only take a couple of seconds.</p>
-    <a href="http://localhost:3000/api/user/confirm-email/{{token}}">Confirm your e-mail</a>
+    <p>{{ i18n 'communication.emailConfirmation.thank_you' language }}</p>
+    <p>{{ i18n 'communication.emailConfirmation.to_get_started' language }}</p>
+    <a href="{{ link }}">{{ i18n 'communication.emailConfirmation.confirm_your_email' language }}</a>
     <br/>
 
-    <p>If you didn't submit your email address to join our subscriber list, just ignore this email.</p>
+    <p>{{ i18n 'communication.emailConfirmation.if_you_didnt_submit' language }}</p>
     <br/>
     
-    <p>Regards,</p>
-    <p>Support team.</p>
+    <p>{{ i18n 'communication.emailConfirmation.regards' language }}</p>
+    <p>{{ i18n 'communication.emailConfirmation.support_team' language }}</p>
   </body>
 </html>

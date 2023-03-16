@@ -63,3 +63,7 @@ export const persistence: Persistence = {
 export const validators: Validators = {
   schemaValidator: makeAjv
 }
+
+compilers.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
+  return internationalization.i18n.t(key, { lng })
+})

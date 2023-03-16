@@ -4,6 +4,7 @@ import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { getVar } from '@/core/0.domain/utils/var'
 import { UseCase } from '@/core/1.application/base/use-case'
 import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 
@@ -12,25 +13,29 @@ type Props = {
   templateCompiler: TemplateCompiler
 }
 
-export type SendEmailValidationEmailData = {
+export type SendEmailConfirmationEmailData = {
+  language: string
   recipientEmail: string
   token: string
 }
 
-export type SendEmailValidationEmailResultDTO = {
+export type SendEmailConfirmationEmailResultDTO = {
   message: string
 }
 
-export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailValidationEmailData, SendEmailValidationEmailResultDTO> {
+export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailConfirmationEmailData, SendEmailConfirmationEmailResultDTO> {
   public static create (props: Props): SendEmailConfirmationEmailUseCase {
     return new SendEmailConfirmationEmailUseCase(props)
   }
 
-  public async execute (sendEmailValidationEmailData: SendEmailValidationEmailData): Promise<Either<DomainError[], SendEmailValidationEmailResultDTO>> {
+  public async execute (sendEmailConfirmationEmailData: SendEmailConfirmationEmailData): Promise<Either<DomainError[], SendEmailConfirmationEmailResultDTO>> {
     const { emailSender, templateCompiler } = this.props
-    const { recipientEmail, token } = sendEmailValidationEmailData
+    const { language, recipientEmail, token } = sendEmailConfirmationEmailData
 
-    const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), { token })
+    const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), {
+      language,
+      link: `${getVar('SERVER_BASE_URL')}/user/confirm-email/${token}`
+    })
 
     if (htmlOrError.isLeft()) {
       return left([htmlOrError.value])
