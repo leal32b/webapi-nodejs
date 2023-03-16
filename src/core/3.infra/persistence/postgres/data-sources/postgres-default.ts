@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { DataSource } from 'typeorm'
 
 import { getVar } from '@/core/0.domain/utils/var'
+import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 export const postgresDefaultDataSource = new DataSource({
   type: 'postgres',
@@ -12,6 +13,6 @@ export const postgresDefaultDataSource = new DataSource({
   database: getVar('POSTGRES_DATABASE'),
   logging: false,
   synchronize: false,
-  entities: ['src/modules/**/postgres/entities/**/*.ts'],
-  migrations: ['src/modules/**/postgres/migrations/**/*.ts']
+  entities: [PostgresUserEntity],
+  migrations: ['{dist,src}/modules/**/postgres/migrations/**/*.{js,ts}']
 })

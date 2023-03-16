@@ -3,7 +3,7 @@ import 'dotenv/config'
 import { getVar } from '@/core/0.domain/utils/var'
 import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
-import { makeTemplateCompiler } from '@/core/4.main/container/compilers/make-template-compiler'
+import { makeHandlebars } from '@/core/4.main/container/compilers/make-handlebars'
 import {
   type Internationalization,
   type App,
@@ -31,7 +31,7 @@ export const communication: Communication = {
 }
 
 export const compilers: Compilers = {
-  templateCompiler: makeTemplateCompiler
+  templateCompiler: makeHandlebars
 }
 
 export const cryptography: Cryptography = {

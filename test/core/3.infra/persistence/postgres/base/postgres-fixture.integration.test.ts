@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import { PostgresFixture } from '@/core/3.infra/persistence/postgres/base/postgres-fixture'
 import { persistence } from '@/core/4.main/container/index'
+import { LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { type PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 class FakeFixture extends PostgresFixture<PostgresUserEntity> {
@@ -11,6 +12,7 @@ class FakeFixture extends PostgresFixture<PostgresUserEntity> {
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),
+        language: LanguageEnum.en,
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
@@ -50,6 +52,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        language: LanguageEnum.en,
         name: expect.any(String),
         password: expect.any(String),
         token: expect.any(String)
@@ -66,6 +69,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        language: LanguageEnum.en,
         name: 'any_name',
         password: expect.any(String),
         token: expect.any(String)
@@ -83,6 +87,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        language: LanguageEnum.en,
         name: 'any_name1',
         password: expect.any(String),
         token: expect.any(String)
@@ -91,6 +96,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        language: LanguageEnum.en,
         name: 'any_name2',
         password: expect.any(String),
         token: expect.any(String)

@@ -2,9 +2,11 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { type Identifier } from '@/core/0.domain/utils/identifier'
+import { type LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
+import { Language } from '@/user/0.domain/value-objects/language'
 import { Name } from '@/user/0.domain/value-objects/name'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { Token } from '@/user/0.domain/value-objects/token'
@@ -12,6 +14,7 @@ import { Token } from '@/user/0.domain/value-objects/token'
 type Props = {
   email: Email
   emailConfirmed: EmailConfirmed
+  language: Language
   name: Name
   password: Password
   token: Token
@@ -19,6 +22,7 @@ type Props = {
 
 export type UserAggregateProps = {
   email: string
+  language: LanguageEnum
   name: string
   password: string
   token: string
@@ -28,11 +32,12 @@ export type UserAggregateProps = {
 
 export class UserAggregate extends AggregateRoot<Props> {
   public static create (props: UserAggregateProps): Either<DomainError[], UserAggregate> {
-    const { email, name, password, token, id, emailConfirmed } = props
+    const { email, language, name, password, token, id, emailConfirmed } = props
 
     const constructParamsOrError = this.validateParams<Props>({
       email: Email.create(email),
       emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
+      language: Language.create(language),
       name: Name.create(name),
       password: Password.create(password),
       token: Token.create(token)
@@ -48,6 +53,7 @@ export class UserAggregate extends AggregateRoot<Props> {
       aggregateId: userAggregate.id,
       payload: {
         email: userAggregate.email.value,
+        language: userAggregate.language.value,
         token: userAggregate.token.value
       }
     }))
@@ -65,6 +71,10 @@ export class UserAggregate extends AggregateRoot<Props> {
 
   public get id (): Identifier {
     return this.props.id
+  }
+
+  public get language (): Language {
+    return this.props.language
   }
 
   public get name (): Name {

@@ -2,6 +2,7 @@ import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixtur
 import { persistence } from '@/core/4.main/container/index'
 import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
+import { LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
@@ -9,6 +10,7 @@ const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
     email: 'any@mail.com',
     id: 'any_id',
+    language: LanguageEnum.en,
     name: 'any_name',
     password: 'hashed_password',
     token: 'any_token'

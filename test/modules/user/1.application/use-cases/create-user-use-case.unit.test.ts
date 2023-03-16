@@ -7,6 +7,7 @@ import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
@@ -17,6 +18,7 @@ import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
+  language: LanguageEnum.en,
   name: 'any_name',
   password: 'any_password',
   passwordRetype: 'any_password'

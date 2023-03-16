@@ -7,6 +7,7 @@ import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
 import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { type LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 type Props = {
@@ -16,8 +17,9 @@ type Props = {
 }
 
 export type CreateUserData = {
-  name: string
   email: string
+  language: LanguageEnum
+  name: string
   password: string
   passwordRetype: string
 }

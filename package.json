@@ -31,7 +31,7 @@
     "docker:up": "docker-compose run --rm start_dependencies",
     "docker:down": "docker-compose down",
     "docker:attach": "docker attach --sig-proxy=false webapi-container",
-    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
     "migration:generate": "npm run typeorm -- migration:generate -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
     "eslint": "eslint '{src,test}/**' --fix",
