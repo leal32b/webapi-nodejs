@@ -2,7 +2,6 @@ import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { type Identifier } from '@/core/0.domain/utils/identifier'
-import { type LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
@@ -22,7 +21,7 @@ type Props = {
 
 export type UserAggregateProps = {
   email: string
-  language: LanguageEnum
+  language: string
   name: string
   password: string
   token: string

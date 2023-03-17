@@ -2,7 +2,6 @@ import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixtur
 import { persistence } from '@/core/4.main/container/index'
 import { makeMongodbFixtures } from '@/core/4.main/setup/fixtures/make-mongodb-fixtures'
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
-import { LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 
@@ -10,7 +9,7 @@ const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
     email: 'any@mail.com',
     id: '000000000000000000000001',
-    language: LanguageEnum.en,
+    language: 'en',
     name: 'any_name',
     password: 'hashed_password',
     token: 'any_token'

@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker'
 
 import { MongodbFixture } from '@/core/3.infra/persistence/mongodb/base/mongodb-fixture'
 import { persistence } from '@/core/4.main/container/index'
-import { LanguageEnum } from '@/user/0.domain/enums/language-enum'
 import { type MongodbUserEntity } from '@/user/3.infra/persistence/mongodb/entities/mongodb-user-entity'
 
 class FixtureFake extends MongodbFixture<MongodbUserEntity> {
@@ -13,7 +12,7 @@ class FixtureFake extends MongodbFixture<MongodbUserEntity> {
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),
-        language: LanguageEnum.en,
+        language: 'en',
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
@@ -52,7 +51,7 @@ describe('MongodbFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
-        language: LanguageEnum.en,
+        language: 'en',
         name: expect.any(String),
         password: expect.any(String),
         token: expect.any(String)
@@ -69,7 +68,7 @@ describe('MongodbFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
-        language: LanguageEnum.en,
+        language: 'en',
         name: 'any_name',
         password: expect.any(String),
         token: expect.any(String)
@@ -87,7 +86,7 @@ describe('MongodbFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
-        language: LanguageEnum.en,
+        language: 'en',
         name: 'any_name1',
         password: expect.any(String),
         token: expect.any(String)
@@ -96,7 +95,7 @@ describe('MongodbFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
-        language: LanguageEnum.en,
+        language: 'en',
         name: 'any_name2',
         password: expect.any(String),
         token: expect.any(String)
