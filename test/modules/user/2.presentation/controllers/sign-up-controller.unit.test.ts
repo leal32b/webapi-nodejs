@@ -10,6 +10,7 @@ import { makeErrorFake } from '~/core/fakes/error-fake'
 const makeRequestFake = (): AppRequest<CreateUserData> => ({
   payload: {
     email: 'any@mail.com',
+    locale: 'en',
     name: 'any_name',
     password: 'any_password',
     passwordRetype: 'any_password'
@@ -54,6 +55,7 @@ describe('SignUpController', () => {
 
       expect(createUserUseCase.execute).toHaveBeenCalledWith({
         email: 'any@mail.com',
+        locale: 'en',
         name: 'any_name',
         password: 'any_password',
         passwordRetype: 'any_password'

@@ -15,6 +15,7 @@ class AggregateFake extends AggregateRoot<ConstructParamsFake> {
       aggregateId: aggregateFake.id,
       payload: {
         email: 'any@mail.com',
+        locale: 'en',
         token: 'any_token'
       }
     }))
@@ -54,6 +55,7 @@ describe('UserCreatedHandler', () => {
       DomainEvents.dispatchEventsForAggregate(aggregateFake.id)
 
       expect(executeSpy).toHaveBeenCalledWith({
+        locale: 'en',
         recipientEmail: 'any@mail.com',
         token: 'any_token'
       })
