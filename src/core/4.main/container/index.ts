@@ -5,7 +5,7 @@ import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
 import { makeHandlebars } from '@/core/4.main/container/compilers/make-handlebars'
 import {
-  type Internationalization,
+  type I18n,
   type App,
   type Communication,
   type Compilers,
@@ -46,8 +46,8 @@ export const documentation: Documentation = {
   }
 }
 
-export const internationalization: Internationalization = {
-  i18n: makeI18next
+export const i18n: I18n = {
+  translator: makeI18next
 }
 
 const persistenceChoices = {
@@ -65,5 +65,5 @@ export const validators: Validators = {
 }
 
 compilers.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
-  return internationalization.i18n.t(key, { lng })
+  return i18n.translator.t(key, { lng })
 })

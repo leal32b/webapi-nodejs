@@ -1,8 +1,8 @@
 import i18next, { type Resource } from 'i18next'
 
-import { type I18n } from '@/core/1.application/i18n/i18n'
+import { type Translator } from '@/core/1.application/i18n/translator'
 
-export class I18nextAdapter implements I18n {
+export class I18nextAdapter implements Translator {
   private constructor (resources: Resource) {
     i18next.init({
       debug: false,

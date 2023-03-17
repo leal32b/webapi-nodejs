@@ -1,3 +1,3 @@
-export interface I18n {
+export interface Translator {
   t: (key: string, opt?: { lng: string }) => string
 }
