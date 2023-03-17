@@ -8,7 +8,7 @@ export class LocaleValidator extends Validator<null> {
   }
 
   public validate (field: string, input: string): Either<InvalidLocaleError, void> {
-    const tester = /^[a-z]{2}([_])?([A-Z]{2})?$/
+    const tester = /^[a-z]{2}?([_][A-Z]{2})?$/
 
     if (!tester.test(input)) {
       return left(InvalidLocaleError.create(field, input))
