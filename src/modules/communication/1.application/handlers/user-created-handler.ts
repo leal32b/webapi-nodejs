@@ -15,10 +15,10 @@ export class UserCreatedHandler extends Handler<Props> {
 
   private async onUserCreatedEvent (event: UserCreatedEvent): Promise<void> {
     const { sendEmailConfirmationEmailUseCase } = this.props
-    const { email: recipientEmail, language, token } = event.payload
+    const { email: recipientEmail, locale, token } = event.payload
 
     await sendEmailConfirmationEmailUseCase.execute({
-      language,
+      locale,
       recipientEmail,
       token
     })

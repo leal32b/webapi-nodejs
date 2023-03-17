@@ -10,7 +10,7 @@ import { type UserRepository } from '@/user/1.application/repositories/user-repo
 export class MongodbUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, language, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
       const userCollection = await persistence.mongodb.client.getCollection('users')
 
       const _id = new ObjectId(id.value)
@@ -18,7 +18,7 @@ export class MongodbUserRepository implements UserRepository {
         _id,
         email: email.value,
         emailConfirmed: emailConfirmed.value,
-        language: language.value,
+        locale: locale.value,
         name: name.value,
         password: password.value,
         token: token.value
@@ -42,7 +42,7 @@ export class MongodbUserRepository implements UserRepository {
         email: user.email,
         emailConfirmed: user.emailConfirmed,
         id: user._id.toString(),
-        language: user.language,
+        locale: user.locale,
         name: user.name,
         password: user.password,
         token: user.token
@@ -66,7 +66,7 @@ export class MongodbUserRepository implements UserRepository {
         email: user.email,
         emailConfirmed: user.emailConfirmed,
         id: user._id.toString(),
-        language: user.language,
+        locale: user.locale,
         name: user.name,
         password: user.password,
         token: user.token
@@ -80,14 +80,14 @@ export class MongodbUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, language, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
       const userCollection = await persistence.mongodb.client.getCollection('users')
 
       const result = await userCollection.updateOne({ _id: id }, {
         $set: {
           email: email.value,
           emailConfirmed: emailConfirmed.value,
-          language: language.value,
+          locale: locale.value,
           name: name.value,
           password: password.value,
           token: token.value

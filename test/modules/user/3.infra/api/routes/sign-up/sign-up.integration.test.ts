@@ -48,7 +48,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -63,7 +63,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'another@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -111,7 +111,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
@@ -126,7 +126,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
@@ -149,7 +149,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any2@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -166,7 +166,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any3@mail.com',
-          language: 'en',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'

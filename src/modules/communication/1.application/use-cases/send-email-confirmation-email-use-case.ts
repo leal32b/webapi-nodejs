@@ -14,7 +14,7 @@ type Props = {
 }
 
 export type SendEmailConfirmationEmailData = {
-  language: string
+  locale: string
   recipientEmail: string
   token: string
 }
@@ -30,11 +30,11 @@ export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailC
 
   public async execute (sendEmailConfirmationEmailData: SendEmailConfirmationEmailData): Promise<Either<DomainError[], SendEmailConfirmationEmailResultDTO>> {
     const { emailSender, templateCompiler } = this.props
-    const { language, recipientEmail, token } = sendEmailConfirmationEmailData
+    const { locale, recipientEmail, token } = sendEmailConfirmationEmailData
 
     const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), {
-      language,
-      link: `${getVar('SERVER_BASE_URL')}/user/confirm-email/${token}`
+      link: `${getVar('SERVER_BASE_URL')}/user/confirm-email/${token}`,
+      lng: locale
     })
 
     if (htmlOrError.isLeft()) {

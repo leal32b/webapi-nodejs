@@ -1,25 +1,25 @@
 import { NullError } from '@/core/0.domain/errors/null-error'
-import { Language } from '@/user/0.domain/value-objects/language'
+import { Locale } from '@/user/0.domain/value-objects/locale'
 
 type SutTypes = {
-  sut: typeof Language
+  sut: typeof Locale
 }
 
 const makeSut = (): SutTypes => {
-  const sut = Language
+  const sut = Locale
 
   return { sut }
 }
 
-describe('Language', () => {
+describe('Locale', () => {
   describe('success', () => {
-    it('returns a Language when input is valid', () => {
+    it('returns a Locale when input is valid', () => {
       const { sut } = makeSut()
       const input = 'en'
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(Language)
+      expect(result.value).toBeInstanceOf(Locale)
     })
   })
 

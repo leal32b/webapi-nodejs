@@ -8,7 +8,7 @@ import { type TemplateCompiler } from '@/core/1.application/compilers/template-c
 import { makeErrorFake } from '~/core/fakes/error-fake'
 
 const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationEmailData => ({
-  language: 'en',
+  locale: 'en',
   recipientEmail: 'recipient@mail.com',
   token: 'any_token'
 })
@@ -53,8 +53,8 @@ describe('SendEmailConfirmationEmailUseCase', () => {
       await sut.execute(sendEmailConfirmationEmailDataFake)
 
       expect(templateCompiler.compile).toHaveBeenCalledWith(expect.stringContaining('templates/email-confirmation'), {
-        language: 'en',
-        link: expect.stringContaining('any_token')
+        link: expect.stringContaining('any_token'),
+        lng: 'en'
       })
     })
 

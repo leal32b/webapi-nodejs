@@ -12,7 +12,7 @@ export class PostgresUserEntity {
     emailConfirmed: boolean
 
   @Column({ type: 'text' })
-    language: string
+    locale: string
 
   @Column({ type: 'text' })
     name: string

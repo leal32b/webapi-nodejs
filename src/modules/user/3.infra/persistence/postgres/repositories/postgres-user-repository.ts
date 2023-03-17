@@ -8,14 +8,14 @@ import { type UserRepository } from '@/user/1.application/repositories/user-repo
 export class PostgresUserRepository implements UserRepository {
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, language, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
       const repository = await persistence.postgres.client.getRepository('users')
 
       const postgresUser = repository.create({
         email: email.value,
         emailConfirmed: emailConfirmed.value,
         id: id.value,
-        language: language.value,
+        locale: locale.value,
         name: name.value,
         password: password.value,
         token: token.value
@@ -63,13 +63,13 @@ export class PostgresUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, language, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
       const repository = await persistence.postgres.client.getRepository('users')
 
       const postgresUser = repository.create({
         email: email.value,
         emailConfirmed: emailConfirmed.value,
-        language: language.value,
+        locale: locale.value,
         name: name.value,
         password: password.value,
         token: token.value

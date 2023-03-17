@@ -10,7 +10,7 @@ import { Token } from '@/user/0.domain/value-objects/token'
 const makeParamsFake = (): UserAggregateProps => ({
   email: 'any@mail.com',
   id: 'any_id',
-  language: 'en',
+  locale: 'en',
   name: 'any_name',
   password: 'password',
   token: 'any_token'

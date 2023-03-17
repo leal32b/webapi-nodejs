@@ -17,7 +17,7 @@ import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
-  language: 'en',
+  locale: 'en',
   name: 'any_name',
   password: 'any_password',
   passwordRetype: 'any_password'

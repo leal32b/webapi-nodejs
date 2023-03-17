@@ -2,7 +2,7 @@ import { DomainEvent, type DomainEventProps } from '@/core/0.domain/base/domain-
 
 type UserCreatedPayload = {
   email: string
-  language: string
+  locale: string
   token: string
 }
 

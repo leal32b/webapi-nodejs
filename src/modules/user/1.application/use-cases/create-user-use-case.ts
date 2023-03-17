@@ -17,7 +17,7 @@ type Props = {
 
 export type CreateUserData = {
   email: string
-  language: string
+  locale: string
   name: string
   password: string
   passwordRetype: string
