@@ -35,14 +35,14 @@ const makeSut = (): SutTypes => {
     errorFake: makeErrorFake(),
     sendEmailConfirmationEmailDataFake: makeSendEmailConfirmationEmailDataFake()
   }
-  const params = {
+  const props = {
     emailSender: makeEmailSenderStub(),
     templateCompiler: makeTemplateCompilerStub()
   }
 
-  const sut = SendEmailConfirmationEmailUseCase.create(params)
+  const sut = SendEmailConfirmationEmailUseCase.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('SendEmailConfirmationEmailUseCase', () => {

@@ -35,12 +35,12 @@ const makeSut = (): SutTypes => {
     requestFake: makeRequestFake(),
     serverErrorFake: ServerError.create('server_error')
   }
-  const params = {
+  const props = {
     authenticateUserUseCase: makeAuthenticateUserUseCaseStub()
   }
-  const sut = SignInController.create(params)
+  const sut = SignInController.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('SignInController', () => {

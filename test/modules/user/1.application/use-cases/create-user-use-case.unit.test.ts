@@ -37,14 +37,14 @@ const makeSut = (): SutTypes => {
     createUserDataFake: makeCreateUserDataFake(),
     errorFake: makeErrorFake()
   }
-  const params = {
+  const props = {
     encrypter: makeEncrypterStub(),
     hasher: makeHasherStub(),
     userRepository: makeUserRepositoryStub()
   }
-  const sut = CreateUserUseCase.create(params)
+  const sut = CreateUserUseCase.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('CreateUserUseCase', () => {

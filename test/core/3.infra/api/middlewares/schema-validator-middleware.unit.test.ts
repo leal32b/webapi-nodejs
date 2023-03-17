@@ -25,15 +25,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const params = {
+  const props = {
     errorFake: makeErrorFake(),
     role: 'any_role',
     schemaValidator: makeSchemaValidatorStub()
   }
 
-  const sut = SchemaValidatorMiddleware.create(params)
+  const sut = SchemaValidatorMiddleware.create(props)
 
-  return { sut, ...params }
+  return { sut, ...props }
 }
 
 describe('SchemaValidatorMiddleware', () => {

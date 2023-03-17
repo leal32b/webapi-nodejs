@@ -37,12 +37,12 @@ const makeSut = (): SutTypes => {
   const doubles = {
     aggregateFake: AggregateFake.create()
   }
-  const params = {
+  const props = {
     sendEmailConfirmationEmailUseCase: makeSendEmailConfirmationEmailUseCaseStub()
   }
-  const sut = UserCreatedHandler.create(params)
+  const sut = UserCreatedHandler.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('UserCreatedHandler', () => {
