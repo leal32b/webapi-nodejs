@@ -6,9 +6,9 @@ export const resources = {
       communication: communication.en
     }
   },
-  pt: {
+  pt_BR: {
     translation: {
-      communication: communication.pt
+      communication: communication.pt_BR
     }
   }
 }

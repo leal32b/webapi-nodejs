@@ -6,6 +6,7 @@ export class I18nextAdapter implements I18n {
   private constructor (resources: Resource) {
     i18next.init({
       debug: false,
+      fallbackLng: 'en',
       lng: 'en',
       resources
     })
