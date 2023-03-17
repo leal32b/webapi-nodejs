@@ -5,7 +5,7 @@ import { Text } from '@/communication/0.domain/value-objects/text'
 import { To } from '@/communication/0.domain/value-objects/to'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { Entity } from '@/core/0.domain/base/entity'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either } from '@/core/0.domain/utils/either'
 
 type Props = {
   from: From
@@ -40,14 +40,9 @@ export class EmailEntity extends Entity<Props> {
       ...htmlOrText
     })
 
-    if (constructParamsOrError.isLeft()) {
-      return left(constructParamsOrError.value)
-    }
-
-    const constructParams = constructParamsOrError.value
-    const emailEntity = new EmailEntity(constructParams)
-
-    return right(emailEntity)
+    return constructParamsOrError.applyOnRight(constructParams => {
+      return new EmailEntity(constructParams)
+    })
   }
 
   public get from (): From {

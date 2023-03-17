@@ -15,6 +15,7 @@ class AggregateFake extends AggregateRoot<ConstructParamsFake> {
       aggregateId: aggregateFake.id,
       payload: {
         email: 'any@mail.com',
+        locale: 'en',
         token: 'any_token'
       }
     }))
@@ -37,12 +38,12 @@ const makeSut = (): SutTypes => {
   const doubles = {
     aggregateFake: AggregateFake.create()
   }
-  const params = {
+  const props = {
     sendEmailConfirmationEmailUseCase: makeSendEmailConfirmationEmailUseCaseStub()
   }
-  const sut = UserCreatedHandler.create(params)
+  const sut = UserCreatedHandler.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('UserCreatedHandler', () => {
@@ -54,6 +55,7 @@ describe('UserCreatedHandler', () => {
       DomainEvents.dispatchEventsForAggregate(aggregateFake.id)
 
       expect(executeSpy).toHaveBeenCalledWith({
+        locale: 'en',
         recipientEmail: 'any@mail.com',
         token: 'any_token'
       })

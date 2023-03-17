@@ -7,12 +7,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const params = {
+  const props = {
     maxLength: 16
   }
-  const sut = MaxLengthValidator.create(params)
+  const sut = MaxLengthValidator.create(props)
 
-  return { sut, ...params }
+  return { sut, ...props }
 }
 
 describe('MaxLengthValidator', () => {

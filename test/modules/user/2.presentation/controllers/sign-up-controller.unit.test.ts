@@ -10,6 +10,7 @@ import { makeErrorFake } from '~/core/fakes/error-fake'
 const makeRequestFake = (): AppRequest<CreateUserData> => ({
   payload: {
     email: 'any@mail.com',
+    locale: 'en',
     name: 'any_name',
     password: 'any_password',
     passwordRetype: 'any_password'
@@ -37,12 +38,12 @@ const makeSut = (): SutTypes => {
     requestFake: makeRequestFake(),
     serverErrorFake: ServerError.create('server_error')
   }
-  const params = {
+  const props = {
     createUserUseCase: makeCreateUserUseCaseStub()
   }
-  const sut = SignUpController.create(params)
+  const sut = SignUpController.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('SignUpController', () => {
@@ -54,6 +55,7 @@ describe('SignUpController', () => {
 
       expect(createUserUseCase.execute).toHaveBeenCalledWith({
         email: 'any@mail.com',
+        locale: 'en',
         name: 'any_name',
         password: 'any_password',
         passwordRetype: 'any_password'

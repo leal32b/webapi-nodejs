@@ -8,7 +8,7 @@ import { changePasswordRequestSchemaExample, changePasswordResponseSchemaExample
 export const changePasswordPath: Path = {
   post: {
     tags: ['user'],
-    summary: "Changes a user's password",
+    summary: "Changes an user's password",
     security: [{
       accessToken: []
     }],

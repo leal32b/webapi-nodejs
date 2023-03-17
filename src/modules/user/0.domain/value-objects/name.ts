@@ -7,7 +7,7 @@ import { MinLengthValidator } from '@/core/0.domain/validators/min-length-valida
 export class Name extends ValueObject<string> {
   public static create (input: string): Either<DomainError[], Name> {
     const validOrError = this.validate(input, [
-      MinLengthValidator.create({ minLength: 3 }),
+      MinLengthValidator.create({ minLength: 2 }),
       MaxLengthValidator.create({ maxLength: 32 })
     ])
 

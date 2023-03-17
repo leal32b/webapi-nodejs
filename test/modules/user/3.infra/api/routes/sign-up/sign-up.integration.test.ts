@@ -48,6 +48,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -62,6 +63,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'another@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -95,8 +97,8 @@ describe('SignUpRoute', () => {
         error: {
           instancePath: '',
           keyword: 'required',
-          message: "must have required property 'name'",
-          params: { missingProperty: 'name' },
+          message: "must have required property 'email'",
+          params: { missingProperty: 'email' },
           schemaPath: '#/required'
         }
       })
@@ -109,6 +111,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
@@ -123,6 +126,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'another_password'
@@ -145,6 +149,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any2@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'
@@ -161,6 +166,7 @@ describe('SignUpRoute', () => {
         .post('/api/user/sign-up')
         .send({
           email: 'any3@mail.com',
+          locale: 'en',
           name: 'any_name',
           password: 'any_password',
           passwordRetype: 'any_password'

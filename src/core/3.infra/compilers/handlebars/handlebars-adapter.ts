@@ -14,7 +14,7 @@ export class HandlebarsAdapter implements TemplateCompiler {
     return new HandlebarsAdapter()
   }
 
-  public compile (templatePath: string, context: Record<string, unknown>): Either<DomainError, string> {
+  public compile (templatePath: string, context?: Record<string, unknown>): Either<DomainError, string> {
     try {
       const source = fs.readFileSync(`${templatePath}.hbs`, 'utf8')
 
@@ -25,6 +25,16 @@ export class HandlebarsAdapter implements TemplateCompiler {
       const template = Handlebars.compile(source)
 
       return right(template(context))
+    } catch (error) {
+      return left(ServerError.create(error.message, error.stack))
+    }
+  }
+
+  public registerHelper (name: string, fn: (...args: any) => string): Either<DomainError, void> {
+    try {
+      Handlebars.registerHelper(name, fn)
+
+      return right()
     } catch (error) {
       return left(ServerError.create(error.message, error.stack))
     }

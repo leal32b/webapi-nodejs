@@ -1,18 +1,20 @@
 export const signUpRequestSchema = {
   type: 'object',
   properties: {
-    name: { type: 'string' },
     email: { type: 'string' },
+    locale: { type: 'string' },
+    name: { type: 'string' },
     password: { type: 'string' },
     passwordRetype: { type: 'string' }
   },
-  required: ['name', 'email', 'password', 'passwordRetype'],
+  required: ['email', 'locale', 'name', 'password', 'passwordRetype'],
   additionalProperties: false
 }
 
 export const signUpRequestSchemaExample = {
-  name: 'John',
   email: 'john.doe@mail.com',
+  locale: 'en',
+  name: 'John',
   password: 'abc123',
   passwordRetype: 'abc123'
 }

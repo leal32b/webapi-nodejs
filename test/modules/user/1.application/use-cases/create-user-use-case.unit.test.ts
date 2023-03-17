@@ -17,6 +17,7 @@ import { makeUserRepositoryStub } from '~/user/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
+  locale: 'en',
   name: 'any_name',
   password: 'any_password',
   passwordRetype: 'any_password'
@@ -36,14 +37,14 @@ const makeSut = (): SutTypes => {
     createUserDataFake: makeCreateUserDataFake(),
     errorFake: makeErrorFake()
   }
-  const params = {
+  const props = {
     encrypter: makeEncrypterStub(),
     hasher: makeHasherStub(),
     userRepository: makeUserRepositoryStub()
   }
-  const sut = CreateUserUseCase.create(params)
+  const sut = CreateUserUseCase.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('CreateUserUseCase', () => {

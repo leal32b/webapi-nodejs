@@ -1,0 +1,12 @@
+{
+  "emailConfirmation":{
+    "title": "Reset Your Password",
+    "hi_there": "Hi there!",
+    "thank_you": "Thank you for signing up.",
+    "to_get_started": "To get you started, please click on the button below to confirm your email address. It will only take a couple of seconds.",
+    "confirm_your_email": "Confirm your e-mail",
+    "if_you_didnt_submit" : "If you didn't submit your email address to join our subscriber list, just ignore this email.",
+    "regards": "Regards,",
+    "support_team": "Support team."
+  }
+}

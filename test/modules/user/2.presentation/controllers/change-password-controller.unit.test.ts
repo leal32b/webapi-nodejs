@@ -35,12 +35,12 @@ const makeSut = (): SutTypes => {
     requestFake: makeRequestFake(),
     serverErrorFake: ServerError.create('server_error')
   }
-  const params = {
+  const props = {
     changePasswordUseCase: makeChangePasswordUseCaseStub() as any
   }
-  const sut = ChangePasswordController.create(params)
+  const sut = ChangePasswordController.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('ChangePasswordController', () => {

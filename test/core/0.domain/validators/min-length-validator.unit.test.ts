@@ -7,12 +7,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const params = {
+  const props = {
     minLength: 7
   }
-  const sut = MinLengthValidator.create(params)
+  const sut = MinLengthValidator.create(props)
 
-  return { sut, ...params }
+  return { sut, ...props }
 }
 
 describe('MinLengthValidator', () => {

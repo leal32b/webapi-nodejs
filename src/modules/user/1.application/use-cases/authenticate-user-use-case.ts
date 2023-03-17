@@ -56,14 +56,10 @@ export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData
     const token = tokenOrError.value
     const updatedOrError = await this.updateUserAggregate(userAggregate, token)
 
-    if (updatedOrError.isLeft()) {
-      return left(updatedOrError.value)
-    }
-
-    return right({
+    return updatedOrError.applyOnRight(() => ({
       accessToken: token.value,
       message: 'user authenticated successfully'
-    })
+    }))
   }
 
   private async createAccessToken (id: string): Promise<Either<DomainError[], Token>> {
@@ -84,11 +80,7 @@ export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData
     const accessToken = accessTokenOrError.value
     const tokenOrError = Token.create(accessToken)
 
-    if (tokenOrError.isLeft()) {
-      return left(tokenOrError.value)
-    }
-
-    return right(tokenOrError.value)
+    return tokenOrError.applyOnRight(token => token)
   }
 
   private async isPasswordValid (hashedPassword: string, password: string): Promise<Either<DomainError[], void>> {
@@ -100,6 +92,7 @@ export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData
     }
 
     const passwordIsValid = passwordIsValidOrError.value
+
     if (!passwordIsValid) {
       return left([InvalidPasswordError.create()])
     }
@@ -124,16 +117,12 @@ export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData
     return right(userAggregate)
   }
 
-  private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], UserAggregate>> {
+  private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
     userAggregate.token = token
     const updatedUserOrError = await userRepository.update(userAggregate)
 
-    if (updatedUserOrError.isLeft()) {
-      return left(updatedUserOrError.value)
-    }
-
-    return right()
+    return updatedUserOrError.applyOnRight(() => {})
   }
 }

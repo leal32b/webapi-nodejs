@@ -32,14 +32,14 @@ const makeSut = (): SutTypes => {
     changePasswordDataFake: makeChangePasswordDataFake(),
     errorFake: makeErrorFake()
   }
-  const params = {
+  const props = {
     hasher: makeHasherStub(),
     userRepository: makeUserRepositoryStub()
   }
-  const sut = ChangePasswordUseCase.create(params)
-  vi.spyOn(params.userRepository, 'readById').mockResolvedValue(right(makeUserAggregateFake()))
+  const sut = ChangePasswordUseCase.create(props)
+  vi.spyOn(props.userRepository, 'readById').mockResolvedValue(right(makeUserAggregateFake()))
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('AuthenticateUserUseCase', () => {

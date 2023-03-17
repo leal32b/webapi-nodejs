@@ -3,8 +3,9 @@ import 'dotenv/config'
 import { getVar } from '@/core/0.domain/utils/var'
 import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
-import { makeTemplateCompiler } from '@/core/4.main/container/compilers/make-template-compiler'
+import { makeHandlebars } from '@/core/4.main/container/compilers/make-handlebars'
 import {
+  type I18n,
   type App,
   type Communication,
   type Compilers,
@@ -16,6 +17,7 @@ import {
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/core/4.main/container/documentation/make-swagger'
+import { makeI18next } from '@/core/4.main/container/i18n/make-i18next'
 import { makeMongodb } from '@/core/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/core/4.main/container/persistence/make-postgres'
 import { makeAjv } from '@/core/4.main/container/validators/make-ajv'
@@ -29,7 +31,7 @@ export const communication: Communication = {
 }
 
 export const compilers: Compilers = {
-  templateCompiler: makeTemplateCompiler
+  templateCompiler: makeHandlebars
 }
 
 export const cryptography: Cryptography = {
@@ -42,6 +44,10 @@ export const documentation: Documentation = {
     middlewares: makeSwagger.middlewares,
     path: makeSwagger.path
   }
+}
+
+export const i18n: I18n = {
+  translator: makeI18next
 }
 
 const persistenceChoices = {
@@ -57,3 +63,7 @@ export const persistence: Persistence = {
 export const validators: Validators = {
   schemaValidator: makeAjv
 }
+
+compilers.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
+  return i18n.translator.t(key, { lng })
+})

@@ -11,6 +11,7 @@ class FakeFixture extends PostgresFixture<PostgresUserEntity> {
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.random.alphaNumeric(12),
+        locale: 'en',
         name: faker.name.firstName(),
         password: faker.random.alphaNumeric(12),
         token: faker.random.alphaNumeric(12)
@@ -50,6 +51,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        locale: 'en',
         name: expect.any(String),
         password: expect.any(String),
         token: expect.any(String)
@@ -66,6 +68,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        locale: 'en',
         name: 'any_name',
         password: expect.any(String),
         token: expect.any(String)
@@ -83,6 +86,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        locale: 'en',
         name: 'any_name1',
         password: expect.any(String),
         token: expect.any(String)
@@ -91,6 +95,7 @@ describe('PostgresFixture', () => {
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
+        locale: 'en',
         name: 'any_name2',
         password: expect.any(String),
         token: expect.any(String)

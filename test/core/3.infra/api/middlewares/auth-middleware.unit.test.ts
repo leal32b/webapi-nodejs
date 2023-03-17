@@ -21,15 +21,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const params = {
+  const props = {
     encrypter: makeEncrypterStub(),
     errorFake: makeErrorFake(),
     role: 'any_role'
   }
 
-  const sut = AuthMiddleware.create(params)
+  const sut = AuthMiddleware.create(props)
 
-  return { sut, ...params }
+  return { sut, ...props }
 }
 
 describe('AuthMiddleware', () => {

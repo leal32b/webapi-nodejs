@@ -22,12 +22,12 @@ const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake()
   }
-  const params = {
+  const props = {
     salt: 12
   }
-  const sut = ArgonAdapter.create(params)
+  const sut = ArgonAdapter.create(props)
 
-  return { sut, ...params, ...doubles }
+  return { sut, ...props, ...doubles }
 }
 
 describe('ArgonAdapter', () => {

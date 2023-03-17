@@ -9,6 +9,7 @@ const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
     email: 'any@mail.com',
     id: '000000000000000000000001',
+    locale: 'en',
     name: 'any_name',
     password: 'hashed_password',
     token: 'any_token'
