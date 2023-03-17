@@ -7,6 +7,12 @@ type RegisteredHandler = {
   name: string
 }
 
+type RegisterParams = {
+  handlerName: string
+  eventName: string
+  callback: (event: DomainEvent<any>) => void
+}
+
 export class DomainEvents {
   private static _handlers: Record<string, RegisteredHandler[]> = {}
   private static _markedAggregates: Array<AggregateRoot<any>> = []
@@ -41,7 +47,9 @@ export class DomainEvents {
     this.markedAggregates.push(aggregate)
   }
 
-  public static register (handlerName: string, eventName: string, callback: (event: DomainEvent<any>) => void): void {
+  public static register (registerParams: RegisterParams): void {
+    const { callback, eventName, handlerName } = registerParams
+
     if (!this.handlers[eventName]) {
       this.handlers[eventName] = []
     }

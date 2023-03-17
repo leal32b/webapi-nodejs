@@ -27,7 +27,11 @@ describe('DomainEvents', () => {
       const handlerName = 'HandlerStub'
       const eventName = 'DomainEventStub'
 
-      sut.register(handlerName, eventName, handlerStub)
+      sut.register({
+        callback: handlerStub,
+        eventName,
+        handlerName
+      })
 
       expect(sut.handlers).toEqual({ DomainEventStub: expect.any(Array) })
     })
@@ -64,7 +68,11 @@ describe('DomainEvents', () => {
       const handlerName = 'HandlerStub'
       const eventName = 'DomainEventStub'
       sut.markAggregateForDispatch(aggregateStub)
-      sut.register(handlerName, eventName, handlerStub)
+      sut.register({
+        callback: handlerStub,
+        eventName,
+        handlerName
+      })
 
       sut.dispatchEventsForAggregate(aggregateStub.id)
 
@@ -103,7 +111,11 @@ describe('DomainEvents', () => {
       const handlerName = 'HandlerStub'
       const eventName = 'DomainEventStub'
       sut.markAggregateForDispatch(aggregateStub)
-      sut.register(handlerName, eventName, handlerStub)
+      sut.register({
+        callback: handlerStub,
+        eventName,
+        handlerName
+      })
 
       sut.clearHandlers()
 

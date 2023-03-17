@@ -5,6 +5,12 @@ export abstract class Handler<PropsType> {
   protected constructor (protected readonly props: PropsType) {}
 
   protected setupSubscriptions (eventName: string, callback: (event: DomainEvent<any>) => void): void {
-    DomainEvents.register(this.constructor.name, eventName, callback)
+    const handlerName = this.constructor.name
+
+    DomainEvents.register({
+      callback,
+      eventName,
+      handlerName
+    })
   }
 }
