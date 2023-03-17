@@ -53,13 +53,9 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     const newPassword = passwordOrError.value
     const updatedOrError = await this.updateUserAggregate(userAggregate, newPassword)
 
-    if (updatedOrError.isLeft()) {
-      return left(updatedOrError.value)
-    }
-
-    return right({
+    return updatedOrError.applyOnRight(() => ({
       message: 'password updated successfully'
-    })
+    }))
   }
 
   private async hashPassword (password: string): Promise<Either<DomainError[], Password>> {
@@ -74,11 +70,7 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     const hashedPassword = hashedPasswordOrError.value
     const passwordOrError = Password.create(hashedPassword)
 
-    if (passwordOrError.isLeft()) {
-      return left(passwordOrError.value)
-    }
-
-    return right(passwordOrError.value)
+    return passwordOrError.applyOnRight(password => password)
   }
 
   private async initialValidation (changePasswordData: ChangePasswordData): Promise<Either<DomainError[], void>> {
@@ -108,16 +100,12 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     return right(userAggregate)
   }
 
-  private async updateUserAggregate (userAggregate: UserAggregate, password: Password): Promise<Either<DomainError[], UserAggregate>> {
+  private async updateUserAggregate (userAggregate: UserAggregate, password: Password): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
     userAggregate.password = password
     const updatedOrError = await userRepository.update(userAggregate)
 
-    if (updatedOrError.isLeft()) {
-      return left(updatedOrError.value)
-    }
-
-    return right()
+    return updatedOrError.applyOnRight(() => {})
   }
 }

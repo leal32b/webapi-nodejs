@@ -54,10 +54,10 @@ export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailC
     }
 
     const emailEntity = emailEntityOrError.value
-    const result = await emailSender.send(emailEntity)
+    const successOrError = await emailSender.send(emailEntity)
 
-    if (result.isLeft()) {
-      return left([result.value])
+    if (successOrError.isLeft()) {
+      return left([successOrError.value])
     }
 
     return right({ message: 'e-mail confirmation e-mail sent successfully' })

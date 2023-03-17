@@ -1,6 +1,6 @@
 import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Either } from '@/core/0.domain/utils/either'
 import { type Identifier } from '@/core/0.domain/utils/identifier'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
 import { Email } from '@/user/0.domain/value-objects/email'
@@ -42,22 +42,19 @@ export class UserAggregate extends AggregateRoot<Props> {
       token: Token.create(token)
     })
 
-    if (constructParamsOrError.isLeft()) {
-      return left(constructParamsOrError.value)
-    }
+    return constructParamsOrError.applyOnRight(constructParams => {
+      const userAggregate = new UserAggregate(constructParams, id)
+      userAggregate.addEvent(UserCreatedEvent.create({
+        aggregateId: userAggregate.id,
+        payload: {
+          email: userAggregate.email.value,
+          locale: userAggregate.locale.value,
+          token: userAggregate.token.value
+        }
+      }))
 
-    const constructParams = constructParamsOrError.value
-    const userAggregate = new UserAggregate(constructParams, id)
-    userAggregate.addEvent(UserCreatedEvent.create({
-      aggregateId: userAggregate.id,
-      payload: {
-        email: userAggregate.email.value,
-        locale: userAggregate.locale.value,
-        token: userAggregate.token.value
-      }
-    }))
-
-    return right(userAggregate)
+      return userAggregate
+    })
   }
 
   public get email (): Email {
