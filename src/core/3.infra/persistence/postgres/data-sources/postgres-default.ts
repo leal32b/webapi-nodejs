@@ -14,5 +14,5 @@ export const postgresDefaultDataSource = new DataSource({
   logging: false,
   synchronize: false,
   entities: [PostgresUserEntity],
-  migrations: ['{dist,src}/modules/**/postgres/migrations/**/*.{js,ts}']
+  migrations: ['src/modules/**/postgres/migrations/**/*.ts']
 })
