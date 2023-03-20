@@ -1,4 +1,4 @@
 export interface Logger {
-  error: (label: string, message: string | Record<string, unknown> | string[]) => void
-  info: (label: string, message: string | Record<string, unknown> | string[]) => void
+  error: (label: string, message: string | Record<string, unknown> | any[]) => void
+  info: (label: string, message: string | Record<string, unknown> | any[]) => void
 }

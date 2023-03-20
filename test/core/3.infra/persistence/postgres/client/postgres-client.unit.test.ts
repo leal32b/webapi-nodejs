@@ -2,6 +2,7 @@ import { type DataSource } from 'typeorm'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
+import { logging } from '@/core/4.main/container/logging'
 
 const NODE_ENV = getVar('NODE_ENV')
 
@@ -27,7 +28,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const dataSourceMock = makeDataSourceMock()
   const sut = PostgresClient.create({
-    dataSource: dataSourceMock
+    dataSource: dataSourceMock,
+    logger: logging.logger
   })
 
   return { dataSourceMock, sut }
@@ -118,7 +120,10 @@ describe('PostgresClient', () => {
     })
 
     it('returns Left when connect throws', async () => {
-      const postgresClient = PostgresClient.create({ dataSource: null })
+      const postgresClient = PostgresClient.create({
+        dataSource: null,
+        logger: logging.logger
+      })
 
       const result = await postgresClient.connect()
 
