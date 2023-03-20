@@ -12,12 +12,14 @@ import {
   type Cryptography,
   type Documentation,
   type Persistence,
-  type Validators
+  type Validators,
+  type Logging
 } from '@/core/4.main/container/container-types'
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/core/4.main/container/documentation/make-swagger'
 import { makeI18next } from '@/core/4.main/container/i18n/make-i18next'
+import { makeWinston } from '@/core/4.main/container/logging/makeWinston'
 import { makeMongodb } from '@/core/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/core/4.main/container/persistence/make-postgres'
 import { makeAjv } from '@/core/4.main/container/validators/make-ajv'
@@ -48,6 +50,10 @@ export const documentation: Documentation = {
 
 export const i18n: I18n = {
   translator: makeI18next
+}
+
+export const logging: Logging = {
+  logger: makeWinston
 }
 
 const persistenceChoices = {

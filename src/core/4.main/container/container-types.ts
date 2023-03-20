@@ -3,6 +3,7 @@ import { type TemplateCompiler } from '@/core/1.application/compilers/template-c
 import { type Encrypter } from '@/core/1.application/cryptography/encrypter'
 import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { type Translator } from '@/core/1.application/i18n/translator'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { type WebApp } from '@/core/3.infra/api/app/web-app'
 import { type SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
 import { type MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
@@ -38,6 +39,10 @@ export type Documentation = {
 
 export type I18n = {
   translator: Translator
+}
+
+export type Logging = {
+  logger: Logger
 }
 
 export type Mongodb = {

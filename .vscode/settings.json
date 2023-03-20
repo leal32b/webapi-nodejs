@@ -12,6 +12,7 @@
     "Metadatas",
     "Middlewares",
     "openapi",
+    "Pino",
     "typeorm",
     "webapi"
   ]
