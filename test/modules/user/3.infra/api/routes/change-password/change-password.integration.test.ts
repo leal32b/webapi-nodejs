@@ -3,7 +3,7 @@ import request from 'supertest'
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
 import { type Route, type WebApp } from '@/core/3.infra/api/app/web-app'
 import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
-import { app, cryptography, persistence } from '@/core/4.main/container/index'
+import { app, cryptography, persistence } from '@/core/4.main/container'
 import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
@@ -59,32 +59,14 @@ describe('ChangePasswordRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 on success', async () => {
+    it('returns 200 with correct message on success on success', async () => {
       const { userFixture, webApp, accessTokenFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFixture.createFixture({ id, password: hashedPassword })
 
-      await request(webApp.app)
-        .post('/api/user/change-password')
-        .set('Authorization', accessTokenFake)
-        .send({
-          id: 'any_id',
-          password: 'any_password',
-          passwordRetype: 'any_password'
-        })
-        .expect(200)
-    })
-
-    it('returns correct message on success', async () => {
-      const { userFixture, webApp, accessTokenFake } = await makeSut()
-      const id = 'any_id2'
-      const password = 'any_password'
-      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFixture.createFixture({ id, password: hashedPassword })
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/change-password')
         .set('Authorization', accessTokenFake)
         .send({
@@ -93,30 +75,18 @@ describe('ChangePasswordRoute', () => {
           passwordRetype: 'any_password'
         })
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(200)
+      expect(body).toEqual({
         message: 'password updated successfully'
       })
     })
   })
 
   describe('failure', () => {
-    it('returns 401 when accessToken is missing', async () => {
+    it('returns 401 with no Authorization token was provided message when accessToken is missing', async () => {
       const { webApp } = await makeSut()
 
-      await request(webApp.app)
-        .post('/api/user/change-password')
-        .send({
-          id: 'any_id',
-          password: 'any_password',
-          passwordRetype: 'another_password'
-        })
-        .expect(401)
-    })
-
-    it('returns correct error message when accessToken is missing', async () => {
-      const { webApp } = await makeSut()
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/change-password')
         .send({
           id: 'any_id',
@@ -124,33 +94,19 @@ describe('ChangePasswordRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(401)
+      expect(body).toEqual({
         error: {
           message: 'no Authorization token was provided'
         }
       })
     })
 
-    it('returns 401 when accessToken is invalid', async () => {
+    it('returns 401 with token is invalid (type: Bearer) error message when accessToken is invalid', async () => {
       const { webApp } = await makeSut()
       const accessToken = 'invalid_token'
 
-      await request(webApp.app)
-        .post('/api/user/change-password')
-        .set('Authorization', accessToken)
-        .send({
-          id: 'any_id',
-          password: 'any_password',
-          passwordRetype: 'another_password'
-        })
-        .expect(401)
-    })
-
-    it('returns correct error message when accessToken is invalid', async () => {
-      const { webApp } = await makeSut()
-      const accessToken = 'invalid_token'
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/change-password')
         .set('Authorization', accessToken)
         .send({
@@ -159,32 +115,24 @@ describe('ChangePasswordRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(401)
+      expect(body).toEqual({
         error: {
           message: 'token is invalid (type: Bearer)'
         }
       })
     })
 
-    it('returns 422 when schema is invalid', async () => {
+    it('returns 422 with schema error message when schema is invalid', async () => {
       const { webApp, accessTokenFake } = await makeSut()
 
-      await request(webApp.app)
-        .post('/api/user/change-password')
-        .set('Authorization', accessTokenFake)
-        .send({})
-        .expect(422)
-    })
-
-    it('returns schema error message when schema is invalid', async () => {
-      const { webApp, accessTokenFake } = await makeSut()
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/change-password')
         .set('Authorization', accessTokenFake)
         .send({})
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(422)
+      expect(body).toEqual({
         error: {
           instancePath: '',
           keyword: 'required',
@@ -195,24 +143,10 @@ describe('ChangePasswordRoute', () => {
       })
     })
 
-    it('returns 401 when passwords do not match', async () => {
+    it('returns 401 with passwords should match error message when passwords do not match', async () => {
       const { webApp, accessTokenFake } = await makeSut()
 
-      await request(webApp.app)
-        .post('/api/user/change-password')
-        .set('Authorization', accessTokenFake)
-        .send({
-          id: 'any_id',
-          password: 'any_password',
-          passwordRetype: 'another_password'
-        })
-        .expect(401)
-    })
-
-    it('returns passwords should match error message', async () => {
-      const { webApp, accessTokenFake } = await makeSut()
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/change-password')
         .set('Authorization', accessTokenFake)
         .send({
@@ -221,7 +155,8 @@ describe('ChangePasswordRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(401)
+      expect(body).toEqual({
         error: {
           field: 'password',
           message: 'passwords should match'

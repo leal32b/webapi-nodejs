@@ -4,6 +4,7 @@ import { type Controller, type AppRequest, type AppResponse } from '@/core/2.pre
 import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
+import { logging } from '@/core/4.main/container/logging'
 
 const makeAuthStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
@@ -40,7 +41,10 @@ const makeSut = (): SutTypes => {
     middleware: makeMiddlewareStub()
   }
 
-  const sut = ExpressAdapter.create(0)
+  const sut = ExpressAdapter.create({
+    logger: logging.logger,
+    port: 0
+  })
 
   return { sut, ...doubles }
 }
@@ -59,12 +63,13 @@ describe('ExpressAdapter', () => {
           type: RouteType.POST
         }]
       })
-      const body = { key: 'any_value' }
+      const body = { anyKey: 'any_value' }
 
-      await request(sut.app)
+      const result = await request(sut.app)
         .post('/api/express/test_body_parser')
         .send(body)
-        .expect(body)
+
+      expect(result.body).toEqual({ anyKey: 'any_value' })
     })
 
     it('returns Right on setApiSpecification', () => {
@@ -100,9 +105,9 @@ describe('ExpressAdapter', () => {
         }]
       })
 
-      await request(sut.app)
-        .get('/api/express/test_content_type')
-        .expect('content-type', /json/)
+      const result = await request(sut.app).get('/api/express/test_content_type')
+
+      expect(result.headers).include({ 'content-type': 'application/json; charset=utf-8' })
     })
 
     it('returns Right on setHeaders', () => {
@@ -128,9 +133,9 @@ describe('ExpressAdapter', () => {
         }]
       })
 
-      await request(sut.app)
-        .get('/api/express/test_cors')
-        .expect('access-control-allow-origin', '*')
+      const result = await request(sut.app).get('/api/express/test_cors')
+
+      expect(result.headers).include({ 'access-control-allow-origin': '*' })
     })
 
     it('returns Right on setRouter when route has only a controller', () => {

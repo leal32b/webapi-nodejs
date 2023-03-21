@@ -2,6 +2,7 @@ import { Collection } from 'mongodb'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { MongodbClient, type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
+import { logging } from '@/core/4.main/container/logging'
 
 vi.mock('mongodb', () => ({
   Collection: vi.fn(),
@@ -28,7 +29,10 @@ const makeSut = async (): Promise<SutTypes> => {
     database: 'any_database',
     name: 'any_name'
   }
-  const sut = MongodbClient.create({ dataSource })
+  const sut = MongodbClient.create({
+    dataSource,
+    logger: logging.logger
+  })
   await sut.connect()
 
   return { sut }
@@ -118,7 +122,10 @@ describe('MongodbAdapter', () => {
         database: 'any_database',
         name: 'any_name'
       }
-      const mongodbClient = MongodbClient.create({ dataSource })
+      const mongodbClient = MongodbClient.create({
+        dataSource,
+        logger: logging.logger
+      })
 
       const result = await mongodbClient.connect()
 

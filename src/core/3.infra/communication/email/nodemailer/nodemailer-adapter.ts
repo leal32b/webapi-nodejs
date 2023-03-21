@@ -4,16 +4,23 @@ import { type EmailEntity } from '@/communication/0.domain/entities/email-entity
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 
-export class NodemailerAdapter implements EmailSender {
-  private constructor () {}
+type Props = {
+  logger: Logger
+}
 
-  public static create (): NodemailerAdapter {
-    return new NodemailerAdapter()
+export class NodemailerAdapter implements EmailSender {
+  private constructor (private readonly props: Props) {}
+
+  public static create (props: Props): NodemailerAdapter {
+    return new NodemailerAdapter(props)
   }
 
   public async send (email: EmailEntity): Promise<Either<DomainError, void>> {
+    const { logger } = this.props
+
     try {
       const transporter = this.createTransporter()
       const info = await transporter.sendMail({
@@ -22,7 +29,8 @@ export class NodemailerAdapter implements EmailSender {
         subject: email.subject.value,
         to: email.to.value
       })
-      console.info(`Email sent: ${info.messageId as string}`)
+
+      logger.info('communication', `Email sent: ${info.messageId as string}`)
 
       return right()
     } catch (error) {

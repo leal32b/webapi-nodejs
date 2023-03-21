@@ -2,6 +2,7 @@ import { MongoClient, type Collection } from 'mongodb'
 
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { getVar } from '@/core/0.domain/utils/var'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { type PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 
 export type MongodbDataSource = {
@@ -12,6 +13,7 @@ export type MongodbDataSource = {
 
 type Props = {
   dataSource: MongodbDataSource
+  logger: Logger
 }
 
 export class MongodbClient implements PersistenceClient {
@@ -41,21 +43,24 @@ export class MongodbClient implements PersistenceClient {
   }
 
   public async close (): Promise<Either<Error, void>> {
+    const { logger } = this.props
+
     try {
       await this.mongoClient.close()
 
-      console.info('dataSource disconnected')
+      logger.info('dataSource', 'dataSource disconnected')
 
       return right()
     } catch (error) {
-      console.error('close', error)
+      logger.error('dataSource', ['close', error])
 
       return left(error)
     }
   }
 
   public async connect (): Promise<Either<Error, void>> {
-    const { connectionString } = this.props.dataSource
+    const { dataSource, logger } = this.props
+    const { connectionString } = dataSource
 
     try {
       this.mongoClient = await MongoClient.connect(connectionString)
@@ -66,11 +71,11 @@ export class MongodbClient implements PersistenceClient {
 
       const { name: dataSource, database } = this.props.dataSource
 
-      console.info(`dataSource connected: [${dataSource}] ${database}`)
+      logger.info('dataSource', `dataSource connected: [${dataSource}] ${database}`)
 
       return right()
     } catch (error) {
-      console.error('connect', error)
+      logger.error('dataSource', ['connect', error])
 
       return left(error)
     }

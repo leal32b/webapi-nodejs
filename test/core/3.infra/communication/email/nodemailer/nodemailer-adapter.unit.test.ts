@@ -4,6 +4,7 @@ import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { DomainError } from '@/core/0.domain/base/domain-error'
 import { getVar } from '@/core/0.domain/utils/var'
 import { NodemailerAdapter } from '@/core/3.infra/communication/email/nodemailer/nodemailer-adapter'
+import { logging } from '@/core/4.main/container/logging'
 
 vi.mock('nodemailer', () => ({
   default: {
@@ -29,7 +30,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const emailFake = makeEmailFake()
-  const sut = NodemailerAdapter.create()
+  const sut = NodemailerAdapter.create({ logger: logging.logger })
 
   return { emailFake, sut }
 }

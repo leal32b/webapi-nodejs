@@ -3,53 +3,69 @@ import express, {
 } from 'express'
 
 import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { type Controller, type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
 
+type Props = {
+  logger: Logger
+  port: number
+}
+
 export class ExpressAdapter implements WebApp {
   private readonly _app: Express
 
-  private constructor (private readonly port: number) {
+  private constructor (private readonly props: Props) {
     this._app = express()
     this._app.use(json())
-    this._app.use(this.log)
+    this._app.use((req: Request, res: Response, next: NextFunction): void => {
+      this.props.logger.info('webapp', [`[${req.method}] ${req.url}`, req.body])
+
+      next()
+    })
   }
 
-  public static create (port: number): ExpressAdapter {
-    return new ExpressAdapter(port)
+  public static create (props: Props): ExpressAdapter {
+    return new ExpressAdapter(props)
   }
 
   public listen (callback = null): Either<ServerError, void> {
-    try {
-      this.app.listen(this.port, callback)
+    const { logger, port } = this.props
 
-      console.info(`server running: http://localhost:${this.port}`)
+    try {
+      this.app.listen(port, callback)
+
+      logger.info('webapp', `server running: http://localhost:${port}`)
 
       return right()
     } catch (error) {
-      console.error('listen', error)
+      logger.error('webapp', ['listen', error])
 
       return left(ServerError.create(error.message, error.stack))
     }
   }
 
   public setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
+    const { logger, port } = this.props
+
     try {
       this.app.use(path, ...middlewares)
 
-      console.info(`swagger running: http://localhost:${this.port}${path}`)
+      logger.info('webapp', `swagger running: http://localhost:${port}${path}`)
 
       return right()
     } catch (error) {
-      console.error('setApiSpecification', error)
+      logger.error('webapp', ['setApiSpecification', error])
 
       return left(ServerError.create(error.message, error.stack))
     }
   }
 
   public setContentType (type: string): Either<ServerError, void> {
+    const { logger } = this.props
+
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         res.type(type)
@@ -58,13 +74,15 @@ export class ExpressAdapter implements WebApp {
 
       return right()
     } catch (error) {
-      console.error('setContentType', error)
+      logger.error('webapp', ['setContentType', error])
 
       return left(ServerError.create(error.message, error.stack))
     }
   }
 
   public setHeaders (headers: Header[]): Either<ServerError, void> {
+    const { logger } = this.props
+
     try {
       this.app.use((req: Request, res: Response, next: NextFunction): void => {
         headers.forEach(({ field, value }) => {
@@ -75,13 +93,15 @@ export class ExpressAdapter implements WebApp {
 
       return right()
     } catch (error) {
-      console.error('setHeaders', error)
+      logger.error('webapp', ['setHeaders', error])
 
       return left(ServerError.create(error.message, error.stack))
     }
   }
 
   public setRouter (router: Router): Either<ServerError, void> {
+    const { logger } = this.props
+
     try {
       const { path, routes, middlewares } = router
 
@@ -92,12 +112,12 @@ export class ExpressAdapter implements WebApp {
           this.expressController(route.controller)
         )
 
-        console.info(`route registered: [${route.type.toUpperCase()}] ${path}${route.path}`)
+        logger.info('webapp', `route registered: [${route.type.toUpperCase()}] ${path}${route.path}`)
       }
 
       return right()
     } catch (error) {
-      console.error('setRouter', error)
+      logger.error('webapp', ['setRouter', error])
 
       return left(ServerError.create(error.message, error.stack))
     }
@@ -139,11 +159,5 @@ export class ExpressAdapter implements WebApp {
         response.status(statusCode).json(payload)
       }
     }
-  }
-
-  private log (req: Request, res: Response, next: NextFunction): void {
-    console.info(`[${req.method}] ${req.url}`, req.body)
-
-    next()
   }
 }
