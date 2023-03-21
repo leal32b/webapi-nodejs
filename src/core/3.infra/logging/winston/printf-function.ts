@@ -21,5 +21,5 @@ export const printfFunction = ({ level, label, message }: LoggerParams): string 
     adjustedMessage = JSON.stringify(message, null, 2).replace(keyQuotes, '$1:')
   }
 
-  return `[${label}] ${level}: ${adjustedMessage}`
+  return `${level}: [${label}] ${adjustedMessage}`
 }

@@ -24,7 +24,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result).toBe('[any_label] any_level: any_message')
+      expect(result).toBe('any_level: [any_label] any_message')
     })
 
     it('returns correct message when message params is an array of strings', () => {
@@ -37,7 +37,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result).toBe('[any_label] any_level: any_message another_string')
+      expect(result).toBe('any_level: [any_label] any_message another_string')
     })
 
     it('returns correct message when message params is an array of strings and objects', () => {
@@ -50,7 +50,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('[any_label] any_level: any_message {anyKey: "any_value"}')
+      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] any_message {anyKey: "any_value"}')
     })
 
     it('returns correct message when message params is an array of objects and strings', () => {
@@ -63,7 +63,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('[any_label] any_level: {anyKey: "any_value"} any_message')
+      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] {anyKey: "any_value"} any_message')
     })
 
     it('returns correct message when message params is an object', () => {
@@ -76,7 +76,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('[any_label] any_level: {anyKey: "any_value"}')
+      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] {anyKey: "any_value"}')
     })
   })
 })
