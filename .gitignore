@@ -1,4 +1,5 @@
 # folders
+cache-npm
 coverage
 data-mongodb
 data-postgres
