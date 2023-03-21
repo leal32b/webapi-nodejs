@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "engines": {
     "node": "^16.15.1",
-    "npm": "^9.6.1"
+    "npm": "^8.11.0"
   },
   "description": "Nodejs Webapi template",
   "main": "dist/core/4.main/server.js",
@@ -28,7 +28,7 @@
     "build": "rimraf dist && npm run copy:templates && tsc -b tsconfig.build.json",
     "build:watch": "npm run build -- -w",
     "copy:templates": "copyfiles -u 1 src/**/templates/* dist/",
-    "docker:up": "docker-compose run --rm start_dependencies",
+    "docker:up": "docker-compose up webapi -d",
     "docker:down": "docker-compose down",
     "docker:attach": "docker attach --sig-proxy=false webapi-container",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",

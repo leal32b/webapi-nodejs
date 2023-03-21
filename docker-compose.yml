@@ -42,14 +42,6 @@ services:
       - ${PORT}:${PORT}
       - 9222:9222
     links:
-      - mongodb
-      - postgres
-
-  start_dependencies:
-    container_name: wait-for-dependencies
-    image: dadarek/wait-for-dependencies
-    command: mongodb:27017 postgres:5432 webapi:3000
+      - ${PERSISTENCE}
     depends_on:
-      - mongodb
-      - postgres
-      - webapi
+      - ${PERSISTENCE}
