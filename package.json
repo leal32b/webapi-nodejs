@@ -6,13 +6,13 @@
     "npm": "^9.6.1"
   },
   "description": "Nodejs Webapi template",
-  "main": "index.js",
+  "main": "dist/core/4.main/server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leal32b/webapi-nodejs.git"
   },
   "author": "leal32b",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/leal32b/webapi-nodejs/issues"
   },

@@ -4,7 +4,7 @@ import { type Controller, type AppRequest, type AppResponse } from '@/core/2.pre
 import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { RouteType } from '@/core/3.infra/api/app/web-app'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
-import { logging } from '@/core/4.main/container'
+import { logging } from '@/core/4.main/container/logging'
 
 const makeAuthStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
