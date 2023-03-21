@@ -10,8 +10,6 @@ const makeSut = (): SutTypes => {
   return { sut }
 }
 
-const lineBreakAndDoubleSpace = /(\r\n|\n|\r|\s\s+)/gm
-
 describe('printfFunction', () => {
   describe('success', () => {
     it('returns correct message when message params is a string', () => {
@@ -50,7 +48,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] any_message {anyKey: "any_value"}')
+      expect(result).toBe('any_level: [any_label] any_message {"anyKey":"any_value"}')
     })
 
     it('returns correct message when message params is an array of objects and strings', () => {
@@ -63,7 +61,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] {anyKey: "any_value"} any_message')
+      expect(result).toBe('any_level: [any_label] {"anyKey":"any_value"} any_message')
     })
 
     it('returns correct message when message params is an object', () => {
@@ -76,7 +74,7 @@ describe('printfFunction', () => {
 
       const result = sut(params)
 
-      expect(result.replace(lineBreakAndDoubleSpace, '')).toBe('any_level: [any_label] {anyKey: "any_value"}')
+      expect(result).toBe('any_level: [any_label] {"anyKey":"any_value"}')
     })
   })
 })
