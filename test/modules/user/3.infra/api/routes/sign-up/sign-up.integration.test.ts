@@ -41,10 +41,10 @@ describe('SignUpRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 on success', async () => {
+    it('returns 200 with an email on success', async () => {
       const { webApp } = makeSut()
 
-      await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
@@ -53,23 +53,9 @@ describe('SignUpRoute', () => {
           password: 'any_password',
           passwordRetype: 'any_password'
         })
-        .expect(200)
-    })
 
-    it('returns an email on success', async () => {
-      const { webApp } = makeSut()
-
-      const result = await request(webApp.app)
-        .post('/api/user/sign-up')
-        .send({
-          email: 'another@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'any_password'
-        })
-
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(200)
+      expect(body).toEqual({
         email: expect.any(String),
         message: 'user created successfully'
       })
@@ -77,23 +63,15 @@ describe('SignUpRoute', () => {
   })
 
   describe('failure', () => {
-    it('returns 422 when schema is invalid', async () => {
+    it('returns 422 with schema error message when schema is invalid', async () => {
       const { webApp } = makeSut()
 
-      await request(webApp.app)
-        .post('/api/user/sign-up')
-        .send({})
-        .expect(422)
-    })
-
-    it('returns schema error message when schema is invalid', async () => {
-      const { webApp } = makeSut()
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({})
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(422)
+      expect(body).toEqual({
         error: {
           instancePath: '',
           keyword: 'required',
@@ -104,25 +82,10 @@ describe('SignUpRoute', () => {
       })
     })
 
-    it('returns 400 when passwords do not match', async () => {
+    it('returns 400 with password should match error message when passwords do not match', async () => {
       const { webApp } = makeSut()
 
-      await request(webApp.app)
-        .post('/api/user/sign-up')
-        .send({
-          email: 'any@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'another_password'
-        })
-        .expect(400)
-    })
-
-    it('returns passwords should match error message', async () => {
-      const { webApp } = makeSut()
-
-      const result = await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
           email: 'any@mail.com',
@@ -132,7 +95,8 @@ describe('SignUpRoute', () => {
           passwordRetype: 'another_password'
         })
 
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(400)
+      expect(body).toEqual({
         error: {
           field: 'password',
           message: 'passwords should match'
@@ -140,12 +104,12 @@ describe('SignUpRoute', () => {
       })
     })
 
-    it('returns 400 when email is already in use', async () => {
+    it('returns 400 with email already in use error message when email is already in use', async () => {
       const { userFixture, webApp } = makeSut()
       const email = 'any2@mail.com'
       await userFixture.createFixture({ email })
 
-      await request(webApp.app)
+      const { body, statusCode } = await request(webApp.app)
         .post('/api/user/sign-up')
         .send({
           email: 'any2@mail.com',
@@ -154,28 +118,12 @@ describe('SignUpRoute', () => {
           password: 'any_password',
           passwordRetype: 'any_password'
         })
-        .expect(400)
-    })
 
-    it('returns email already in use error message', async () => {
-      const { userFixture, webApp } = makeSut()
-      const email = 'any3@mail.com'
-      await userFixture.createFixture({ email })
-
-      const result = await request(webApp.app)
-        .post('/api/user/sign-up')
-        .send({
-          email: 'any3@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'any_password'
-        })
-
-      expect(result.body).toEqual({
+      expect(statusCode).toBe(400)
+      expect(body).toEqual({
         error: {
           field: 'email',
-          input: 'any3@mail.com',
+          input: 'any2@mail.com',
           message: 'email already in use'
         }
       })
