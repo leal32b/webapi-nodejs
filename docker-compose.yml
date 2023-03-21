@@ -7,7 +7,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
     volumes:
-      - ./data-mongodb:/data/db
+      - ./docker-volumes/mongodb:/data/db
     ports:
       - 27017:27017
 
@@ -19,7 +19,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ./data-postgres:/var/lib/postgresql/data
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
@@ -37,7 +37,7 @@ services:
       - ./.npmrc:/usr/src/webapi-nodejs/.npmrc
       - ./package.json:/usr/src/webapi-nodejs/package.json
       - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
-      - ./cache-npm:/root/.npm
+      - ./docker-volumes/npm-cache:/root/.npm
     ports:
       - ${PORT}:${PORT}
       - 9222:9222

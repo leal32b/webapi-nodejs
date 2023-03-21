@@ -1,8 +1,6 @@
 # folders
-cache-npm
 coverage
-data-mongodb
-data-postgres
+docker-volumes
 dist
 node_modules
 
