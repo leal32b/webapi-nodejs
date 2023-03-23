@@ -14,6 +14,6 @@ export const makeMongodb: Mongodb = {
     logger: logging.logger
   }),
   repositories: {
-    userRepository: new MongodbUserRepository()
+    userRepository: MongodbUserRepository.create({ publisher: null })
   }
 }

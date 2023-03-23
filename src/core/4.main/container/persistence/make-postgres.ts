@@ -14,6 +14,6 @@ export const makePostgres: Postgres = {
     logger: logging.logger
   }),
   repositories: {
-    userRepository: new PostgresUserRepository()
+    userRepository: PostgresUserRepository.create({ publisher: null })
   }
 }

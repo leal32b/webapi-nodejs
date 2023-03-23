@@ -1,3 +1,4 @@
+import { type Publisher } from '@/core/1.application/events/publisher'
 import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container'
 import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
@@ -18,20 +19,24 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: PostgresUserRepository
+  publisher: Publisher
   userFixture: DatabaseFixture<UserAggregateProps>
   userAggregateFake: UserAggregate
 }
 
 const makeSut = (): SutTypes => {
+  const props = {
+    publisher: null
+  }
   const doubles = {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
     userFixture: makePostgresFixtures.userFixture
   }
-  const sut = new PostgresUserRepository()
+  const sut = PostgresUserRepository.create(props)
 
-  return { sut, ...collaborators, ...doubles }
+  return { sut, ...collaborators, ...doubles, ...props }
 }
 
 describe('UserPostgresRepository', () => {

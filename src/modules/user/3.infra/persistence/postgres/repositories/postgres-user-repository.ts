@@ -1,11 +1,21 @@
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
+import { type Publisher } from '@/core/1.application/events/publisher'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { persistence } from '@/core/4.main/container'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
+type Props = {
+  publisher: Publisher
+}
 export class PostgresUserRepository implements UserRepository {
+  private constructor (private readonly props: Props) {}
+
+  public static create (props: Props): PostgresUserRepository {
+    return new PostgresUserRepository(props)
+  }
+
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
       const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
@@ -22,6 +32,8 @@ export class PostgresUserRepository implements UserRepository {
       })
 
       await persistence.postgres.client.manager.save(postgresUser)
+
+      // this.props.publisher.publish()
 
       return right()
     } catch (error) {
