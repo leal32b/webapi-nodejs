@@ -22,3 +22,5 @@
 [ ] create a mechanism to log errors (maybe in DomainError)
 [x] adjust types in src/core/0.domain/events/domain-events.ts
 [x] make-template-compiler -> make-handlebars
+[ ] mock handlebars on handlebars-adapter.unit.test.ts
+[ ] verify if it's needed all the vi.fn()

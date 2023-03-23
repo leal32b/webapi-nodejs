@@ -23,6 +23,19 @@ services:
     ports:
       - 5432:5432
 
+  rabbitmq:
+    container_name: rabbitmq-container
+    image: rabbitmq:3.10-management
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - ./docker-volumes/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   webapi:
     container_name: webapi-container
     image: node:16.15
@@ -43,5 +56,7 @@ services:
       - 9222:9222
     links:
       - ${PERSISTENCE}
+      - rabbitmq
     depends_on:
       - ${PERSISTENCE}
+      - rabbitmq
