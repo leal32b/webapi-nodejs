@@ -1,10 +1,10 @@
 import amqplib, { type Channel, type Connection, type Options } from 'amqplib'
 
 import { left, right, type Either } from '@/core/0.domain/utils/either'
-import { type MessageBroker } from '@/core/1.application/events/message-broker'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { type Queue } from '@/core/1.application/types/queue'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
+import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 
 type Props = {
   connectParams: Options.Connect
