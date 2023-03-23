@@ -12,11 +12,13 @@ import {
   type Cryptography,
   type Documentation,
   type Persistence,
-  type Validators
+  type Validators,
+  type Events
 } from '@/core/4.main/container/container-types'
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/core/4.main/container/documentation/make-swagger'
+import { makeRabbitmq } from '@/core/4.main/container/events/make-rabbitmq'
 import { makeI18next } from '@/core/4.main/container/i18n/make-i18next'
 import { makeMongodb } from '@/core/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/core/4.main/container/persistence/make-postgres'
@@ -44,6 +46,10 @@ export const documentation: Documentation = {
     middlewares: makeSwagger.middlewares,
     path: makeSwagger.path
   }
+}
+
+export const events: Events = {
+  messageBroker: makeRabbitmq
 }
 
 export const i18n: I18n = {

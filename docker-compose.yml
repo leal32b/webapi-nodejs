@@ -45,6 +45,7 @@ services:
     environment:
       - MONGODB_HOST=mongodb
       - POSTGRES_HOST=postgres
+      - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
       - ./.npmrc:/usr/src/webapi-nodejs/.npmrc
