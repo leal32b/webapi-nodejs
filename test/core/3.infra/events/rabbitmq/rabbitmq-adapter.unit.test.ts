@@ -1,16 +1,14 @@
-import amqplib from 'amqplib/callback_api'
+import amqplib from 'amqplib'
 
 import { RabbitmqAdapter } from '@/core/3.infra/events/rabbitmq/rabbitmq-adapter'
 
-vi.mock('amqplib/callback_api', () => ({
+vi.mock('amqplib', () => ({
   default: {
-    connect: (host, fn) => {
-      fn(null, {
-        createChannel: fn2 => {
-          fn2(null, { assertQueue: vi.fn() })
-        }
-      })
-    }
+    connect: () => ({
+      createChannel: () => {
+        return { assertQueue: vi.fn() }
+      }
+    })
   }
 }))
 
@@ -34,15 +32,15 @@ describe('RabbitmqClient', () => {
       const { sut } = makeSut()
       const connectSpy = vi.spyOn(amqplib, 'connect')
 
-      sut.connect()
+      await sut.connect()
 
-      expect(connectSpy).toHaveBeenCalledWith('any_host', expect.any(Function))
+      expect(connectSpy).toHaveBeenCalledWith('any_host')
     })
 
-    it('connects to rabbitmq server', () => {
+    it('connects to rabbitmq server', async () => {
       const { sut } = makeSut()
 
-      const result = sut.connect()
+      const result = await sut.connect()
 
       expect(result.isRight()).toBe(true)
     })
@@ -50,115 +48,72 @@ describe('RabbitmqClient', () => {
     it('calls amqplib.createChannel with correct params', async () => {
       const { sut } = makeSut()
       const createChannelSpy = vi.fn()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(null, { createChannel: createChannelSpy })
-      })
-      sut.connect()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({ createChannel: createChannelSpy } as any)
 
-      sut.createChannel()
+      await sut.connect()
 
-      expect(createChannelSpy).toHaveBeenCalledWith(expect.any(Function))
-    })
-
-    it('creates a channel', async () => {
-      const { sut } = makeSut()
-      sut.connect()
-
-      const result = sut.createChannel()
-
-      expect(result.isRight()).toBe(true)
+      expect(createChannelSpy).toHaveBeenCalledOnce()
     })
 
     it('calls amqplib.assertQueue with correct params', async () => {
       const { sut } = makeSut()
       const assertQueueSpy = vi.fn()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(null, {
-          createChannel: (fn2) => {
-            fn2(null, { assertQueue: assertQueueSpy })
-          }
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          assertQueue: assertQueueSpy
         })
-      })
-      const name = 'any_queue'
-      sut.connect()
-      sut.createChannel()
+      } as any)
+      const queue = { name: 'any_queue' }
+      await sut.connect()
 
-      sut.createQueue(name)
+      sut.createQueue(queue)
 
       expect(assertQueueSpy).toHaveBeenCalledWith('any_queue', expect.any(Object))
     })
 
     it('creates a queue', async () => {
       const { sut } = makeSut()
-      const name = 'any_queue'
-      sut.connect()
-      sut.createChannel()
+      const queue = { name: 'any_queue' }
+      await sut.connect()
 
-      const result = sut.createQueue(name)
+      const result = sut.createQueue(queue)
 
       expect(result.isRight()).toBe(true)
     })
   })
 
   describe('failure', () => {
-    it('returns Left when amqplib.connect throws', () => {
+    it('returns Left when amqplib.connect throws', async () => {
       const { sut } = makeSut()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce(() => { throw new Error() })
+      vi.spyOn(amqplib, 'connect').mockRejectedValueOnce(new Error())
 
-      const result = sut.connect()
-
-      expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns Left when amqplib.connect returns an error', () => {
-      const { sut } = makeSut()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(new Error(), null)
-      })
-
-      const result = sut.connect()
+      const result = await sut.connect()
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when amqplib.createChannel throws', async () => {
       const { sut } = makeSut()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(null, { createChannel: () => { throw new Error() } })
-      })
-      sut.connect()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => { throw new Error() }
+      } as any)
 
-      const result = sut.createChannel()
-
-      expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns Left when amqplib.createChannel returns an error', async () => {
-      const { sut } = makeSut()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(null, { createChannel: (fn) => { fn(new Error(), null) } })
-      })
-      sut.connect()
-
-      const result = sut.createChannel()
+      const result = await sut.connect()
 
       expect(result.isLeft()).toBe(true)
     })
 
     it('returns Left when amqplib.assertQueue throws', async () => {
       const { sut } = makeSut()
-      vi.spyOn(amqplib, 'connect').mockImplementationOnce((host, fn) => {
-        fn(null, {
-          createChannel: fn2 => {
-            fn2(null, { assertQueue: () => { throw new Error() } })
-          }
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          assertQueue: () => { throw new Error() }
         })
-      })
-      const name = 'any_queue'
-      sut.connect()
-      sut.createChannel()
+      } as any)
+      const queue = { name: 'any_queue' }
+      await sut.connect()
 
-      const result = sut.createQueue(name)
+      const result = sut.createQueue(queue)
 
       expect(result.isLeft()).toBe(true)
     })

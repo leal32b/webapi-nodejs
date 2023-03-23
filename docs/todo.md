@@ -24,3 +24,4 @@
 [x] make-template-compiler -> make-handlebars
 [ ] mock handlebars on handlebars-adapter.unit.test.ts
 [ ] verify if it's needed all the vi.fn()
+[ ] revise setup/webApp -> import values and make sets inside index.ts

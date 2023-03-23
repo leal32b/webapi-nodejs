@@ -1,14 +1,15 @@
-import amqplib, { type Channel, type Connection, type Options } from 'amqplib/callback_api'
+import amqplib, { type Channel, type Connection } from 'amqplib'
 
 import { left, right, type Either } from '@/core/0.domain/utils/either'
+import { type Queue } from '@/core/1.application/types/queue'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { type MessageBrokerClient } from '@/core/3.infra/events/message-broker-client'
+import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 
 type Props = {
   host: string
 }
 
-export class RabbitmqAdapter implements MessageBrokerClient {
+export class RabbitmqAdapter implements MessageBroker {
   private channel: Channel
   private connection: Connection
 
@@ -18,35 +19,12 @@ export class RabbitmqAdapter implements MessageBrokerClient {
     return new RabbitmqAdapter(props)
   }
 
-  public connect (): Either<ServerError, void> {
+  public async connect (): Promise<Either<ServerError, void>> {
     const { host } = this.props
 
     try {
-      amqplib.connect(host, (error, connection) => {
-        if (error) {
-          throw new Error(error)
-        }
-
-        this.connection = connection
-      })
-
-      const result = this.createChannel()
-
-      return result
-    } catch (error) {
-      return left(ServerError.create(error))
-    }
-  }
-
-  public createChannel (): Either<ServerError, void> {
-    try {
-      this.connection.createChannel((error, channel) => {
-        if (error) {
-          throw error
-        }
-
-        this.channel = channel
-      })
+      this.connection = await amqplib.connect(host)
+      this.channel = await this.connection.createChannel()
 
       return right()
     } catch (error) {
@@ -54,10 +32,9 @@ export class RabbitmqAdapter implements MessageBrokerClient {
     }
   }
 
-  public createQueue (name: string, opt?: Options.AssertQueue): Either<ServerError, void> {
+  public createQueue (queue: Queue): Either<ServerError, void> {
     try {
-      this.channel.assertQueue(name, {
-        ...opt,
+      this.channel.assertQueue(queue.name, {
         durable: false
       })
 
