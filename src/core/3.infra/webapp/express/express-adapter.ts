@@ -21,7 +21,16 @@ export class ExpressAdapter implements WebApp {
     this._app = express()
     this._app.use(json())
     this._app.use((req: Request, res: Response, next: NextFunction): void => {
-      this.props.logger.info('webapp', [`[${req.method}] ${req.url}`, req.body])
+      const originalSend = res.send
+
+      res.send = (data: string) => {
+        const parsedData = JSON.parse(data)
+        res.send = originalSend
+
+        this.props.logger[parsedData.error ? 'error' : 'info']('webapp', [`[${req.method}] ${req.url}`, req.body, data])
+
+        return res.send(data)
+      }
 
       next()
     })
@@ -142,21 +151,21 @@ export class ExpressAdapter implements WebApp {
   private expressMiddleware (route: Route, middleware: Middleware): RequestHandler {
     const { auth, schema } = route
 
-    return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const httpRequest = {
-        accessToken: request.headers.authorization,
+        accessToken: req.headers.authorization,
         auth,
-        payload: request.body,
+        payload: req.body,
         schema
       }
       const appResponse = await middleware.handle(httpRequest)
       const { statusCode, payload } = appResponse
 
       if (statusCode === 200) {
-        Object.assign(request, payload)
+        Object.assign(req, payload)
         next()
       } else {
-        response.status(statusCode).json(payload)
+        res.status(statusCode).json(payload)
       }
     }
   }
