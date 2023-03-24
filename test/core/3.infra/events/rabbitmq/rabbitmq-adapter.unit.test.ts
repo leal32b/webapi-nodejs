@@ -4,7 +4,8 @@ import { left, right } from '@/core/0.domain/utils/either'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { RabbitmqAdapter } from '@/core/3.infra/events/rabbitmq/rabbitmq-adapter'
-import { logging } from '@/core/4.main/container/logging'
+
+import { makeLoggerMock } from '~/core/mocks/logger-mock'
 
 vi.mock('amqplib', () => ({
   default: {
@@ -35,7 +36,7 @@ const makeSut = (): SutTypes => {
       port: 0,
       username: 'any_user'
     },
-    logger: logging.logger
+    logger: makeLoggerMock()
   }
   const sut = RabbitmqAdapter.create(params)
 

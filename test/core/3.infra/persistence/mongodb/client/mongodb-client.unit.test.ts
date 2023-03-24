@@ -1,8 +1,10 @@
 import { Collection } from 'mongodb'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { MongodbClient, type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
-import { logging } from '@/core/4.main/container/logging'
+
+import { makeLoggerMock } from '~/core/mocks/logger-mock'
 
 vi.mock('mongodb', () => ({
   Collection: vi.fn(),
@@ -21,6 +23,8 @@ const NODE_ENV = getVar('NODE_ENV')
 
 type SutTypes = {
   sut: MongodbClient
+  dataSource: MongodbDataSource
+  logger: Logger
 }
 
 const makeSut = async (): Promise<SutTypes> => {
@@ -29,13 +33,14 @@ const makeSut = async (): Promise<SutTypes> => {
     database: 'any_database',
     name: 'any_name'
   }
-  const sut = MongodbClient.create({
+  const params = {
     dataSource,
-    logger: logging.logger
-  })
+    logger: makeLoggerMock()
+  }
+  const sut = MongodbClient.create(params)
   await sut.connect()
 
-  return { sut }
+  return { sut, ...params }
 }
 
 describe('MongodbAdapter', () => {
@@ -117,6 +122,7 @@ describe('MongodbAdapter', () => {
     })
 
     it('returns Left when connect throws', async () => {
+      const { logger } = await makeSut()
       const dataSource = {
         connectionString: 'invalid_connectionString',
         database: 'any_database',
@@ -124,7 +130,7 @@ describe('MongodbAdapter', () => {
       }
       const mongodbClient = MongodbClient.create({
         dataSource,
-        logger: logging.logger
+        logger
       })
 
       const result = await mongodbClient.connect()

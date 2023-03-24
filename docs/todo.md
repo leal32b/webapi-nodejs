@@ -30,5 +30,5 @@
 [x] adjust colorFunction of winston
 [ ] log route errors
 [x] change 'dataSource' to persistence on logs
-[ ] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
+[x] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
 [ ] make logging.logger mock
