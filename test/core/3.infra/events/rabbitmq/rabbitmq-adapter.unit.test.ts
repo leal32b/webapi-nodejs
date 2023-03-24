@@ -67,7 +67,7 @@ describe('RabbitmqClient', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('calls amqplib.createChannel with correct params', async () => {
+    it('calls connection.createChannel with correct params', async () => {
       const { sut } = makeSut()
       const createChannelSpy = vi.fn()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({ createChannel: createChannelSpy } as any)
@@ -77,7 +77,7 @@ describe('RabbitmqClient', () => {
       expect(createChannelSpy).toHaveBeenCalledOnce()
     })
 
-    it('calls amqplib.assertQueue with correct params', async () => {
+    it('calls channel.assertQueue with correct params', async () => {
       const { sut } = makeSut()
       const assertQueueSpy = vi.fn()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
@@ -103,18 +103,16 @@ describe('RabbitmqClient', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('calls amqplib.sendToQueue with correct params', async () => {
+    it('calls channel.sendToQueue with correct params', async () => {
       const { sut } = makeSut()
       const sendToQueueSpy = vi.fn()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
-          assertQueue: vi.fn(),
           sendToQueue: sendToQueueSpy
         })
       } as any)
       const queue = { name: 'any_queue' }
       await sut.connect()
-      sut.createQueue(queue)
 
       await sut.publishToQueue(queue, {
         aggregateId: 'any_id',
@@ -144,7 +142,7 @@ describe('RabbitmqClient', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('calls amqplib.consume with correct params', async () => {
+    it('calls channel.consume with correct params', async () => {
       const { sut } = makeSut()
       const consumeSpy = vi.fn()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
@@ -184,7 +182,7 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when amqplib.createChannel throws', async () => {
+    it('returns Left when connection.createChannel throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => { throw new Error() }
@@ -196,7 +194,7 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when amqplib.assertQueue throws', async () => {
+    it('returns Left when channel.assertQueue throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -212,7 +210,7 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when amqplib.sendToQueue throws', async () => {
+    it('returns Left when channel.sendToQueue throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -234,7 +232,7 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when amqplib.sendToQueue returns false', async () => {
+    it('returns Left when channel.sendToQueue returns false', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -256,7 +254,7 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when amqplib.consume throws', async () => {
+    it('returns Left when channel.consume throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -272,15 +270,23 @@ describe('RabbitmqClient', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('logs the error when handlerFn returns Left', async () => {
-      const { sut, logger } = makeSut()
-      const errorSpy = vi.spyOn(logger, 'error')
+    it('does not call channel.ack when handlerFn returns Left', async () => {
+      const { sut } = makeSut()
+      const ackSpy = vi.fn()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          ack: ackSpy,
+          consume: (queue, fn) => fn({
+            content: Buffer.from(JSON.stringify({}))
+          })
+        })
+      } as any)
       const queue = { name: 'any_queue' }
       await sut.connect()
 
       await sut.subscribeToQueue(queue, () => left(new Error()) as any)
 
-      expect(errorSpy).toHaveBeenCalledWith('events', ['handle', Error(), {}])
+      expect(ackSpy).not.toHaveBeenCalled()
     })
   })
 })

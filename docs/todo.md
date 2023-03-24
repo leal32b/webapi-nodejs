@@ -31,4 +31,4 @@
 [ ] log route errors
 [x] change 'dataSource' to persistence on logs
 [x] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
-[ ] make logging.logger mock
+[x] make logging.logger mock

@@ -58,17 +58,22 @@ export class RabbitmqAdapter implements MessageBroker {
     }
   }
 
-  public async publishToQueue (queue: Queue, payload: Event<Record<string, unknown>>): Promise<Either<ServerError, void>> {
+  public async publishToQueue (queue: Queue, event: Event<Record<string, unknown>>): Promise<Either<ServerError, void>> {
     const { logger } = this.props
+    const adaptedEvent = {
+      aggregateId: event.aggregateId,
+      createdAt: event.createdAt,
+      payload: event.payload
+    }
 
     try {
-      const sent = this.channel.sendToQueue(queue.name, Buffer.from(JSON.stringify(payload)))
+      const sent = this.channel.sendToQueue(queue.name, Buffer.from(JSON.stringify(adaptedEvent)))
 
       if (!sent) {
         return left(ServerError.create('error on sending to queue'))
       }
 
-      logger.info('events', [`event sent to queue: [${queue.name}]`, payload])
+      logger.info('events', [`event sent to queue: [${queue.name}]`, adaptedEvent])
 
       return right()
     } catch (error) {
@@ -84,21 +89,15 @@ export class RabbitmqAdapter implements MessageBroker {
     try {
       this.channel.consume(queue.name, async (msg: ConsumeMessage) => {
         const payload = JSON.parse(msg.content.toString())
-
-        logger.info('events', [`event received: [${queue.name}]`, payload])
-
         const resultOrError = await handlerFn(payload)
 
-        if (resultOrError.isLeft()) {
-          logger.error('events', ['handle', resultOrError.value, payload])
+        logger[resultOrError.isLeft() ? 'error' : 'info']('events', [`handle: [${queue.name}]`, payload, resultOrError.value])
 
+        if (resultOrError.isLeft()) {
           return
         }
 
-        const result = resultOrError.value
         this.channel.ack(msg)
-
-        logger.info('events', [`event successfully handled: [${queue.name}]`, payload, result])
       })
 
       return right()
