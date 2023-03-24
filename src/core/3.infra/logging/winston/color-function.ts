@@ -9,8 +9,8 @@ const colors = {
 
 const labels = {
   communication: colors.yellow,
-  dataSource: colors.cyan,
   events: colors.blue,
+  persistence: colors.cyan,
   webapp: colors.magenta
 }
 

@@ -43,11 +43,11 @@ export class PostgresClient implements PersistenceClient {
     try {
       await this.props.dataSource.destroy()
 
-      logger.info('dataSource', 'dataSource disconnected')
+      logger.info('persistence', 'dataSource disconnected')
 
       return right()
     } catch (error) {
-      logger.error('dataSource', ['close', error])
+      logger.error('persistence', ['close', error])
 
       return left(error)
     }
@@ -61,11 +61,11 @@ export class PostgresClient implements PersistenceClient {
       const dataSource = this.props.dataSource.name
       const database = this.props.dataSource.options.database as string
 
-      logger.info('dataSource', `dataSource connected: [${dataSource}] ${database}`)
+      logger.info('persistence', `dataSource connected: [${dataSource}] ${database}`)
 
       return right()
     } catch (error) {
-      logger.error('dataSource', ['connect', error])
+      logger.error('persistence', ['connect', error])
 
       return left(error)
     }

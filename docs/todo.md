@@ -29,6 +29,6 @@
 [ ] change name of export in src/modules/communication/1.application/i18n/index.ts
 [x] adjust colorFunction of winston
 [ ] log route errors
-[ ] change 'dataSource' to persistence on logs
+[x] change 'dataSource' to persistence on logs
 [ ] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
 [ ] make logging.logger mock

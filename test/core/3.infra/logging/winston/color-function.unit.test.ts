@@ -21,15 +21,6 @@ describe('colorFunction', () => {
       expect(result).toBe('\x1b[33mcommunication\x1b[0m')
     })
 
-    it('returns formatted label when it is dataSource', () => {
-      const { sut } = makeSut()
-      const label = 'dataSource'
-
-      const result = sut(label)
-
-      expect(result).toBe('\x1b[36mdataSource\x1b[0m')
-    })
-
     it('returns formatted label when it is events', () => {
       const { sut } = makeSut()
       const label = 'events'
@@ -37,6 +28,15 @@ describe('colorFunction', () => {
       const result = sut(label)
 
       expect(result).toBe('\x1b[34mevents\x1b[0m')
+    })
+
+    it('returns formatted label when it is persistence', () => {
+      const { sut } = makeSut()
+      const label = 'persistence'
+
+      const result = sut(label)
+
+      expect(result).toBe('\x1b[36mpersistence\x1b[0m')
     })
 
     it('returns formatted label when it is webapp', () => {
