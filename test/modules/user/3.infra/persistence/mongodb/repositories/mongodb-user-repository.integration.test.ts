@@ -1,10 +1,12 @@
-import { type Publisher } from '@/core/1.application/events/publisher'
+import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
 import { persistence } from '@/core/4.main/container'
 import { makeMongodbFixtures } from '@/core/4.main/setup/fixtures/make-mongodb-fixtures'
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
+
+import { makeMessageBrokerMock } from '~/core/mocks/message-broker-mock'
 
 const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
@@ -19,14 +21,14 @@ const makeUserAggregateFake = (): UserAggregate => {
 
 type SutTypes = {
   sut: MongodbUserRepository
-  publisher: Publisher
+  messageBroker: MessageBroker
   userFixture: DatabaseFixture<UserAggregateProps>
   userAggregateFake: UserAggregate
 }
 
 const makeSut = (): SutTypes => {
   const props = {
-    publisher: null
+    messageBroker: makeMessageBrokerMock()
   }
   const doubles = {
     userAggregateFake: makeUserAggregateFake()
@@ -50,11 +52,26 @@ describe('UserMongodbRepository', () => {
   })
 
   describe('success', () => {
-    it('returns Right on create success', async () => {
-      const { sut, userAggregateFake } = makeSut()
+    it('calls messageBroker.publishToQueue with correct params', async () => {
+      const { sut, messageBroker, userAggregateFake } = makeSut()
+      const publishToQueueSpy = vi.spyOn(messageBroker, 'publishToQueue')
 
       const result = await sut.create(userAggregateFake)
 
+      expect(publishToQueueSpy).toHaveBeenCalledWith({
+        name: 'userCreated'
+      },
+      {
+        props: {
+          aggregateId: '000000000000000000000001',
+          createdAt: expect.any(Date),
+          payload: {
+            email: 'any@mail.com',
+            locale: 'en',
+            token: 'any_token'
+          }
+        }
+      })
       expect(result.isRight()).toBe(true)
     })
 

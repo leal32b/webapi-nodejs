@@ -2,14 +2,16 @@ import { ObjectId } from 'mongodb'
 
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
-import { type Publisher } from '@/core/1.application/events/publisher'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
+import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 import { persistence } from '@/core/4.main/container'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
+import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
+import { userCreatedQueue } from '@/user/1.application/events/queues/user-created-queue'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 type Props = {
-  publisher: Publisher
+  messageBroker: MessageBroker
 }
 
 export class MongodbUserRepository implements UserRepository {
@@ -35,7 +37,14 @@ export class MongodbUserRepository implements UserRepository {
         token: token.value
       })
 
-      // this.props.publisher.publish()
+      this.props.messageBroker.publishToQueue(userCreatedQueue, UserCreatedEvent.create({
+        aggregateId: id.value,
+        payload: {
+          email: email.value,
+          locale: locale.value,
+          token: token.value
+        }
+      }))
 
       return right()
     } catch (error) {
