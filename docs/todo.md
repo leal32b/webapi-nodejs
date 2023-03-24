@@ -25,3 +25,10 @@
 [ ] mock handlebars on handlebars-adapter.unit.test.ts
 [ ] verify if it's needed all the vi.fn()
 [ ] revise setup/webApp -> import values and make sets inside index.ts
+[ ] adjust container -> events and logging, make functions?
+[ ] change name of export in src/modules/communication/1.application/i18n/index.ts
+[x] adjust colorFunction of winston
+[ ] log route errors
+[ ] change 'dataSource' to persistence on logs
+[ ] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
+[ ] make logging.logger mock

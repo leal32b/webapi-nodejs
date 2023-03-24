@@ -1,7 +1,8 @@
 import 'dotenv/config'
 import 'module-alias/register'
 
-import { app, events, persistence } from '@/core/4.main/container'
+import { app, persistence } from '@/core/4.main/container'
+import { events } from '@/core/4.main/container/events'
 import { setupMessageBroker } from '@/core/4.main/setup/events'
 import { setHandlers } from '@/core/4.main/setup/handlers/set-handlers'
 import { setupWebApp } from '@/core/4.main/setup/webapp'
