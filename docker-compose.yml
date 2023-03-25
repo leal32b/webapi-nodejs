@@ -7,9 +7,9 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
     volumes:
-      - ./data-mongodb:/data/db
+      - ./docker-volumes/mongodb:/data/db
     ports:
-      - 27017:27017
+      - ${MONGODB_PORT}:${MONGODB_PORT}
 
   postgres:
     container_name: postgres-container
@@ -19,9 +19,22 @@ services:
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ./data-postgres:/var/lib/postgresql/data
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
+  rabbitmq:
+    container_name: rabbitmq-container
+    image: rabbitmq:3.11-management
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - ./docker-volumes/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
+    ports:
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+      - ${RABBITMQ_MGR_PORT}:${RABBITMQ_MGR_PORT}
 
   webapi:
     container_name: webapi-container
@@ -32,24 +45,19 @@ services:
     environment:
       - MONGODB_HOST=mongodb
       - POSTGRES_HOST=postgres
+      - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./dist:/usr/src/webapi-nodejs/dist
       - ./.npmrc:/usr/src/webapi-nodejs/.npmrc
       - ./package.json:/usr/src/webapi-nodejs/package.json
       - ./package-lock.json:/usr/src/webapi-nodejs/package-lock.json
-      - ./cache-npm:/root/.npm
+      - ./docker-volumes/npm-cache:/root/.npm
     ports:
       - ${PORT}:${PORT}
-      - 9222:9222
+      - ${DEBUG_PORT}:${DEBUG_PORT}
     links:
-      - mongodb
-      - postgres
-
-  start_dependencies:
-    container_name: wait-for-dependencies
-    image: dadarek/wait-for-dependencies
-    command: mongodb:27017 postgres:5432 webapi:3000
+      - ${PERSISTENCE}
+      - rabbitmq
     depends_on:
-      - mongodb
-      - postgres
-      - webapi
+      - ${PERSISTENCE}
+      - rabbitmq

@@ -1,7 +1,5 @@
 import { DomainError } from '@/core/0.domain/base/domain-error'
-import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { left, right } from '@/core/0.domain/utils/either'
-import { Identifier } from '@/core/0.domain/utils/identifier'
 import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
 import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
@@ -79,15 +77,6 @@ describe('CreateUserUseCase', () => {
       await sut.execute(createUserDataFake)
 
       expect(userRepository.create).toHaveBeenCalledWith(expect.any(UserAggregate))
-    })
-
-    it('calls DomainEvents.dispatchEventsForAggregate with correct params', async () => {
-      const { sut, createUserDataFake } = makeSut()
-      const dispatchEventsForAggregateSpy = vi.spyOn(DomainEvents, 'dispatchEventsForAggregate')
-
-      await sut.execute(createUserDataFake)
-
-      expect(dispatchEventsForAggregateSpy).toHaveBeenCalledWith(expect.any(Identifier))
     })
 
     it('returns a message and the created user email', async () => {

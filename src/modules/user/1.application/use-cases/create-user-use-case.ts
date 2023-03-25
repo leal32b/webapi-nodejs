@@ -1,5 +1,4 @@
 import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { DomainEvents } from '@/core/0.domain/events/domain-events'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { UseCase } from '@/core/1.application/base/use-case'
 import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
@@ -59,14 +58,10 @@ export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUser
     const token = tokenOrError.value
     const userAggregateOrError = await this.createUserAggregate(createUserData, hashedPassword, token)
 
-    return userAggregateOrError.applyOnRight(userAggregate => {
-      DomainEvents.dispatchEventsForAggregate(userAggregate.id)
-
-      return {
-        email,
-        message: 'user created successfully'
-      }
-    })
+    return userAggregateOrError.applyOnRight(() => ({
+      email,
+      message: 'user created successfully'
+    }))
   }
 
   private async createUserAggregate (createUserData: CreateUserData, hashedPassword: string, token: string): Promise<Either<DomainError[], UserAggregate>> {

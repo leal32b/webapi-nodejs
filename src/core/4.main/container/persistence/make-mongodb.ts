@@ -3,6 +3,7 @@ import { MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb
 import { mongodbDefaultDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/mongodb-default'
 import { mongodbTestDataSource } from '@/core/3.infra/persistence/mongodb/data-sources/mongodb-test'
 import { type Mongodb } from '@/core/4.main/container/container-types'
+import { events } from '@/core/4.main/container/events'
 import { logging } from '@/core/4.main/container/logging'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 
@@ -14,6 +15,6 @@ export const makeMongodb: Mongodb = {
     logger: logging.logger
   }),
   repositories: {
-    userRepository: new MongodbUserRepository()
+    userRepository: MongodbUserRepository.create({ messageBroker: events.messageBroker })
   }
 }

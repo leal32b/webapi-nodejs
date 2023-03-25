@@ -22,3 +22,15 @@
 [ ] create a mechanism to log errors (maybe in DomainError)
 [x] adjust types in src/core/0.domain/events/domain-events.ts
 [x] make-template-compiler -> make-handlebars
+[ ] mock handlebars on handlebars-adapter.unit.test.ts
+[ ] verify if it's needed all the vi.fn()
+[ ] revise setup/webApp -> import values and make sets inside index.ts
+[ ] adjust container -> events and logging, make functions?
+[ ] change name of export in src/modules/communication/1.application/i18n/index.ts
+[x] adjust colorFunction of winston
+[x] log route errors
+[x] change 'dataSource' to persistence on logs
+[x] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
+[x] make logging.logger mock
+[ ] await publishToTopic? -> modules/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository.ts
+[x] change rabbitmq-adapter to amqplib-adapter

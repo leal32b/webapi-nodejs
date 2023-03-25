@@ -1,4 +1,4 @@
-import { DomainEvent, type DomainEventProps } from '@/core/0.domain/base/domain-event'
+import { Event, type Props } from '@/core/1.application/base/event'
 
 type UserCreatedPayload = {
   email: string
@@ -6,8 +6,8 @@ type UserCreatedPayload = {
   token: string
 }
 
-export class UserCreatedEvent extends DomainEvent<UserCreatedPayload> {
-  public static create (props: DomainEventProps<UserCreatedPayload>): UserCreatedEvent {
+export class UserCreatedEvent extends Event<UserCreatedPayload> {
+  public static create (props: Props<UserCreatedPayload>): UserCreatedEvent {
     return new UserCreatedEvent(props)
   }
 }

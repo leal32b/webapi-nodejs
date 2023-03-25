@@ -1,8 +1,10 @@
- type LoggerParams = {
-   label: string
-   level: string
-   message: string | Record<string, unknown> | any[]
- }
+import { colorFunction } from '@/core/3.infra/logging/winston/color-function'
+
+type LoggerParams = {
+  label: string
+  level: string
+  message: string | Record<string, unknown> | any[]
+}
 
 export const printfFunction = ({ level, label, message }: LoggerParams): string => {
   let adjustedMessage = message as string
@@ -20,5 +22,6 @@ export const printfFunction = ({ level, label, message }: LoggerParams): string 
     adjustedMessage = JSON.stringify(message)
   }
 
-  return `${level}: [${label}] ${adjustedMessage}`
+  return `${level}: [${colorFunction(label)}] ${adjustedMessage}`
 }
+

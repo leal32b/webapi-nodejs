@@ -1,14 +1,14 @@
-import { DomainEvent } from '@/core/0.domain/base/domain-event'
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { Event } from '@/core/1.application/base/event'
 
 type PayloadFake = {
   anyKey: string
 }
 
-class DomainEventStub extends DomainEvent<PayloadFake> {
-  public static create (): DomainEventStub {
-    return new DomainEventStub({
-      aggregateId: Identifier.create(),
+class EventStub extends Event<PayloadFake> {
+  public static create (): EventStub {
+    return new EventStub({
+      aggregateId: 'any_id',
+      createdAt: new Date(),
       payload: {
         anyKey: 'any_value'
       }
@@ -17,11 +17,11 @@ class DomainEventStub extends DomainEvent<PayloadFake> {
 }
 
 type SutTypes = {
-  sut: DomainEventStub
+  sut: EventStub
 }
 
 const makeSut = (): SutTypes => {
-  const sut = DomainEventStub.create()
+  const sut = EventStub.create()
 
   return { sut }
 }
@@ -33,7 +33,7 @@ describe('DomainEvent', () => {
 
       const result = sut.aggregateId
 
-      expect(result).toBeInstanceOf(Identifier)
+      expect(result).toBe('any_id')
     })
 
     it('gets createdAt', () => {

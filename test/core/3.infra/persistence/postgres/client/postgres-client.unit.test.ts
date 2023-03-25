@@ -1,6 +1,7 @@
 import { type DataSource } from 'typeorm'
 
 import { getVar, setVar } from '@/core/0.domain/utils/var'
+import { type Logger } from '@/core/1.application/logging/logger'
 import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
 import { logging } from '@/core/4.main/container/logging'
 
@@ -22,17 +23,19 @@ const makeDataSourceMock = (): DataSource => ({
 
 type SutTypes = {
   sut: PostgresClient
-  dataSourceMock: DataSource
+  dataSource: DataSource
+  logger: Logger
 }
 
 const makeSut = (): SutTypes => {
-  const dataSourceMock = makeDataSourceMock()
-  const sut = PostgresClient.create({
-    dataSource: dataSourceMock,
+  const params = {
+    dataSource: makeDataSourceMock(),
     logger: logging.logger
-  })
 
-  return { dataSourceMock, sut }
+  }
+  const sut = PostgresClient.create(params)
+
+  return { sut, ...params }
 }
 
 describe('PostgresClient', () => {
@@ -102,8 +105,8 @@ describe('PostgresClient', () => {
 
   describe('failure', () => {
     it('returns Left when close throws', async () => {
-      const { sut, dataSourceMock } = makeSut()
-      vi.spyOn(dataSourceMock, 'destroy').mockRejectedValueOnce(new Error())
+      const { sut, dataSource } = makeSut()
+      vi.spyOn(dataSource, 'destroy').mockRejectedValueOnce(new Error())
 
       const result = await sut.close()
 
@@ -111,8 +114,8 @@ describe('PostgresClient', () => {
     })
 
     it('returns Left when clearDatabase throws', async () => {
-      const { sut, dataSourceMock } = makeSut()
-      vi.spyOn(dataSourceMock, 'getRepository').mockImplementationOnce((vi.fn() as any))
+      const { sut, dataSource } = makeSut()
+      vi.spyOn(dataSource, 'getRepository').mockImplementationOnce((vi.fn() as any))
 
       const result = await sut.clearDatabase()
 
