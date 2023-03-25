@@ -9,7 +9,7 @@ services:
     volumes:
       - ./docker-volumes/mongodb:/data/db
     ports:
-      - 27017:27017
+      - ${MONGODB_PORT}:${MONGODB_PORT}
 
   postgres:
     container_name: postgres-container
@@ -21,11 +21,11 @@ services:
     volumes:
       - ./docker-volumes/postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
 
   rabbitmq:
     container_name: rabbitmq-container
-    image: rabbitmq:3.10-management
+    image: rabbitmq:3.11-management
     hostname: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
@@ -33,8 +33,8 @@ services:
     volumes:
       - ./docker-volumes/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+      - ${RABBITMQ_MGR_PORT}:${RABBITMQ_MGR_PORT}
 
   webapi:
     container_name: webapi-container
@@ -54,7 +54,7 @@ services:
       - ./docker-volumes/npm-cache:/root/.npm
     ports:
       - ${PORT}:${PORT}
-      - 9222:9222
+      - ${DEBUG_PORT}:${DEBUG_PORT}
     links:
       - ${PERSISTENCE}
       - rabbitmq
