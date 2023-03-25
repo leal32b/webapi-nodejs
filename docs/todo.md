@@ -32,3 +32,5 @@
 [x] change 'dataSource' to persistence on logs
 [x] adjust mongodb and postgres repository tests (add messageBrokerStub), publish event on postgres
 [x] make logging.logger mock
+[ ] await publishToTopic? -> modules/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository.ts
+[ ] change rabbitmq-adapter to amqplib-adapter

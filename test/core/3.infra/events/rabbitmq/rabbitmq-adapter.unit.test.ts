@@ -12,10 +12,12 @@ vi.mock('amqplib', () => ({
     connect: () => ({
       createChannel: () => ({
         ack: vi.fn(),
+        assertExchange: vi.fn(),
         assertQueue: vi.fn(),
-        consume: (queue, fn) => fn({
-          content: Buffer.from(JSON.stringify({}))
-        }),
+        bindQueue: vi.fn(),
+        consume: (queue, fn) => fn({ content: Buffer.from(JSON.stringify({})) }),
+        prefetch: vi.fn(),
+        publish: () => true,
         sendToQueue: () => true
       })
     })
@@ -85,7 +87,8 @@ describe('RabbitmqClient', () => {
           assertQueue: assertQueueSpy
         })
       } as any)
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       sut.createQueue(queue)
@@ -93,12 +96,57 @@ describe('RabbitmqClient', () => {
       expect(assertQueueSpy).toHaveBeenCalledWith('any_queue', expect.any(Object))
     })
 
+    it('calls channel.bindQueue with correct params', async () => {
+      const { sut } = makeSut()
+      const bindQueueSpy = vi.fn()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          assertQueue: vi.fn(),
+          bindQueue: bindQueueSpy
+        })
+      } as any)
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      await sut.connect()
+
+      sut.createQueue(queue)
+
+      expect(bindQueueSpy).toHaveBeenCalledWith('any_queue', 'any_topic', 'any_key.#', expect.any(Object))
+    })
+
     it('creates a queue', async () => {
       const { sut } = makeSut()
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       const result = sut.createQueue(queue)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('calls channel.assertExchange with correct params', async () => {
+      const { sut } = makeSut()
+      const assertExchangeSpy = vi.fn()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          assertExchange: assertExchangeSpy
+        })
+      } as any)
+      const topic = { name: 'any_topic' }
+      await sut.connect()
+
+      sut.createTopic(topic)
+
+      expect(assertExchangeSpy).toHaveBeenCalledWith('any_topic', 'topic', expect.any(Object))
+    })
+
+    it('creates a topic', async () => {
+      const { sut } = makeSut()
+      const topic = { name: 'any_topic' }
+      await sut.connect()
+
+      const result = sut.createTopic(topic)
 
       expect(result.isRight()).toBe(true)
     })
@@ -111,33 +159,80 @@ describe('RabbitmqClient', () => {
           sendToQueue: sendToQueueSpy
         })
       } as any)
-      const queue = { name: 'any_queue' }
-      await sut.connect()
-
-      await sut.publishToQueue(queue, {
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      const event = {
         aggregateId: 'any_id',
         createdAt: new Date(),
         payload: {
           anyKey: 'any_value'
         }
-      } as any)
+      }
+      await sut.connect()
 
-      expect(sendToQueueSpy).toHaveBeenCalledWith('any_queue', expect.any(Buffer))
+      await sut.publishToQueue(queue, event as any)
+
+      expect(sendToQueueSpy).toHaveBeenCalledWith('any_queue', expect.any(Buffer), expect.any(Object))
     })
 
     it('publishes to queue', async () => {
       const { sut } = makeSut()
-      const queue = { name: 'any_queue' }
-      await sut.connect()
-      sut.createQueue(queue)
-
-      const result = await sut.publishToQueue(queue, {
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      const event = {
         aggregateId: 'any_id',
         createdAt: new Date(),
         payload: {
           anyKey: 'any_value'
         }
+      }
+      await sut.connect()
+      sut.createQueue(queue)
+
+      const result = await sut.publishToQueue(queue, event as any)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('calls channel.publish with correct params', async () => {
+      const { sut } = makeSut()
+      const publishSpy = vi.fn()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          publish: publishSpy
+        })
       } as any)
+      const topic = { name: 'any_topic' }
+      const key = ['any_key', '#']
+      const event = {
+        aggregateId: 'any_id',
+        createdAt: new Date(),
+        payload: {
+          anyKey: 'any_value'
+        }
+      }
+      await sut.connect()
+
+      await sut.publishToTopic(topic, key, event as any)
+
+      expect(publishSpy).toHaveBeenCalledWith('any_topic', 'any_key.#', expect.any(Buffer), expect.any(Object))
+    })
+
+    it('publishes to topic', async () => {
+      const { sut } = makeSut()
+      const topic = { name: 'any_topic' }
+      const key = ['any_key', '#']
+      const event = {
+        aggregateId: 'any_id',
+        createdAt: new Date(),
+        payload: {
+          anyKey: 'any_value'
+        }
+      }
+      await sut.connect()
+      sut.createTopic(topic)
+
+      const result = await sut.publishToTopic(topic, key, event as any)
 
       expect(result.isRight()).toBe(true)
     })
@@ -151,17 +246,19 @@ describe('RabbitmqClient', () => {
           sendToQueue: vi.fn()
         })
       } as any)
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       await sut.subscribeToQueue(queue, vi.fn())
 
-      expect(consumeSpy).toHaveBeenCalledWith('any_queue', expect.any(Function))
+      expect(consumeSpy).toHaveBeenCalledWith('any_queue', expect.any(Function), expect.any(Object))
     })
 
     it('subscribes to queue', async () => {
       const { sut } = makeSut()
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
       sut.createQueue(queue)
 
@@ -201,10 +298,44 @@ describe('RabbitmqClient', () => {
           assertQueue: () => { throw new Error() }
         })
       } as any)
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       const result = sut.createQueue(queue)
+
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
+    })
+
+    it('returns Left when channel.bindQueue throws', async () => {
+      const { sut } = makeSut()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          bindQueue: () => { throw new Error() }
+        })
+      } as any)
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      await sut.connect()
+
+      const result = sut.createQueue(queue)
+
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
+    })
+
+    it('returns Left when channel.assertExchange throws', async () => {
+      const { sut } = makeSut()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          assertExchange: () => { throw new Error() }
+        })
+      } as any)
+      const topic = { name: 'any_topic' }
+      await sut.connect()
+
+      const result = sut.createTopic(topic)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value).toBeInstanceOf(ServerError)
@@ -217,16 +348,42 @@ describe('RabbitmqClient', () => {
           sendToQueue: () => { throw new Error() }
         })
       } as any)
-      const queue = { name: 'any_queue' }
-      await sut.connect()
-
-      const result = await sut.publishToQueue(queue, {
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      const event = {
         aggregateId: 'any_id',
         createdAt: new Date(),
         payload: {
           anyKey: 'any_value'
         }
+      }
+      await sut.connect()
+
+      const result = await sut.publishToQueue(queue, event as any)
+
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
+    })
+
+    it('returns Left when channel.publish throws', async () => {
+      const { sut } = makeSut()
+      vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
+        createChannel: () => ({
+          publish: () => { throw new Error() }
+        })
       } as any)
+      const topic = { name: 'any_topic' }
+      const key = ['any_key', '#']
+      const event = {
+        aggregateId: 'any_id',
+        createdAt: new Date(),
+        payload: {
+          anyKey: 'any_value'
+        }
+      }
+      await sut.connect()
+
+      const result = await sut.publishToTopic(topic, key, event as any)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value).toBeInstanceOf(ServerError)
@@ -239,16 +396,18 @@ describe('RabbitmqClient', () => {
           sendToQueue: () => false
         })
       } as any)
-      const queue = { name: 'any_queue' }
-      await sut.connect()
-
-      const result = await sut.publishToQueue(queue, {
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
+      const event = {
         aggregateId: 'any_id',
         createdAt: new Date(),
         payload: {
           anyKey: 'any_value'
         }
-      } as any)
+      }
+      await sut.connect()
+
+      const result = await sut.publishToQueue(queue, event as any)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value).toBeInstanceOf(ServerError)
@@ -261,7 +420,8 @@ describe('RabbitmqClient', () => {
           consume: () => { throw new Error() }
         })
       } as any)
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       const result = await sut.subscribeToQueue(queue, vi.fn())
@@ -281,7 +441,8 @@ describe('RabbitmqClient', () => {
           })
         })
       } as any)
-      const queue = { name: 'any_queue' }
+      const topic = { name: 'any_topic' }
+      const queue = { key: ['any_key', '#'], name: 'any_queue', topics: [topic] }
       await sut.connect()
 
       await sut.subscribeToQueue(queue, () => left(new Error()) as any)

@@ -5,7 +5,7 @@ import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 import { persistence } from '@/core/4.main/container'
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
-import { userCreatedQueue } from '@/user/1.application/events/queues/user-created-queue'
+import { userCreatedTopic } from '@/user/1.application/events/topics/user-created-topic'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 type Props = {
@@ -36,7 +36,7 @@ export class PostgresUserRepository implements UserRepository {
 
       await persistence.postgres.client.manager.save(postgresUser)
 
-      this.props.messageBroker.publishToQueue(userCreatedQueue, UserCreatedEvent.create({
+      this.props.messageBroker.publishToTopic(userCreatedTopic, ['userCreated', '#'], UserCreatedEvent.create({
         aggregateId: id.value,
         payload: {
           email: email.value,

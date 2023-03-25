@@ -52,26 +52,26 @@ describe('UserPostgresRepository', () => {
   })
 
   describe('success', () => {
-    it('calls messageBroker.publishToQueue with correct params', async () => {
+    it('calls messageBroker.publishToTopic with correct params', async () => {
       const { sut, messageBroker, userAggregateFake } = makeSut()
-      const publishToQueueSpy = vi.spyOn(messageBroker, 'publishToQueue')
+      const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 
       const result = await sut.create(userAggregateFake)
 
-      expect(publishToQueueSpy).toHaveBeenCalledWith({
-        name: 'userCreated'
-      },
-      {
-        props: {
-          aggregateId: 'any_id',
-          createdAt: expect.any(Date),
-          payload: {
-            email: 'any@mail.com',
-            locale: 'en',
-            token: 'any_token'
+      expect(publishToTopicSpy).toHaveBeenCalledWith(
+        { name: 'userCreatedTopic' },
+        ['userCreated', '#'],
+        {
+          props: {
+            aggregateId: 'any_id',
+            createdAt: expect.any(Date),
+            payload: {
+              email: 'any@mail.com',
+              locale: 'en',
+              token: 'any_token'
+            }
           }
-        }
-      })
+        })
       expect(result.isRight()).toBe(true)
     })
 

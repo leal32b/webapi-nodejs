@@ -4,7 +4,7 @@ import 'module-alias/register'
 import { app, persistence } from '@/core/4.main/container'
 import { events } from '@/core/4.main/container/events'
 import { setupMessageBroker } from '@/core/4.main/setup/events'
-import { setHandlers } from '@/core/4.main/setup/handlers/set-handlers'
+import { setupHandlers } from '@/core/4.main/setup/handlers'
 import { setupWebApp } from '@/core/4.main/setup/webapp'
 
 const webApp = app.webApp
@@ -16,7 +16,7 @@ const bootstrap = async (): Promise<void> => {
 
   setupWebApp(webApp)
   setupMessageBroker(messageBroker)
-  setHandlers()
+  setupHandlers()
 
   webApp.listen()
 }

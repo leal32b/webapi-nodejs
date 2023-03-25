@@ -4,6 +4,7 @@ import { left, right, type Either } from '@/core/0.domain/utils/either'
 import { type Event } from '@/core/1.application/base/event'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { type Queue } from '@/core/1.application/types/queue'
+import { type Topic } from '@/core/1.application/types/topic'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type HandlerFn, type MessageBroker } from '@/core/3.infra/events/message-broker'
 
@@ -28,6 +29,7 @@ export class RabbitmqAdapter implements MessageBroker {
     try {
       this.connection = await amqplib.connect(connectParams)
       this.channel = await this.connection.createChannel()
+      this.channel.prefetch(1)
 
       logger.info('events', `messageBroker connected: ${connectParams.hostname}`)
 
@@ -41,18 +43,42 @@ export class RabbitmqAdapter implements MessageBroker {
 
   public createQueue (queue: Queue): Either<ServerError, void> {
     const { logger } = this.props
-    const { name } = queue
+    const { name: queueName, key, topics } = queue
 
     try {
-      this.channel.assertQueue(name, {
-        durable: false
-      })
+      topics.forEach(topic => {
+        const { name: topicName } = topic
 
-      logger.info('events', `queue created: ${name}`)
+        this.channel.assertQueue(queueName, { durable: true })
+        this.channel.bindQueue(queueName, topicName, key.join('.'), {
+          durable: true
+        })
+
+        logger.info('events', `queue created: [${topicName}] ${queueName}`)
+      })
 
       return right()
     } catch (error) {
       logger.error('events', ['createQueue', error])
+
+      return left(ServerError.create(error))
+    }
+  }
+
+  public createTopic (topic: Topic): Either<ServerError, void> {
+    const { logger } = this.props
+    const { name } = topic
+
+    try {
+      this.channel.assertExchange(name, 'topic', {
+        durable: true
+      })
+
+      logger.info('events', `topic created: ${name}`)
+
+      return right()
+    } catch (error) {
+      logger.error('events', ['createTopic', error])
 
       return left(ServerError.create(error))
     }
@@ -67,17 +93,47 @@ export class RabbitmqAdapter implements MessageBroker {
     }
 
     try {
-      const sent = this.channel.sendToQueue(queue.name, Buffer.from(JSON.stringify(adaptedEvent)))
+      const sent = this.channel.sendToQueue(queue.name, Buffer.from(JSON.stringify(adaptedEvent)), { persistent: true })
 
       if (!sent) {
-        return left(ServerError.create('error on sending to queue'))
+        return left(ServerError.create('error on publishing to queue'))
       }
 
-      logger.info('events', [`event sent to queue: [${queue.name}]`, adaptedEvent])
+      logger.info('events', [`event published to queue: [${queue.name}]`, adaptedEvent])
 
       return right()
     } catch (error) {
-      logger.error('events', ['createQueue', error])
+      logger.error('events', ['publishToQueue', error])
+
+      return left(ServerError.create(error))
+    }
+  }
+
+  public async publishToTopic (topic: Topic, key: string[], event: Event<Record<string, unknown>>): Promise<Either<ServerError, void>> {
+    const { logger } = this.props
+    const adaptedEvent = {
+      aggregateId: event.aggregateId,
+      createdAt: event.createdAt,
+      payload: event.payload
+    }
+
+    try {
+      const sent = this.channel.publish(
+        topic.name,
+        key.join('.'),
+        Buffer.from(JSON.stringify(adaptedEvent)),
+        { persistent: true }
+      )
+
+      if (!sent) {
+        return left(ServerError.create('error on publishing to topic'))
+      }
+
+      logger.info('events', [`event published to topic: [${topic.name}]`, adaptedEvent])
+
+      return right()
+    } catch (error) {
+      logger.error('events', ['publishToTopic', error])
 
       return left(ServerError.create(error))
     }
@@ -98,6 +154,8 @@ export class RabbitmqAdapter implements MessageBroker {
         }
 
         this.channel.ack(msg)
+      }, {
+        noAck: false
       })
 
       return right()
