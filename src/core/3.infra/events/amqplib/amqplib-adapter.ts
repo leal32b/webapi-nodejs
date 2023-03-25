@@ -13,14 +13,14 @@ type Props = {
   logger: Logger
 }
 
-export class RabbitmqAdapter implements MessageBroker {
+export class AmqplibAdapter implements MessageBroker {
   private channel: Channel
   private connection: Connection
 
   private constructor (private readonly props: Props) {}
 
-  public static create (props: Props): RabbitmqAdapter {
-    return new RabbitmqAdapter(props)
+  public static create (props: Props): AmqplibAdapter {
+    return new AmqplibAdapter(props)
   }
 
   public async connect (): Promise<Either<ServerError, void>> {

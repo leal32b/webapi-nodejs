@@ -3,7 +3,7 @@ import { PostgresClient } from '@/core/3.infra/persistence/postgres/client/postg
 import { postgresDefaultDataSource } from '@/core/3.infra/persistence/postgres/data-sources/postgres-default'
 import { postgresTestDataSource } from '@/core/3.infra/persistence/postgres/data-sources/postgres-test'
 import { type Postgres } from '@/core/4.main/container/container-types'
-import { makeRabbitmq } from '@/core/4.main/container/events/make-rabbitmq'
+import { events } from '@/core/4.main/container/events'
 import { logging } from '@/core/4.main/container/logging'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
@@ -15,6 +15,6 @@ export const makePostgres: Postgres = {
     logger: logging.logger
   }),
   repositories: {
-    userRepository: PostgresUserRepository.create({ messageBroker: makeRabbitmq })
+    userRepository: PostgresUserRepository.create({ messageBroker: events.messageBroker })
   }
 }

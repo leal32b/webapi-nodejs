@@ -1,9 +1,9 @@
 import { getVar, getIntVar } from '@/core/0.domain/utils/var'
+import { AmqplibAdapter } from '@/core/3.infra/events/amqplib/amqplib-adapter'
 import { type MessageBroker } from '@/core/3.infra/events/message-broker'
-import { RabbitmqAdapter } from '@/core/3.infra/events/rabbitmq/rabbitmq-adapter'
 import { logging } from '@/core/4.main/container/logging'
 
-export const makeRabbitmq: MessageBroker = RabbitmqAdapter.create({
+export const makeAmqplib: MessageBroker = AmqplibAdapter.create({
   connectParams: {
     hostname: getVar('RABBITMQ_HOST'),
     password: getVar('RABBITMQ_PASSWORD'),

@@ -3,7 +3,7 @@ import amqplib from 'amqplib'
 import { left, right } from '@/core/0.domain/utils/either'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { RabbitmqAdapter } from '@/core/3.infra/events/rabbitmq/rabbitmq-adapter'
+import { AmqplibAdapter } from '@/core/3.infra/events/amqplib/amqplib-adapter'
 
 import { makeLoggerMock } from '~/core/mocks/logger-mock'
 
@@ -25,7 +25,7 @@ vi.mock('amqplib', () => ({
 }))
 
 type SutTypes = {
-  sut: RabbitmqAdapter
+  sut: AmqplibAdapter
   connectParams: Record<string, unknown>
   logger: Logger
 }
@@ -40,12 +40,12 @@ const makeSut = (): SutTypes => {
     },
     logger: makeLoggerMock()
   }
-  const sut = RabbitmqAdapter.create(params)
+  const sut = AmqplibAdapter.create(params)
 
   return { sut, ...params }
 }
 
-describe('RabbitmqClient', () => {
+describe('AmqplibAdapter', () => {
   describe('success', () => {
     it('calls amqplib.connect with correct params', async () => {
       const { sut } = makeSut()
