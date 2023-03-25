@@ -17,15 +17,10 @@
     "url": "https://github.com/leal32b/webapi-nodejs/issues"
   },
   "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
-  "_moduleAliases": {
-    "@/core": "dist/core",
-    "@/communication": "dist/modules/communication",
-    "@/user": "dist/modules/user"
-  },
   "scripts": {
     "start": "node dist/core/4.main/server.js",
     "debug": "nodemon dist/core/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
-    "build": "rimraf dist && npm run copy:templates && tsc -b tsconfig.build.json",
+    "build": "rimraf dist && npm run copy:templates && tsc -b tsconfig.build.json && tsc-alias",
     "build:watch": "npm run build -- -w",
     "copy:templates": "copyfiles -u 1 src/**/templates/* dist/",
     "docker:up": "docker-compose up webapi -d",
@@ -51,13 +46,13 @@
     "handlebars": "^4.7.7",
     "i18next": "^22.4.13",
     "jsonwebtoken": "^9.0.0",
-    "module-alias": "^2.2.2",
     "mongodb": "^5.1.0",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
     "pg": "^8.10.0",
     "pg-mem": "^2.6.10",
     "swagger-ui-express": "^4.6.2",
+    "tsc-alias": "^1.8.4",
     "typeorm": "^0.3.12",
     "winston": "^3.8.2"
   },
