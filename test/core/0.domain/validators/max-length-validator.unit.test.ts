@@ -69,7 +69,7 @@ describe('MaxLengthValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input.length is greater than maxLength', () => {
+    it('returns Left with MaxLengthError when input.length is greater than maxLength', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'exceeding_max_length_string'
@@ -77,15 +77,6 @@ describe('MaxLengthValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns MaxLengthError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'exceeding_max_length_string'
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(MaxLengthError)
     })
   })

@@ -25,7 +25,7 @@ describe('EmailValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input has no @', () => {
+    it('returns Left with InvalidEmailError when input has no @', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'without_at.com'
@@ -33,9 +33,10 @@ describe('EmailValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns Left when input has no domain', () => {
+    it('returns Left with InvalidEmailError when input has no domain', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any@mail'
@@ -43,9 +44,10 @@ describe('EmailValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns Left when input is an empty string', () => {
+    it('returns Left with InvalidEmailError when input is an empty string', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -53,9 +55,10 @@ describe('EmailValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns Left when input is null', () => {
+    it('returns Left with InvalidEmailError when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -63,9 +66,10 @@ describe('EmailValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
 
-    it('returns Left when input is undefined', () => {
+    it('returns Left with InvalidEmailError when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
@@ -73,15 +77,6 @@ describe('EmailValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns InvalidEmailError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(InvalidEmailError)
     })
   })

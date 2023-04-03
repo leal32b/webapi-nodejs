@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidDateError', () => {
   describe('success', () => {
-    it('returns an InvalidDateError', () => {
+    it('returns an InvalidDateError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'invalid_date'
@@ -20,15 +20,6 @@ describe('InvalidDateError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(InvalidDateError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'invalid_date'
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'invalid_date',

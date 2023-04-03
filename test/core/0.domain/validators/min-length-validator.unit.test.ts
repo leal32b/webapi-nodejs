@@ -39,7 +39,7 @@ describe('MinLengthValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input.length is lower than minLength', () => {
+    it('returns Left with MinLengthError when input.length is lower than minLength', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'short'
@@ -47,9 +47,10 @@ describe('MinLengthValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns Left when input is an empty string', () => {
+    it('returns Left with MinLengthError when input is an empty string', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -57,9 +58,10 @@ describe('MinLengthValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns Left when input is null', () => {
+    it('returns Left with MinLengthError when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -67,9 +69,10 @@ describe('MinLengthValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(MinLengthError)
     })
 
-    it('returns Left when input is undefined', () => {
+    it('returns Left with MinLengthError when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
@@ -77,15 +80,6 @@ describe('MinLengthValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns MinLengthError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(MinLengthError)
     })
   })

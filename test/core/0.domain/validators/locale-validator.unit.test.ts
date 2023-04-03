@@ -35,7 +35,7 @@ describe('LocaleValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input does not have 2 or 5 characters', () => {
+    it('returns Left with InvalidLocaleError when input does not have 2 or 5 characters', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'eng'
@@ -43,18 +43,20 @@ describe('LocaleValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
 
-    it('returns Left when input does not have an underscore', () => {
+    it('returns Left with InvalidLocaleError when input does not have an underscore', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'en-US'
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
 
-    it('returns Left when input has upper language code', () => {
+    it('returns Left with InvalidLocaleError when input has upper language code', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'EN_US'
@@ -62,9 +64,10 @@ describe('LocaleValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
 
-    it('returns Left when input has lower country code', () => {
+    it('returns Left with InvalidLocaleError when input has lower country code', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'en_us'
@@ -72,9 +75,10 @@ describe('LocaleValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
 
-    it('returns Left when input is null', () => {
+    it('returns Left with InvalidLocaleError when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -82,9 +86,10 @@ describe('LocaleValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
 
-    it('returns Left when input is undefined', () => {
+    it('returns Left with InvalidLocaleError when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
@@ -92,15 +97,6 @@ describe('LocaleValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns InvalidEmailError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(InvalidLocaleError)
     })
   })

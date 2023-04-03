@@ -25,7 +25,7 @@ describe('NotEmptyValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is an empty string', () => {
+    it('returns Left with EmptyError when input is an empty string', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -33,15 +33,6 @@ describe('NotEmptyValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns EmptyError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = ''
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(EmptyError)
     })
   })

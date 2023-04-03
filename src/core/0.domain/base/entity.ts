@@ -16,7 +16,8 @@ export abstract class Entity<PropsType> {
   }
 
   public static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
-    const errors = Object.values(params)
+    const errors = Object
+      .values(params)
       .map(param => param.isLeft() ? param.value : [])
       .reduce((acc, curVal) => acc.concat(curVal))
 
@@ -25,7 +26,8 @@ export abstract class Entity<PropsType> {
     }
 
     const validatedParams = Object.fromEntries(
-      Object.entries(params)
+      Object
+        .entries(params)
         .map(([param, result]) => [param, result.value])
     )
 
