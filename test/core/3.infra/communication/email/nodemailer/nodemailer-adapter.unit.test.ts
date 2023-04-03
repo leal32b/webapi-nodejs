@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer'
 
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
-import { DomainError } from '@/core/0.domain/base/domain-error'
 import { getVar } from '@/core/0.domain/utils/var'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { NodemailerAdapter } from '@/core/3.infra/communication/email/nodemailer/nodemailer-adapter'
 
 import { makeLoggerMock } from '~/core/mocks/logger-mock'
@@ -81,22 +81,14 @@ describe('NodemailerAdapter', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when send throws', async () => {
+    it('returns Left with ServerError when send throws', async () => {
       const { sut, emailFake } = makeSut()
       vi.spyOn(nodemailer, 'createTransport').mockImplementationOnce(vi.fn() as any)
 
       const result = await sut.send(emailFake)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an error when send throws', async () => {
-      const { sut, emailFake } = makeSut()
-      vi.spyOn(nodemailer, 'createTransport').mockImplementationOnce(vi.fn() as any)
-
-      const result = await sut.send(emailFake)
-
-      expect(result.value).toBeInstanceOf(DomainError)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
   })
 })

@@ -5,7 +5,7 @@ import { I18nextAdapter } from '@/core/3.infra/i18n/i18next/i18next-adapter'
 vi.mock('i18next', () => ({
   default: {
     init: vi.fn(),
-    t: vi.fn().mockReturnValue('English')
+    t: () => 'English'
   }
 }))
 

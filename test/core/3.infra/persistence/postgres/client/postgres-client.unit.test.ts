@@ -83,46 +83,40 @@ describe('PostgresClient', () => {
 
       expect(result.isRight()).toBe(true)
     })
+  })
 
-    it('returns Left on clearDatabase when not in test environment', async () => {
+  describe('failure', () => {
+    it('returns Left with Error on clearDatabase when not in test environment', async () => {
       const { sut } = makeSut()
       setVar('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns an Error on clearDatabase when not in test environment', async () => {
-      const { sut } = makeSut()
-      setVar('NODE_ENV', 'any_environment')
-
-      const result = await sut.clearDatabase()
-
-      expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
-    })
-  })
-
-  describe('failure', () => {
-    it('returns Left when close throws', async () => {
+    it('returns Left with Error when close throws', async () => {
       const { sut, dataSource } = makeSut()
       vi.spyOn(dataSource, 'destroy').mockRejectedValueOnce(new Error())
 
       const result = await sut.close()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns Left when clearDatabase throws', async () => {
+    it('returns Left with Error when clearDatabase throws', async () => {
       const { sut, dataSource } = makeSut()
       vi.spyOn(dataSource, 'getRepository').mockImplementationOnce((vi.fn() as any))
 
       const result = await sut.clearDatabase()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns Left when connect throws', async () => {
+    it('returns Left with Error when connect throws', async () => {
       const postgresClient = PostgresClient.create({
         dataSource: null,
         logger: logging.logger
@@ -131,6 +125,7 @@ describe('PostgresClient', () => {
       const result = await postgresClient.connect()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
   })
 })

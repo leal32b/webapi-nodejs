@@ -271,7 +271,7 @@ describe('AmqplibAdapter', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when amqplib.connect throws', async () => {
+    it('returns Left with ServerError when amqplib.connect throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockRejectedValueOnce(new Error())
 
@@ -281,7 +281,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when connection.createChannel throws', async () => {
+    it('returns Left with ServerError when connection.createChannel throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => { throw new Error() }
@@ -293,7 +293,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.assertQueue throws', async () => {
+    it('returns Left with ServerError when channel.assertQueue throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -310,7 +310,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.bindQueue throws', async () => {
+    it('returns Left with ServerError when channel.bindQueue throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -327,7 +327,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.assertExchange throws', async () => {
+    it('returns Left with ServerError when channel.assertExchange throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -343,7 +343,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.sendToQueue throws', async () => {
+    it('returns Left with ServerError when channel.sendToQueue throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -367,7 +367,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.publish throws', async () => {
+    it('returns Left with ServerError when channel.publish throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -391,7 +391,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.sendToQueue returns false', async () => {
+    it('returns Left with ServerError when channel.sendToQueue returns false', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({
@@ -415,7 +415,7 @@ describe('AmqplibAdapter', () => {
       expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when channel.consume throws', async () => {
+    it('returns Left with ServerError when channel.consume throws', async () => {
       const { sut } = makeSut()
       vi.spyOn(amqplib, 'connect').mockResolvedValueOnce({
         createChannel: () => ({

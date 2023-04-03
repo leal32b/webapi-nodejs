@@ -12,24 +12,14 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidTokenError', () => {
   describe('success', () => {
-    it('returns an InvalidTokenError', () => {
+    it('returns an InvalidTokenError with correct props', () => {
       const { sut } = makeSut()
       const type = 'Bearer'
 
       const result = sut.create(type)
 
       expect(result).toBeInstanceOf(InvalidTokenError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const type = 'Bearer'
-
-      const result = sut.create(type)
-
-      expect(result.props).toEqual({
-        message: 'token is invalid (type: Bearer)'
-      })
+      expect(result.props).toEqual({ message: 'token is invalid (type: Bearer)' })
     })
   })
 })

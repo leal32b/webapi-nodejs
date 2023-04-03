@@ -65,7 +65,7 @@ describe('AjvAdapter', () => {
       expect(validate).toHaveBeenCalledWith({ anyKey: 'any_value' })
     })
 
-    it('returns Right when schema is successfully validated', async () => {
+    it('returns Right with isValid=true when schema is successfully validated', async () => {
       const { sut } = makeSut()
       const schema = {
         additionalProperties: false,
@@ -82,30 +82,10 @@ describe('AjvAdapter', () => {
       const result = await sut.validate(fakeRequest, schema)
 
       expect(result.isRight()).toBe(true)
+      expect(result.value).toEqual({ isValid: true })
     })
 
-    it('returns isValid=true when schema is valid', async () => {
-      const { sut } = makeSut()
-      const schema = {
-        additionalProperties: false,
-        properties: {
-          anyKey: { type: 'string' }
-        },
-        required: ['anyKey'],
-        type: 'object'
-      }
-      const fakeRequest = {
-        payload: { anyKey: 'any_value' }
-      }
-
-      const result = await sut.validate(fakeRequest, schema)
-
-      expect(result.value).toEqual({
-        isValid: true
-      })
-    })
-
-    it('returns isValid=false and errors when schema is invalid', async () => {
+    it('returns Right with isValid=false and errors when schema is invalid', async () => {
       const { sut } = makeSut()
       const schema = {
         additionalProperties: false,
@@ -137,6 +117,7 @@ describe('AjvAdapter', () => {
 
       const result = await sut.validate(fakeRequest, schema)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toEqual({
         errors: [{
           instancePath: '/anyKey',
@@ -153,7 +134,7 @@ describe('AjvAdapter', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when compile throws', async () => {
+    it('returns Left with Error when compile throws', async () => {
       const { sut } = makeSut()
       const schema = {}
       const fakeRequest = {
@@ -165,23 +146,10 @@ describe('AjvAdapter', () => {
       const result = await sut.validate(fakeRequest, schema)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an error when compile throws', async () => {
-      const { sut } = makeSut()
-      const schema = {}
-      const fakeRequest = {
-        payload: { anyKey: 'any_value' }
-      }
-      const compile = vi.fn(() => { throw new Error() })
-      vi.mocked(Ajv).mockImplementationOnce(() => ({ compile } as any))
-
-      const result = await sut.validate(fakeRequest, schema)
-
       expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns Left when validate throws', async () => {
+    it('returns Left with Error when validate throws', async () => {
       const { sut } = makeSut()
       const schema = {}
       const fakeRequest = {
@@ -195,21 +163,6 @@ describe('AjvAdapter', () => {
       const result = await sut.validate(fakeRequest, schema)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an error when validate throws', async () => {
-      const { sut } = makeSut()
-      const schema = {}
-      const fakeRequest = {
-        payload: { anyKey: 'any_value' }
-      }
-      const validate = vi.fn(() => { throw new Error() })
-      vi.mocked(Ajv).mockImplementationOnce(() => ({
-        compile: validate
-      } as any))
-
-      const result = await sut.validate(fakeRequest, schema)
-
       expect(result.value).toBeInstanceOf(Error)
     })
   })

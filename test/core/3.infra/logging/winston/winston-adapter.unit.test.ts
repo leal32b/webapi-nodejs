@@ -54,13 +54,5 @@ describe('WinstonAdapter', () => {
 
       expect(info).toHaveBeenCalledWith({ label: 'any_label', message: ['any_message'] })
     })
-
-    // it('xxx', () => {
-    //   const { sut } = makeSut()
-
-    //   sut.info('any_label', ['any_message'])
-
-    //   expect(info).toHaveBeenCalledWith({ label: 'any_label', message: ['any_message'] })
-    // })
   })
 })

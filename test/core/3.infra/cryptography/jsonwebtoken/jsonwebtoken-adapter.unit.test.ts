@@ -1,27 +1,24 @@
 import 'dotenv/config'
 
-import jwt, { type JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
-import { DomainError } from '@/core/0.domain/base/domain-error'
+import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { type TokenData, TokenType } from '@/core/1.application/cryptography/encrypter'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 
 import { makeErrorFake } from '~/core/fakes/error-fake'
 
 vi.mock('jsonwebtoken', () => ({
   default: {
-    async sign (): Promise<string> {
-      return await Promise.resolve('token')
-    },
-    async verify (): Promise<JwtPayload> {
-      return await Promise.resolve({
-        payload: {
-          auth: ['any_auth'],
-          id: 'any_id'
-        },
-        type: TokenType.access
-      })
-    }
+    sign: () => 'token',
+    verify: () => ({
+      payload: {
+        auth: ['any_auth'],
+        id: 'any_id'
+      },
+      type: TokenType.access
+    })
   }
 }))
 
@@ -51,7 +48,7 @@ const makeSut = (): SutTypes => {
 
 describe('JsonwebtokenAdapter', () => {
   describe('success', () => {
-    it('calls encrypt with correct params', async () => {
+    it('calls jwt.sign with correct params', async () => {
       const { sut, dataFake } = makeSut()
       const signSpy = vi.spyOn(vi.mocked(jwt), 'sign')
 
@@ -70,37 +67,32 @@ describe('JsonwebtokenAdapter', () => {
       })
     })
 
-    it('returns Right when encrypt succeeds', async () => {
+    it('returns Right with token when encrypt succeeds', async () => {
       const { sut, dataFake } = makeSut()
 
       const result = await sut.encrypt(dataFake)
 
       expect(result.isRight()).toBe(true)
-    })
-
-    it('returns a token', async () => {
-      const { sut, dataFake } = makeSut()
-
-      const result = await sut.encrypt(dataFake)
-
       expect(result.value).toBe('token')
     })
 
-    it('returns Right when decrypt succeeds', async () => {
+    it('calls jwt.verify with correct params', async () => {
+      const { sut } = makeSut()
+      const verifySpy = vi.spyOn(vi.mocked(jwt), 'verify')
+      const token = 'token'
+
+      await sut.decrypt(token)
+
+      expect(verifySpy).toHaveBeenCalledWith('token', 'any_secret')
+    })
+
+    it('returns Right with decrypted token when decrypt succeeds', async () => {
       const { sut } = makeSut()
       const token = 'token'
 
       const result = await sut.decrypt(token)
 
       expect(result.isRight()).toBe(true)
-    })
-
-    it('decrypts a token', async () => {
-      const { sut } = makeSut()
-      const token = 'token'
-
-      const result = await sut.decrypt(token)
-
       expect(result.value).toEqual({
         payload: {
           auth: ['any_auth'],
@@ -112,25 +104,17 @@ describe('JsonwebtokenAdapter', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when jsonwebtoken.encrypt throws', async () => {
+    it('returns Left with ServerError when jsonwebtoken.encrypt throws', async () => {
       const { sut, errorFake, dataFake } = makeSut()
       vi.spyOn(jwt, 'sign').mockRejectedValueOnce(errorFake as never)
 
       const result = await sut.encrypt(dataFake)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns an error when jsonwebtoken.encrypt throws', async () => {
-      const { sut, errorFake, dataFake } = makeSut()
-      vi.spyOn(jwt, 'sign').mockRejectedValueOnce(errorFake as never)
-
-      const result = await sut.encrypt(dataFake)
-
-      expect(result.value).toBeInstanceOf(DomainError)
-    })
-
-    it('returns Left when jsonwebtoken.verify throws', async () => {
+    it('returns Left with ServerError when jsonwebtoken.verify throws', async () => {
       const { sut, errorFake } = makeSut()
       vi.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
       const token = 'any_token'
@@ -138,16 +122,7 @@ describe('JsonwebtokenAdapter', () => {
       const result = await sut.decrypt(token)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an error when jsonwebtoken.verify throws', async () => {
-      const { sut, errorFake } = makeSut()
-      vi.spyOn(jwt, 'verify').mockRejectedValueOnce(errorFake as never)
-      const token = 'any_token'
-
-      const result = await sut.decrypt(token)
-
-      expect(result.value).toBeInstanceOf(DomainError)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
   })
 })

@@ -12,22 +12,13 @@ const makeSut = (): SutTypes => {
 
 describe('MissingTokenError', () => {
   describe('success', () => {
-    it('returns a MissingTokenError', () => {
+    it('returns a MissingTokenError with correct props', () => {
       const { sut } = makeSut()
 
       const result = sut.create()
 
       expect(result).toBeInstanceOf(MissingTokenError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-
-      const result = sut.create()
-
-      expect(result.props).toEqual({
-        message: 'no Authorization token was provided'
-      })
+      expect(result.props).toEqual({ message: 'no Authorization token was provided' })
     })
   })
 })

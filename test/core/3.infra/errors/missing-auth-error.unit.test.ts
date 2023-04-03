@@ -12,24 +12,14 @@ const makeSut = (): SutTypes => {
 
 describe('MissingAuthError', () => {
   describe('success', () => {
-    it('returns a MissingAuthError', () => {
+    it('returns a MissingAuthError with correct props', () => {
       const { sut } = makeSut()
       const auth = ['any']
 
       const result = sut.create(auth)
 
       expect(result).toBeInstanceOf(MissingAuthError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const auth = ['any']
-
-      const result = sut.create(auth)
-
-      expect(result.props).toEqual({
-        message: 'user must have at least one of these permissions: any'
-      })
+      expect(result.props).toEqual({ message: 'user must have at least one of these permissions: any' })
     })
   })
 })

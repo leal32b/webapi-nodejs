@@ -12,22 +12,13 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidSchemaError', () => {
   describe('success', () => {
-    it('returns an InvalidSchemaError', () => {
+    it('returns an InvalidSchemaError with correct props', () => {
       const { sut } = makeSut()
 
       const result = sut.create()
 
       expect(result).toBeInstanceOf(InvalidSchemaError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-
-      const result = sut.create()
-
-      expect(result.props).toEqual({
-        message: 'schema is invalid'
-      })
+      expect(result.props).toEqual({ message: 'schema is invalid' })
     })
   })
 })
