@@ -12,22 +12,13 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidPasswordError', () => {
   describe('success', () => {
-    it('returns an InvalidPasswordError', () => {
+    it('returns an InvalidPasswordError with correct props', () => {
       const { sut } = makeSut()
 
       const result = sut.create()
 
       expect(result).toBeInstanceOf(InvalidPasswordError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-
-      const result = sut.create()
-
-      expect(result.props).toEqual({
-        message: 'invalid username or password'
-      })
+      expect(result.props).toEqual({ message: 'invalid username or password' })
     })
   })
 })
