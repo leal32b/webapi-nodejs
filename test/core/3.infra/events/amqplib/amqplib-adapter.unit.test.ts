@@ -36,6 +36,7 @@ const makeSut = (): SutTypes => {
       hostname: 'any_host',
       password: 'any_password',
       port: 0,
+      protocol: 'any_protocol',
       username: 'any_user'
     },
     logger: makeLoggerMock()
@@ -57,6 +58,7 @@ describe('AmqplibAdapter', () => {
         hostname: 'any_host',
         password: 'any_password',
         port: 0,
+        protocol: 'any_protocol',
         username: 'any_user'
       })
     })

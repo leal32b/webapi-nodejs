@@ -8,6 +8,7 @@ export const makeAmqplib: MessageBroker = AmqplibAdapter.create({
     hostname: getVar('RABBITMQ_HOST'),
     password: getVar('RABBITMQ_PASSWORD'),
     port: getIntVar('RABBITMQ_PORT'),
+    protocol: getVar('RABBITMQ_PROTOCOL'),
     username: getVar('RABBITMQ_USERNAME')
   },
   logger: logging.logger
