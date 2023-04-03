@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('ServerError', () => {
   describe('success', () => {
-    it('returns a ServerError', () => {
+    it('returns a ServerError with correct props', () => {
       const { sut } = makeSut()
       const message = 'any_message'
       const stack = 'any_stack'
@@ -20,15 +20,6 @@ describe('ServerError', () => {
       const result = sut.create(message, stack)
 
       expect(result).toBeInstanceOf(ServerError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const message = 'any_message'
-      const stack = 'any_stack'
-
-      const result = sut.create(message, stack)
-
       expect(result.props).toEqual({
         message: 'any_message',
         stack: 'any_stack'
