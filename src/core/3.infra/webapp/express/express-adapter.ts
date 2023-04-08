@@ -9,7 +9,6 @@ import { type Controller, type AppRequest } from '@/core/2.presentation/base/con
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
-import { type ApiDocumenter } from '@/core/3.infra/documentation/api-documenter'
 
 type Props = {
   logger: Logger
@@ -58,11 +57,11 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  public setApiSpecification (path: string, apiDocumenter: ApiDocumenter): Either<ServerError, void> {
+  public setApiSpecification (path: string, config: Record<string, unknown>): Either<ServerError, void> {
     const { logger, port } = this.props
 
     try {
-      this.app.use(path, serve, setup(apiDocumenter.config))
+      this.app.use(path, serve, setup(config))
 
       logger.info('webapp', `swagger running: http://localhost:${port}${path}`)
 
