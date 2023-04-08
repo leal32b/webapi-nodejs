@@ -8,10 +8,10 @@ import { Password } from '@/user/0.domain/value-objects/password'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeHasherStub } from '~/core/stubs/hasher-stub'
-import { makeUserAggregateFake } from '~/user/user-aggregate-fake'
-import { makeUserRepositoryStub } from '~/user/user-repository-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeUserAggregateFake } from '~/user/_doubles/user-aggregate-fake'
+import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 
 const makeChangePasswordDataFake = (): ChangePasswordData => ({
   id: 'any_id',

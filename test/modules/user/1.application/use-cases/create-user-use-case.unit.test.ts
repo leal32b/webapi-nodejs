@@ -8,10 +8,10 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeEncrypterStub } from '~/core/stubs/encrypter-stub'
-import { makeHasherStub } from '~/core/stubs/hasher-stub'
-import { makeUserRepositoryStub } from '~/user/user-repository-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeEncrypterStub } from '~/core/_doubles/stubs/encrypter-stub'
+import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',

@@ -5,7 +5,7 @@ import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type CreateUserData, type CreateUserResultDTO, type CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 import { SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<CreateUserData> => ({
   payload: {

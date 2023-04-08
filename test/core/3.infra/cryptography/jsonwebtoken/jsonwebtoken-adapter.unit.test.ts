@@ -7,7 +7,7 @@ import { type TokenData, TokenType } from '@/core/1.application/cryptography/enc
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { JsonwebtokenAdapter } from '@/core/3.infra/cryptography/jsonwebtoken/jsonwebtoken-adapter'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 vi.mock('jsonwebtoken', () => ({
   default: {

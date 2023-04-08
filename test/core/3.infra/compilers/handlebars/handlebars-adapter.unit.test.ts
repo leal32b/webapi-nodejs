@@ -6,7 +6,7 @@ import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { HandlebarsAdapter } from '@/core/3.infra/compilers/handlebars/handlebars-adapter'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 vi.mock('fs', () => ({
   default: {

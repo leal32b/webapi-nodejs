@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { getVar } from '@/core/0.domain/utils/var'
 import { type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 

@@ -1,4 +1,4 @@
-import { type ApiDocumenter } from '@/core/3.infra/documentation/api-documenter'
+import { type ApiDocumenter } from '@/core/2.presentation/documentation/api-documenter'
 import { SwaggerAdapter } from '@/core/3.infra/documentation/swagger/swagger-adapter'
 import { apiDocumentationParams } from '@/core/4.main/container/documentation/api-documentation-params'
 

@@ -1,4 +1,4 @@
-import { type MessageBroker } from '@/core/3.infra/events/message-broker'
+import { type MessageBroker } from '@/core/1.application/events/message-broker'
 import { queues } from '@/core/4.main/setup/events/queues'
 import { topics } from '@/core/4.main/setup/events/topics'
 

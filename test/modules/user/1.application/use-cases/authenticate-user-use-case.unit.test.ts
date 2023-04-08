@@ -9,11 +9,11 @@ import { Token } from '@/user/0.domain/value-objects/token'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type AuthenticateUserData, AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeEncrypterStub } from '~/core/stubs/encrypter-stub'
-import { makeHasherStub } from '~/core/stubs/hasher-stub'
-import { makeUserAggregateFake } from '~/user/user-aggregate-fake'
-import { makeUserRepositoryStub } from '~/user/user-repository-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeEncrypterStub } from '~/core/_doubles/stubs/encrypter-stub'
+import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeUserAggregateFake } from '~/user/_doubles/user-aggregate-fake'
+import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 
 const makeAuthenticateUserDataFake = (): AuthenticateUserData => ({
   email: 'any@mail.com',

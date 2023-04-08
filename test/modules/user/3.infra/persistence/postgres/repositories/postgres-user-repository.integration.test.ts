@@ -1,12 +1,12 @@
-import { type MessageBroker } from '@/core/3.infra/events/message-broker'
-import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type MessageBroker } from '@/core/1.application/events/message-broker'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { persistence } from '@/core/4.main/container'
-import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
-import { makeMessageBrokerMock } from '~/core/mocks/message-broker-mock'
+import { makeMessageBrokerMock } from '~/core/_doubles/mocks/message-broker-mock'
+import { PostgresUserFixture } from '~/user/_fixtures/postgres/postgres-user-fixture'
 
 const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
@@ -34,7 +34,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFixture: makePostgresFixtures.userFixture
+    userFixture: PostgresUserFixture.create()
   }
   const sut = PostgresUserRepository.create(props)
 

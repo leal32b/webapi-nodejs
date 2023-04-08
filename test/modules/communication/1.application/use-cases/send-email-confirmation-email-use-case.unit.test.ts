@@ -5,7 +5,7 @@ import { DomainError } from '@/core/0.domain/base/domain-error'
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationEmailData => ({
   locale: 'en',

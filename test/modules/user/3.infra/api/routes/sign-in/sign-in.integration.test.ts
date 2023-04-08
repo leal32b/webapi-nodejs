@@ -1,13 +1,14 @@
 import request from 'supertest'
 
-import { type Route, type WebApp } from '@/core/3.infra/api/app/web-app'
-import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type DatabaseFixture } from '@/core/3.infra/persistence/persistence-fixture'
+import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/core/4.main/container'
-import { fixtures } from '@/core/4.main/setup/fixtures/index'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { signInRoute } from '@/user/3.infra/api/routes/sign-in/sign-in-route'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
+
+import { userFixtures } from '~/user/_fixtures/user-fixtures'
 
 type SutTypes = {
   sut: Route
@@ -17,7 +18,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    userFixture: fixtures.userFixture,
+    userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
   const sut = signInRoute(signInControllerFactory())

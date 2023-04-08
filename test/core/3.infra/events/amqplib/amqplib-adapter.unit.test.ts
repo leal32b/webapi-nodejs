@@ -5,7 +5,7 @@ import { type Logger } from '@/core/1.application/logging/logger'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { AmqplibAdapter } from '@/core/3.infra/events/amqplib/amqplib-adapter'
 
-import { makeLoggerMock } from '~/core/mocks/logger-mock'
+import { makeLoggerMock } from '~/core/_doubles/mocks/logger-mock'
 
 vi.mock('amqplib', () => ({
   default: {

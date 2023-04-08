@@ -3,8 +3,8 @@ import { type Validator } from '@/core/0.domain/base/validator'
 import { ValueObject } from '@/core/0.domain/base/value-object'
 import { left } from '@/core/0.domain/utils/either'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeValidatorStub } from '~/core/stubs/validator-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeValidatorStub } from '~/core/_doubles/stubs/validator-stub'
 
 type SutTypes = {
   sut: typeof ValueObject

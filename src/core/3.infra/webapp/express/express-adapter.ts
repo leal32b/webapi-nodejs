@@ -5,10 +5,10 @@ import { serve, setup } from 'swagger-ui-express'
 
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { type Logger } from '@/core/1.application/logging/logger'
+import { type Middleware } from '@/core/1.application/middleware/middleware'
 import { type Controller, type AppRequest } from '@/core/2.presentation/base/controller'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
-import { type Middleware } from '@/core/2.presentation/middleware/middleware'
-import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
+import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/webapp/web-app'
 
 type Props = {
   logger: Logger

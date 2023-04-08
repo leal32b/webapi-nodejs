@@ -5,7 +5,7 @@ import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type ChangePasswordData, type ChangePasswordResultDTO, type ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
   payload: {

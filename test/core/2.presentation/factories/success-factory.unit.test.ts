@@ -1,7 +1,7 @@
 import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { success } from '@/core/2.presentation/factories/success-factory'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 type SutTypes = {
   sut: typeof success

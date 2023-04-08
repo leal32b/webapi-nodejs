@@ -4,7 +4,7 @@ import { type DomainError } from '@/core/0.domain/base/domain-error'
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { ArgonAdapter } from '@/core/3.infra/cryptography/argon/argon-adapter'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 vi.mock('argon2', () => ({
   default: {

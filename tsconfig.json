@@ -17,9 +17,9 @@
       "@/core/*": ["src/core/*"],
       "@/communication/*": ["src/modules/communication/*"],
       "@/user/*": ["src/modules/user/*"],
-      "~/core/*": ["test/core/_doubles/*"],
-      "~/communication/*": ["test/modules/communication/_doubles/*"],
-      "~/user/*": ["test/modules/user/_doubles/*"]
+      "~/core/*": ["test/core/*"],
+      "~/communication/*": ["test/modules/communication/*"],
+      "~/user/*": ["test/modules/user/*"]
     }
   },
   "include": [

@@ -1,6 +1,6 @@
 import { getVar, getIntVar } from '@/core/0.domain/utils/var'
+import { type MessageBroker } from '@/core/1.application/events/message-broker'
 import { AmqplibAdapter } from '@/core/3.infra/events/amqplib/amqplib-adapter'
-import { type MessageBroker } from '@/core/3.infra/events/message-broker'
 import { logging } from '@/core/4.main/container/logging'
 
 export const makeAmqplib: MessageBroker = AmqplibAdapter.create({

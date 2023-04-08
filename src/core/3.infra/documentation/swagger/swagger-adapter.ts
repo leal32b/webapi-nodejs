@@ -1,4 +1,4 @@
-import { type ApiDocumentationParams, type ApiDocumenter } from '@/core/3.infra/documentation/api-documenter'
+import { type ApiDocumentationParams, type ApiDocumenter } from '@/core/2.presentation/documentation/api-documenter'
 
 type SwaggerConfig = {
   components: {

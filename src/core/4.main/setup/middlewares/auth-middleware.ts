@@ -1,5 +1,5 @@
-import { type Middleware } from '@/core/2.presentation/middleware/middleware'
-import { AuthMiddleware } from '@/core/3.infra/api/middlewares/auth-middleware'
+import { type Middleware } from '@/core/1.application/middleware/middleware'
+import { AuthMiddleware } from '@/core/2.presentation/middlewares/auth-middleware'
 import { cryptography } from '@/core/4.main/container'
 
 export const authMiddleware: Middleware = AuthMiddleware.create({

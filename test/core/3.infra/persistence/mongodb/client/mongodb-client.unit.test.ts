@@ -4,7 +4,7 @@ import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { MongodbClient, type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 
-import { makeLoggerMock } from '~/core/mocks/logger-mock'
+import { makeLoggerMock } from '~/core/_doubles/mocks/logger-mock'
 
 vi.mock('mongodb', () => ({
   Collection: vi.fn(),
