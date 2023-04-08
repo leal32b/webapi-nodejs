@@ -44,7 +44,7 @@ const makeSut = (): SutTypes => {
 
 describe('AuthenticateUserUseCase', () => {
   describe('success', () => {
-    it('calls UserRepository.readById with correct param', async () => {
+    it('calls UserRepository.readById with correct params', async () => {
       const { sut, userRepository, changePasswordDataFake } = makeSut()
 
       await sut.execute(changePasswordDataFake)
@@ -68,11 +68,12 @@ describe('AuthenticateUserUseCase', () => {
       expect(userRepository.update).toHaveBeenCalledWith(expect.any(UserAggregate))
     })
 
-    it('returns a message', async () => {
+    it('returns Right with message', async () => {
       const { sut, changePasswordDataFake } = makeSut()
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toEqual({
         message: 'password updated successfully'
       })
@@ -80,56 +81,62 @@ describe('AuthenticateUserUseCase', () => {
   })
 
   describe('failure', () => {
-    it('returns PasswordMismatchError when passwords do not match', async () => {
+    it('returns Left with PasswordMismatchError when passwords do not match', async () => {
       const { sut, changePasswordDataFake } = makeSut()
 
       const result = await sut.execute({ ...changePasswordDataFake, passwordRetype: 'anything' })
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(PasswordMismatchError)
     })
 
-    it('returns an Error when UserRepository.readById fails', async () => {
+    it('returns Left with Error when UserRepository.readById fails', async () => {
       const { sut, userRepository, errorFake, changePasswordDataFake } = makeSut()
       vi.spyOn(userRepository, 'readById').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns NotFoundError when userRepository.readById returns null', async () => {
+    it('returns Left with NotFoundError when userRepository.readById returns null', async () => {
       const { sut, userRepository, changePasswordDataFake } = makeSut()
       vi.spyOn(userRepository, 'readById').mockResolvedValueOnce(right())
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(NotFoundError)
     })
 
-    it('returns an Error when Hasher.hash fails', async () => {
+    it('returns Left with Error when Hasher.hash fails', async () => {
       const { sut, hasher, errorFake, changePasswordDataFake } = makeSut()
       vi.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when Password.create fails', async () => {
+    it('returns Left with Error when Password.create fails', async () => {
       const { sut, errorFake, changePasswordDataFake } = makeSut()
       vi.spyOn(Password, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when UserRepository.update fails', async () => {
+    it('returns Left with Error when UserRepository.update fails', async () => {
       const { sut, userRepository, errorFake, changePasswordDataFake } = makeSut()
       vi.spyOn(userRepository, 'update').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })

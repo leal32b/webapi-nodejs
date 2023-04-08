@@ -14,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Subject', () => {
   describe('success', () => {
-    it('returns a Subject when input is valid', () => {
+    it('returns Subject when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_subject'
 

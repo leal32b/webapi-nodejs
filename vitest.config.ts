@@ -39,12 +39,3 @@ export default defineConfig({
     }
   }
 })
-
-// Test Files  79 passed (79)
-//      Tests  416 passed (416)
-//   Duration  6.76s (transform 734ms, setup 0ms, collect 5.49s, tests 713ms)
-
-// Statements   : 100% ( 861/861 )
-// Branches     : 100% ( 190/190 )
-// Functions    : 100% ( 288/288 )
-// Lines        : 100% ( 824/824 )

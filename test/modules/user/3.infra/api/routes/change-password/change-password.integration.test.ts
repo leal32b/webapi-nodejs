@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { TokenType } from '@/core/1.application/cryptography/encrypter'
-import { type DatabaseFixture } from '@/core/3.infra/persistence/persistence-fixture'
+import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/core/4.main/container'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
@@ -26,7 +26,7 @@ const makeAccessTokenFake = async (): Promise<string> => {
 
 type SutTypes = {
   sut: Route
-  userFixture: DatabaseFixture<UserAggregateProps>
+  userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp
   accessTokenFake: string
 }

@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { type DatabaseFixture } from '@/core/3.infra/persistence/persistence-fixture'
+import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/core/4.main/container'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
@@ -12,7 +12,7 @@ import { userFixtures } from '~/user/_fixtures/user-fixtures'
 
 type SutTypes = {
   sut: Route
-  userFixture: DatabaseFixture<UserAggregateProps>
+  userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp
 }
 

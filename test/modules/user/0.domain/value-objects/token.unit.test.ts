@@ -14,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Token', () => {
   describe('success', () => {
-    it('returns a Token when input is valid', () => {
+    it('returns Token when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_Token'
 

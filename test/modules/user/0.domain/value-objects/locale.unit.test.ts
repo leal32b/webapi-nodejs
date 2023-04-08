@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('Locale', () => {
   describe('success', () => {
-    it('returns a Locale when input is valid', () => {
+    it('returns Locale when input is valid', () => {
       const { sut } = makeSut()
       const input = 'en'
 

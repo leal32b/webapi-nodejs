@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
 
 describe('Text', () => {
   describe('success', () => {
-    it('returns a Text when input is valid', () => {
+    it('returns Text when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_text'
 

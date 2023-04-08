@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
 
 describe('Html', () => {
   describe('success', () => {
-    it('returns a Html when input is valid', () => {
+    it('returns Html when input is valid', () => {
       const { sut } = makeSut()
       const input = '<html>any_text</html>'
 

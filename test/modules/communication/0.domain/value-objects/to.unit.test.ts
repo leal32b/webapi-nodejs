@@ -16,7 +16,7 @@ const makeSut = (): SutTypes => {
 
 describe('To', () => {
   describe('success', () => {
-    it('returns a To when input is valid', () => {
+    it('returns To when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any@mail.com'
 
@@ -25,7 +25,7 @@ describe('To', () => {
       expect(result.value).toBeInstanceOf(To)
     })
 
-    it('returns a To when input is a valid array', () => {
+    it('returns To when input is a valid array', () => {
       const { sut } = makeSut()
       const input = ['any@mail.com', 'another@mail.com']
 

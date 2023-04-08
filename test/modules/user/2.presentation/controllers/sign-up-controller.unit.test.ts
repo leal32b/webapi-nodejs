@@ -62,68 +62,43 @@ describe('SignUpController', () => {
       })
     })
 
-    it('returns 200 when valid params are provided', async () => {
+    it('returns 200 with email and message when valid params are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(200)
-    })
-
-    it('returns an User when valid params are provided', async () => {
-      const { sut, requestFake } = makeSut()
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        email: 'any@mail.com',
-        message: 'user created successfully'
+      expect(result).toEqual({
+        payload: {
+          email: 'any@mail.com',
+          message: 'user created successfully'
+        },
+        statusCode: 200
       })
     })
   })
 
   describe('failure', () => {
-    it('returns 400 when CreateUserUseCase returns a clientError', async () => {
+    it('returns 400 with error when CreateUserUseCase returns a clientError', async () => {
       const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(400)
-    })
-
-    it('returns error in body when CreateUserUseCase returns a clientError', async () => {
-      const { sut, createUserUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'any_message'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'any_message' } },
+        statusCode: 400
       })
     })
 
-    it('returns 500 when CreateUserUseCase returns a serverError', async () => {
+    it('returns 500 with error when CreateUserUseCase returns a serverError', async () => {
       const { sut, createUserUseCase, serverErrorFake, requestFake } = makeSut()
       vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(500)
-    })
-
-    it('returns error in body when CreateUserUseCase returns a serverError', async () => {
-      const { sut, createUserUseCase, serverErrorFake, requestFake } = makeSut()
-      vi.spyOn(createUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'internal server error'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'internal server error' } },
+        statusCode: 500
       })
     })
   })

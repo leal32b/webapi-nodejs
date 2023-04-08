@@ -46,7 +46,7 @@ describe('EmailEntity', () => {
       expect(result.value).toBeInstanceOf(EmailEntity)
     })
 
-    it('gets from prop', () => {
+    it('gets from', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -54,7 +54,7 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).from).toBeInstanceOf(From)
     })
 
-    it('gets html prop', () => {
+    it('gets html', () => {
       const { sut, paramsFake } = makeSut()
       paramsFake.html = '<html>any_html</html>'
 
@@ -63,7 +63,7 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).html).toBeInstanceOf(Html)
     })
 
-    it('gets subject prop', () => {
+    it('gets subject', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -71,7 +71,7 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).subject).toBeInstanceOf(Subject)
     })
 
-    it('gets text prop', () => {
+    it('gets text', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -79,7 +79,7 @@ describe('EmailEntity', () => {
       expect((result.value as EmailEntity).text).toBeInstanceOf(Text)
     })
 
-    it('gets to prop', () => {
+    it('gets to', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -89,26 +89,18 @@ describe('EmailEntity', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when any param is invalid', () => {
+    it('returns Left with an array of Errors when any param is invalid', () => {
       const { sut, paramsFake } = makeSut()
       const from = null
 
       const result = sut.create({ ...paramsFake, from })
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an array of errors when any param is invalid', () => {
-      const { sut, paramsFake } = makeSut()
-      const from = null
-
-      const result = sut.create({ ...paramsFake, from })
-
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns an error for each param validation that fails', () => {
+    it('returns an Error for each param validation that fails', () => {
       const { sut, paramsFake } = makeSut()
       const from = null
       const subject = null

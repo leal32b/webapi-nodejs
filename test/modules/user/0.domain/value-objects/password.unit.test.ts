@@ -14,7 +14,7 @@ const makeSut = (): SutTypes => {
 
 describe('Password', () => {
   describe('success', () => {
-    it('returns a Password when input is valid', () => {
+    it('returns Password when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_password'
 
