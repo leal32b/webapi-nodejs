@@ -21,20 +21,6 @@ export class ExpressAdapter implements WebApp {
   private constructor (private readonly props: Props) {
     this._app = express()
     this._app.use(json())
-    // this._app.use((req: Request, res: Response, next: NextFunction): void => {
-    //   const originalSend = res.send
-
-    //   res.send = (data: string) => {
-    //     const parsedData = JSON.parse(data)
-    //     res.send = originalSend
-
-    //     this.props.logger[parsedData.error ? 'error' : 'info']('webapp', [`[${req.method}] ${req.url}`, req.body, data])
-
-    //     return res.send(data)
-    //   }
-
-    //   next()
-    // })
   }
 
   public static create (props: Props): ExpressAdapter {
