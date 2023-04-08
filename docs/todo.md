@@ -34,3 +34,5 @@
 [x] make logging.logger mock
 [ ] await publishToTopic? -> modules/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository.ts
 [x] change rabbitmq-adapter to amqplib-adapter
+[ ] merge api-specification with path in api-specification
+[ ] add logger to WebApp implementations

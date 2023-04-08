@@ -3,6 +3,7 @@
     "source.fixAll.eslint": true
   },
   "cSpell.words": [
+    "amqp",
     "cimg",
     "codeclimate",
     "codecov",
