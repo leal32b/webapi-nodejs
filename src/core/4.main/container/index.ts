@@ -40,10 +40,7 @@ export const cryptography: Cryptography = {
 }
 
 export const documentation: Documentation = {
-  apiSpecification: {
-    middlewares: makeSwagger.middlewares,
-    path: makeSwagger.path
-  }
+  apiDocumenter: makeSwagger
 }
 
 export const i18n: I18n = {

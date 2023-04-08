@@ -5,15 +5,11 @@ import { type Hasher } from '@/core/1.application/cryptography/hasher'
 import { type Translator } from '@/core/1.application/i18n/translator'
 import { type WebApp } from '@/core/3.infra/api/app/web-app'
 import { type SchemaValidator } from '@/core/3.infra/api/validators/schema-validator'
+import { type ApiDocumenter } from '@/core/3.infra/documentation/api-documenter'
 import { type MongodbClient } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 import { type PersistenceClient } from '@/core/3.infra/persistence/persistence-client'
 import { type PostgresClient } from '@/core/3.infra/persistence/postgres/client/postgres-client'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
-
-export type ApiSpecification = {
-  path: string
-  middlewares: any[]
-}
 
 export type App = {
   webApp: WebApp
@@ -33,7 +29,7 @@ export type Cryptography = {
 }
 
 export type Documentation = {
-  apiSpecification: ApiSpecification
+  apiDocumenter: ApiDocumenter
 }
 
 export type I18n = {

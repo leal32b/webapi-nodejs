@@ -1,8 +1,8 @@
-import { type Path } from '@/core/3.infra/documentation/api-specification/path'
-import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
-import { invalidTokenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-token-schema'
-import { missingTokenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/missing-token-schema'
-import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'
+import { type Path } from '@/core/3.infra/documentation/path'
+import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/schemas/invalid-schema-schema'
+import { invalidTokenSchemaExample } from '@/core/3.infra/documentation/schemas/invalid-token-schema'
+import { missingTokenSchemaExample } from '@/core/3.infra/documentation/schemas/missing-token-schema'
+import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/schemas/password-mismatch-schema'
 import { changePasswordRequestSchemaExample, changePasswordResponseSchemaExample } from '@/user/3.infra/api/routes/change-password/change-password-schemas'
 
 export const changePasswordPath: Path = {

@@ -1,6 +1,7 @@
 import express, {
   type Express, json, type NextFunction, type Request, type RequestHandler, type Response
 } from 'express'
+import { serve, setup } from 'swagger-ui-express'
 
 import { type Either, left, right } from '@/core/0.domain/utils/either'
 import { type Logger } from '@/core/1.application/logging/logger'
@@ -8,6 +9,7 @@ import { type Controller, type AppRequest } from '@/core/2.presentation/base/con
 import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type Middleware } from '@/core/2.presentation/middleware/middleware'
 import { type WebApp, type Router, type Route, type Header } from '@/core/3.infra/api/app/web-app'
+import { type ApiDocumenter } from '@/core/3.infra/documentation/api-documenter'
 
 type Props = {
   logger: Logger
@@ -20,20 +22,20 @@ export class ExpressAdapter implements WebApp {
   private constructor (private readonly props: Props) {
     this._app = express()
     this._app.use(json())
-    this._app.use((req: Request, res: Response, next: NextFunction): void => {
-      const originalSend = res.send
+    // this._app.use((req: Request, res: Response, next: NextFunction): void => {
+    //   const originalSend = res.send
 
-      res.send = (data: string) => {
-        const parsedData = JSON.parse(data)
-        res.send = originalSend
+    //   res.send = (data: string) => {
+    //     const parsedData = JSON.parse(data)
+    //     res.send = originalSend
 
-        this.props.logger[parsedData.error ? 'error' : 'info']('webapp', [`[${req.method}] ${req.url}`, req.body, data])
+    //     this.props.logger[parsedData.error ? 'error' : 'info']('webapp', [`[${req.method}] ${req.url}`, req.body, data])
 
-        return res.send(data)
-      }
+    //     return res.send(data)
+    //   }
 
-      next()
-    })
+    //   next()
+    // })
   }
 
   public static create (props: Props): ExpressAdapter {
@@ -56,11 +58,11 @@ export class ExpressAdapter implements WebApp {
     }
   }
 
-  public setApiSpecification (path: string, middlewares: any[]): Either<ServerError, void> {
+  public setApiSpecification (path: string, apiDocumenter: ApiDocumenter): Either<ServerError, void> {
     const { logger, port } = this.props
 
     try {
-      this.app.use(path, ...middlewares)
+      this.app.use(path, serve, setup(apiDocumenter.config))
 
       logger.info('webapp', `swagger running: http://localhost:${port}${path}`)
 
@@ -110,10 +112,9 @@ export class ExpressAdapter implements WebApp {
 
   public setRouter (router: Router): Either<ServerError, void> {
     const { logger } = this.props
+    const { path, routes, middlewares } = router
 
     try {
-      const { path, routes, middlewares } = router
-
       for (const route of routes) {
         this.app[route.type](
           '/api' + path + route.path,

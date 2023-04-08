@@ -36,3 +36,4 @@
 [x] change rabbitmq-adapter to amqplib-adapter
 [ ] merge api-specification with path in api-specification
 [ ] add logger to WebApp implementations
+[ ] change i18n to internationalization
