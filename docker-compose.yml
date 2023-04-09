@@ -25,7 +25,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq-container
-    image: rabbitmq:3.11-management
+    image: rabbitmq:3.10
     hostname: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}

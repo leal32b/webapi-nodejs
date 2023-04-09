@@ -37,3 +37,21 @@ export const getIntVar = (varName: string): number => {
 
   return parseInt(varValue)
 }
+
+export const getBooleanVar = (varName: string): boolean => {
+  const varValue = process.env[varName]
+
+  if (!varValue) {
+    console.error(`Environment variable '${varName}' not found!`)
+
+    return undefined
+  }
+
+  try {
+    return JSON.parse(varValue)
+  } catch (error) {
+    console.error(`Environment variable '${varName}' is not boolean!`)
+
+    return undefined
+  }
+}
