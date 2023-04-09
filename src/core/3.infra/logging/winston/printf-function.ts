@@ -22,6 +22,6 @@ export const printfFunction = ({ level, label, message }: LoggerParams): string 
     adjustedMessage = JSON.stringify(message)
   }
 
-  return `${level}: [${colorFunction(label)}] ${adjustedMessage}`
+  return `${level}: ${colorFunction(label)} ${adjustedMessage}`
 }
 
