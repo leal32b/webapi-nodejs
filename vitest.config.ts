@@ -1,9 +1,5 @@
 import { defineConfig } from 'vitest/config'
 
-const path = '/core/3.infra/webapp/**'
-const srcPath = 'src' + path
-const testPath = 'test' + path
-
 export default defineConfig({
   test: {
     root: '.',

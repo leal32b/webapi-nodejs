@@ -18,7 +18,7 @@ const labels: Record<string, ColorFn> = {
 
 export const colorFunction = (label: string): string => {
   try {
-    return labels[label](`[${label}]`)
+    return labels[label](label)
   } catch (error) {
     return label
   }
