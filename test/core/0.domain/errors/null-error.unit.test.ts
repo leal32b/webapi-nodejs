@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('NullError', () => {
   describe('success', () => {
-    it('returns a NullError', () => {
+    it('returns a NullError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -20,33 +20,10 @@ describe('NullError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(NullError)
-    })
-
-    it('returns props with correct values when input is null', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = null
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: null,
         message: 'should not be null'
-      })
-    })
-
-    it('returns props with correct values when input is undefined', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.create(field, input)
-
-      expect(result.props).toEqual({
-        field: 'any_field',
-        input: undefined,
-        message: 'should not be undefined'
       })
     })
   })

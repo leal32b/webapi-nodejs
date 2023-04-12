@@ -25,7 +25,7 @@ describe('DateValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is an invalid date', () => {
+    it('returns Left with InvalidDateError when input is an invalid date', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'invalid_date'
@@ -33,9 +33,10 @@ describe('DateValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidDateError)
     })
 
-    it('returns Left when input is an empty string', () => {
+    it('returns Left with InvalidDateError when input is an empty string', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -43,9 +44,10 @@ describe('DateValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidDateError)
     })
 
-    it('returns Left when input is null', () => {
+    it('returns Left with InvalidDateError when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -53,9 +55,10 @@ describe('DateValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(InvalidDateError)
     })
 
-    it('returns Left when input is undefined', () => {
+    it('returns Left with InvalidDateError when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
@@ -63,15 +66,6 @@ describe('DateValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns InvalidDateError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(InvalidDateError)
     })
   })

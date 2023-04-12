@@ -3,8 +3,8 @@ import { type Validator } from '@/core/0.domain/base/validator'
 import { ValueObject } from '@/core/0.domain/base/value-object'
 import { left } from '@/core/0.domain/utils/either'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeValidatorStub } from '~/core/stubs/validator-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeValidatorStub } from '~/core/_doubles/stubs/validator-stub'
 
 type SutTypes = {
   sut: typeof ValueObject
@@ -58,7 +58,7 @@ describe('ValueObject', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when any validatorStub fails', () => {
+    it('returns Left with an array of errors when any validatorStub fails', () => {
       const { sut, validatorStub, errorFake } = makeSut()
       const input = 'short'
       vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
@@ -66,9 +66,11 @@ describe('ValueObject', () => {
       const result = sut.validate(input, [validatorStub])
 
       expect(result.isLeft()).toBe(true)
+      expect((result.value as DomainError[])
+        .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns Left when input is an array and any validatorStub fails', () => {
+    it('returns Left with an array of errors when input is an array and any validatorStub fails', () => {
       const { sut, validatorStub, errorFake } = makeSut()
       const input = ['short', 'short']
       vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
@@ -76,15 +78,6 @@ describe('ValueObject', () => {
       const result = sut.validate(input, [validatorStub])
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an array of errors when any validatorStub fails', () => {
-      const { sut, validatorStub, errorFake } = makeSut()
-      const input = 'short'
-      vi.spyOn(validatorStub, 'validate').mockReturnValue(left(errorFake))
-
-      const result = sut.validate(input, [validatorStub])
-
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)
     })

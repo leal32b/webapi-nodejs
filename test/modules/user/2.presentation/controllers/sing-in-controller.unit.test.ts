@@ -5,7 +5,7 @@ import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type AuthenticateUserData, type AuthenticateUserResultDTO, type AuthenticateUserUseCase } from '@/user/1.application/use-cases/authenticate-user-use-case'
 import { SignInController } from '@/user/2.presentation/controllers/sign-in-controller'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<AuthenticateUserData> => ({
   payload: {
@@ -56,68 +56,43 @@ describe('SignInController', () => {
       })
     })
 
-    it('returns 200 when valid credentials are provided', async () => {
+    it('returns 200 with accessToken and message when valid credentials are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(200)
-    })
-
-    it('returns a accessToken when valid credentials are provided', async () => {
-      const { sut, requestFake } = makeSut()
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        accessToken: 'access_token',
-        message: 'user authenticated successfully'
+      expect(result).toEqual({
+        payload: {
+          accessToken: 'access_token',
+          message: 'user authenticated successfully'
+        },
+        statusCode: 200
       })
     })
   })
 
   describe('failure', () => {
-    it('returns 401 when invalid credentials are provided', async () => {
+    it('returns 401 with error when invalid credentials are provided', async () => {
       const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(401)
-    })
-
-    it('returns error in body when invalid credentials are provided', async () => {
-      const { sut, authenticateUserUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'any_message'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'any_message' } },
+        statusCode: 401
       })
     })
 
-    it('returns 500 when AuthenticateUserUseCase returns a serverError', async () => {
+    it('returns 500 with error when AuthenticateUserUseCase returns a serverError', async () => {
       const { sut, authenticateUserUseCase, serverErrorFake, requestFake } = makeSut()
       vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(500)
-    })
-
-    it('returns error in body when AuthenticateUserUseCase returns a serverError', async () => {
-      const { sut, authenticateUserUseCase, serverErrorFake, requestFake } = makeSut()
-      vi.spyOn(authenticateUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'internal server error'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'internal server error' } },
+        statusCode: 500
       })
     })
   })

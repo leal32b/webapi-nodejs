@@ -1,4 +1,4 @@
-import { type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type WebApp } from '@/core/3.infra/webapp/web-app'
 import { setApiSpecification } from '@/core/4.main/setup/webapp/set-api-specification'
 import { setContentType } from '@/core/4.main/setup/webapp/set-content-type'
 import { setHeaders } from '@/core/4.main/setup/webapp/set-headers'

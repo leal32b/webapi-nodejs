@@ -8,10 +8,10 @@ import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
-import { makeEncrypterStub } from '~/core/stubs/encrypter-stub'
-import { makeHasherStub } from '~/core/stubs/hasher-stub'
-import { makeUserRepositoryStub } from '~/user/user-repository-stub'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeEncrypterStub } from '~/core/_doubles/stubs/encrypter-stub'
+import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({
   email: 'any@mail.com',
@@ -55,7 +55,7 @@ describe('CreateUserUseCase', () => {
       expect(userRepository.readByEmail).toHaveBeenCalledWith('any@mail.com')
     })
 
-    it('calls Hasher.hash with correct param', async () => {
+    it('calls Hasher.hash with correct params', async () => {
       const { sut, hasher, createUserDataFake } = makeSut()
 
       await sut.execute(createUserDataFake)
@@ -63,7 +63,7 @@ describe('CreateUserUseCase', () => {
       expect(hasher.hash).toHaveBeenCalledWith('any_password')
     })
 
-    it('calls Encrypter.encrypt with correct param', async () => {
+    it('calls Encrypter.encrypt with correct params', async () => {
       const { sut, encrypter, createUserDataFake } = makeSut()
 
       await sut.execute(createUserDataFake)
@@ -79,12 +79,13 @@ describe('CreateUserUseCase', () => {
       expect(userRepository.create).toHaveBeenCalledWith(expect.any(UserAggregate))
     })
 
-    it('returns a message and the created user email', async () => {
+    it('returns Right with message and email when execute succeeds', async () => {
       const { sut, createUserDataFake } = makeSut()
 
-      const user = await sut.execute(createUserDataFake)
+      const result = await sut.execute(createUserDataFake)
 
-      expect(user.value).toEqual({
+      expect(result.isRight()).toBe(true)
+      expect(result.value).toEqual({
         email: 'any@mail.com',
         message: 'user created successfully'
       })
@@ -92,16 +93,17 @@ describe('CreateUserUseCase', () => {
   })
 
   describe('failure', () => {
-    it('returns an Error when UserRepository fails', async () => {
+    it('returns Left with Error when UserRepository fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
       vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns EmailTakenError when email is already in use', async () => {
+    it('returns Left with EmailTakenError when email is already in use', async () => {
       const { sut, userRepository, createUserDataFake } = makeSut()
       vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(
         right(UserAggregate.create({
@@ -113,49 +115,55 @@ describe('CreateUserUseCase', () => {
 
       const result = await sut.execute({ ...createUserDataFake })
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(EmailTakenError)
     })
 
-    it('returns PasswordMismatchError when passwords do not match', async () => {
+    it('returns Left with PasswordMismatchError when passwords do not match', async () => {
       const { sut, createUserDataFake } = makeSut()
 
       const result = await sut.execute({ ...createUserDataFake, passwordRetype: 'anything' })
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(PasswordMismatchError)
     })
 
-    it('returns an Error when Hasher.hash fails', async () => {
+    it('returns Left with Error when Hasher.hash fails', async () => {
       const { sut, hasher, errorFake, createUserDataFake } = makeSut()
       vi.spyOn(hasher, 'hash').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(createUserDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when Encrypter.encrypt fails', async () => {
+    it('returns Left with Error when Encrypter.encrypt fails', async () => {
       const { sut, encrypter, errorFake, createUserDataFake } = makeSut()
       vi.spyOn(encrypter, 'encrypt').mockResolvedValueOnce(left(errorFake))
 
       const result = await sut.execute(createUserDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when UserAggregate.create fails', async () => {
+    it('returns Left with Error when UserAggregate.create fails', async () => {
       const { sut, createUserDataFake } = makeSut()
 
       const result = await sut.execute({ ...createUserDataFake, email: 'invalid_email' })
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns an Error when UserRepository.create fails', async () => {
+    it('returns Left with Error when UserRepository.create fails', async () => {
       const { sut, userRepository, errorFake, createUserDataFake } = makeSut()
       vi.spyOn(userRepository, 'create').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(createUserDataFake)
 
+      expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
   })

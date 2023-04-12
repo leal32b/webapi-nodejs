@@ -1,4 +1,4 @@
-import { type Route, RouteType } from '@/core/3.infra/api/app/web-app'
+import { type Route, RouteType } from '@/core/3.infra/webapp/web-app'
 import { type SignUpController } from '@/user/2.presentation/controllers/sign-up-controller'
 import { signUpRequestSchema } from '@/user/3.infra/api/routes/sign-up/sign-up-schemas'
 

@@ -25,7 +25,7 @@ describe('NotHtmlValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is an invalid html', () => {
+    it('returns Left with NotHtmlError when input is an invalid html', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -33,15 +33,6 @@ describe('NotHtmlValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns NotHtmlError when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = ''
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(NotHtmlError)
     })
   })

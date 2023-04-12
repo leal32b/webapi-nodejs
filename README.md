@@ -54,15 +54,16 @@ npm run migration:run
 <a rel="lint-staged" href="https://github.com/okonet/lint-staged#readme"><img src="./docs/logos/lintstaged.png" height="32"/></a>
 <a rel="jscpd" href="https://github.com/kucherenko/jscpd#readme"><img src="./docs/logos/jscpd.svg" height="32"/></a>
 <a rel="Conventional Commits" href="https://www.conventionalcommits.org"><img src="./docs/logos/conventionalcommits.svg" height="32"/></a>
+<a rel="Express" href="https://expressjs.com"><img src="./docs/logos/express.svg" height="32"/></a>
 <a rel="Swagger" href="https://swagger.io"><img src="./docs/logos/swagger.svg" height="32"/></a>
 <a rel="Docker" href="https://www.docker.com"><img src="./docs/logos/docker.svg" height="32"/></a>
-<a rel="MongoDB" href="https://www.mongodb.com"><img src="./docs/logos/mongodb.svg" height="32"/></a>
 <a rel="PostgreSQL" href="https://www.postgresql.org"><img src="./docs/logos/postgresql.svg" height="32"/></a>
+<a rel="MongoDB" href="https://www.mongodb.com"><img src="./docs/logos/mongodb.svg" height="32"/></a>
+<a rel="Rabbitmq" href="https://www.rabbitmq.com"><img src="./docs/logos/rabbitmq.svg" height="32"/></a>
 <a rel="CircleCI" href="https://circleci.com"><img src="./docs/logos/circleci.svg" height="32"/></a>
 <a rel="Codecov" href="https://about.codecov.io"><img src="./docs/logos/codecov.svg" height="32"/></a>
 <a rel="Code Climate" href="https://codeclimate.com"><img src="./docs/logos/codeclimate.svg" height="32"/></a>
 <a rel="Render" href="https://render.com"><img src="./docs/logos/render.svg" height="32"/></a>
-<a rel="MongoDB Cloud" href="https://mongodb.com"><img src="./docs/logos/mongodb.svg" height="32"/></a>
 <a rel="VS Code" href="https://code.visualstudio.com"><img src="./docs/logos/vscode.svg" height="32"/></a>
 <a rel="DBeaver" href="https://dbeaver.io"><img src="./docs/logos/dbeaver.svg" height="32"/></a>
 <a rel="Insomnia" href="https://insomnia.rest"><img src="./docs/logos/insomnia.svg" height="32"/></a>

@@ -1,7 +1,7 @@
-import { type Path } from '@/core/3.infra/documentation/api-specification/path'
-import { emailTakenSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/email-taken-schema'
-import { invalidSchemaSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/invalid-schema-schema'
-import { passwordMismatchSchemaExample } from '@/core/3.infra/documentation/api-specification/schemas/password-mismatch-schema'
+import { type Path } from '@/core/2.presentation/documentation/api-documenter'
+import { emailTakenSchemaExample } from '@/core/2.presentation/documentation/schemas/email-taken-schema'
+import { invalidSchemaSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-schema-schema'
+import { passwordMismatchSchemaExample } from '@/core/2.presentation/documentation/schemas/password-mismatch-schema'
 import { signUpRequestSchemaExample, signUpResponseSchemaExample } from '@/user/3.infra/api/routes/sign-up/sign-up-schemas'
 
 export const signUpPath: Path = {

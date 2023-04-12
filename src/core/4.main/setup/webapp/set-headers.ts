@@ -1,4 +1,4 @@
-import { type WebApp } from '@/core/3.infra/api/app/web-app'
+import { type WebApp } from '@/core/3.infra/webapp/web-app'
 
 export const setHeaders = (webApp: WebApp): void => {
   webApp.setHeaders([

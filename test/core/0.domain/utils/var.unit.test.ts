@@ -1,8 +1,8 @@
-import { getIntVar, getVar, setVar } from '@/core/0.domain/utils/var'
+import { getBooleanVar, getIntVar, getVar, setVar } from '@/core/0.domain/utils/var'
 
 describe('Var', () => {
   describe('success', () => {
-    it('sets environment variable', () => {
+    it('sets an environment variable', () => {
       const varName = 'ANY_VAR'
       const value = 'any_value'
 
@@ -11,7 +11,7 @@ describe('Var', () => {
       expect(process.env.ANY_VAR).toBe('any_value')
     })
 
-    it('gets environment variable', () => {
+    it('gets an environment variable', () => {
       const varName = 'ANY_VAR2'
       const value = 'any_value2'
       process.env[varName] = value
@@ -21,7 +21,7 @@ describe('Var', () => {
       expect(result).toBe('any_value2')
     })
 
-    it('gets environment variable as int', () => {
+    it('gets an environment variable as int', () => {
       const varName = 'ANY_VAR3'
       const value = 1
       process.env[varName] = value.toString()
@@ -29,6 +29,16 @@ describe('Var', () => {
       const result = getIntVar(varName)
 
       expect(result).toBe(1)
+    })
+
+    it('gets an environment variable as boolean', () => {
+      const varName = 'ANY_VAR4'
+      const value = true
+      process.env[varName] = value.toString()
+
+      const result = getBooleanVar(varName)
+
+      expect(result).toBe(true)
     })
   })
 
@@ -53,38 +63,46 @@ describe('Var', () => {
       expect(logSpy).toHaveBeenCalledWith('Invalid environment variable value: null')
     })
 
-    it('returns undefined on getVar when variable do not exist', async () => {
+    it('returns undefined and logs an error message on getVar when variable does not exist', async () => {
       const varName = 'NOT_EXISTING_VAR'
+      const logSpy = vi.spyOn(console, 'error')
 
       const result = getVar(varName)
 
       expect(result).toBe(undefined)
-    })
-
-    it('logs an error message on getVar when variable do not exist', async () => {
-      const varName = 'NOT_EXISTING_VAR'
-      const logSpy = vi.spyOn(console, 'error')
-
-      getVar(varName)
-
       expect(logSpy).toHaveBeenCalledWith("Environment variable 'NOT_EXISTING_VAR' not found!")
     })
 
-    it('returns undefined on getIntVar when variable do not exist', async () => {
+    it('returns undefined and logs an error message on getIntVar when variable does not exist', async () => {
       const varName = 'NOT_EXISTING_VAR'
+      const logSpy = vi.spyOn(console, 'error')
 
       const result = getIntVar(varName)
 
       expect(result).toBe(undefined)
+      expect(logSpy).toHaveBeenCalledWith("Environment variable 'NOT_EXISTING_VAR' not found!")
     })
 
-    it('logs an error message on getIntVar when variable do not exist', async () => {
+    it('returns undefined and logs an error message on getBooleanVar when variable does not exist', async () => {
       const varName = 'NOT_EXISTING_VAR'
       const logSpy = vi.spyOn(console, 'error')
 
-      getIntVar(varName)
+      const result = getBooleanVar(varName)
 
+      expect(result).toBe(undefined)
       expect(logSpy).toHaveBeenCalledWith("Environment variable 'NOT_EXISTING_VAR' not found!")
+    })
+
+    it('returns undefined and logs an error message on getBooleanVar when variable is not boolean', async () => {
+      const varName = 'NOT_BOOLEAN_VAR'
+      const logSpy = vi.spyOn(console, 'error')
+      const value = 'not_boolean_value'
+      process.env[varName] = value.toString()
+
+      const result = getBooleanVar(varName)
+
+      expect(result).toBe(undefined)
+      expect(logSpy).toHaveBeenCalledWith("Environment variable 'NOT_BOOLEAN_VAR' is not boolean!")
     })
   })
 })

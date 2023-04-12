@@ -1,26 +1,26 @@
 import 'dotenv/config'
 
 import { getVar } from '@/core/0.domain/utils/var'
-import { makeExpress } from '@/core/4.main/container/app/make-express'
 import { makeNodemailer } from '@/core/4.main/container/communication/make-nodemailer'
 import { makeHandlebars } from '@/core/4.main/container/compilers/make-handlebars'
 import {
-  type I18n,
   type App,
   type Communication,
   type Compilers,
   type Cryptography,
   type Documentation,
   type Persistence,
-  type Validators
+  type Validators,
+  type Localization
 } from '@/core/4.main/container/container-types'
 import { makeArgon } from '@/core/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/core/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/core/4.main/container/documentation/make-swagger'
-import { makeI18next } from '@/core/4.main/container/i18n/make-i18next'
+import { makeI18next } from '@/core/4.main/container/localization/make-i18next'
 import { makeMongodb } from '@/core/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/core/4.main/container/persistence/make-postgres'
 import { makeAjv } from '@/core/4.main/container/validators/make-ajv'
+import { makeExpress } from '@/core/4.main/container/webapp/make-express'
 
 export const app: App = {
   webApp: makeExpress
@@ -40,13 +40,10 @@ export const cryptography: Cryptography = {
 }
 
 export const documentation: Documentation = {
-  apiSpecification: {
-    middlewares: makeSwagger.middlewares,
-    path: makeSwagger.path
-  }
+  apiDocumenter: makeSwagger
 }
 
-export const i18n: I18n = {
+export const localization: Localization = {
   translator: makeI18next
 }
 
@@ -65,5 +62,5 @@ export const validators: Validators = {
 }
 
 compilers.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
-  return i18n.translator.t(key, { lng })
+  return localization.translator.t(key, { lng })
 })

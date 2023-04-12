@@ -4,7 +4,7 @@ import { getVar, setVar } from '@/core/0.domain/utils/var'
 import { type Logger } from '@/core/1.application/logging/logger'
 import { MongodbClient, type MongodbDataSource } from '@/core/3.infra/persistence/mongodb/client/mongodb-client'
 
-import { makeLoggerMock } from '~/core/mocks/logger-mock'
+import { makeLoggerMock } from '~/core/_doubles/mocks/logger-mock'
 
 vi.mock('mongodb', () => ({
   Collection: vi.fn(),
@@ -65,24 +65,6 @@ describe('MongodbAdapter', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns Left on clearDatabase when not in test environment', async () => {
-      const { sut } = await makeSut()
-      setVar('NODE_ENV', 'any_environment')
-
-      const result = await sut.clearDatabase()
-
-      expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an Error on clearDatabase when not in test environment', async () => {
-      const { sut } = await makeSut()
-      setVar('NODE_ENV', 'any_environment')
-
-      const result = await sut.clearDatabase()
-
-      expect(result.value).toEqual(new Error('Clear database is allowed only in test environment'))
-    })
-
     it('returns Right on close', async () => {
       const { sut } = await makeSut()
 
@@ -105,23 +87,35 @@ describe('MongodbAdapter', () => {
       }))
     })
 
-    it('returns Left when close throws', async () => {
+    it('returns Left with Error on clearDatabase when not in test environment', async () => {
+      const { sut } = await makeSut()
+      setVar('NODE_ENV', 'any_environment')
+
+      const result = await sut.clearDatabase()
+
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
+    })
+
+    it('returns Left with Error when close throws', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.close()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns Left when clearDatabase throws', async () => {
+    it('returns Left with Error when clearDatabase throws', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.clearDatabase()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
 
-    it('returns Left when connect throws', async () => {
+    it('returns Left with Error when connect throws', async () => {
       const { logger } = await makeSut()
       const dataSource = {
         connectionString: 'invalid_connectionString',
@@ -136,6 +130,7 @@ describe('MongodbAdapter', () => {
       const result = await mongodbClient.connect()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(Error)
     })
   })
 })

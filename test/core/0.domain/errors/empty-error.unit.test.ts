@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('EmptyError', () => {
   describe('success', () => {
-    it('returns an EmptyError', () => {
+    it('returns an EmptyError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = ''
@@ -20,15 +20,6 @@ describe('EmptyError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(EmptyError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = ''
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: '',

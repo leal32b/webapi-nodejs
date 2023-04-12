@@ -15,7 +15,7 @@ const makeSut = (): SutTypes => {
 
 describe('From', () => {
   describe('success', () => {
-    it('returns a From when input is valid', () => {
+    it('returns From when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any@mail.com'
 

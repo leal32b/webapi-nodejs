@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('MinLengthError', () => {
   describe('success', () => {
-    it('returns a MinLengthError', () => {
+    it('returns a MinLengthError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6
@@ -21,16 +21,6 @@ describe('MinLengthError', () => {
       const result = sut.create(field, length, input)
 
       expect(result).toBeInstanceOf(MinLengthError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const length = 6
-      const input = 'short'
-
-      const result = sut.create(field, length, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'short',

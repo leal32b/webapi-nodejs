@@ -42,7 +42,7 @@ describe('MongodbFixture', () => {
   })
 
   describe('success', () => {
-    it('returns the created entity when no params are provided', async () => {
+    it('returns created entity when no params are provided', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.createRandomFixture()

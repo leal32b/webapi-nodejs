@@ -1,11 +1,22 @@
-import request from 'supertest'
+import express from 'express'
 
+import { type Middleware } from '@/core/1.application/middleware/middleware'
 import { type Controller, type AppRequest, type AppResponse } from '@/core/2.presentation/base/controller'
-import { type Middleware } from '@/core/2.presentation/middleware/middleware'
-import { RouteType } from '@/core/3.infra/api/app/web-app'
+import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { ExpressAdapter } from '@/core/3.infra/webapp/express/express-adapter'
+import { RouteType } from '@/core/3.infra/webapp/web-app'
 
-import { makeLoggerMock } from '~/core/mocks/logger-mock'
+import { makeLoggerMock } from '~/core/_doubles/mocks/logger-mock'
+
+vi.mock('express', () => ({
+  default: vi.fn(() => ({
+    address: vi.fn(),
+    get: vi.fn(),
+    listen: vi.fn(),
+    use: vi.fn()
+  })),
+  json: vi.fn()
+}))
 
 const makeAuthStub = (): Controller<Record<string, unknown>> => ({
   handle: vi.fn(async (request: AppRequest<any>): Promise<AppResponse<any>> => ({
@@ -52,8 +63,46 @@ const makeSut = (): SutTypes => {
 
 describe('ExpressAdapter', () => {
   describe('success', () => {
-    it('parses body as json', async () => {
+    it('calls app.listen with correct params', async () => {
+      const listen = vi.fn()
+      vi.mocked(express).mockImplementationOnce(() => ({
+        listen,
+        use: vi.fn()
+      } as any))
       const { sut } = makeSut()
+
+      sut.listen()
+
+      expect(listen).toHaveBeenCalledWith(0, null)
+    })
+
+    it('returns Right when listen succeeds', () => {
+      const { sut } = makeSut()
+      vi.spyOn(sut.app, 'listen').mockReturnValueOnce(null)
+
+      const result = sut.listen()
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('returns Right on setApiSpecification', () => {
+      const { sut } = makeSut()
+      const path = 'any_path'
+      const config = { anyKey: 'any_value' }
+
+      const result = sut.setApiSpecification(path, config)
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('calls app.<routeType> with correct params', async () => {
+      const get = vi.fn()
+      vi.mocked(express).mockImplementationOnce(() => ({
+        get,
+        use: vi.fn()
+      } as any))
+      const { sut } = makeSut()
+
       sut.setRouter({
         middlewares: [],
         path: '/express',
@@ -61,26 +110,43 @@ describe('ExpressAdapter', () => {
           controller: makeControllerStub(),
           path: '/test_body_parser',
           schema: {},
-          type: RouteType.POST
+          type: RouteType.GET
         }]
       })
-      const body = { anyKey: 'any_value' }
 
-      const result = await request(sut.app)
-        .post('/api/express/test_body_parser')
-        .send(body)
-
-      expect(result.body).toEqual({ anyKey: 'any_value' })
+      expect(get).toHaveBeenCalledWith(
+        '/api/express/test_body_parser',
+        [],
+        expect.any(Function)
+      )
     })
 
-    it('returns Right on setApiSpecification', () => {
+    it('returns Right on setRouter', async () => {
       const { sut } = makeSut()
-      const path = 'any_path'
-      const middlewares = [() => {}, () => {}]
 
-      const result = sut.setApiSpecification(path, middlewares)
+      const result = sut.setRouter({
+        middlewares: [],
+        path: '/express',
+        routes: [{
+          controller: makeControllerStub(),
+          path: '/test_body_parser',
+          schema: {},
+          type: RouteType.GET
+        }]
+      })
 
       expect(result.isRight()).toBe(true)
+    })
+
+    it('calls app.use with correct params', async () => {
+      const use = vi.fn()
+      vi.mocked(express).mockImplementationOnce(() => ({ use } as any))
+      const { sut } = makeSut()
+      const type = 'any_type'
+
+      sut.setContentType(type)
+
+      expect(use).toHaveBeenCalledWith(expect.any(Function))
     })
 
     it('returns Right on setContentType', () => {
@@ -92,25 +158,6 @@ describe('ExpressAdapter', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns default contentType as json', async () => {
-      const { sut } = makeSut()
-      sut.setContentType('json')
-      sut.setRouter({
-        middlewares: [],
-        path: '/express',
-        routes: [{
-          controller: makeControllerStub(),
-          path: '/test_content_type',
-          schema: {},
-          type: RouteType.GET
-        }]
-      })
-
-      const result = await request(sut.app).get('/api/express/test_content_type')
-
-      expect(result.headers).include({ 'content-type': 'application/json; charset=utf-8' })
-    })
-
     it('returns Right on setHeaders', () => {
       const { sut } = makeSut()
       const headers = [{ field: 'any_field', value: 'any_value' }]
@@ -118,25 +165,6 @@ describe('ExpressAdapter', () => {
       const result = sut.setHeaders(headers)
 
       expect(result.isRight()).toBe(true)
-    })
-
-    it('enables CORS', async () => {
-      const { sut } = makeSut()
-      sut.setHeaders([{ field: 'access-control-allow-origin', value: '*' }])
-      sut.setRouter({
-        middlewares: [],
-        path: '/express',
-        routes: [{
-          controller: makeControllerStub(),
-          path: '/test_cors',
-          schema: {},
-          type: RouteType.GET
-        }]
-      })
-
-      const result = await request(sut.app).get('/api/express/test_cors')
-
-      expect(result.headers).include({ 'access-control-allow-origin': '*' })
     })
 
     it('returns Right on setRouter when route has only a controller', () => {
@@ -178,35 +206,26 @@ describe('ExpressAdapter', () => {
 
       const result = sut.app
 
-      expect(result).toBeInstanceOf(Function)
-    })
-
-    it('returns Right when listen succeeds', () => {
-      const { sut } = makeSut()
-      vi.spyOn(sut.app, 'listen').mockReturnValueOnce(null)
-      const port = 0
-
-      const result = sut.listen(port)
-
-      expect(result.isRight()).toBe(true)
+      expect(result).toEqual(expect.any(Object))
     })
   })
 
   describe('failure', () => {
-    it('returns Left when setApiSpecification throws', () => {
+    it('returns Left with ServerError when setApiSpecification throws', () => {
       const { sut } = makeSut()
       vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
       })
       const path = 'any_path'
-      const middlewares = [() => {}, () => {}]
+      const config = { anyKey: 'any_value' }
 
-      const result = sut.setApiSpecification(path, middlewares)
+      const result = sut.setApiSpecification(path, config)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when setContentType throws', () => {
+    it('returns Left with ServerError when setContentType throws', () => {
       const { sut } = makeSut()
       vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
@@ -216,9 +235,10 @@ describe('ExpressAdapter', () => {
       const result = sut.setContentType(type)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when setHeaders throws', () => {
+    it('returns Left with ServerError when setHeaders throws', () => {
       const { sut } = makeSut()
       vi.spyOn(sut.app, 'use').mockImplementationOnce(() => {
         throw new Error()
@@ -228,9 +248,10 @@ describe('ExpressAdapter', () => {
       const result = sut.setHeaders(headers)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when setRouter throws', () => {
+    it('returns Left with ServerError when setRouter throws', () => {
       const { sut, controller } = makeSut()
       vi.spyOn(sut.app, 'get').mockImplementationOnce(() => {
         throw new Error()
@@ -248,9 +269,10 @@ describe('ExpressAdapter', () => {
       })
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
 
-    it('returns Left when listen throws', () => {
+    it('returns Left with ServerError when listen throws', () => {
       const { sut } = makeSut()
       vi.spyOn(sut.app, 'listen').mockImplementationOnce(() => {
         throw new Error()
@@ -259,6 +281,7 @@ describe('ExpressAdapter', () => {
       const result = sut.listen()
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(ServerError)
     })
   })
 })

@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('NotFoundError', () => {
   describe('success', () => {
-    it('returns a NotFoundError', () => {
+    it('returns a NotFoundError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'any_input'
@@ -20,15 +20,6 @@ describe('NotFoundError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(NotFoundError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'any_input'
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'any_input',

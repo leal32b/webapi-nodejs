@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidEmailError', () => {
   describe('success', () => {
-    it('returns an InvalidEmailError', () => {
+    it('returns an InvalidEmailError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'invalid_mail'
@@ -20,15 +20,6 @@ describe('InvalidEmailError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(InvalidEmailError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'invalid_mail'
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'invalid_mail',

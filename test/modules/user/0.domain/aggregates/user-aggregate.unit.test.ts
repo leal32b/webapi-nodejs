@@ -32,7 +32,7 @@ const makeSut = (): SutTypes => {
 
 describe('UserAggregate', () => {
   describe('success', () => {
-    it('returns an User when params are valid', () => {
+    it('returns User when params are valid', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -40,7 +40,7 @@ describe('UserAggregate', () => {
       expect(result.value).toBeInstanceOf(UserAggregate)
     })
 
-    it('returns an User with emailConfirmed=true when it is passed', () => {
+    it('returns User with emailConfirmed=true when it is passed', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create({
@@ -51,7 +51,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).emailConfirmed.value).toBe(true)
     })
 
-    it('gets email prop', () => {
+    it('gets email', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -59,7 +59,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).email).toBeInstanceOf(Email)
     })
 
-    it('gets emailConfirmed prop', () => {
+    it('gets emailConfirmed', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -67,7 +67,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).emailConfirmed).toBeInstanceOf(EmailConfirmed)
     })
 
-    it('gets id prop', () => {
+    it('gets id', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -75,7 +75,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).id).toBeInstanceOf(Identifier)
     })
 
-    it('gets name prop', () => {
+    it('gets name', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -83,7 +83,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).name).toBeInstanceOf(Name)
     })
 
-    it('gets password prop', () => {
+    it('gets password', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -91,7 +91,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).password).toBeInstanceOf(Password)
     })
 
-    it('gets token prop', () => {
+    it('gets token', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
@@ -99,7 +99,7 @@ describe('UserAggregate', () => {
       expect((result.value as UserAggregate).token).toBeInstanceOf(Token)
     })
 
-    it('sets emailConfirmed prop', () => {
+    it('sets emailConfirmed', () => {
       const { sut, paramsFake } = makeSut()
       const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
 
@@ -110,7 +110,7 @@ describe('UserAggregate', () => {
       expect(userEntity.emailConfirmed.value).toBe(true)
     })
 
-    it('sets password prop', () => {
+    it('sets password', () => {
       const { sut, paramsFake } = makeSut()
       const password = Password.create('any_password').value as Token
 
@@ -121,7 +121,7 @@ describe('UserAggregate', () => {
       expect(userEntity.token.value).toBe('any_token')
     })
 
-    it('sets token prop', () => {
+    it('sets token', () => {
       const { sut, paramsFake } = makeSut()
       const token = Token.create('any_token').value as Token
 
@@ -134,26 +134,18 @@ describe('UserAggregate', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when any param is invalid', () => {
+    it('returns Left with an array of Errors when any param is invalid', () => {
       const { sut, paramsFake } = makeSut()
       const email = null
 
       const result = sut.create({ ...paramsFake, email })
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns an array of errors when any param is invalid', () => {
-      const { sut, paramsFake } = makeSut()
-      const email = null
-
-      const result = sut.create({ ...paramsFake, email })
-
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns an error for each param validation that fails', () => {
+    it('returns an Error for each param validation that fails', () => {
       const { sut, paramsFake } = makeSut()
       const email = null
       const name = null

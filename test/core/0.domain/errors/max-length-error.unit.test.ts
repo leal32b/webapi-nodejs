@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('MaxLengthError', () => {
   describe('success', () => {
-    it('returns a MaxLengthError', () => {
+    it('returns a MaxLengthError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const length = 6
@@ -21,16 +21,6 @@ describe('MaxLengthError', () => {
       const result = sut.create(field, length, input)
 
       expect(result).toBeInstanceOf(MaxLengthError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const length = 6
-      const input = 'long_string'
-
-      const result = sut.create(field, length, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'long_string',

@@ -5,7 +5,7 @@ import { ServerError } from '@/core/2.presentation/errors/server-error'
 import { type ChangePasswordData, type ChangePasswordResultDTO, type ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 import { ChangePasswordController } from '@/user/2.presentation/controllers/change-password-controller'
 
-import { makeErrorFake } from '~/core/fakes/error-fake'
+import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
 
 const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
   payload: {
@@ -57,67 +57,40 @@ describe('ChangePasswordController', () => {
       })
     })
 
-    it('returns 200 when valid credentials are provided', async () => {
+    it('returns 200 with message when valid credentials are provided', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(200)
-    })
-
-    it('returns correct message when valid credentials are provided', async () => {
-      const { sut, requestFake } = makeSut()
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        message: 'password updated successfully'
+      expect(result).toEqual({
+        payload: { message: 'password updated successfully' },
+        statusCode: 200
       })
     })
   })
 
   describe('failure', () => {
-    it('returns 401 when passwords do not match', async () => {
+    it('returns 401 with error when passwords do not match', async () => {
       const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
       vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(401)
-    })
-
-    it('returns error in body when invalid params are provided', async () => {
-      const { sut, changePasswordUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'any_message'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'any_message' } },
+        statusCode: 401
       })
     })
 
-    it('returns 500 when ChangePasswordUseCase returns a serverError', async () => {
+    it('returns 500 with error when ChangePasswordUseCase returns a serverError', async () => {
       const { sut, changePasswordUseCase, serverErrorFake, requestFake } = makeSut()
       vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 
-      expect(result.statusCode).toBe(500)
-    })
-
-    it('returns error in body when ChangePasswordUseCase returns a serverError', async () => {
-      const { sut, changePasswordUseCase, serverErrorFake, requestFake } = makeSut()
-      vi.spyOn(changePasswordUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
-
-      const result = await sut.handle(requestFake)
-
-      expect(result.payload).toEqual({
-        error: {
-          message: 'internal server error'
-        }
+      expect(result).toEqual({
+        payload: { error: { message: 'internal server error' } },
+        statusCode: 500
       })
     })
   })

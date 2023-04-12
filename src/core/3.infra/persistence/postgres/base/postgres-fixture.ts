@@ -1,5 +1,5 @@
 import { type IntegerGreaterThanZero } from '@/core/0.domain/types/integer-greater-than-zero'
-import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { persistence } from '@/core/4.main/container'
 
 type Props<ReturnType> = {
@@ -7,7 +7,7 @@ type Props<ReturnType> = {
   repositoryName: string
 }
 
-export abstract class PostgresFixture<EntityType> implements DatabaseFixture<EntityType> {
+export abstract class PostgresFixture<EntityType> implements PersistenceFixture<EntityType> {
   protected constructor (private readonly props: Props<EntityType>) {}
 
   public async createFixture (entity: Partial<EntityType>): Promise<EntityType> {

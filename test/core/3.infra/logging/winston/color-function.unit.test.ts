@@ -18,7 +18,7 @@ describe('colorFunction', () => {
 
       const result = sut(label)
 
-      expect(result).toBe('\x1b[33mcommunication\x1b[0m')
+      expect(result).toBe(`\x1b[33m${label}\x1b[0m`)
     })
 
     it('returns formatted label when it is events', () => {
@@ -27,7 +27,7 @@ describe('colorFunction', () => {
 
       const result = sut(label)
 
-      expect(result).toBe('\x1b[34mevents\x1b[0m')
+      expect(result).toBe(`\x1b[34m${label}\x1b[0m`)
     })
 
     it('returns formatted label when it is persistence', () => {
@@ -36,7 +36,7 @@ describe('colorFunction', () => {
 
       const result = sut(label)
 
-      expect(result).toBe('\x1b[36mpersistence\x1b[0m')
+      expect(result).toBe(`\x1b[36m${label}\x1b[0m`)
     })
 
     it('returns formatted label when it is webapp', () => {
@@ -45,7 +45,7 @@ describe('colorFunction', () => {
 
       const result = sut(label)
 
-      expect(result).toBe('\x1b[35mwebapp\x1b[0m')
+      expect(result).toBe(`\x1b[35m${label}\x1b[0m`)
     })
   })
 

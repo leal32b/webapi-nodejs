@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { DataSource } from 'typeorm'
 
-import { getVar } from '@/core/0.domain/utils/var'
+import { getBooleanVar, getVar } from '@/core/0.domain/utils/var'
 import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 export const postgresDefaultDataSource = new DataSource({
@@ -12,7 +12,7 @@ export const postgresDefaultDataSource = new DataSource({
   password: getVar('POSTGRES_PASSWORD'),
   database: getVar('POSTGRES_DATABASE'),
   logging: false,
-  synchronize: false,
+  synchronize: getBooleanVar('POSTGRES_SYNC'),
   entities: [PostgresUserEntity],
   migrations: ['src/modules/**/postgres/migrations/**/*.ts']
 })

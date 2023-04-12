@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
 
 describe('EmailConfirmed', () => {
   describe('success', () => {
-    it('returns an EmailConfirmed when input is valid', () => {
+    it('returns EmailConfirmed when input is valid', () => {
       const { sut } = makeSut()
       const input = true
 

@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('NotHtmlError', () => {
   describe('success', () => {
-    it('returns a NotHtmlError', () => {
+    it('returns a NotHtmlError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'invalid_html'
@@ -20,15 +20,6 @@ describe('NotHtmlError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(NotHtmlError)
-    })
-
-    it('returns props with correct values when input is invalid', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'invalid_html'
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'invalid_html',

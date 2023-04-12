@@ -37,9 +37,7 @@ describe('Either', () => {
 
       expect(result.value).toBe(undefined)
     })
-  })
 
-  describe('failure', () => {
     it('returns true on isLeft when it is left', () => {
       const result: Either<any, any> = left('anything')
 

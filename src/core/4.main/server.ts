@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import 'module-alias/register'
 
 import { app, persistence } from '@/core/4.main/container'
 import { events } from '@/core/4.main/container/events'

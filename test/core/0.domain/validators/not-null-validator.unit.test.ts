@@ -25,7 +25,7 @@ describe('NotNullValidator', () => {
   })
 
   describe('failure', () => {
-    it('returns Left when input is null', () => {
+    it('returns Left with NotNullValidator when input is null', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = null
@@ -33,9 +33,10 @@ describe('NotNullValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(NullError)
     })
 
-    it('returns Left when input is undefined', () => {
+    it('returns Left with NotNullValidator when input is undefined', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = undefined
@@ -43,15 +44,6 @@ describe('NotNullValidator', () => {
       const result = sut.validate(field, input)
 
       expect(result.isLeft()).toBe(true)
-    })
-
-    it('returns NotNullValidator when validation fails', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = undefined
-
-      const result = sut.validate(field, input)
-
       expect(result.value).toBeInstanceOf(NullError)
     })
   })

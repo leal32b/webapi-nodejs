@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 
 describe('InvalidLocaleError', () => {
   describe('success', () => {
-    it('returns an InvalidLocaleError', () => {
+    it('returns an InvalidLocaleError with correct props', () => {
       const { sut } = makeSut()
       const field = 'any_field'
       const input = 'enUSA'
@@ -20,15 +20,6 @@ describe('InvalidLocaleError', () => {
       const result = sut.create(field, input)
 
       expect(result).toBeInstanceOf(InvalidLocaleError)
-    })
-
-    it('returns props with correct values', () => {
-      const { sut } = makeSut()
-      const field = 'any_field'
-      const input = 'enUSA'
-
-      const result = sut.create(field, input)
-
       expect(result.props).toEqual({
         field: 'any_field',
         input: 'enUSA',

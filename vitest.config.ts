@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: ['test/**'],
+    include: ['test/**/*{integration,unit}.test.ts'],
     exclude: ['test/**/_doubles/**'],
     globalSetup: 'vitest.setup.ts',
     threads: false,
@@ -13,7 +13,7 @@ export default defineConfig({
     logHeapUsage: false,
     passWithNoTests: true,
     coverage: {
-      include: ['src/**'],
+      include: ['src/**/*.ts'],
       exclude: [
         'src/**/4.main/**', 
         'src/**/data-sources/**', 
@@ -29,9 +29,9 @@ export default defineConfig({
       '@/core': 'src/core',
       '@/communication': 'src/modules/communication',
       '@/user': 'src/modules/user',
-      '~/core': 'test/core/_doubles',
-      '~/communication': 'test/modules/communication/_doubles',
-      '~/user': 'test/modules/user/_doubles'
+      '~/core': 'test/core',
+      '~/communication': 'test/modules/communication',
+      '~/user': 'test/modules/user'
     }
   }
 })

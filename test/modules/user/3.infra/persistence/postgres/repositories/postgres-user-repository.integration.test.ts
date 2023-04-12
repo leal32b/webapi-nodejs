@@ -1,12 +1,12 @@
-import { type MessageBroker } from '@/core/3.infra/events/message-broker'
-import { type DatabaseFixture } from '@/core/3.infra/persistence/database-fixture'
+import { type MessageBroker } from '@/core/1.application/events/message-broker'
+import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { persistence } from '@/core/4.main/container'
-import { makePostgresFixtures } from '@/core/4.main/setup/fixtures/make-postgres-fixtures'
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
-import { makeMessageBrokerMock } from '~/core/mocks/message-broker-mock'
+import { makeMessageBrokerMock } from '~/core/_doubles/mocks/message-broker-mock'
+import { PostgresUserFixture } from '~/user/_fixtures/postgres/postgres-user-fixture'
 
 const makeUserAggregateFake = (): UserAggregate => {
   return UserAggregate.create({
@@ -22,7 +22,7 @@ const makeUserAggregateFake = (): UserAggregate => {
 type SutTypes = {
   sut: PostgresUserRepository
   messageBroker: MessageBroker
-  userFixture: DatabaseFixture<UserAggregateProps>
+  userFixture: PersistenceFixture<UserAggregateProps>
   userAggregateFake: UserAggregate
 }
 
@@ -34,7 +34,7 @@ const makeSut = (): SutTypes => {
     userAggregateFake: makeUserAggregateFake()
   }
   const collaborators = {
-    userFixture: makePostgresFixtures.userFixture
+    userFixture: PostgresUserFixture.create()
   }
   const sut = PostgresUserRepository.create(props)
 
@@ -75,41 +75,45 @@ describe('UserPostgresRepository', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('returns null on readByEmail if user does not exist', async () => {
+    it('returns Right with null on readByEmail if user does not exist', async () => {
       const { sut } = makeSut()
       const email = 'any2@mail.com'
 
       const result = await sut.readByEmail(email)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toBe(null)
     })
 
-    it('returns an UserAggregate on readByEmail success', async () => {
+    it('returns Right with UserAggregate on readByEmail success', async () => {
       const { sut, userFixture } = makeSut()
       const email = 'any2@mail.com'
       await userFixture.createFixture({ email })
 
       const result = await sut.readByEmail(email)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toBeInstanceOf(UserAggregate)
     })
 
-    it('returns null on readById if user does not exist', async () => {
+    it('returns Right with null on readById if user does not exist', async () => {
       const { sut } = makeSut()
       const id = 'any_id2'
 
       const result = await sut.readById(id)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toBe(null)
     })
 
-    it('returns an UserAggregate on readById success', async () => {
+    it('returns Right with UserAggregate on readById success', async () => {
       const { sut, userFixture } = makeSut()
       const id = 'any_id2'
       await userFixture.createFixture({ id })
 
       const result = await sut.readById(id)
 
+      expect(result.isRight()).toBe(true)
       expect(result.value).toBeInstanceOf(UserAggregate)
     })
 
