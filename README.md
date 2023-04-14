@@ -60,6 +60,7 @@ npm run migration:run
 <a rel="PostgreSQL" href="https://www.postgresql.org"><img src="./docs/logos/postgresql.svg" height="32"/></a>
 <a rel="MongoDB" href="https://www.mongodb.com"><img src="./docs/logos/mongodb.svg" height="32"/></a>
 <a rel="Rabbitmq" href="https://www.rabbitmq.com"><img src="./docs/logos/rabbitmq.svg" height="32"/></a>
+<a rel="Mailtrap" href="https://mailtrap.io"><img src="./docs/logos/mailtrap.svg" height="32"/></a>
 <a rel="CircleCI" href="https://circleci.com"><img src="./docs/logos/circleci.svg" height="32"/></a>
 <a rel="Codecov" href="https://about.codecov.io"><img src="./docs/logos/codecov.svg" height="32"/></a>
 <a rel="Code Climate" href="https://codeclimate.com"><img src="./docs/logos/codeclimate.svg" height="32"/></a>
