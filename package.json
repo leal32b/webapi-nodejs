@@ -25,7 +25,7 @@
     "tsc": "tsc -b tsconfig.build.json",
     "copy:templates": "copyfiles -u 1 src/**/templates/* dist/",
     "docker:up": "docker-compose up webapi -d",
-    "docker:down": "docker-compose down",
+    "docker:stop": "docker-compose stop",
     "docker:attach": "docker attach --sig-proxy=false webapi-container",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
     "migration:generate": "npm run typeorm -- migration:generate -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
