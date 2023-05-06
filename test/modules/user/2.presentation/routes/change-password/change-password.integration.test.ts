@@ -1,11 +1,12 @@
 import request from 'supertest'
 
-import { TokenType } from '@/core/1.application/cryptography/encrypter'
-import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
-import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
-import { app, cryptography, persistence } from '@/core/4.main/container'
-import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
-import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
+import { TokenType } from '@/common/1.application/cryptography/encrypter'
+import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
+import { type Route, type WebApp } from '@/common/3.infra/webapp/web-app'
+import { app, cryptography, persistence } from '@/common/4.main/container'
+import { authMiddleware } from '@/common/4.main/setup/middlewares/auth-middleware'
+import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+
 import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { changePasswordRoute } from '@/user/2.presentation/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'

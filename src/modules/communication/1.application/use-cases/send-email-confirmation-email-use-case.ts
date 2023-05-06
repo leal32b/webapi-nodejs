@@ -1,12 +1,13 @@
 import path from 'path'
 
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either, left, right } from '@/common/0.domain/utils/either'
+import { getVar } from '@/common/0.domain/utils/var'
+import { UseCase } from '@/common/1.application/base/use-case'
+import { type TemplateCompiler } from '@/common/1.application/compilers/template-compiler'
+
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
-import { getVar } from '@/core/0.domain/utils/var'
-import { UseCase } from '@/core/1.application/base/use-case'
-import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 
 type Props = {
   emailSender: EmailSender

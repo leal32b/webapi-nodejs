@@ -1,8 +1,8 @@
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { ValueObject } from '@/core/0.domain/base/value-object'
-import { type Either } from '@/core/0.domain/utils/either'
-import { NotEmptyValidator } from '@/core/0.domain/validators/not-empty-validator'
-import { NotNullValidator } from '@/core/0.domain/validators/not-null-validator'
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { ValueObject } from '@/common/0.domain/base/value-object'
+import { type Either } from '@/common/0.domain/utils/either'
+import { NotEmptyValidator } from '@/common/0.domain/validators/not-empty-validator'
+import { NotNullValidator } from '@/common/0.domain/validators/not-null-validator'
 
 export class Password extends ValueObject<string> {
   public static create (input: string): Either<DomainError[], Password> {

@@ -1,8 +1,9 @@
-import { type Path } from '@/core/2.presentation/documentation/api-documenter'
-import { invalidSchemaSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-schema-schema'
-import { invalidTokenSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-token-schema'
-import { missingTokenSchemaExample } from '@/core/2.presentation/documentation/schemas/missing-token-schema'
-import { passwordMismatchSchemaExample } from '@/core/2.presentation/documentation/schemas/password-mismatch-schema'
+import { type Path } from '@/common/2.presentation/documentation/api-documenter'
+import { invalidSchemaSchemaExample } from '@/common/2.presentation/documentation/schemas/invalid-schema-schema'
+import { invalidTokenSchemaExample } from '@/common/2.presentation/documentation/schemas/invalid-token-schema'
+import { missingTokenSchemaExample } from '@/common/2.presentation/documentation/schemas/missing-token-schema'
+import { passwordMismatchSchemaExample } from '@/common/2.presentation/documentation/schemas/password-mismatch-schema'
+
 import { changePasswordRequestSchemaExample, changePasswordResponseSchemaExample } from '@/user/2.presentation/routes/change-password/change-password-schemas'
 
 export const changePasswordPath: Path = {

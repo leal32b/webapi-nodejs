@@ -1,7 +1,8 @@
-import { type Path } from '@/core/2.presentation/documentation/api-documenter'
-import { invalidPasswordSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-password-schema'
-import { invalidSchemaSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-schema-schema'
-import { notFoundSchemaExample } from '@/core/2.presentation/documentation/schemas/not-found-schema'
+import { type Path } from '@/common/2.presentation/documentation/api-documenter'
+import { invalidPasswordSchemaExample } from '@/common/2.presentation/documentation/schemas/invalid-password-schema'
+import { invalidSchemaSchemaExample } from '@/common/2.presentation/documentation/schemas/invalid-schema-schema'
+import { notFoundSchemaExample } from '@/common/2.presentation/documentation/schemas/not-found-schema'
+
 import { signInRequestSchemaExample, signInResponseSchemaExample } from '@/user/2.presentation/routes/sign-in/sign-in-schemas'
 
 export const signInPath: Path = {

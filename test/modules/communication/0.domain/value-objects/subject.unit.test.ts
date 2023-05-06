@@ -1,6 +1,7 @@
+import { MaxLengthError } from '@/common/0.domain/errors/max-length-error'
+import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
+
 import { Subject } from '@/communication/0.domain/value-objects/subject'
-import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
-import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
 
 type SutTypes = {
   sut: typeof Subject

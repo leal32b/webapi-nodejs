@@ -1,10 +1,11 @@
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
-import { UseCase } from '@/core/1.application/base/use-case'
-import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
-import { type Hasher } from '@/core/1.application/cryptography/hasher'
-import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
-import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either, left, right } from '@/common/0.domain/utils/either'
+import { UseCase } from '@/common/1.application/base/use-case'
+import { type Encrypter, TokenType } from '@/common/1.application/cryptography/encrypter'
+import { type Hasher } from '@/common/1.application/cryptography/hasher'
+import { EmailTakenError } from '@/common/1.application/errors/email-taken-error'
+import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
+
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 

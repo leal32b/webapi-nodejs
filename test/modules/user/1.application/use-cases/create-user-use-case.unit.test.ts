@@ -1,16 +1,17 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { left, right } from '@/core/0.domain/utils/either'
-import { type Encrypter, TokenType } from '@/core/1.application/cryptography/encrypter'
-import { type Hasher } from '@/core/1.application/cryptography/hasher'
-import { EmailTakenError } from '@/core/1.application/errors/email-taken-error'
-import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
+import { DomainError } from '@/common/0.domain/base/domain-error'
+import { left, right } from '@/common/0.domain/utils/either'
+import { type Encrypter, TokenType } from '@/common/1.application/cryptography/encrypter'
+import { type Hasher } from '@/common/1.application/cryptography/hasher'
+import { EmailTakenError } from '@/common/1.application/errors/email-taken-error'
+import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
+
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type CreateUserData, CreateUserUseCase } from '@/user/1.application/use-cases/create-user-use-case'
 
-import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
-import { makeEncrypterStub } from '~/core/_doubles/stubs/encrypter-stub'
-import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
+import { makeEncrypterStub } from '~/common/_doubles/stubs/encrypter-stub'
+import { makeHasherStub } from '~/common/_doubles/stubs/hasher-stub'
 import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 
 const makeCreateUserDataFake = (): CreateUserData => ({

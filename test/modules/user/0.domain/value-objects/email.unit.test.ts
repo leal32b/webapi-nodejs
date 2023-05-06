@@ -1,6 +1,7 @@
-import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
-import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
-import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
+import { InvalidEmailError } from '@/common/0.domain/errors/invalid-email-error'
+import { MaxLengthError } from '@/common/0.domain/errors/max-length-error'
+import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
+
 import { Email } from '@/user/0.domain/value-objects/email'
 
 type SutTypes = {

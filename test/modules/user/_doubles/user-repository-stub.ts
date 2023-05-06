@@ -1,4 +1,5 @@
-import { right } from '@/core/0.domain/utils/either'
+import { right } from '@/common/0.domain/utils/either'
+
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 
 export const makeUserRepositoryStub = (): UserRepository => ({

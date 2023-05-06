@@ -1,4 +1,5 @@
-import { NullError } from '@/core/0.domain/errors/null-error'
+import { NullError } from '@/common/0.domain/errors/null-error'
+
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 
 type SutTypes = {

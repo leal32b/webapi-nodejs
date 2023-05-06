@@ -1,5 +1,6 @@
-import { EmptyError } from '@/core/0.domain/errors/empty-error'
-import { NullError } from '@/core/0.domain/errors/null-error'
+import { EmptyError } from '@/common/0.domain/errors/empty-error'
+import { NullError } from '@/common/0.domain/errors/null-error'
+
 import { Token } from '@/user/0.domain/value-objects/token'
 
 type SutTypes = {

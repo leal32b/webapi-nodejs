@@ -1,5 +1,6 @@
+import { NotHtmlError } from '@/common/0.domain/errors/not-html-error'
+
 import { Html } from '@/communication/0.domain/value-objects/html'
-import { NotHtmlError } from '@/core/0.domain/errors/not-html-error'
 
 type SutTypes = {
   sut: typeof Html

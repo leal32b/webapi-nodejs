@@ -1,8 +1,9 @@
+import { DomainError } from '@/common/0.domain/base/domain-error'
+import { InvalidEmailError } from '@/common/0.domain/errors/invalid-email-error'
+import { MaxLengthError } from '@/common/0.domain/errors/max-length-error'
+import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
+
 import { To } from '@/communication/0.domain/value-objects/to'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { InvalidEmailError } from '@/core/0.domain/errors/invalid-email-error'
-import { MaxLengthError } from '@/core/0.domain/errors/max-length-error'
-import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
 
 type SutTypes = {
   sut: typeof To

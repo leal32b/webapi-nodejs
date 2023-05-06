@@ -1,6 +1,7 @@
-import { type WebApp } from '@/core/3.infra/webapp/web-app'
-import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
-import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
+import { type WebApp } from '@/common/3.infra/webapp/web-app'
+import { authMiddleware } from '@/common/4.main/setup/middlewares/auth-middleware'
+import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+
 import { changePasswordRoute } from '@/user/2.presentation/routes/change-password/change-password-route'
 import { signInRoute } from '@/user/2.presentation/routes/sign-in/sign-in-route'
 import { signUpRoute } from '@/user/2.presentation/routes/sign-up/sign-up-route'

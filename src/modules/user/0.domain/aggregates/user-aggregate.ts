@@ -1,7 +1,8 @@
-import { AggregateRoot } from '@/core/0.domain/base/aggregate-root'
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either } from '@/core/0.domain/utils/either'
-import { type Identifier } from '@/core/0.domain/utils/identifier'
+import { AggregateRoot } from '@/common/0.domain/base/aggregate-root'
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either } from '@/common/0.domain/utils/either'
+import { type Identifier } from '@/common/0.domain/utils/identifier'
+
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { Locale } from '@/user/0.domain/value-objects/locale'

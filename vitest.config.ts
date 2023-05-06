@@ -26,10 +26,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@/core': 'src/core',
+      '@/common': 'src/common',
       '@/communication': 'src/modules/communication',
       '@/user': 'src/modules/user',
-      '~/core': 'test/core',
+      '~/common': 'test/common',
       '~/communication': 'test/modules/communication',
       '~/user': 'test/modules/user'
     }

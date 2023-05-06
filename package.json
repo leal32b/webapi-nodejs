@@ -6,7 +6,7 @@
     "npm": "^8.11.0"
   },
   "description": "Nodejs Webapi template",
-  "main": "dist/core/4.main/server.js",
+  "main": "dist/common/4.main/server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leal32b/webapi-nodejs.git"
@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/leal32b/webapi-nodejs#readme",
   "scripts": {
-    "start": "node dist/core/4.main/server.js",
-    "debug": "nodemon dist/core/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
+    "start": "node dist/common/4.main/server.js",
+    "debug": "nodemon dist/common/4.main/server.js -L --watch dist --inspect=0.0.0.0:9222 --nolazy",
     "build": "rimraf dist && npm run copy:templates && npm run tsc && tsc-alias",
     "build:watch": "npm run build && (concurrently 'npm run tsc -- -w' 'tsc-alias -w')",
     "tsc": "tsc -b tsconfig.build.json",
@@ -28,8 +28,8 @@
     "docker:stop": "docker-compose stop",
     "docker:attach": "docker attach --sig-proxy=false webapi-container",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
-    "migration:generate": "npm run typeorm -- migration:generate -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
-    "migration:run": "npm run typeorm -- migration:run -d src/core/3.infra/persistence/postgres/data-sources/postgres-default.ts",
+    "migration:generate": "npm run typeorm -- migration:generate -d src/common/3.infra/persistence/postgres/data-sources/postgres-default.ts",
+    "migration:run": "npm run typeorm -- migration:run -d src/common/3.infra/persistence/postgres/data-sources/postgres-default.ts",
     "eslint": "eslint '{src,test}/**' --fix",
     "jscpd": "jscpd",
     "test": "vitest",

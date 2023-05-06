@@ -1,4 +1,4 @@
-import { Event, type Props } from '@/core/1.application/base/event'
+import { Event, type Props } from '@/common/1.application/base/event'
 
 type UserCreatedPayload = {
   email: string

@@ -1,5 +1,6 @@
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either } from '@/core/0.domain/utils/either'
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either } from '@/common/0.domain/utils/either'
+
 import { type UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 
 export interface UserRepository {

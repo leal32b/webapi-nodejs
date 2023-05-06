@@ -1,11 +1,12 @@
-import { type MessageBroker } from '@/core/1.application/events/message-broker'
-import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
-import { persistence } from '@/core/4.main/container'
+import { type MessageBroker } from '@/common/1.application/events/message-broker'
+import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
+import { persistence } from '@/common/4.main/container'
+
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'
 import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 
-import { makeMessageBrokerMock } from '~/core/_doubles/mocks/message-broker-mock'
+import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker-mock'
 import { MongodbUserFixture } from '~/user/_fixtures/mongodb/mongodb-user-fixture'
 
 const makeUserAggregateFake = (): UserAggregate => {

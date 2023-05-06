@@ -1,5 +1,6 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { Identifier } from '@/core/0.domain/utils/identifier'
+import { DomainError } from '@/common/0.domain/base/domain-error'
+import { Identifier } from '@/common/0.domain/utils/identifier'
+
 import { UserAggregate, type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { Email } from '@/user/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/user/0.domain/value-objects/email-confirmed'

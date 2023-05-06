@@ -1,11 +1,12 @@
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { Entity } from '@/common/0.domain/base/entity'
+import { type Either } from '@/common/0.domain/utils/either'
+
 import { From } from '@/communication/0.domain/value-objects/from'
 import { Html } from '@/communication/0.domain/value-objects/html'
 import { Subject } from '@/communication/0.domain/value-objects/subject'
 import { Text } from '@/communication/0.domain/value-objects/text'
 import { To } from '@/communication/0.domain/value-objects/to'
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { Entity } from '@/core/0.domain/base/entity'
-import { type Either } from '@/core/0.domain/utils/either'
 
 type Props = {
   from: From

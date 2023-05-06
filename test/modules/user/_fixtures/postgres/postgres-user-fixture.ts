@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 
-import { PostgresFixture } from '@/core/3.infra/persistence/postgres/base/postgres-fixture'
+import { PostgresFixture } from '@/common/3.infra/persistence/postgres/base/postgres-fixture'
+
 import { type PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 export class PostgresUserFixture extends PostgresFixture<PostgresUserEntity> {

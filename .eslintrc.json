@@ -19,8 +19,8 @@
         "order": "alphabetically"
       },
       "typeLiterals": ["signature", "method", "constructor", "field"]
-    }],
-    "@typescript-eslint/naming-convention": ["error",
+      }],
+      "@typescript-eslint/naming-convention": ["error",
       { "selector": ["variable"], "format": ["camelCase", "UPPER_CASE"], "leadingUnderscore": "allow" },
       { "selector": ["classMethod", "typeProperty"], "format": ["camelCase"] },
       { "selector": ["typeAlias"], "format": ["PascalCase"] },
@@ -30,6 +30,8 @@
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "complexity": ["error", { "max": 5 }],
     "import/export": "warn",
@@ -39,9 +41,9 @@
     "import/no-unresolved": "off",
     "import/order": ["error", {
       "alphabetize": { "order": "asc", "caseInsensitive": true },
-      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+      "groups": ["builtin", "external", "parent", "internal", "sibling", "index"],
       "newlines-between": "always",
-      "pathGroups": [{ "pattern": "@/**", "group": "internal" }]
+      "pathGroups": [{ "pattern": "@/common/**", "group": "parent" }, { "pattern": "@/**", "group": "internal" }]
     }],
     "max-lines-per-function": ["error", { "max": 27, "skipBlankLines": true, "skipComments": true }],
     "new-cap": "off",
@@ -68,6 +70,7 @@
     "docs",
     "node_modules",
     "vitest*",
-    "*.hbs"
+    "*.hbs",
+    "*.json"
   ]
 }

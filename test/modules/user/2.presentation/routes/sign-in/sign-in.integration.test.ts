@@ -1,9 +1,10 @@
 import request from 'supertest'
 
-import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
-import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
-import { app, cryptography, persistence } from '@/core/4.main/container'
-import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
+import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
+import { type Route, type WebApp } from '@/common/3.infra/webapp/web-app'
+import { app, cryptography, persistence } from '@/common/4.main/container'
+import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+
 import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
 import { signInRoute } from '@/user/2.presentation/routes/sign-in/sign-in-route'
 import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'

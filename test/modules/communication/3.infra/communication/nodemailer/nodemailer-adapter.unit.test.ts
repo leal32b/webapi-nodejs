@@ -1,11 +1,12 @@
 import nodemailer from 'nodemailer'
 
+import { getVar } from '@/common/0.domain/utils/var'
+import { ServerError } from '@/common/2.presentation/errors/server-error'
+
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { NodemailerAdapter } from '@/communication/3.infra/communication/nodemailer/nodemailer-adapter'
-import { getVar } from '@/core/0.domain/utils/var'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 
-import { makeLoggerMock } from '~/core/_doubles/mocks/logger-mock'
+import { makeLoggerMock } from '~/common/_doubles/mocks/logger-mock'
 
 vi.mock('nodemailer', () => ({
   default: {

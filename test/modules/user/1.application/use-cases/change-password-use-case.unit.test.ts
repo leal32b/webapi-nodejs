@@ -1,15 +1,16 @@
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { left, right } from '@/core/0.domain/utils/either'
-import { type Hasher } from '@/core/1.application/cryptography/hasher'
-import { NotFoundError } from '@/core/1.application/errors/not-found-error'
-import { PasswordMismatchError } from '@/core/1.application/errors/password-mismatch-error'
+import { DomainError } from '@/common/0.domain/base/domain-error'
+import { left, right } from '@/common/0.domain/utils/either'
+import { type Hasher } from '@/common/1.application/cryptography/hasher'
+import { NotFoundError } from '@/common/1.application/errors/not-found-error'
+import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
+
 import { UserAggregate } from '@/user/0.domain/aggregates/user-aggregate'
 import { Password } from '@/user/0.domain/value-objects/password'
 import { type UserRepository } from '@/user/1.application/repositories/user-repository'
 import { type ChangePasswordData, ChangePasswordUseCase } from '@/user/1.application/use-cases/change-password-use-case'
 
-import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
-import { makeHasherStub } from '~/core/_doubles/stubs/hasher-stub'
+import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
+import { makeHasherStub } from '~/common/_doubles/stubs/hasher-stub'
 import { makeUserAggregateFake } from '~/user/_doubles/user-aggregate-fake'
 import { makeUserRepositoryStub } from '~/user/_doubles/user-repository-stub'
 

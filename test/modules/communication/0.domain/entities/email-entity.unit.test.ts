@@ -1,10 +1,11 @@
+import { DomainError } from '@/common/0.domain/base/domain-error'
+
 import { EmailEntity, type EmailEntityProps } from '@/communication/0.domain/entities/email-entity'
 import { From } from '@/communication/0.domain/value-objects/from'
 import { Html } from '@/communication/0.domain/value-objects/html'
 import { Subject } from '@/communication/0.domain/value-objects/subject'
 import { Text } from '@/communication/0.domain/value-objects/text'
 import { To } from '@/communication/0.domain/value-objects/to'
-import { DomainError } from '@/core/0.domain/base/domain-error'
 
 const makeParamsFake = (): EmailEntityProps => ({
   from: 'sender@mail.com',
