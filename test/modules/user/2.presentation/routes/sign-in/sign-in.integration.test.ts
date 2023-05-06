@@ -2,11 +2,11 @@ import request from 'supertest'
 
 import { type PersistenceFixture } from '@/core/3.infra/persistence/persistence-fixture'
 import { type Route, type WebApp } from '@/core/3.infra/webapp/web-app'
-import { app, persistence } from '@/core/4.main/container'
+import { app, cryptography, persistence } from '@/core/4.main/container'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
-import { signUpRoute } from '@/user/3.infra/api/routes/sign-up/sign-up-route'
-import { signUpControllerFactory } from '@/user/4.main/factories/sign-up-controller-factory'
+import { signInRoute } from '@/user/2.presentation/routes/sign-in/sign-in-route'
+import { signInControllerFactory } from '@/user/4.main/factories/sign-in-controller-factory'
 
 import { userFixtures } from '~/user/_fixtures/user-fixtures'
 
@@ -21,7 +21,7 @@ const makeSut = (): SutTypes => {
     userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
-  const sut = signUpRoute(signUpControllerFactory())
+  const sut = signInRoute(signInControllerFactory())
   collaborators.webApp.setRouter({
     middlewares: [schemaValidatorMiddleware],
     path: '/user',
@@ -31,7 +31,7 @@ const makeSut = (): SutTypes => {
   return { sut, ...collaborators }
 }
 
-describe('SignUpRoute', () => {
+describe('SignInRoute', () => {
   beforeAll(async () => {
     await persistence.actual.client.connect()
   })
@@ -42,23 +42,25 @@ describe('SignUpRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 with an email on success', async () => {
-      const { webApp } = makeSut()
+    it('returns 200 with an accessToken on success', async () => {
+      const { userFixture, webApp } = makeSut()
+      const email = 'any@mail.com'
+      const password = 'any_password'
+      const hashedPassword = (await cryptography.hasher.hash(password)).value as string
+      await userFixture.createFixture({ email, password: hashedPassword })
+      userFixture.createFixture({})
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/user/sign-up')
+        .post('/api/user/sign-in')
         .send({
           email: 'any@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'any_password'
+          password: 'any_password'
         })
 
       expect(statusCode).toBe(200)
       expect(body).toEqual({
-        email: expect.any(String),
-        message: 'user created successfully'
+        accessToken: expect.any(String),
+        message: 'user authenticated successfully'
       })
     })
   })
@@ -68,7 +70,7 @@ describe('SignUpRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/user/sign-up')
+        .post('/api/user/sign-in')
         .send({})
 
       expect(statusCode).toBe(422)
@@ -83,49 +85,42 @@ describe('SignUpRoute', () => {
       })
     })
 
-    it('returns 400 with password should match error message when passwords do not match', async () => {
+    it('returns 401 with email not found error message when when email is not found', async () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/user/sign-up')
+        .post('/api/user/sign-in')
         .send({
-          email: 'any@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'another_password'
+          email: 'not_in_base@mail.com',
+          password: 'any_password'
         })
 
-      expect(statusCode).toBe(400)
+      expect(statusCode).toBe(401)
       expect(body).toEqual({
         error: {
-          field: 'password',
-          message: 'passwords should match'
+          field: 'email',
+          input: 'not_in_base@mail.com',
+          message: "email 'not_in_base@mail.com' not found"
         }
       })
     })
 
-    it('returns 400 with email already in use error message when email is already in use', async () => {
+    it('returns 401 with invalid password error message when when password is invalid', async () => {
       const { userFixture, webApp } = makeSut()
       const email = 'any2@mail.com'
       await userFixture.createFixture({ email })
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/user/sign-up')
+        .post('/api/user/sign-in')
         .send({
           email: 'any2@mail.com',
-          locale: 'en',
-          name: 'any_name',
-          password: 'any_password',
-          passwordRetype: 'any_password'
+          password: 'invalid_password'
         })
 
-      expect(statusCode).toBe(400)
+      expect(statusCode).toBe(401)
       expect(body).toEqual({
         error: {
-          field: 'email',
-          input: 'any2@mail.com',
-          message: 'email already in use'
+          message: 'invalid username or password'
         }
       })
     })

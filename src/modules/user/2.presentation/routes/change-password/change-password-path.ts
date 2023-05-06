@@ -3,7 +3,7 @@ import { invalidSchemaSchemaExample } from '@/core/2.presentation/documentation/
 import { invalidTokenSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-token-schema'
 import { missingTokenSchemaExample } from '@/core/2.presentation/documentation/schemas/missing-token-schema'
 import { passwordMismatchSchemaExample } from '@/core/2.presentation/documentation/schemas/password-mismatch-schema'
-import { changePasswordRequestSchemaExample, changePasswordResponseSchemaExample } from '@/user/3.infra/api/routes/change-password/change-password-schemas'
+import { changePasswordRequestSchemaExample, changePasswordResponseSchemaExample } from '@/user/2.presentation/routes/change-password/change-password-schemas'
 
 export const changePasswordPath: Path = {
   post: {

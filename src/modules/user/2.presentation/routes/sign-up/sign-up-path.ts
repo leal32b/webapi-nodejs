@@ -1,21 +1,21 @@
 import { type Path } from '@/core/2.presentation/documentation/api-documenter'
-import { invalidPasswordSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-password-schema'
+import { emailTakenSchemaExample } from '@/core/2.presentation/documentation/schemas/email-taken-schema'
 import { invalidSchemaSchemaExample } from '@/core/2.presentation/documentation/schemas/invalid-schema-schema'
-import { notFoundSchemaExample } from '@/core/2.presentation/documentation/schemas/not-found-schema'
-import { signInRequestSchemaExample, signInResponseSchemaExample } from '@/user/3.infra/api/routes/sign-in/sign-in-schemas'
+import { passwordMismatchSchemaExample } from '@/core/2.presentation/documentation/schemas/password-mismatch-schema'
+import { signUpRequestSchemaExample, signUpResponseSchemaExample } from '@/user/2.presentation/routes/sign-up/sign-up-schemas'
 
-export const signInPath: Path = {
+export const signUpPath: Path = {
   post: {
     tags: ['user'],
-    summary: 'Signs in an user',
+    summary: 'Signs up a new user',
     requestBody: {
       required: true,
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/signInRequestSchema'
+            $ref: '#/schemas/signUpRequestSchema'
           },
-          example: signInRequestSchemaExample
+          example: signUpRequestSchemaExample
         }
       }
     },
@@ -25,29 +25,29 @@ export const signInPath: Path = {
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/signInResponseSchema'
+              $ref: '#/schemas/signUpResponseSchema'
             },
-            example: signInResponseSchemaExample
+            example: signUpResponseSchemaExample
           }
         }
       },
-      401: {
-        description: 'Unauthorized',
+      400: {
+        description: 'Bad Request',
         content: {
           'application/json': {
             schema: {
               oneOf: [{
-                $ref: '#/schemas/invalidPasswordSchema'
+                $ref: '#/schemas/emailTakenSchema'
               }, {
-                $ref: '#/schemas/notFoundSchema'
+                $ref: '#/schemas/passwordMismatchSchema'
               }]
             },
             examples: {
-              invalidPasswordSchema: {
-                value: invalidPasswordSchemaExample
+              emailTakenSchema: {
+                value: emailTakenSchemaExample
               },
-              notFoundSchema: {
-                value: notFoundSchemaExample
+              passwordMismatchSchema: {
+                value: passwordMismatchSchemaExample
               }
             }
           }

@@ -7,7 +7,7 @@ import { app, cryptography, persistence } from '@/core/4.main/container'
 import { authMiddleware } from '@/core/4.main/setup/middlewares/auth-middleware'
 import { schemaValidatorMiddleware } from '@/core/4.main/setup/middlewares/schema-validator-middleware'
 import { type UserAggregateProps } from '@/user/0.domain/aggregates/user-aggregate'
-import { changePasswordRoute } from '@/user/3.infra/api/routes/change-password/change-password-route'
+import { changePasswordRoute } from '@/user/2.presentation/routes/change-password/change-password-route'
 import { changePasswordControllerFactory } from '@/user/4.main/factories/change-password-controller-factory'
 
 import { userFixtures } from '~/user/_fixtures/user-fixtures'
