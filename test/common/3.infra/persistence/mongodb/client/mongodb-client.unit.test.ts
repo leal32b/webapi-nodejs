@@ -77,7 +77,8 @@ describe('MongodbAdapter', () => {
   describe('failure', () => {
     beforeAll(() => {
       vi.resetAllMocks()
-      vi.mock('mongodb', () => ({
+      vi.doMock('mongodb', () => ({
+        Collection: vi.fn(),
         MongoClient: {
           connect: vi.fn(() => ({
             close: vi.fn(() => { throw new Error() }),
