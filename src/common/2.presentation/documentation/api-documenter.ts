@@ -50,7 +50,6 @@ export type ApiDocumentationParams = {
   paths: Record<string, Path>
   schemas: Record<string, unknown>
   servers: Server[]
-  tags: Array<{ name: string }>
 }
 
 export interface ApiDocumenter {

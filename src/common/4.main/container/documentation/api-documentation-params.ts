@@ -32,8 +32,5 @@ export const apiDocumentationParams: ApiDocumentationParams = {
   servers: [{
     description: getVar('NODE_ENV'),
     url: '/api'
-  }],
-  tags: [{
-    name: 'user'
   }]
 }
