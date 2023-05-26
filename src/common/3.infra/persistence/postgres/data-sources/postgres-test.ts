@@ -1,6 +1,6 @@
 import { newDb } from 'pg-mem'
 
-import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
+import { PostgresUserEntity } from '@/identity/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 const mem = newDb()
 mem.public.registerFunction({

@@ -6,7 +6,7 @@ import { type Mongodb } from '@/common/4.main/container/container-types'
 import { events } from '@/common/4.main/container/events'
 import { logging } from '@/common/4.main/container/logging'
 
-import { MongodbUserRepository } from '@/user/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
+import { MongodbUserRepository } from '@/identity/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 
 const dataSource = getVar('NODE_ENV') === 'test' ? mongodbTestDataSource : mongodbDefaultDataSource
 

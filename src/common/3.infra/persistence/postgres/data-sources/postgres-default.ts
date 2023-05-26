@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm'
 
 import { getBooleanVar, getVar } from '@/common/0.domain/utils/var'
 
-import { PostgresUserEntity } from '@/user/3.infra/persistence/postgres/entities/postgres-user-entity'
+import { PostgresUserEntity } from '@/identity/3.infra/persistence/postgres/entities/postgres-user-entity'
 
 export const postgresDefaultDataSource = new DataSource({
   type: 'postgres',

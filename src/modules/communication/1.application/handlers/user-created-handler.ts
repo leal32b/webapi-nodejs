@@ -3,7 +3,7 @@ import { Handler } from '@/common/0.domain/base/handler'
 import { type Either } from '@/common/0.domain/utils/either'
 
 import { type SendEmailConfirmationEmailResultDTO, type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email-use-case'
-import { type UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
+import { type UserCreatedEvent } from '@/identity/0.domain/events/user-created-event'
 
 type Props = {
   sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase

@@ -8,7 +8,7 @@ import { missingTokenSchema } from '@/common/2.presentation/documentation/schema
 import { notFoundSchema } from '@/common/2.presentation/documentation/schemas/not-found-schema'
 import { passwordMismatchSchema } from '@/common/2.presentation/documentation/schemas/password-mismatch-schema'
 
-import { userPaths, userSchemas } from '@/user/4.main/setup/webapp/user-api-specification'
+import { identityPaths, identitySchemas } from '@/identity/4.main/setup/webapp/identity-api-specification'
 
 export const apiDocumentationParams: ApiDocumentationParams = {
   info: {
@@ -17,7 +17,7 @@ export const apiDocumentationParams: ApiDocumentationParams = {
     version: '1.0.0'
   },
   paths: {
-    ...userPaths
+    ...identityPaths
   },
   schemas: {
     emailTakenSchema,
@@ -27,7 +27,7 @@ export const apiDocumentationParams: ApiDocumentationParams = {
     missingTokenSchema,
     notFoundSchema,
     passwordMismatchSchema,
-    ...userSchemas
+    ...identitySchemas
   },
   servers: [{
     description: getVar('NODE_ENV'),

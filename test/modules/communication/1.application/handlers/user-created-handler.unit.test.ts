@@ -1,6 +1,6 @@
 import { UserCreatedHandler } from '@/communication/1.application/handlers/user-created-handler'
 import { type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email-use-case'
-import { UserCreatedEvent } from '@/user/0.domain/events/user-created-event'
+import { UserCreatedEvent } from '@/identity/0.domain/events/user-created-event'
 
 const makeSendEmailConfirmationEmailUseCaseStub = (): SendEmailConfirmationEmailUseCase => ({
   execute: vi.fn()

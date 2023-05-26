@@ -10,7 +10,7 @@ import { type PostgresClient } from '@/common/3.infra/persistence/postgres/clien
 import { type WebApp } from '@/common/3.infra/webapp/web-app'
 
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
-import { type UserRepository } from '@/user/1.application/repositories/user-repository'
+import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 
 export type App = {
   webApp: WebApp

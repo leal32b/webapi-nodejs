@@ -6,7 +6,7 @@ import { type Postgres } from '@/common/4.main/container/container-types'
 import { events } from '@/common/4.main/container/events'
 import { logging } from '@/common/4.main/container/logging'
 
-import { PostgresUserRepository } from '@/user/3.infra/persistence/postgres/repositories/postgres-user-repository'
+import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
 const dataSource = getVar('NODE_ENV') === 'test' ? postgresTestDataSource : postgresDefaultDataSource
 
