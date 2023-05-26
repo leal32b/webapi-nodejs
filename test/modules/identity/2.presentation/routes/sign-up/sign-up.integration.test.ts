@@ -59,7 +59,7 @@ describe('SignUpRoute', () => {
       expect(statusCode).toBe(200)
       expect(body).toEqual({
         email: expect.any(String),
-        message: 'user created successfully'
+        message: 'user signed up successfully'
       })
     })
   })

@@ -43,7 +43,7 @@ const makeSut = (): SutTypes => {
   return { sut, ...props, ...doubles }
 }
 
-describe('AuthenticateUserUseCase', () => {
+describe('SignInUserUseCase', () => {
   describe('success', () => {
     it('calls UserRepository.readById with correct params', async () => {
       const { sut, userRepository, changePasswordDataFake } = makeSut()

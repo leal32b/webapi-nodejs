@@ -31,5 +31,5 @@ export const signUpResponseSchema = {
 
 export const signUpResponseSchemaExample = {
   email: 'john.doe@mail.com',
-  message: 'user created successfully'
+  message: 'user signed up successfully'
 }

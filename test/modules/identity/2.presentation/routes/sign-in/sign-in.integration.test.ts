@@ -61,7 +61,7 @@ describe('SignInRoute', () => {
       expect(statusCode).toBe(200)
       expect(body).toEqual({
         accessToken: expect.any(String),
-        message: 'user authenticated successfully'
+        message: 'user signed in successfully'
       })
     })
   })

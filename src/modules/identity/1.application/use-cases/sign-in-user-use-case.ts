@@ -16,23 +16,23 @@ type Props = {
   encrypter: Encrypter
 }
 
-export type AuthenticateUserData = {
+export type SignInUserData = {
   email: string
   password: string
 }
 
-export type AuthenticateUserResultDTO = {
+export type SignInUserResultDTO = {
   accessToken: string
   message: string
 }
 
-export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData, AuthenticateUserResultDTO> {
-  public static create (props: Props): AuthenticateUserUseCase {
-    return new AuthenticateUserUseCase(props)
+export class SignInUserUseCase extends UseCase<Props, SignInUserData, SignInUserResultDTO> {
+  public static create (props: Props): SignInUserUseCase {
+    return new SignInUserUseCase(props)
   }
 
-  public async execute (authenticateUserData: AuthenticateUserData): Promise<Either<DomainError[], AuthenticateUserResultDTO>> {
-    const { email, password } = authenticateUserData
+  public async execute (signInUserData: SignInUserData): Promise<Either<DomainError[], SignInUserResultDTO>> {
+    const { email, password } = signInUserData
 
     const userAggregateOrError = await this.readUserAggregate(email)
 
@@ -59,7 +59,7 @@ export class AuthenticateUserUseCase extends UseCase<Props, AuthenticateUserData
 
     return updatedOrError.applyOnRight(() => ({
       accessToken: token.value,
-      message: 'user authenticated successfully'
+      message: 'user signed in successfully'
     }))
   }
 

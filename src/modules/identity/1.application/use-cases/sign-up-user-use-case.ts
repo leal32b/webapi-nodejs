@@ -15,7 +15,7 @@ type Props = {
   encrypter: Encrypter
 }
 
-export type CreateUserData = {
+export type SignUpUserData = {
   email: string
   locale: string
   name: string
@@ -23,21 +23,21 @@ export type CreateUserData = {
   passwordRetype: string
 }
 
-export type CreateUserResultDTO = {
+export type SignUpUserResultDTO = {
   email: string
   message: string
 }
 
-export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUserResultDTO> {
-  public static create (props: Props): CreateUserUseCase {
-    return new CreateUserUseCase(props)
+export class SignUpUserUseCase extends UseCase<Props, SignUpUserData, SignUpUserResultDTO> {
+  public static create (props: Props): SignUpUserUseCase {
+    return new SignUpUserUseCase(props)
   }
 
-  public async execute (createUserData: CreateUserData): Promise<Either<DomainError[], CreateUserResultDTO>> {
+  public async execute (signUpUserData: SignUpUserData): Promise<Either<DomainError[], SignUpUserResultDTO>> {
     const { encrypter, hasher } = this.props
-    const { email, password } = createUserData
+    const { email, password } = signUpUserData
 
-    const validOrError = await this.initialValidation(createUserData)
+    const validOrError = await this.initialValidation(signUpUserData)
 
     if (validOrError.isLeft()) {
       return left(validOrError.value)
@@ -57,19 +57,19 @@ export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUser
 
     const hashedPassword = hashedPasswordOrError.value
     const token = tokenOrError.value
-    const userAggregateOrError = await this.createUserAggregate(createUserData, hashedPassword, token)
+    const userAggregateOrError = await this.createUserAggregate(signUpUserData, hashedPassword, token)
 
     return userAggregateOrError.applyOnRight(() => ({
       email,
-      message: 'user created successfully'
+      message: 'user signed up successfully'
     }))
   }
 
-  private async createUserAggregate (createUserData: CreateUserData, hashedPassword: string, token: string): Promise<Either<DomainError[], UserAggregate>> {
+  private async createUserAggregate (signUpUserData: SignUpUserData, hashedPassword: string, token: string): Promise<Either<DomainError[], UserAggregate>> {
     const { userRepository } = this.props
 
     const userAggregateOrError = UserAggregate.create({
-      ...createUserData,
+      ...signUpUserData,
       password: hashedPassword,
       token
     })
@@ -84,9 +84,9 @@ export class CreateUserUseCase extends UseCase<Props, CreateUserData, CreateUser
     return createdUserOrError.applyOnRight(() => userAggregate)
   }
 
-  private async initialValidation (createUserData: CreateUserData): Promise<Either<DomainError[], void>> {
+  private async initialValidation (signUpUserData: SignUpUserData): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
-    const { email, password, passwordRetype } = createUserData
+    const { email, password, passwordRetype } = signUpUserData
 
     if (password !== passwordRetype) {
       return left([PasswordMismatchError.create('password')])
