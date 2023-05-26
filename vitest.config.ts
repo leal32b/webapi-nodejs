@@ -27,11 +27,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/common': 'src/common',
-      '@/communication': 'src/modules/communication',
-      '@/user': 'src/modules/user',
       '~/common': 'test/common',
-      '~/communication': 'test/modules/communication',
-      '~/user': 'test/modules/user'
+      '@': 'src/modules',
+      '~': 'test/modules'
     }
   }
 })
