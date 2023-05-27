@@ -3,7 +3,7 @@ import { type Encrypter } from '@/common/1.application/cryptography/encrypter'
 import { type Hasher } from '@/common/1.application/cryptography/hasher'
 import { type Translator } from '@/common/1.application/localization/translator'
 import { type ApiDocumenter } from '@/common/2.presentation/documentation/api-documenter'
-import { type SchemaValidator } from '@/common/2.presentation/validators/schema-validator'
+import { type SchemaValidator } from '@/common/2.presentation/validation/schema-validator'
 import { type MongodbClient } from '@/common/3.infra/persistence/mongodb/client/mongodb-client'
 import { type PersistenceClient } from '@/common/3.infra/persistence/persistence-client'
 import { type PostgresClient } from '@/common/3.infra/persistence/postgres/client/postgres-client'
@@ -60,6 +60,6 @@ export type Repositories = {
   userRepository: UserRepository
 }
 
-export type Validators = {
+export type Validation = {
   schemaValidator: SchemaValidator
 }

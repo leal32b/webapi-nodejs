@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 
 import { DomainError } from '@/common/0.domain/base/domain-error'
-import { AjvAdapter } from '@/common/3.infra/validators/ajv/ajv-adapter'
+import { AjvAdapter } from '@/common/3.infra/validation/ajv/ajv-adapter'
 
 vi.mock('ajv', () => ({
   default: vi.fn(() => ({

@@ -3,7 +3,7 @@ import { type AppResponse } from '@/common/2.presentation/base/controller'
 import { clientError } from '@/common/2.presentation/factories/client-error-factory'
 import { serverError } from '@/common/2.presentation/factories/server-error-factory'
 import { success } from '@/common/2.presentation/factories/success-factory'
-import { type SchemaValidator } from '@/common/2.presentation/validators/schema-validator'
+import { type SchemaValidator } from '@/common/2.presentation/validation/schema-validator'
 
 type Props = {
   schemaValidator: SchemaValidator

@@ -10,7 +10,7 @@ import {
   type Cryptography,
   type Documentation,
   type Persistence,
-  type Validators,
+  type Validation,
   type Localization
 } from '@/common/4.main/container/container-types'
 import { makeArgon } from '@/common/4.main/container/cryptography/make-argon'
@@ -19,7 +19,7 @@ import { makeSwagger } from '@/common/4.main/container/documentation/make-swagge
 import { makeI18next } from '@/common/4.main/container/localization/make-i18next'
 import { makeMongodb } from '@/common/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/common/4.main/container/persistence/make-postgres'
-import { makeAjv } from '@/common/4.main/container/validators/make-ajv'
+import { makeAjv } from '@/common/4.main/container/validation/make-ajv'
 import { makeExpress } from '@/common/4.main/container/webapp/make-express'
 
 export const app: App = {
@@ -57,7 +57,7 @@ export const persistence: Persistence = {
   ...persistenceChoices
 }
 
-export const validators: Validators = {
+export const validation: Validation = {
   schemaValidator: makeAjv
 }
 

@@ -2,7 +2,7 @@ import { type ErrorObject } from 'ajv'
 
 import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { SchemaValidatorMiddleware } from '@/common/2.presentation/middlewares/schema-validator-middleware'
-import { type SchemaValidator, type SchemaValidatorResult } from '@/common/2.presentation/validators/schema-validator'
+import { type SchemaValidator, type SchemaValidatorResult } from '@/common/2.presentation/validation/schema-validator'
 
 const makeErrorFake = (): ErrorObject => ({
   properties: {

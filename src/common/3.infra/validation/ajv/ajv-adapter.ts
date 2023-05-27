@@ -2,7 +2,7 @@ import Ajv, { type ErrorObject } from 'ajv'
 
 import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { type MiddlewareRequest } from '@/common/1.application/middleware/middleware'
-import { type SchemaValidator, type SchemaValidatorResult } from '@/common/2.presentation/validators/schema-validator'
+import { type SchemaValidator, type SchemaValidatorResult } from '@/common/2.presentation/validation/schema-validator'
 
 export class AjvAdapter implements SchemaValidator {
   private constructor () {}
