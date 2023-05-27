@@ -1,5 +1,6 @@
+import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
+
 import { Text } from '@/communication/0.domain/value-objects/text'
-import { MinLengthError } from '@/core/0.domain/errors/min-length-error'
 
 type SutTypes = {
   sut: typeof Text

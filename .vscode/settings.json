@@ -21,6 +21,7 @@
     "Rabbitmq",
     "standardjs",
     "typeorm",
+    "unstub",
     "webapi"
   ]
 }

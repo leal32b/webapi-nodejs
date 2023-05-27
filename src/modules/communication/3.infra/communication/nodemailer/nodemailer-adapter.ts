@@ -1,11 +1,12 @@
 import nodemailer from 'nodemailer'
 
+import { type DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either, left, right } from '@/common/0.domain/utils/either'
+import { type Logger } from '@/common/1.application/logging/logger'
+import { ServerError } from '@/common/2.presentation/errors/server-error'
+
 import { type EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
-import { type DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
-import { type Logger } from '@/core/1.application/logging/logger'
-import { ServerError } from '@/core/2.presentation/errors/server-error'
 
 type Props = {
   logger: Logger

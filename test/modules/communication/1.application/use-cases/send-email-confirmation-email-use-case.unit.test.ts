@@ -1,11 +1,12 @@
+import { DomainError } from '@/common/0.domain/base/domain-error'
+import { type Either, left, right } from '@/common/0.domain/utils/either'
+import { type TemplateCompiler } from '@/common/1.application/compilation/template-compiler'
+
 import { EmailEntity } from '@/communication/0.domain/entities/email-entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
 import { type SendEmailConfirmationEmailData, SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email-use-case'
-import { DomainError } from '@/core/0.domain/base/domain-error'
-import { type Either, left, right } from '@/core/0.domain/utils/either'
-import { type TemplateCompiler } from '@/core/1.application/compilers/template-compiler'
 
-import { makeErrorFake } from '~/core/_doubles/fakes/error-fake'
+import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 
 const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationEmailData => ({
   locale: 'en',

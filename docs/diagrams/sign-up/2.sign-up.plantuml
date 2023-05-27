@@ -1,0 +1,30 @@
+@startuml Container Diagram | Sign up
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+  !define FA https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/tupadr3/font-awesome-5
+  !define LOGOS https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/logos
+  !include LOGOS/postgresql.puml
+  !include LOGOS/nodejs.puml
+  !include LOGOS/rabbitmq.puml
+
+  AddRelTag("async", $lineStyle = DashedLine())
+
+  SHOW_PERSON_PORTRAIT()
+
+  Person(user, "User")
+  System_Ext(front, "Webapp", "Frontend application")
+  System_Ext(emailSystem, "E-mail System", "E-mail system")
+
+  System_Boundary(webapi, "webapi-nodejs") {
+    Container(back, "Backend", "Node.js", "Backend application", $sprite="nodejs")
+    ContainerDb(persistence, "persistence", "postgres", "application persistence", $sprite="postgresql")
+    ContainerQueue(userCreatedQueue, "userCreatedQueue", "rabbitmq", "userCreated queue", $sprite="rabbitmq")
+  }
+
+  Rel(user, front, "1.1. Signs up", "https/json")
+  Rel(front, back, "1.2. Signs up an user", "https/json")
+  Rel(back, persistence, "1.3. Creates an user", "SQL/TCP", $tags="async" )
+  Rel(back, userCreatedQueue, "1.4. Emmit event userCreated", "amqp", $tags="async")
+  Rel(back, emailSystem, "2.1. Sends verification e-mail", "smtp", $tags="async")
+
+  SHOW_LEGEND()
+@enduml
