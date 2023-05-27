@@ -1,6 +1,5 @@
 import { Collection } from 'mongodb'
 
-import { getVar, setVar } from '@/common/0.domain/utils/var'
 import { type Logger } from '@/common/1.application/logging/logger'
 import { MongodbClient, type MongodbDataSource } from '@/common/3.infra/persistence/mongodb/client/mongodb-client'
 
@@ -18,8 +17,6 @@ vi.mock('mongodb', () => ({
     }))
   }
 }))
-
-const NODE_ENV = getVar('NODE_ENV')
 
 type SutTypes = {
   sut: MongodbClient
@@ -44,10 +41,6 @@ const makeSut = async (): Promise<SutTypes> => {
 }
 
 describe('MongodbAdapter', () => {
-  afterEach(() => {
-    setVar('NODE_ENV', NODE_ENV)
-  })
-
   describe('success', () => {
     it('gets collection', async () => {
       const { sut } = await makeSut()
@@ -88,9 +81,13 @@ describe('MongodbAdapter', () => {
       }))
     })
 
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
     it('returns Left with Error on clearDatabase when not in test environment', async () => {
       const { sut } = await makeSut()
-      setVar('NODE_ENV', 'any_environment')
+      vi.stubEnv('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
 

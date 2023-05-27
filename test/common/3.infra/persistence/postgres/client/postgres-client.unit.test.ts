@@ -1,11 +1,8 @@
 import { type DataSource } from 'typeorm'
 
-import { getVar, setVar } from '@/common/0.domain/utils/var'
 import { type Logger } from '@/common/1.application/logging/logger'
 import { PostgresClient } from '@/common/3.infra/persistence/postgres/client/postgres-client'
 import { logging } from '@/common/4.main/container/logging'
-
-const NODE_ENV = getVar('NODE_ENV')
 
 const makeDataSourceMock = (): DataSource => ({
   destroy: vi.fn(),
@@ -39,10 +36,6 @@ const makeSut = (): SutTypes => {
 }
 
 describe('PostgresClient', () => {
-  afterEach(() => {
-    setVar('NODE_ENV', NODE_ENV)
-  })
-
   describe('success', () => {
     it('connects to dataSource', async () => {
       const { sut } = makeSut()
@@ -86,9 +79,13 @@ describe('PostgresClient', () => {
   })
 
   describe('failure', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
     it('returns Left with Error on clearDatabase when not in test environment', async () => {
       const { sut } = makeSut()
-      setVar('NODE_ENV', 'any_environment')
+      vi.stubEnv('NODE_ENV', 'any_environment')
 
       const result = await sut.clearDatabase()
 
