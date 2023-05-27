@@ -1,0 +1,19 @@
+@startuml System Context Diagram | Sign up
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+  SHOW_PERSON_PORTRAIT()
+
+  AddRelTag("async", $lineStyle = DashedLine())
+
+  Person(user, "User")
+  System_Ext(front, "Webapp", "Frontend application")
+  System_Ext(emailSystem, "E-mail System", "E-mail system")
+
+  System(system, "webapi-nodejs", "Backend system")
+
+  Rel(user,  front, "1.1. Signs up", "https/json")
+  Rel(front, system, "1.2. Signs up an user", "https/json")
+  Rel(system, emailSystem, "2.1. Sends verification e-mail", "smtp", $tags="async")
+
+  SHOW_LEGEND()
+@enduml
