@@ -1,4 +1,4 @@
-import { type TemplateCompiler } from '@/common/1.application/compilers/template-compiler'
+import { type TemplateCompiler } from '@/common/1.application/compilation/template-compiler'
 import { type Encrypter } from '@/common/1.application/cryptography/encrypter'
 import { type Hasher } from '@/common/1.application/cryptography/hasher'
 import { type Translator } from '@/common/1.application/localization/translator'
@@ -20,7 +20,7 @@ export type Communication = {
   emailSender: EmailSender
 }
 
-export type Compilers = {
+export type Compilation = {
   templateCompiler: TemplateCompiler
 }
 

@@ -4,7 +4,7 @@ import Handlebars from 'handlebars'
 
 import { type DomainError } from '@/common/0.domain/base/domain-error'
 import { ServerError } from '@/common/2.presentation/errors/server-error'
-import { HandlebarsAdapter } from '@/common/3.infra/compilers/handlebars/handlebars-adapter'
+import { HandlebarsAdapter } from '@/common/3.infra/compilation/handlebars/handlebars-adapter'
 
 import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 

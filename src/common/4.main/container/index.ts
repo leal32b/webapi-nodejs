@@ -2,11 +2,11 @@ import 'dotenv/config'
 
 import { getVar } from '@/common/0.domain/utils/var'
 import { makeNodemailer } from '@/common/4.main/container/communication/make-nodemailer'
-import { makeHandlebars } from '@/common/4.main/container/compilers/make-handlebars'
+import { makeHandlebars } from '@/common/4.main/container/compilation/make-handlebars'
 import {
   type App,
   type Communication,
-  type Compilers,
+  type Compilation,
   type Cryptography,
   type Documentation,
   type Persistence,
@@ -30,7 +30,7 @@ export const communication: Communication = {
   emailSender: makeNodemailer
 }
 
-export const compilers: Compilers = {
+export const compilation: Compilation = {
   templateCompiler: makeHandlebars
 }
 
@@ -61,6 +61,6 @@ export const validators: Validators = {
   schemaValidator: makeAjv
 }
 
-compilers.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
+compilation.templateCompiler.registerHelper('i18n', (key: string, lng?: string): string => {
   return localization.translator.t(key, { lng })
 })

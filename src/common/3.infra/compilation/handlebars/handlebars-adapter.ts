@@ -4,7 +4,7 @@ import Handlebars from 'handlebars'
 
 import { type DomainError } from '@/common/0.domain/base/domain-error'
 import { left, right, type Either } from '@/common/0.domain/utils/either'
-import { type TemplateCompiler } from '@/common/1.application/compilers/template-compiler'
+import { type TemplateCompiler } from '@/common/1.application/compilation/template-compiler'
 import { ServerError } from '@/common/2.presentation/errors/server-error'
 
 export class HandlebarsAdapter implements TemplateCompiler {
