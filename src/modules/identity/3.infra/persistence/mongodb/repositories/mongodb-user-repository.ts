@@ -101,6 +101,30 @@ export class MongodbUserRepository implements UserRepository {
     }
   }
 
+  async readByToken (token: string): Promise<Either<DomainError[], UserAggregate>> {
+    try {
+      const user = await this.readByFilter({ token })
+
+      if (!user) {
+        return right(null)
+      }
+
+      const userAggregateOrError = UserAggregate.create({
+        email: user.email,
+        emailConfirmed: user.emailConfirmed,
+        id: user._id.toString(),
+        locale: user.locale,
+        name: user.name,
+        password: user.password,
+        token: user.token
+      })
+
+      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+    } catch (error) {
+      return left([ServerError.create(error.message, error.stack)])
+    }
+  }
+
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
       const { email, emailConfirmed, id, locale, name, password, token } = userAggregate

@@ -84,6 +84,22 @@ export class PostgresUserRepository implements UserRepository {
     }
   }
 
+  async readByToken (token: string): Promise<Either<DomainError[], UserAggregate>> {
+    try {
+      const user = await this.readByFilter({ token })
+
+      if (!user) {
+        return right(null)
+      }
+
+      const userAggregateOrError = UserAggregate.create(user)
+
+      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+    } catch (error) {
+      return left([ServerError.create(error.message, error.stack)])
+    }
+  }
+
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
       const { email, emailConfirmed, id, locale, name, password, token } = userAggregate

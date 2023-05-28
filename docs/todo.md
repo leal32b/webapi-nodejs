@@ -37,3 +37,4 @@
 [x] merge api-specification with path in api-specification
 [ ] add logger to WebApp implementations
 [x] change i18n to internationalization
+[ ] adjust all tests of classes that has more than one method, add a `desc` for each one
