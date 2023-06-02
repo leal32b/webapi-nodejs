@@ -6,5 +6,6 @@ export const makeUserRepositoryStub = (): UserRepository => ({
   create: vi.fn(() => right()),
   readByEmail: vi.fn(() => right()),
   readById: vi.fn(() => right()),
+  readByToken: vi.fn(() => right()),
   update: vi.fn(() => right())
 } as any)

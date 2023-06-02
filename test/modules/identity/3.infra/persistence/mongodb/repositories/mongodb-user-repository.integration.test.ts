@@ -124,7 +124,7 @@ describe('UserMongodbRepository', () => {
       })
     })
 
-    describe.only('readByToken', () => {
+    describe('readByToken', () => {
       it('returns Right with null on readByToken when no user with token is found', async () => {
         const { sut } = makeSut()
         const token = 'not_in_base_token'
@@ -196,7 +196,7 @@ describe('UserMongodbRepository', () => {
       })
     })
 
-    describe.only('readByToken', () => {
+    describe('readByToken', () => {
       it('returns Left when readByToken throws', async () => {
         const { sut } = makeSut()
         const token = 'any_token'
