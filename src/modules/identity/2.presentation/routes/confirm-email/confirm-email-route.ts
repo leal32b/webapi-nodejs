@@ -7,5 +7,5 @@ export const confirmEmailRoute = (controller: ConfirmEmailController): Route => 
   controller,
   path: '/confirm-email/:token',
   schema: confirmEmailRequestSchema,
-  type: RouteType.POST
+  type: RouteType.PATCH
 })

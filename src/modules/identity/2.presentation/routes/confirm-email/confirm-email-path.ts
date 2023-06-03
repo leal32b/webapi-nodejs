@@ -1,13 +1,20 @@
 import { type Path } from '@/common/2.presentation/documentation/api-documenter'
 import { invalidSchemaSchemaExample } from '@/common/2.presentation/documentation/schemas/invalid-schema-schema'
-import { notFoundSchemaExample } from '@/common/2.presentation/documentation/schemas/not-found-schema'
+import { tokenNotFoundSchemaExample } from '@/common/2.presentation/documentation/schemas/not-found-schema'
 
-import { confirmEmailResponseSchemaExample } from '@/identity/2.presentation/routes/confirm-email/confirm-email-schemas'
+import { confirmEmailRequestSchemaExample, confirmEmailResponseSchemaExample } from '@/identity/2.presentation/routes/confirm-email/confirm-email-schemas'
 
 export const confirmEmailPath: Path = {
   patch: {
     tags: ['identity'],
     summary: "Confirms an user's e-mail",
+    parameters: [{
+      in: 'path',
+      name: 'token',
+      required: true,
+      schema: { type: 'string' },
+      example: confirmEmailRequestSchemaExample.token
+    }],
     responses: {
       200: {
         description: 'OK',
@@ -26,14 +33,12 @@ export const confirmEmailPath: Path = {
           'application/json': {
             schema: {
               oneOf: [{
-                $ref: '#/schemas/emailTakenSchema'
-              }, {
-                $ref: '#/schemas/passwordMismatchSchema'
+                $ref: '#/schemas/notFoundSchema'
               }]
             },
             examples: {
               notFoundSchema: {
-                value: notFoundSchemaExample
+                value: tokenNotFoundSchemaExample
               }
             }
           }

@@ -9,7 +9,7 @@ import { signUpRequestSchema, signUpResponseSchema } from '@/identity/2.presenta
 
 export const identityPaths = {
   '/identity/change-password': changePasswordPath,
-  '/identity/confirm-email': confirmEmailPath,
+  '/identity/confirm-email/{token}': confirmEmailPath,
   '/identity/sign-in': signInPath,
   '/identity/sign-up': signUpPath
 }

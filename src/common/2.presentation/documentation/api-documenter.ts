@@ -1,5 +1,6 @@
 type Schema = {
-  $ref: string
+  $ref?: string
+  type?: string
 }
 
 type Schemas = {
@@ -18,12 +19,21 @@ type Content = Record<string, {
   examples?: Examples
 }>
 
+type Parameter = {
+  example: string
+  in: string
+  name: string
+  required: boolean
+  schema: Schema
+}
+
 type Security = Record<string, any>
 
 export type Path = Record<string, {
   tags: string[]
   summary: string
   security?: Security[]
+  parameters?: Parameter[]
   requestBody?: {
     required: boolean
     content: Content
