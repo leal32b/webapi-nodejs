@@ -1,17 +1,14 @@
 import request from 'supertest'
 
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
-import { type WebApp, type Route } from '@/common/3.infra/webapp/web-app'
+import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, persistence } from '@/common/4.main/container'
-import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+import { setupWebApp } from '@/common/4.main/setup/webapp'
 
 import { type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
-import { confirmEmailRoute } from '@/identity/2.presentation/routes/confirm-email/confirm-email-route'
-import { confirmEmailControllerFactory } from '@/identity/4.main/factories/confirm-email-controller-factory'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
 type SutTypes = {
-  sut: Route
   userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp
 }
@@ -21,14 +18,9 @@ const makeSut = (): SutTypes => {
     userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
-  const sut = confirmEmailRoute(confirmEmailControllerFactory())
-  collaborators.webApp.setRouter({
-    middlewares: [schemaValidatorMiddleware],
-    path: '/identity',
-    routes: [sut]
-  })
+  setupWebApp(app.webApp)
 
-  return { sut, ...collaborators }
+  return { ...collaborators }
 }
 
 describe('ChangePasswordRoute', () => {
@@ -51,7 +43,7 @@ describe('ChangePasswordRoute', () => {
       })
 
       const { body, statusCode } = await request(webApp.app)
-        .post(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/confirm-email/${token}`)
         .send()
 
       expect(statusCode).toBe(200)
@@ -67,7 +59,7 @@ describe('ChangePasswordRoute', () => {
       const token = 'invalid_token'
 
       const { body, statusCode } = await request(webApp.app)
-        .post(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/confirm-email/${token}`)
         .send({})
 
       expect(statusCode).toBe(422)
@@ -87,7 +79,7 @@ describe('ChangePasswordRoute', () => {
       const token = 'x.y.z'
 
       const { body, statusCode } = await request(webApp.app)
-        .post(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/confirm-email/${token}`)
         .send()
 
       expect(statusCode).toBe(400)
