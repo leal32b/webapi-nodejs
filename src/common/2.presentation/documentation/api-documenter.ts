@@ -24,7 +24,7 @@ export type Path = Record<string, {
   tags: string[]
   summary: string
   security?: Security[]
-  requestBody: {
+  requestBody?: {
     required: boolean
     content: Content
   }
