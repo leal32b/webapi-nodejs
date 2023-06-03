@@ -4,6 +4,7 @@ export type MiddlewareRequest = AppRequest<any> & {
   accessToken?: string
   auth?: string[]
   schema?: Record<string, unknown>
+  payload?: Record<string, unknown>
 }
 
 export interface Middleware {

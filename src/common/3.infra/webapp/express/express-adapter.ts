@@ -123,14 +123,17 @@ export class ExpressAdapter implements WebApp {
   }
 
   private expressController (controller: Controller<Record<string, unknown>>): RequestHandler {
-    return async (request: Request, response: Response): Promise<void> => {
+    return async (req: Request, res: Response): Promise<void> => {
       const httpRequest: AppRequest<any> = {
-        payload: request.body
+        payload: {
+          ...req.body,
+          ...req.params
+        }
       }
       const appResponse = await controller.handle(httpRequest)
       const { statusCode, payload } = appResponse
 
-      response.status(statusCode).json(payload)
+      res.status(statusCode).json(payload)
     }
   }
 
@@ -141,7 +144,10 @@ export class ExpressAdapter implements WebApp {
       const httpRequest = {
         accessToken: req.headers.authorization,
         auth,
-        payload: req.body,
+        payload: {
+          ...req.body,
+          ...req.params
+        },
         schema
       }
       const appResponse = await middleware.handle(httpRequest)
