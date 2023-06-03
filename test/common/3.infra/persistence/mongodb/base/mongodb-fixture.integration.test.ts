@@ -12,11 +12,11 @@ class FixtureFake extends MongodbFixture<MongodbUserEntity> {
       createDefault: (): any => ({
         email: faker.internet.email(),
         emailConfirmed: false,
-        id: faker.random.alphaNumeric(12),
+        id: faker.string.alphanumeric(12),
         locale: 'en',
-        name: faker.name.firstName(),
-        password: faker.random.alphaNumeric(12),
-        token: faker.random.alphaNumeric(12)
+        name: faker.person.firstName(),
+        password: faker.string.alphanumeric(12),
+        token: faker.string.alphanumeric(12)
       })
     })
   }

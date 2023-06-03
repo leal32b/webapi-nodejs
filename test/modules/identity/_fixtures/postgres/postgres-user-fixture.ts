@@ -10,11 +10,11 @@ export class PostgresUserFixture extends PostgresFixture<PostgresUserEntity> {
       createDefault: (): PostgresUserEntity => ({
         email: faker.internet.email(),
         emailConfirmed: false,
-        id: faker.random.alphaNumeric(12),
+        id: faker.string.alphanumeric(12),
         locale: 'en',
-        name: faker.name.firstName(),
-        password: `$argon2id$v=19$m=4096,t=3,p=1$${faker.random.alphaNumeric(16)}$${faker.random.alphaNumeric(32)}`,
-        token: faker.random.alphaNumeric(12)
+        name: faker.person.firstName(),
+        password: `$argon2id$v=19$m=4096,t=3,p=1$${faker.string.alphanumeric(16)}$${faker.string.alphanumeric(32)}`,
+        token: faker.string.alphanumeric(12)
       }),
       repositoryName: 'users'
     })
