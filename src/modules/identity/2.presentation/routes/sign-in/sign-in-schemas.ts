@@ -4,7 +4,10 @@ export const signInRequestSchema = {
     email: { type: 'string' },
     password: { type: 'string' }
   },
-  required: ['email', 'password'],
+  required: [
+    'email',
+    'password'
+  ],
   additionalProperties: false
 }
 
@@ -19,7 +22,10 @@ export const signInResponseSchema = {
     accessToken: { type: 'string' },
     message: { type: 'string' }
   },
-  required: ['accessToken', 'message'],
+  required: [
+    'accessToken',
+    'message'
+  ],
   additionalProperties: false
 }
 

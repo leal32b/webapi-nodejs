@@ -43,5 +43,4 @@
 [x] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
 [x] verify SutTypes members order (must be equal to props, doubles, etc)
 [x] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
-[ ] break lines on schema definitions (required)
-[ ] add schema validation to controller tests
+[x] break lines on schema definitions (required)
