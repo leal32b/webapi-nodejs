@@ -44,3 +44,4 @@
 [ ] verify SutTypes members order (must be equal to props, doubles, etc)
 [ ] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
 [ ] break lines on schema definitions (required)
+[ ] add schema validation to controller tests

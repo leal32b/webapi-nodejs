@@ -1,8 +1,11 @@
-1 - add method to repository interface
-2 - implement method in repository
-3 - implement method in repositoryStub
-4 - implement use-case
-5 - implement controller
-6 - create schemas
-7 - create path
-8 - create route
+01 - add method to repository interface
+02 - implement method in repository
+03 - implement method in repositoryStub
+04 - implement use-case
+05 - implement controller
+06 - create schemas
+07 - create path
+08 - create route
+09 - implement controller factory
+10 - adjust module api-specification
+11 - adjust module router

@@ -16,9 +16,9 @@ export class ConfirmEmailController extends Controller<Props> {
   }
 
   async handle (request: AppRequest<any>): Promise<AppResponse<any>> {
-    const { payload: signUpData } = request
+    const { payload: confirmEmailData } = request
 
-    const confirmEmailResultDtoOrError = await this.props.confirmEmailUseCase.execute(signUpData)
+    const confirmEmailResultDtoOrError = await this.props.confirmEmailUseCase.execute(confirmEmailData)
 
     if (confirmEmailResultDtoOrError.isLeft()) {
       const error = confirmEmailResultDtoOrError.value
