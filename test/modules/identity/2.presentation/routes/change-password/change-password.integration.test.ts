@@ -131,7 +131,7 @@ describe('ChangePasswordRoute', () => {
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/change-password')
         .set('Authorization', accessTokenFake)
-        .send({})
+        .send()
 
       expect(statusCode).toBe(422)
       expect(body).toEqual({

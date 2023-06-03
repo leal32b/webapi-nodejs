@@ -72,7 +72,7 @@ describe('SignInRoute', () => {
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/sign-in')
-        .send({})
+        .send()
 
       expect(statusCode).toBe(422)
       expect(body).toEqual({
