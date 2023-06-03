@@ -55,7 +55,7 @@ describe('ConfirmEmailController', () => {
       })
     })
 
-    it('returns 200 with message when valid params are provided', async () => {
+    it('returns 200 with message when handle succeeds', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)

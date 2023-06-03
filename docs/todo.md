@@ -40,7 +40,7 @@
 [ ] adjust all tests of classes that has more than one method, add a `desc` for each one
 [x] remove "user" from "sign-up-user-use-case" and "sign-in-user-use-case"
 [x] interface Encrypter, adjust "data: TokenData" to "tokenData: TokenData"
-[ ] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
+[x] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
 [ ] verify SutTypes members order (must be equal to props, doubles, etc)
 [ ] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
 [ ] break lines on schema definitions (required)
