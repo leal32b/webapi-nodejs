@@ -18,7 +18,7 @@ const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
 
 const makeChangePasswordUseCaseStub = (): ChangePasswordUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => right({
-    message: 'password updated successfully'
+    message: 'any_message'
   }))
 } as any)
 
@@ -68,7 +68,7 @@ describe('ChangePasswordController', () => {
       const result = await sut.handle(requestFake)
 
       expect(result).toEqual({
-        payload: { message: 'password updated successfully' },
+        payload: { message: 'any_message' },
         statusCode: 200
       })
     })

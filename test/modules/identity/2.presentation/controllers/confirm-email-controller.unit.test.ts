@@ -16,7 +16,7 @@ const makeRequestFake = (): AppRequest<ConfirmEmailData> => ({
 
 const makeConfirmEmailUseCaseStub = (): ConfirmEmailUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], ConfirmEmailResultDTO>> => right({
-    message: 'email confirmed successfully'
+    message: 'any_message'
   }))
 } as any)
 
@@ -65,9 +65,7 @@ describe('ConfirmEmailController', () => {
       const result = await sut.handle(requestFake)
 
       expect(result).toEqual({
-        payload: {
-          message: 'email confirmed successfully'
-        },
+        payload: { message: 'any_message' },
         statusCode: 200
       })
     })

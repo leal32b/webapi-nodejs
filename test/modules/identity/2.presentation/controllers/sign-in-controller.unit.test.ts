@@ -17,8 +17,8 @@ const makeRequestFake = (): AppRequest<SignInData> => ({
 
 const makeSignInUseCaseStub = (): SignInUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], SignInResultDTO>> => right({
-    accessToken: 'access_token',
-    message: 'user signed in successfully'
+    accessToken: 'any_token',
+    message: 'any_message'
   }))
 } as any)
 
@@ -68,8 +68,8 @@ describe('SignInController', () => {
 
       expect(result).toEqual({
         payload: {
-          accessToken: 'access_token',
-          message: 'user signed in successfully'
+          accessToken: 'any_token',
+          message: 'any_message'
         },
         statusCode: 200
       })

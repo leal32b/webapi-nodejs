@@ -21,7 +21,7 @@ const makeRequestFake = (): AppRequest<SignUpData> => ({
 const makeSignUpUseCaseStub = (): SignUpUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], SignUpResultDTO>> => right({
     email: 'any@mail.com',
-    message: 'user signed up successfully'
+    message: 'any message'
   }))
 } as any)
 
@@ -75,7 +75,7 @@ describe('SignUpController', () => {
       expect(result).toEqual({
         payload: {
           email: 'any@mail.com',
-          message: 'user signed up successfully'
+          message: 'any message'
         },
         statusCode: 200
       })
