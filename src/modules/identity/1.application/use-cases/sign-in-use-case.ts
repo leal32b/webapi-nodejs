@@ -16,23 +16,23 @@ type Props = {
   encrypter: Encrypter
 }
 
-export type SignInUserData = {
+export type SignInData = {
   email: string
   password: string
 }
 
-export type SignInUserResultDTO = {
+export type SignInResultDTO = {
   accessToken: string
   message: string
 }
 
-export class SignInUserUseCase extends UseCase<Props, SignInUserData, SignInUserResultDTO> {
-  public static create (props: Props): SignInUserUseCase {
-    return new SignInUserUseCase(props)
+export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
+  public static create (props: Props): SignInUseCase {
+    return new SignInUseCase(props)
   }
 
-  public async execute (signInUserData: SignInUserData): Promise<Either<DomainError[], SignInUserResultDTO>> {
-    const { email, password } = signInUserData
+  public async execute (signInData: SignInData): Promise<Either<DomainError[], SignInResultDTO>> {
+    const { email, password } = signInData
 
     const userAggregateOrError = await this.readUserAggregate(email)
 

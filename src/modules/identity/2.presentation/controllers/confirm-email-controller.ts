@@ -28,8 +28,8 @@ export class ConfirmEmailController extends Controller<Props> {
         : clientError.badRequest(error)
     }
 
-    const signUpUserResultDTO = confirmEmailResultDtoOrError.value
+    const signUpResultDTO = confirmEmailResultDtoOrError.value
 
-    return success.ok(signUpUserResultDTO)
+    return success.ok(signUpResultDTO)
   }
 }

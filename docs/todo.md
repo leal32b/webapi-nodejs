@@ -38,7 +38,7 @@
 [ ] add logger to WebApp implementations
 [x] change i18n to internationalization
 [ ] adjust all tests of classes that has more than one method, add a `desc` for each one
-[ ] remove "user" from "sign-up-user-use-case" and "sign-in-user-use-case"
+[x] remove "user" from "sign-up-user-use-case" and "sign-in-user-use-case"
 [ ] interface Encrypter, adjust "data: TokenData" to "tokenData: TokenData"
 [ ] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
 [ ] verify SutTypes members order (must be equal to props, doubles, etc)
