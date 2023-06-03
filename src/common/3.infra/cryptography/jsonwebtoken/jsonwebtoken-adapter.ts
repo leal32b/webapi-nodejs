@@ -25,9 +25,9 @@ export class JsonwebtokenAdapter implements Encrypter {
     }
   }
 
-  public async encrypt (data: TokenData, expiresIn: string | number = '1d'): Promise<Either<DomainError, string>> {
+  public async encrypt (tokenData: TokenData, expiresIn: string | number = '1d'): Promise<Either<DomainError, string>> {
     try {
-      const result = await jwt.sign(data, this.secret, {
+      const result = await jwt.sign(tokenData, this.secret, {
         expiresIn
       })
 
