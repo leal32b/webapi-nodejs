@@ -7,9 +7,9 @@ const makeSendEmailConfirmationEmailUseCaseStub = (): SendEmailConfirmationEmail
 } as any)
 
 type SutTypes = {
-  sut: UserCreatedHandler
-  sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
   userCreatedEventFake: UserCreatedEvent
+  sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
+  sut: UserCreatedHandler
 }
 
 const makeSut = (): SutTypes => {
@@ -29,7 +29,11 @@ const makeSut = (): SutTypes => {
   }
   const sut = UserCreatedHandler.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('UserCreatedHandler', () => {

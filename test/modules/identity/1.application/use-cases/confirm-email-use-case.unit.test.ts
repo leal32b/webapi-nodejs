@@ -16,10 +16,10 @@ const makeConfirmEmailDataFake = (): ConfirmEmailData => ({
 })
 
 type SutTypes = {
-  sut: ConfirmEmailUseCase
-  userRepository: UserRepository
   confirmEmailDataFake: ConfirmEmailData
   errorFake: DomainError
+  userRepository: UserRepository
+  sut: ConfirmEmailUseCase
 }
 
 const makeSut = (): SutTypes => {
@@ -30,11 +30,14 @@ const makeSut = (): SutTypes => {
   const props = {
     userRepository: makeUserRepositoryStub()
   }
-
   const sut = ConfirmEmailUseCase.create(props)
   vi.spyOn(props.userRepository, 'readByToken').mockResolvedValue(right(makeUserAggregateFake()))
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('ConfirmEmailUseCase', () => {

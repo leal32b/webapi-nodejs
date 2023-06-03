@@ -26,11 +26,11 @@ const makeSignUpUseCaseStub = (): SignUpUseCase => ({
 } as any)
 
 type SutTypes = {
-  sut: SignUpController
-  signUpUseCase: SignUpUseCase
   errorFake: DomainError
-  serverErrorFake: ServerError
   requestFake: AppRequest<SignUpData>
+  serverErrorFake: ServerError
+  signUpUseCase: SignUpUseCase
+  sut: SignUpController
 }
 
 const makeSut = (): SutTypes => {
@@ -44,7 +44,11 @@ const makeSut = (): SutTypes => {
   }
   const sut = SignUpController.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('SignUpController', () => {

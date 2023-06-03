@@ -7,9 +7,9 @@ import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 import { makeValidatorStub } from '~/common/_doubles/stubs/validator-stub'
 
 type SutTypes = {
-  sut: typeof ValueObject
   errorFake: DomainError
   validatorStub: Validator<any>
+  sut: typeof ValueObject
 }
 
 const makeSut = (): SutTypes => {
@@ -19,7 +19,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = ValueObject
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('ValueObject', () => {

@@ -14,9 +14,9 @@ vi.mock('argon2', () => ({
 }))
 
 type SutTypes = {
-  sut: ArgonAdapter
-  salt: number
   errorFake: DomainError
+  salt: number
+  sut: ArgonAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -28,7 +28,11 @@ const makeSut = (): SutTypes => {
   }
   const sut = ArgonAdapter.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('ArgonAdapter', () => {

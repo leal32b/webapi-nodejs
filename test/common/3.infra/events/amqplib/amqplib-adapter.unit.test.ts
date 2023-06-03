@@ -25,9 +25,9 @@ vi.mock('amqplib', () => ({
 }))
 
 type SutTypes = {
-  sut: AmqplibAdapter
   connectParams: Record<string, unknown>
   logger: Logger
+  sut: AmqplibAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -44,7 +44,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = AmqplibAdapter.create(params)
 
-  return { sut, ...params }
+  return {
+    ...params,
+    sut
+  }
 }
 
 describe('AmqplibAdapter', () => {

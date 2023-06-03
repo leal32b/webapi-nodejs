@@ -4,8 +4,8 @@ import { success } from '@/common/2.presentation/factories/success-factory'
 import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 
 type SutTypes = {
-  sut: typeof success
   errorFake: DomainError
+  sut: typeof success
 }
 
 const makeSut = (): SutTypes => {
@@ -14,7 +14,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = success
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('success', () => {

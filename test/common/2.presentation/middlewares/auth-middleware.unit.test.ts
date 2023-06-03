@@ -14,10 +14,10 @@ const makeEncrypterStub = (): Encrypter => ({
 })
 
 type SutTypes = {
-  sut: AuthMiddleware
   encrypter: Encrypter
-  role: string
   errorFake: DomainError
+  role: string
+  sut: AuthMiddleware
 }
 
 const makeSut = (): SutTypes => {
@@ -29,7 +29,10 @@ const makeSut = (): SutTypes => {
 
   const sut = AuthMiddleware.create(props)
 
-  return { sut, ...props }
+  return {
+    ...props,
+    sut
+  }
 }
 
 describe('AuthMiddleware', () => {

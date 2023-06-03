@@ -21,11 +21,11 @@ const makeConfirmEmailUseCaseStub = (): ConfirmEmailUseCase => ({
 } as any)
 
 type SutTypes = {
-  sut: ConfirmEmailController
-  confirmEmailUseCase: ConfirmEmailUseCase
   errorFake: DomainError
-  serverErrorFake: ServerError
   requestFake: AppRequest<ConfirmEmailData>
+  serverErrorFake: ServerError
+  confirmEmailUseCase: ConfirmEmailUseCase
+  sut: ConfirmEmailController
 }
 
 const makeSut = (): SutTypes => {
@@ -40,7 +40,11 @@ const makeSut = (): SutTypes => {
 
   const sut = ConfirmEmailController.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('ConfirmEmailController', () => {

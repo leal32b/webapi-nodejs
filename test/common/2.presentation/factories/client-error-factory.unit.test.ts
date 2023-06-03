@@ -12,9 +12,9 @@ const makeSchemaErrorFake = (): any => ({
 })
 
 type SutTypes = {
-  sut: typeof clientError
   errorFake: DomainError
   schemaErrorFake: any
+  sut: typeof clientError
 }
 
 const makeSut = (): SutTypes => {
@@ -24,7 +24,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = clientError
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('clientError', () => {

@@ -19,9 +19,9 @@ vi.mock('mongodb', () => ({
 }))
 
 type SutTypes = {
-  sut: MongodbClient
   dataSource: MongodbDataSource
   logger: Logger
+  sut: MongodbClient
 }
 
 const makeSut = async (): Promise<SutTypes> => {
@@ -37,7 +37,10 @@ const makeSut = async (): Promise<SutTypes> => {
   const sut = MongodbClient.create(params)
   await sut.connect()
 
-  return { sut, ...params }
+  return {
+    ...params,
+    sut
+  }
 }
 
 describe('MongodbAdapter', () => {

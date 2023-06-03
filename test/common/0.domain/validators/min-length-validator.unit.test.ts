@@ -2,8 +2,8 @@ import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
 import { MinLengthValidator } from '@/common/0.domain/validators/min-length-validator'
 
 type SutTypes = {
-  sut: MinLengthValidator
   minLength: number
+  sut: MinLengthValidator
 }
 
 const makeSut = (): SutTypes => {
@@ -12,7 +12,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = MinLengthValidator.create(props)
 
-  return { sut, ...props }
+  return {
+    ...props,
+    sut
+  }
 }
 
 describe('MinLengthValidator', () => {

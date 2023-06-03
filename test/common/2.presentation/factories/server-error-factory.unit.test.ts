@@ -4,8 +4,8 @@ import { serverError } from '@/common/2.presentation/factories/server-error-fact
 import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 
 type SutTypes = {
-  sut: typeof serverError
   errorFake: DomainError
+  sut: typeof serverError
 }
 
 const makeSut = (): SutTypes => {
@@ -14,7 +14,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = serverError
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('serverError', () => {

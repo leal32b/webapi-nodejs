@@ -23,12 +23,12 @@ const makeSignUpDataFake = (): SignUpData => ({
 })
 
 type SutTypes = {
-  sut: SignUpUseCase
-  userRepository: UserRepository
-  hasher: Hasher
-  encrypter: Encrypter
   errorFake: DomainError
   signUpDataFake: SignUpData
+  encrypter: Encrypter
+  hasher: Hasher
+  userRepository: UserRepository
+  sut: SignUpUseCase
 }
 
 const makeSut = (): SutTypes => {
@@ -43,7 +43,11 @@ const makeSut = (): SutTypes => {
   }
   const sut = SignUpUseCase.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('SignUpUseCase', () => {

@@ -26,15 +26,20 @@ const makeEmailFake = (): EmailEntity => EmailEntity.create({
 }).value as EmailEntity
 
 type SutTypes = {
-  sut: NodemailerAdapter
   emailFake: EmailEntity
+  sut: NodemailerAdapter
 }
 
 const makeSut = (): SutTypes => {
-  const emailFake = makeEmailFake()
+  const doubles = {
+    emailFake: makeEmailFake()
+  }
   const sut = NodemailerAdapter.create({ logger: makeLoggerMock() })
 
-  return { emailFake, sut }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('NodemailerAdapter', () => {

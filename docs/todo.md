@@ -41,7 +41,7 @@
 [x] remove "user" from "sign-up-user-use-case" and "sign-in-user-use-case"
 [x] interface Encrypter, adjust "data: TokenData" to "tokenData: TokenData"
 [x] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
-[ ] verify SutTypes members order (must be equal to props, doubles, etc)
+[x] verify SutTypes members order (must be equal to props, doubles, etc)
 [ ] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
 [ ] break lines on schema definitions (required)
 [ ] add schema validation to controller tests
