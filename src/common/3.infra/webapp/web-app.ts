@@ -4,6 +4,7 @@ import { type Controller } from '@/common/2.presentation/base/controller'
 import { type ServerError } from '@/common/2.presentation/errors/server-error'
 
 export enum RouteType {
+  PATCH = 'patch',
   POST = 'post',
   GET = 'get'
 }

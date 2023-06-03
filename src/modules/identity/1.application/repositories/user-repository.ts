@@ -7,5 +7,6 @@ export interface UserRepository {
   create: (userAggregate: UserAggregate) => Promise<Either<DomainError[], void>>
   readByEmail: (email: string) => Promise<Either<DomainError[], UserAggregate>>
   readById: (id: string) => Promise<Either<DomainError[], UserAggregate>>
+  readByToken: (token: string) => Promise<Either<DomainError[], UserAggregate>>
   update: (userAggregate: UserAggregate) => Promise<Either<DomainError[], void>>
 }

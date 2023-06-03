@@ -37,3 +37,11 @@
 [x] merge api-specification with path in api-specification
 [ ] add logger to WebApp implementations
 [x] change i18n to internationalization
+[ ] adjust all tests of classes that has more than one method, add a `desc` for each one
+[ ] remove "user" from "sign-up-user-use-case" and "sign-in-user-use-case"
+[ ] interface Encrypter, adjust "data: TokenData" to "tokenData: TokenData"
+[ ] adjust controllers success tests from "... valid params are provided" to "... handle succeeds"
+[ ] verify SutTypes members order (must be equal to props, doubles, etc)
+[ ] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
+[ ] break lines on schema definitions (required)
+[ ] add schema validation to controller tests

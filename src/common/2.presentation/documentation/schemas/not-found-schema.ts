@@ -22,10 +22,18 @@ export const notFoundSchema = {
   additionalProperties: false
 }
 
-export const notFoundSchemaExample = {
+export const emailNotFoundSchemaExample = {
   error: {
     field: 'email',
     input: 'john.doe@mail.com',
     message: "email 'john.doe@mail.com' not found"
+  }
+}
+
+export const tokenNotFoundSchemaExample = {
+  error: {
+    field: 'token',
+    input: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.UnP25ddNPCSH2liwMMda7naPmIY0bOTXKoGWOpysVao',
+    message: "token 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.UnP25ddNPCSH2liwMMda7naPmIY0bOTXKoGWOpysVao' not found"
   }
 }

@@ -2,14 +2,11 @@ import request from 'supertest'
 
 import { TokenType } from '@/common/1.application/cryptography/encrypter'
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
-import { type Route, type WebApp } from '@/common/3.infra/webapp/web-app'
+import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/common/4.main/container'
-import { authMiddleware } from '@/common/4.main/setup/middlewares/auth-middleware'
-import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+import { setupWebApp } from '@/common/4.main/setup/webapp'
 
 import { type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
-import { changePasswordRoute } from '@/identity/2.presentation/routes/change-password/change-password-route'
-import { changePasswordControllerFactory } from '@/identity/4.main/factories/change-password-controller-factory'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
 
@@ -26,7 +23,6 @@ const makeAccessTokenFake = async (): Promise<string> => {
 }
 
 type SutTypes = {
-  sut: Route
   userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp
   accessTokenFake: string
@@ -40,14 +36,9 @@ const makeSut = async (): Promise<SutTypes> => {
     userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
-  const sut = changePasswordRoute(changePasswordControllerFactory())
-  collaborators.webApp.setRouter({
-    middlewares: [authMiddleware, schemaValidatorMiddleware],
-    path: '/identity',
-    routes: [sut]
-  })
+  setupWebApp(app.webApp)
 
-  return { sut, ...collaborators, ...doubles }
+  return { ...doubles, ...collaborators }
 }
 
 describe('ChangePasswordRoute', () => {
@@ -61,7 +52,7 @@ describe('ChangePasswordRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 with correct message on success on success', async () => {
+    it('returns 200 with correct message on success', async () => {
       const { userFixture, webApp, accessTokenFake } = await makeSut()
       const id = 'any_id'
       const password = 'any_password'
@@ -131,7 +122,7 @@ describe('ChangePasswordRoute', () => {
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/change-password')
         .set('Authorization', accessTokenFake)
-        .send({})
+        .send()
 
       expect(statusCode).toBe(422)
       expect(body).toEqual({

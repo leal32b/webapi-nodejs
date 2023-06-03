@@ -1,18 +1,15 @@
 import request from 'supertest'
 
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
-import { type Route, type WebApp } from '@/common/3.infra/webapp/web-app'
+import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/common/4.main/container'
-import { schemaValidatorMiddleware } from '@/common/4.main/setup/middlewares/schema-validator-middleware'
+import { setupWebApp } from '@/common/4.main/setup/webapp'
 
 import { type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
-import { signInRoute } from '@/identity/2.presentation/routes/sign-in/sign-in-route'
-import { signInControllerFactory } from '@/identity/4.main/factories/sign-in-controller-factory'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
 
 type SutTypes = {
-  sut: Route
   userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp
 }
@@ -22,14 +19,9 @@ const makeSut = (): SutTypes => {
     userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
-  const sut = signInRoute(signInControllerFactory())
-  collaborators.webApp.setRouter({
-    middlewares: [schemaValidatorMiddleware],
-    path: '/identity',
-    routes: [sut]
-  })
+  setupWebApp(app.webApp)
 
-  return { sut, ...collaborators }
+  return { ...collaborators }
 }
 
 describe('SignInRoute', () => {
@@ -72,7 +64,7 @@ describe('SignInRoute', () => {
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/sign-in')
-        .send({})
+        .send()
 
       expect(statusCode).toBe(422)
       expect(body).toEqual({
