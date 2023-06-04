@@ -18,16 +18,16 @@ const makeRequestFake = (): AppRequest<ChangePasswordData> => ({
 
 const makeChangePasswordUseCaseStub = (): ChangePasswordUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], ChangePasswordResultDTO>> => right({
-    message: 'password updated successfully'
+    message: 'any_message'
   }))
 } as any)
 
 type SutTypes = {
-  sut: ChangePasswordController
-  changePasswordUseCase: ChangePasswordUseCase
   errorFake: DomainError
-  serverErrorFake: ServerError
   requestFake: AppRequest<ChangePasswordData>
+  serverErrorFake: ServerError
+  changePasswordUseCase: ChangePasswordUseCase
+  sut: ChangePasswordController
 }
 
 const makeSut = (): SutTypes => {
@@ -41,7 +41,11 @@ const makeSut = (): SutTypes => {
   }
   const sut = ChangePasswordController.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('ChangePasswordController', () => {
@@ -64,7 +68,7 @@ describe('ChangePasswordController', () => {
       const result = await sut.handle(requestFake)
 
       expect(result).toEqual({
-        payload: { message: 'password updated successfully' },
+        payload: { message: 'any_message' },
         statusCode: 200
       })
     })

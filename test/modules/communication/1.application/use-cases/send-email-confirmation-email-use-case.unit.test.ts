@@ -24,11 +24,11 @@ const makeTemplateCompilerStub = (): TemplateCompiler => ({
 })
 
 type SutTypes = {
-  sut: SendEmailConfirmationEmailUseCase
-  emailSender: EmailSender
-  templateCompiler: TemplateCompiler
   errorFake: DomainError
   sendEmailConfirmationEmailDataFake: SendEmailConfirmationEmailData
+  emailSender: EmailSender
+  templateCompiler: TemplateCompiler
+  sut: SendEmailConfirmationEmailUseCase
 }
 
 const makeSut = (): SutTypes => {
@@ -43,7 +43,11 @@ const makeSut = (): SutTypes => {
 
   const sut = SendEmailConfirmationEmailUseCase.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('SendEmailConfirmationEmailUseCase', () => {

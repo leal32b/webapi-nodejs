@@ -16,16 +16,16 @@ const makeRequestFake = (): AppRequest<ConfirmEmailData> => ({
 
 const makeConfirmEmailUseCaseStub = (): ConfirmEmailUseCase => ({
   execute: vi.fn(async (): Promise<Either<DomainError[], ConfirmEmailResultDTO>> => right({
-    message: 'email confirmed successfully'
+    message: 'any_message'
   }))
 } as any)
 
 type SutTypes = {
-  sut: ConfirmEmailController
-  confirmEmailUseCase: ConfirmEmailUseCase
   errorFake: DomainError
-  serverErrorFake: ServerError
   requestFake: AppRequest<ConfirmEmailData>
+  serverErrorFake: ServerError
+  confirmEmailUseCase: ConfirmEmailUseCase
+  sut: ConfirmEmailController
 }
 
 const makeSut = (): SutTypes => {
@@ -40,7 +40,11 @@ const makeSut = (): SutTypes => {
 
   const sut = ConfirmEmailController.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('ConfirmEmailController', () => {
@@ -55,15 +59,13 @@ describe('ConfirmEmailController', () => {
       })
     })
 
-    it('returns 200 with message when valid params are provided', async () => {
+    it('returns 200 with message when handle succeeds', async () => {
       const { sut, requestFake } = makeSut()
 
       const result = await sut.handle(requestFake)
 
       expect(result).toEqual({
-        payload: {
-          message: 'email confirmed successfully'
-        },
+        payload: { message: 'any_message' },
         statusCode: 200
       })
     })

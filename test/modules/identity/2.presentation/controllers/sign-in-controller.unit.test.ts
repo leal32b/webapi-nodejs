@@ -3,31 +3,31 @@ import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { type AppRequest } from '@/common/2.presentation/base/controller'
 import { ServerError } from '@/common/2.presentation/errors/server-error'
 
-import { type SignInUserData, type SignInUserResultDTO, type SignInUserUseCase } from '@/identity/1.application/use-cases/sign-in-user-use-case'
+import { type SignInData, type SignInResultDTO, type SignInUseCase } from '@/identity/1.application/use-cases/sign-in-use-case'
 import { SignInController } from '@/identity/2.presentation/controllers/sign-in-controller'
 
 import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 
-const makeRequestFake = (): AppRequest<SignInUserData> => ({
+const makeRequestFake = (): AppRequest<SignInData> => ({
   payload: {
     email: 'any@email.com',
     password: 'any_password'
   }
 })
 
-const makeSignInUserUseCaseStub = (): SignInUserUseCase => ({
-  execute: vi.fn(async (): Promise<Either<DomainError[], SignInUserResultDTO>> => right({
-    accessToken: 'access_token',
-    message: 'user signed in successfully'
+const makeSignInUseCaseStub = (): SignInUseCase => ({
+  execute: vi.fn(async (): Promise<Either<DomainError[], SignInResultDTO>> => right({
+    accessToken: 'any_token',
+    message: 'any_message'
   }))
 } as any)
 
 type SutTypes = {
-  sut: SignInController
-  signInUserUseCase: SignInUserUseCase
   errorFake: DomainError
+  requestFake: AppRequest<SignInData>
   serverErrorFake: ServerError
-  requestFake: AppRequest<SignInUserData>
+  signInUseCase: SignInUseCase
+  sut: SignInController
 }
 
 const makeSut = (): SutTypes => {
@@ -37,21 +37,25 @@ const makeSut = (): SutTypes => {
     serverErrorFake: ServerError.create('server_error')
   }
   const props = {
-    signInUserUseCase: makeSignInUserUseCaseStub()
+    signInUseCase: makeSignInUseCaseStub()
   }
   const sut = SignInController.create(props)
 
-  return { sut, ...props, ...doubles }
+  return {
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('SignInController', () => {
   describe('success', () => {
-    it('calls SignInUserUseCase with correct params', async () => {
-      const { sut, signInUserUseCase, requestFake } = makeSut()
+    it('calls SignInUseCase with correct params', async () => {
+      const { sut, signInUseCase, requestFake } = makeSut()
 
       await sut.handle(requestFake)
 
-      expect(signInUserUseCase.execute).toHaveBeenCalledWith({
+      expect(signInUseCase.execute).toHaveBeenCalledWith({
         email: 'any@email.com',
         password: 'any_password'
       })
@@ -64,8 +68,8 @@ describe('SignInController', () => {
 
       expect(result).toEqual({
         payload: {
-          accessToken: 'access_token',
-          message: 'user signed in successfully'
+          accessToken: 'any_token',
+          message: 'any_message'
         },
         statusCode: 200
       })
@@ -74,8 +78,8 @@ describe('SignInController', () => {
 
   describe('failure', () => {
     it('returns 401 with error when invalid credentials are provided', async () => {
-      const { sut, signInUserUseCase, errorFake, requestFake } = makeSut()
-      vi.spyOn(signInUserUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
+      const { sut, signInUseCase, errorFake, requestFake } = makeSut()
+      vi.spyOn(signInUseCase, 'execute').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.handle(requestFake)
 
@@ -85,9 +89,9 @@ describe('SignInController', () => {
       })
     })
 
-    it('returns 500 with error when SignInUserUseCase returns a serverError', async () => {
-      const { sut, signInUserUseCase, serverErrorFake, requestFake } = makeSut()
-      vi.spyOn(signInUserUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
+    it('returns 500 with error when SignInUseCase returns a serverError', async () => {
+      const { sut, signInUseCase, serverErrorFake, requestFake } = makeSut()
+      vi.spyOn(signInUseCase, 'execute').mockResolvedValueOnce(left([serverErrorFake]))
 
       const result = await sut.handle(requestFake)
 

@@ -31,9 +31,9 @@ const makeFakeData = (): TokenData => ({
 })
 
 type SutTypes = {
-  sut: JsonwebtokenAdapter
-  errorFake: DomainError
   dataFake: TokenData
+  errorFake: DomainError
+  sut: JsonwebtokenAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -43,7 +43,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = JsonwebtokenAdapter.create()
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('JsonwebtokenAdapter', () => {

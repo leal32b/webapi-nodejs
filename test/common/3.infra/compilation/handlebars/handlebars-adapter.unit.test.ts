@@ -24,8 +24,8 @@ vi.mock('handlebars', () => ({
 }))
 
 type SutTypes = {
-  sut: HandlebarsAdapter
   errorFake: DomainError
+  sut: HandlebarsAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -34,7 +34,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = HandlebarsAdapter.create()
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('HandlebarsAdapter', () => {

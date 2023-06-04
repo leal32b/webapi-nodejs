@@ -21,25 +21,30 @@ const makeUserAggregateFake = (): UserAggregate => {
 }
 
 type SutTypes = {
-  sut: MongodbUserRepository
-  messageBroker: MessageBroker
   userFixture: PersistenceFixture<UserAggregateProps>
   userAggregateFake: UserAggregate
+  messageBroker: MessageBroker
+  sut: MongodbUserRepository
 }
 
 const makeSut = (): SutTypes => {
-  const props = {
-    messageBroker: makeMessageBrokerMock()
+  const collaborators = {
+    userFixture: MongodbUserFixture.create()
   }
   const doubles = {
     userAggregateFake: makeUserAggregateFake()
   }
-  const collaborators = {
-    userFixture: MongodbUserFixture.create()
+  const props = {
+    messageBroker: makeMessageBrokerMock()
   }
   const sut = MongodbUserRepository.create(props)
 
-  return { sut, ...collaborators, ...doubles, ...props }
+  return {
+    ...collaborators,
+    ...doubles,
+    ...props,
+    sut
+  }
 }
 
 describe('UserMongodbRepository', () => {

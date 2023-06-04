@@ -1,0 +1,12 @@
+@startuml Theme
+  !$color_bg = "#1a1b26"
+  !$color_fg = "#cfc9c2"
+
+  skinparam {
+    backgroundColor $color_bg
+    DefaultFontColor $color_fg
+    ArrowColor $color_fg
+  }
+
+  UpdateBoundaryStyle(, , $color_fg, $color_fg)
+@enduml

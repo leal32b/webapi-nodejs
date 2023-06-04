@@ -2,8 +2,8 @@ import { MaxLengthError } from '@/common/0.domain/errors/max-length-error'
 import { MaxLengthValidator } from '@/common/0.domain/validators/max-length-validator'
 
 type SutTypes = {
-  sut: MaxLengthValidator
   maxLength: number
+  sut: MaxLengthValidator
 }
 
 const makeSut = (): SutTypes => {
@@ -12,7 +12,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = MaxLengthValidator.create(props)
 
-  return { sut, ...props }
+  return {
+    ...props,
+    sut
+  }
 }
 
 describe('MaxLengthValidator', () => {

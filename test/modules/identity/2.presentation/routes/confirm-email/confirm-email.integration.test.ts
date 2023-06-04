@@ -8,6 +8,7 @@ import { setupWebApp } from '@/common/4.main/setup/webapp'
 import { type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
+
 type SutTypes = {
   userFixture: PersistenceFixture<UserAggregateProps>
   webApp: WebApp

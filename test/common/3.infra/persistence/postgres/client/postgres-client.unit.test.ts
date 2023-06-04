@@ -19,20 +19,22 @@ const makeDataSourceMock = (): DataSource => ({
 }) as any
 
 type SutTypes = {
-  sut: PostgresClient
   dataSource: DataSource
   logger: Logger
+  sut: PostgresClient
 }
 
 const makeSut = (): SutTypes => {
   const params = {
     dataSource: makeDataSourceMock(),
     logger: logging.logger
-
   }
   const sut = PostgresClient.create(params)
 
-  return { sut, ...params }
+  return {
+    ...params,
+    sut
+  }
 }
 
 describe('PostgresClient', () => {

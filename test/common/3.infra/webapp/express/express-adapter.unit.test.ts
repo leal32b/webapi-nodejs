@@ -40,10 +40,10 @@ const makeMiddlewareStub = (): Middleware => ({
 })
 
 type SutTypes = {
-  sut: ExpressAdapter
   auth: Middleware
   controller: Controller<Record<string, unknown>>
   middleware: Middleware
+  sut: ExpressAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -52,13 +52,15 @@ const makeSut = (): SutTypes => {
     controller: makeControllerStub(),
     middleware: makeMiddlewareStub()
   }
-
   const sut = ExpressAdapter.create({
     logger: makeLoggerMock(),
     port: 0
   })
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('ExpressAdapter', () => {

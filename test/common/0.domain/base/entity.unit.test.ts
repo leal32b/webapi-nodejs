@@ -11,9 +11,9 @@ type Params = {
 }
 
 type SutTypes = {
-  sut: typeof Entity
   errorFake: DomainError
   valueObjectStub: Either<DomainError[], ValueObject<any>>
+  sut: typeof Entity
 }
 
 const makeSut = (): SutTypes => {
@@ -23,7 +23,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = Entity
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('Entity', () => {

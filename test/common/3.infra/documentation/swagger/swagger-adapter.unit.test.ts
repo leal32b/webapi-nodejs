@@ -32,7 +32,10 @@ const makeSut = (): SutTypes => {
 
   const sut = SwaggerAdapter.create(params)
 
-  return { sut, ...params }
+  return {
+    ...params,
+    sut
+  }
 }
 
 describe('SwaggerAdapter', () => {

@@ -7,7 +7,13 @@ export const signUpRequestSchema = {
     password: { type: 'string' },
     passwordRetype: { type: 'string' }
   },
-  required: ['email', 'locale', 'name', 'password', 'passwordRetype'],
+  required: [
+    'email',
+    'locale',
+    'name',
+    'password',
+    'passwordRetype'
+  ],
   additionalProperties: false
 }
 
@@ -25,7 +31,10 @@ export const signUpResponseSchema = {
     email: { type: 'string' },
     message: { type: 'string' }
   },
-  required: ['email', 'message'],
+  required: [
+    'email',
+    'message'
+  ],
   additionalProperties: false
 }
 

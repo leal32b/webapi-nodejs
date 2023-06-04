@@ -1,0 +1,16 @@
+@startuml Base
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+  !include theme.puml
+
+  ' Logos
+  !define  LOGOS https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/logos
+  !include LOGOS/nodejs.puml
+  !include LOGOS/rabbitmq.puml
+  !include LOGOS/mongodb.puml
+
+  ' Definitions
+  SHOW_PERSON_OUTLINE()
+
+  ' Tags
+  AddRelTag("async", $lineStyle = DashedLine())
+@enduml

@@ -4,10 +4,10 @@ import { clientError } from '@/common/2.presentation/factories/client-error-fact
 import { serverError } from '@/common/2.presentation/factories/server-error-factory'
 import { success } from '@/common/2.presentation/factories/success-factory'
 
-import { type SignUpUserUseCase, type SignUpUserResultDTO, type SignUpUserData } from '@/identity/1.application/use-cases/sign-up-user-use-case'
+import { type SignUpUseCase, type SignUpResultDTO, type SignUpData } from '@/identity/1.application/use-cases/sign-up-use-case'
 
 type Props = {
-  signUpUserUseCase: SignUpUserUseCase
+  signUpUseCase: SignUpUseCase
 }
 
 export class SignUpController extends Controller<Props> {
@@ -15,21 +15,21 @@ export class SignUpController extends Controller<Props> {
     return new SignUpController(props)
   }
 
-  public async handle (request: AppRequest<SignUpUserData>): Promise<AppResponse<SignUpUserResultDTO>> {
+  public async handle (request: AppRequest<SignUpData>): Promise<AppResponse<SignUpResultDTO>> {
     const { payload: signUpData } = request
 
-    const signUpUserResultDtoOrError = await this.props.signUpUserUseCase.execute(signUpData)
+    const signUpResultDtoOrError = await this.props.signUpUseCase.execute(signUpData)
 
-    if (signUpUserResultDtoOrError.isLeft()) {
-      const error = signUpUserResultDtoOrError.value
+    if (signUpResultDtoOrError.isLeft()) {
+      const error = signUpResultDtoOrError.value
 
       return error[0] instanceof ServerError
         ? serverError.internalServerError(error)
         : clientError.badRequest(error)
     }
 
-    const signUpUserResultDTO = signUpUserResultDtoOrError.value
+    const signUpResultDTO = signUpResultDtoOrError.value
 
-    return success.ok(signUpUserResultDTO)
+    return success.ok(signUpResultDTO)
   }
 }

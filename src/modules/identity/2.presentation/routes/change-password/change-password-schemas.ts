@@ -5,7 +5,11 @@ export const changePasswordRequestSchema = {
     password: { type: 'string' },
     passwordRetype: { type: 'string' }
   },
-  required: ['id', 'password', 'passwordRetype'],
+  required: [
+    'id',
+    'password',
+    'passwordRetype'
+  ],
   additionalProperties: false
 }
 

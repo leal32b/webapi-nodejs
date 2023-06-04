@@ -24,21 +24,24 @@ const makeAccessTokenFake = async (): Promise<string> => {
 
 type SutTypes = {
   userFixture: PersistenceFixture<UserAggregateProps>
-  webApp: WebApp
   accessTokenFake: string
+  webApp: WebApp
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const doubles = {
-    accessTokenFake: await makeAccessTokenFake()
-  }
   const collaborators = {
     userFixture: userFixtures.userFixture,
     webApp: app.webApp
   }
+  const doubles = {
+    accessTokenFake: await makeAccessTokenFake()
+  }
   setupWebApp(app.webApp)
 
-  return { ...doubles, ...collaborators }
+  return {
+    ...collaborators,
+    ...doubles
+  }
 }
 
 describe('ChangePasswordRoute', () => {

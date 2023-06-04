@@ -20,8 +20,8 @@ const makeErrorFake = (): DomainError => {
 }
 
 type SutTypes = {
-  sut: AjvAdapter
   errorFake: DomainError
+  sut: AjvAdapter
 }
 
 const makeSut = (): SutTypes => {
@@ -30,7 +30,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = AjvAdapter.create()
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('AjvAdapter', () => {

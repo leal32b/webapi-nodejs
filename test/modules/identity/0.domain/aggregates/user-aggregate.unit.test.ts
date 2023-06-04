@@ -18,8 +18,8 @@ const makeParamsFake = (): UserAggregateProps => ({
 })
 
 type SutTypes = {
-  sut: typeof UserAggregate
   paramsFake: UserAggregateProps
+  sut: typeof UserAggregate
 }
 
 const makeSut = (): SutTypes => {
@@ -28,7 +28,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = UserAggregate
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('UserAggregate', () => {

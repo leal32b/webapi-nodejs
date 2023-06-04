@@ -15,8 +15,8 @@ const makeParamsFake = (): EmailEntityProps => ({
 })
 
 type SutTypes = {
-  sut: typeof EmailEntity
   paramsFake: EmailEntityProps
+  sut: typeof EmailEntity
 }
 
 const makeSut = (): SutTypes => {
@@ -25,7 +25,10 @@ const makeSut = (): SutTypes => {
   }
   const sut = EmailEntity
 
-  return { sut, ...doubles }
+  return {
+    ...doubles,
+    sut
+  }
 }
 
 describe('EmailEntity', () => {

@@ -19,9 +19,9 @@ const makeSchemaValidatorStub = (): SchemaValidator => ({
 })
 
 type SutTypes = {
-  sut: SchemaValidatorMiddleware
-  schemaValidator: SchemaValidator
   errorFake: ErrorObject
+  schemaValidator: SchemaValidator
+  sut: SchemaValidatorMiddleware
 }
 
 const makeSut = (): SutTypes => {
@@ -33,7 +33,10 @@ const makeSut = (): SutTypes => {
 
   const sut = SchemaValidatorMiddleware.create(props)
 
-  return { sut, ...props }
+  return {
+    ...props,
+    sut
+  }
 }
 
 describe('SchemaValidatorMiddleware', () => {
