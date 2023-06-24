@@ -104,7 +104,7 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
   private async updateUserAggregate (userAggregate: UserAggregate, password: Password): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
-    userAggregate.password = password
+    userAggregate.setPassword(password)
     const updatedOrError = await userRepository.update(userAggregate)
 
     return updatedOrError.applyOnRight(() => {})

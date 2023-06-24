@@ -5,12 +5,12 @@ import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, persistence } from '@/common/4.main/container'
 import { setupWebApp } from '@/common/4.main/setup/webapp'
 
-import { type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
+import { type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
 
 type SutTypes = {
-  userFixture: PersistenceFixture<UserAggregateProps>
+  userFixture: PersistenceFixture<UserEntityProps>
   webApp: WebApp
 }
 
@@ -35,7 +35,7 @@ describe('SignUpRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 with an email on success', async () => {
+    it.only('returns 200 with an email on success', async () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)

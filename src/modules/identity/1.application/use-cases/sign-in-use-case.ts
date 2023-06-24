@@ -41,7 +41,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
     }
 
     const userAggregate = userAggregateOrError.value
-    const { id, password: hashedPassword } = userAggregate
+    const { id, password: hashedPassword } = userAggregate.aggregateRoot
     const passwordValidOrError = await this.isPasswordValid(hashedPassword.value, password)
 
     if (passwordValidOrError.isLeft()) {
@@ -121,7 +121,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
   private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
-    userAggregate.token = token
+    userAggregate.setToken(token)
     const updatedUserOrError = await userRepository.update(userAggregate)
 
     return updatedUserOrError.applyOnRight(() => {})

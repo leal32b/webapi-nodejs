@@ -6,10 +6,10 @@ import { Identifier } from '@/common/0.domain/utils/identifier'
 type Params = Record<string, Either<DomainError[], ValueObject<any>>>
 
 export abstract class Entity<PropsType> {
-  protected readonly props: PropsType & { id: Identifier }
+  protected readonly _props: PropsType & { id: Identifier }
 
   protected constructor (props: PropsType, id?: string) {
-    this.props = {
+    this._props = {
       ...props,
       id: Identifier.create({ id })
     }
@@ -32,5 +32,9 @@ export abstract class Entity<PropsType> {
     )
 
     return right(validatedParams as ParamsType)
+  }
+
+  public get props (): typeof this._props {
+    return this._props
   }
 }

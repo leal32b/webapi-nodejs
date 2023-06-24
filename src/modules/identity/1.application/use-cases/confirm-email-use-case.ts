@@ -67,7 +67,7 @@ export class ConfirmEmailUseCase extends UseCase<Props, ConfirmEmailData, Confir
   private async updateUserAggregate (userAggregate: UserAggregate, emailConfirmed: EmailConfirmed): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
-    userAggregate.emailConfirmed = emailConfirmed
+    userAggregate.setEmailConfirmed(emailConfirmed)
     const updatedOrError = await userRepository.update(userAggregate)
 
     return updatedOrError.applyOnRight(() => {})

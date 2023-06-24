@@ -7,6 +7,7 @@ import { EmailTakenError } from '@/common/1.application/errors/email-taken-error
 import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserEntity } from '@/identity/0.domain/entities/user-entity'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 
 type Props = {
@@ -68,11 +69,18 @@ export class SignUpUseCase extends UseCase<Props, SignUpData, SignUpResultDTO> {
   private async createUserAggregate (signUpData: SignUpData, hashedPassword: string, token: string): Promise<Either<DomainError[], UserAggregate>> {
     const { userRepository } = this.props
 
-    const userAggregateOrError = UserAggregate.create({
+    const userEntityOrError = UserEntity.create({
       ...signUpData,
       password: hashedPassword,
       token
     })
+
+    if (userEntityOrError.isLeft()) {
+      return left(userEntityOrError.value)
+    }
+
+    const userEntity = userEntityOrError.value
+    const userAggregateOrError = UserAggregate.create(userEntity)
 
     if (userAggregateOrError.isLeft()) {
       return left(userAggregateOrError.value)

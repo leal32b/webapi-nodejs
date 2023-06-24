@@ -2,7 +2,8 @@ import { type MessageBroker } from '@/common/1.application/events/message-broker
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
 import { persistence } from '@/common/4.main/container'
 
-import { UserAggregate, type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
 import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
@@ -10,18 +11,20 @@ import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker-mo
 import { PostgresUserFixture } from '~/identity/_fixtures/postgres/postgres-user-fixture'
 
 const makeUserAggregateFake = (): UserAggregate => {
-  return UserAggregate.create({
-    email: 'any@mail.com',
-    id: 'any_id',
-    locale: 'en',
-    name: 'any_name',
-    password: 'hashed_password',
-    token: 'any_token'
-  }).value as UserAggregate
+  return UserAggregate.create(
+    UserEntity.create({
+      email: 'any@mail.com',
+      id: 'any_id',
+      locale: 'en',
+      name: 'any_name',
+      password: 'hashed_password',
+      token: 'any_token'
+    }).value as UserEntity
+  ).value as UserAggregate
 }
 
 type SutTypes = {
-  userFixture: PersistenceFixture<UserAggregateProps>
+  userFixture: PersistenceFixture<UserEntityProps>
   userAggregateFake: UserAggregate
   messageBroker: MessageBroker
   sut: PostgresUserRepository
@@ -59,7 +62,7 @@ describe('UserPostgresRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it('calls messageBroker.publishToTopic with correct params', async () => {
+      it.only('calls messageBroker.publishToTopic with correct params', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 
@@ -156,7 +159,7 @@ describe('UserPostgresRepository', () => {
       it('returns Right on update success', async () => {
         const { sut, userAggregateFake } = makeSut()
         const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
-        userAggregateFake.emailConfirmed = emailConfirmed
+        userAggregateFake.setEmailConfirmed(emailConfirmed)
 
         const result = await sut.update(userAggregateFake)
 

@@ -6,6 +6,7 @@ import { EmailTakenError } from '@/common/1.application/errors/email-taken-error
 import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserEntity } from '@/identity/0.domain/entities/user-entity'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 import { type SignUpData, SignUpUseCase } from '@/identity/1.application/use-cases/sign-up-use-case'
 
@@ -111,11 +112,13 @@ describe('SignUpUseCase', () => {
     it('returns Left with EmailTakenError when email is already in use', async () => {
       const { sut, userRepository, signUpDataFake } = makeSut()
       vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(
-        right(UserAggregate.create({
-          ...makeSignUpDataFake(),
-          id: 'any_id',
-          token: 'any_token'
-        }).value as UserAggregate)
+        right(UserAggregate.create(
+          UserEntity.create({
+            ...makeSignUpDataFake(),
+            id: 'any_id',
+            token: 'any_token'
+          }).value as UserEntity
+        ).value as UserAggregate)
       )
 
       const result = await sut.execute({ ...signUpDataFake })

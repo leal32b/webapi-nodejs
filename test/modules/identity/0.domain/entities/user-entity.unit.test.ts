@@ -1,14 +1,14 @@
 import { DomainError } from '@/common/0.domain/base/domain-error'
 import { Identifier } from '@/common/0.domain/utils/identifier'
 
-import { UserAggregate, type UserAggregateProps } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
 import { Email } from '@/identity/0.domain/value-objects/email'
 import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
 import { Name } from '@/identity/0.domain/value-objects/name'
 import { Password } from '@/identity/0.domain/value-objects/password'
 import { Token } from '@/identity/0.domain/value-objects/token'
 
-const makeParamsFake = (): UserAggregateProps => ({
+const makeParamsFake = (): UserEntityProps => ({
   email: 'any@mail.com',
   id: 'any_id',
   locale: 'en',
@@ -18,15 +18,15 @@ const makeParamsFake = (): UserAggregateProps => ({
 })
 
 type SutTypes = {
-  paramsFake: UserAggregateProps
-  sut: typeof UserAggregate
+  paramsFake: UserEntityProps
+  sut: typeof UserEntity
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
     paramsFake: makeParamsFake()
   }
-  const sut = UserAggregate
+  const sut = UserEntity
 
   return {
     ...doubles,
@@ -34,17 +34,17 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('UserAggregate', () => {
+describe('UserEntity', () => {
   describe('success', () => {
-    it('returns User when params are valid', () => {
+    it('returns UserEntity when params are valid', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create(paramsFake)
 
-      expect(result.value).toBeInstanceOf(UserAggregate)
+      expect(result.value).toBeInstanceOf(UserEntity)
     })
 
-    it('returns User with emailConfirmed=true when it is passed', () => {
+    it('returns UserEntity with emailConfirmed=true when it is passed', () => {
       const { sut, paramsFake } = makeSut()
 
       const result = sut.create({
@@ -52,7 +52,7 @@ describe('UserAggregate', () => {
         emailConfirmed: true
       })
 
-      expect((result.value as UserAggregate).emailConfirmed.value).toBe(true)
+      expect((result.value as UserEntity).emailConfirmed.value).toBe(true)
     })
 
     it('gets email', () => {
@@ -60,7 +60,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).email).toBeInstanceOf(Email)
+      expect((result.value as UserEntity).email).toBeInstanceOf(Email)
     })
 
     it('gets emailConfirmed', () => {
@@ -68,7 +68,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).emailConfirmed).toBeInstanceOf(EmailConfirmed)
+      expect((result.value as UserEntity).emailConfirmed).toBeInstanceOf(EmailConfirmed)
     })
 
     it('gets id', () => {
@@ -76,7 +76,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).id).toBeInstanceOf(Identifier)
+      expect((result.value as UserEntity).id).toBeInstanceOf(Identifier)
     })
 
     it('gets name', () => {
@@ -84,7 +84,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).name).toBeInstanceOf(Name)
+      expect((result.value as UserEntity).name).toBeInstanceOf(Name)
     })
 
     it('gets password', () => {
@@ -92,7 +92,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).password).toBeInstanceOf(Password)
+      expect((result.value as UserEntity).password).toBeInstanceOf(Password)
     })
 
     it('gets token', () => {
@@ -100,7 +100,7 @@ describe('UserAggregate', () => {
 
       const result = sut.create(paramsFake)
 
-      expect((result.value as UserAggregate).token).toBeInstanceOf(Token)
+      expect((result.value as UserEntity).token).toBeInstanceOf(Token)
     })
 
     it('sets emailConfirmed', () => {
@@ -108,7 +108,7 @@ describe('UserAggregate', () => {
       const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
 
       const result = sut.create(paramsFake)
-      const userEntity = result.value as UserAggregate
+      const userEntity = result.value as UserEntity
       userEntity.emailConfirmed = emailConfirmed
 
       expect(userEntity.emailConfirmed.value).toBe(true)
@@ -119,7 +119,7 @@ describe('UserAggregate', () => {
       const password = Password.create('any_password').value as Token
 
       const result = sut.create(paramsFake)
-      const userEntity = result.value as UserAggregate
+      const userEntity = result.value as UserEntity
       userEntity.password = password
 
       expect(userEntity.token.value).toBe('any_token')
@@ -130,7 +130,7 @@ describe('UserAggregate', () => {
       const token = Token.create('any_token').value as Token
 
       const result = sut.create(paramsFake)
-      const userEntity = result.value as UserAggregate
+      const userEntity = result.value as UserEntity
       userEntity.token = token
 
       expect(userEntity.token.value).toBe('any_token')

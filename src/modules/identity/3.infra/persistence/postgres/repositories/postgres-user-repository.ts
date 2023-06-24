@@ -5,6 +5,7 @@ import { ServerError } from '@/common/2.presentation/errors/server-error'
 import { persistence } from '@/common/4.main/container'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
+import { UserEntity } from '@/identity/0.domain/entities/user-entity'
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created-event'
 import { userCreatedTopic } from '@/identity/1.application/events/topics/user-created-topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
@@ -22,7 +23,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const repository = await persistence.postgres.client.getRepository('users')
 
       const postgresUser = repository.create({
@@ -60,7 +61,22 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userAggregateOrError = UserAggregate.create(user)
+      const userEntityOrError = UserEntity.create({
+        email: user.email,
+        emailConfirmed: user.emailConfirmed,
+        id: user.id,
+        locale: user.locale,
+        name: user.name,
+        password: user.password,
+        token: user.token
+      })
+
+      if (userEntityOrError.isLeft()) {
+        return left(userEntityOrError.value)
+      }
+
+      const userEntity = userEntityOrError.value
+      const userAggregateOrError = UserAggregate.create(userEntity)
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
@@ -76,7 +92,22 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userAggregateOrError = UserAggregate.create(user)
+      const userEntityOrError = UserEntity.create({
+        email: user.email,
+        emailConfirmed: user.emailConfirmed,
+        id: user.id,
+        locale: user.locale,
+        name: user.name,
+        password: user.password,
+        token: user.token
+      })
+
+      if (userEntityOrError.isLeft()) {
+        return left(userEntityOrError.value)
+      }
+
+      const userEntity = userEntityOrError.value
+      const userAggregateOrError = UserAggregate.create(userEntity)
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
@@ -92,7 +123,22 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userAggregateOrError = UserAggregate.create(user)
+      const userEntityOrError = UserEntity.create({
+        email: user.email,
+        emailConfirmed: user.emailConfirmed,
+        id: user.id,
+        locale: user.locale,
+        name: user.name,
+        password: user.password,
+        token: user.token
+      })
+
+      if (userEntityOrError.isLeft()) {
+        return left(userEntityOrError.value)
+      }
+
+      const userEntity = userEntityOrError.value
+      const userAggregateOrError = UserAggregate.create(userEntity)
 
       return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
     } catch (error) {
@@ -102,7 +148,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate
+      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const repository = await persistence.postgres.client.getRepository('users')
 
       const postgresUser = repository.create({
