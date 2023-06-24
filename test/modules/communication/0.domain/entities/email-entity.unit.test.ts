@@ -7,7 +7,7 @@ import { Subject } from '@/communication/0.domain/value-objects/subject'
 import { Text } from '@/communication/0.domain/value-objects/text'
 import { To } from '@/communication/0.domain/value-objects/to'
 
-const makeParamsFake = (): EmailEntityProps => ({
+const makePropsFake = (): EmailEntityProps => ({
   from: 'sender@mail.com',
   subject: 'any_subject',
   text: 'any_text',
@@ -15,13 +15,13 @@ const makeParamsFake = (): EmailEntityProps => ({
 })
 
 type SutTypes = {
-  paramsFake: EmailEntityProps
+  propsFake: EmailEntityProps
   sut: typeof EmailEntity
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    paramsFake: makeParamsFake()
+    propsFake: makePropsFake()
   }
   const sut = EmailEntity
 
@@ -33,83 +33,83 @@ const makeSut = (): SutTypes => {
 
 describe('EmailEntity', () => {
   describe('success', () => {
-    it('returns an Email when params are valid', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns an Email when props are valid', () => {
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect(result.value).toBeInstanceOf(EmailEntity)
     })
 
-    it('returns an Email when params are valid and to is an array', () => {
-      const { sut, paramsFake } = makeSut()
-      paramsFake.to = ['recipient@email.com', 'another_recipient@email.com']
+    it('returns an Email when props are valid and to is an array', () => {
+      const { sut, propsFake } = makeSut()
+      propsFake.to = ['recipient@email.com', 'another_recipient@email.com']
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect(result.value).toBeInstanceOf(EmailEntity)
     })
 
     it('gets from', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as EmailEntity).from).toBeInstanceOf(From)
     })
 
     it('gets html', () => {
-      const { sut, paramsFake } = makeSut()
-      paramsFake.html = '<html>any_html</html>'
+      const { sut, propsFake } = makeSut()
+      propsFake.html = '<html>any_html</html>'
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as EmailEntity).html).toBeInstanceOf(Html)
     })
 
     it('gets subject', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as EmailEntity).subject).toBeInstanceOf(Subject)
     })
 
     it('gets text', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as EmailEntity).text).toBeInstanceOf(Text)
     })
 
     it('gets to', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as EmailEntity).to).toBeInstanceOf(To)
     })
   })
 
   describe('failure', () => {
-    it('returns Left with an array of Errors when any param is invalid', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns Left with an array of Errors when any prop is invalid', () => {
+      const { sut, propsFake } = makeSut()
       const from = null
 
-      const result = sut.create({ ...paramsFake, from })
+      const result = sut.create({ ...propsFake, from })
 
       expect(result.isLeft()).toBe(true)
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns an Error for each param validation that fails', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns an Error for each prop validation that fails', () => {
+      const { sut, propsFake } = makeSut()
       const from = null
       const subject = null
 
-      const result = sut.create({ ...paramsFake, from, subject })
+      const result = sut.create({ ...propsFake, from, subject })
 
       expect((result.value as DomainError[]).map(error => error.props.field)).toEqual(
         expect.arrayContaining(['From', 'Subject'])

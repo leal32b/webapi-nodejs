@@ -33,7 +33,7 @@ export class UserEntity extends Entity<Props> {
   public static create (props: UserEntityProps): Either<DomainError[], UserEntity> {
     const { email, locale, name, password, token, id, emailConfirmed } = props
 
-    const validPropsOrError = this.validateParams<Props>({
+    const validPropsOrError = this.validateProps<Props>({
       email: Email.create(email),
       emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
       locale: Locale.create(locale),

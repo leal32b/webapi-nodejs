@@ -34,15 +34,15 @@ export class EmailEntity extends Entity<Props> {
       ? { html: Html.create(html) }
       : { text: Text.create(text) }
 
-    const constructParamsOrError = this.validateParams<Props>({
+    const validPropsOrError = this.validateProps<Props>({
       from: From.create(from),
       subject: Subject.create(subject),
       to: To.create(to),
       ...htmlOrText
     })
 
-    return constructParamsOrError.applyOnRight(constructParams => {
-      return new EmailEntity(constructParams)
+    return validPropsOrError.applyOnRight(props => {
+      return new EmailEntity(props)
     })
   }
 

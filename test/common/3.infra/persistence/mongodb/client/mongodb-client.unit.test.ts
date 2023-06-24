@@ -30,15 +30,15 @@ const makeSut = async (): Promise<SutTypes> => {
     database: 'any_database',
     name: 'any_name'
   }
-  const params = {
+  const props = {
     dataSource,
     logger: makeLoggerMock()
   }
-  const sut = MongodbClient.create(params)
+  const sut = MongodbClient.create(props)
   await sut.connect()
 
   return {
-    ...params,
+    ...props,
     sut
   }
 }

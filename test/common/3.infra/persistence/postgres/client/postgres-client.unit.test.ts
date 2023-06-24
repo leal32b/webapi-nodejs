@@ -25,14 +25,14 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const params = {
+  const props = {
     dataSource: makeDataSourceMock(),
     logger: logging.logger
   }
-  const sut = PostgresClient.create(params)
+  const sut = PostgresClient.create(props)
 
   return {
-    ...params,
+    ...props,
     sut
   }
 }

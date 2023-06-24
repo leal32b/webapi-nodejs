@@ -8,7 +8,7 @@ import { Name } from '@/identity/0.domain/value-objects/name'
 import { Password } from '@/identity/0.domain/value-objects/password'
 import { Token } from '@/identity/0.domain/value-objects/token'
 
-const makeParamsFake = (): UserEntityProps => ({
+const makePropsFake = (): UserEntityProps => ({
   email: 'any@mail.com',
   id: 'any_id',
   locale: 'en',
@@ -18,13 +18,13 @@ const makeParamsFake = (): UserEntityProps => ({
 })
 
 type SutTypes = {
-  paramsFake: UserEntityProps
+  propsFake: UserEntityProps
   sut: typeof UserEntity
 }
 
 const makeSut = (): SutTypes => {
   const doubles = {
-    paramsFake: makeParamsFake()
+    propsFake: makePropsFake()
   }
   const sut = UserEntity
 
@@ -36,19 +36,19 @@ const makeSut = (): SutTypes => {
 
 describe('UserEntity', () => {
   describe('success', () => {
-    it('returns UserEntity when params are valid', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns UserEntity when props are valid', () => {
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect(result.value).toBeInstanceOf(UserEntity)
     })
 
     it('returns UserEntity with emailConfirmed=true when it is passed', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
       const result = sut.create({
-        ...paramsFake,
+        ...propsFake,
         emailConfirmed: true
       })
 
@@ -56,58 +56,58 @@ describe('UserEntity', () => {
     })
 
     it('gets email', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).email).toBeInstanceOf(Email)
     })
 
     it('gets emailConfirmed', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).emailConfirmed).toBeInstanceOf(EmailConfirmed)
     })
 
     it('gets id', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).id).toBeInstanceOf(Identifier)
     })
 
     it('gets name', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).name).toBeInstanceOf(Name)
     })
 
     it('gets password', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).password).toBeInstanceOf(Password)
     })
 
     it('gets token', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
 
       expect((result.value as UserEntity).token).toBeInstanceOf(Token)
     })
 
     it('sets emailConfirmed', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
       const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
       userEntity.emailConfirmed = emailConfirmed
 
@@ -115,10 +115,10 @@ describe('UserEntity', () => {
     })
 
     it('sets password', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
       const password = Password.create('any_password').value as Token
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
       userEntity.password = password
 
@@ -126,10 +126,10 @@ describe('UserEntity', () => {
     })
 
     it('sets token', () => {
-      const { sut, paramsFake } = makeSut()
+      const { sut, propsFake } = makeSut()
       const token = Token.create('any_token').value as Token
 
-      const result = sut.create(paramsFake)
+      const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
       userEntity.token = token
 
@@ -138,23 +138,23 @@ describe('UserEntity', () => {
   })
 
   describe('failure', () => {
-    it('returns Left with an array of Errors when any param is invalid', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns Left with an array of Errors when any prop is invalid', () => {
+      const { sut, propsFake } = makeSut()
       const email = null
 
-      const result = sut.create({ ...paramsFake, email })
+      const result = sut.create({ ...propsFake, email })
 
       expect(result.isLeft()).toBe(true)
       expect((result.value as DomainError[])
         .every(item => item instanceof DomainError)).toBe(true)
     })
 
-    it('returns an Error for each param validation that fails', () => {
-      const { sut, paramsFake } = makeSut()
+    it('returns an Error for each prop validation that fails', () => {
+      const { sut, propsFake } = makeSut()
       const email = null
       const name = null
 
-      const result = sut.create({ ...paramsFake, email, name })
+      const result = sut.create({ ...propsFake, email, name })
 
       expect((result.value as DomainError[]).map(error => error.props.field)).toEqual(
         expect.arrayContaining(['Email', 'Name'])

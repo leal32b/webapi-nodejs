@@ -6,7 +6,7 @@ import { type Either, left } from '@/common/0.domain/utils/either'
 import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
 import { makeValueObjectStub } from '~/common/_doubles/stubs/value-object-stub'
 
-type Params = {
+type Props = {
   valueObject: ValueObject<any>
 }
 
@@ -31,16 +31,16 @@ const makeSut = (): SutTypes => {
 
 describe('Entity', () => {
   describe('success', () => {
-    it('returns Right with params and valueObjects when all params are valid', () => {
+    it('returns Right with props and valueObjects when all props are valid', () => {
       const { sut, valueObjectStub } = makeSut()
 
-      const result = sut.validateParams<Params>({
+      const result = sut.validateProps<Props>({
         valueObject: valueObjectStub
       })
 
       expect(result.isRight()).toBe(true)
       expect(Object
-        .values(result.value as Params)
+        .values(result.value as Props)
         .every(item => item instanceof ValueObject)).toBe(true)
     })
 
@@ -60,10 +60,10 @@ describe('Entity', () => {
   })
 
   describe('failure', () => {
-    it('returns Left with an array of errors when any param is invalid', () => {
+    it('returns Left with an array of errors when any prop is invalid', () => {
       const { sut, errorFake, valueObjectStub } = makeSut()
 
-      const result = sut.validateParams<Params>({
+      const result = sut.validateProps<Props>({
         invalidValueObject: left([errorFake]),
         valueObject: valueObjectStub
       })

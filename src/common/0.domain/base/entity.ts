@@ -3,7 +3,7 @@ import { type ValueObject } from '@/common/0.domain/base/value-object'
 import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { Identifier } from '@/common/0.domain/utils/identifier'
 
-type Params = Record<string, Either<DomainError[], ValueObject<any>>>
+type Props = Record<string, Either<DomainError[], ValueObject<any>>>
 
 export abstract class Entity<PropsType> {
   protected readonly _props: PropsType & { id: Identifier }
@@ -15,23 +15,23 @@ export abstract class Entity<PropsType> {
     }
   }
 
-  public static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
+  public static validateProps <PropsType>(props: Props): Either<DomainError[], PropsType> {
     const errors = Object
-      .values(params)
-      .map(param => param.isLeft() ? param.value : [])
+      .values(props)
+      .map(prop => prop.isLeft() ? prop.value : [])
       .reduce((acc, curVal) => acc.concat(curVal))
 
     if (errors.length > 0) {
       return left(errors)
     }
 
-    const validatedParams = Object.fromEntries(
+    const validatedProps = Object.fromEntries(
       Object
-        .entries(params)
-        .map(([param, result]) => [param, result.value])
+        .entries(props)
+        .map(([prop, result]) => [prop, result.value])
     )
 
-    return right(validatedParams as ParamsType)
+    return right(validatedProps as PropsType)
   }
 
   public get props (): typeof this._props {

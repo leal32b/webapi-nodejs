@@ -43,7 +43,7 @@ describe('PostgresFixture', () => {
   })
 
   describe('success', () => {
-    it('returns created entity when no params are provided', async () => {
+    it('returns created entity when no props are provided', async () => {
       const { sut } = await makeSut()
 
       const result = await sut.createRandomFixture()
@@ -59,11 +59,11 @@ describe('PostgresFixture', () => {
       })
     })
 
-    it('returns created entity with provided params', async () => {
+    it('returns created entity with provided props', async () => {
       const { sut } = await makeSut()
-      const params = { name: 'any_name' }
+      const props = { name: 'any_name' }
 
-      const result = await sut.createFixture(params)
+      const result = await sut.createFixture(props)
 
       expect(result).toEqual({
         email: expect.any(String),
@@ -76,12 +76,12 @@ describe('PostgresFixture', () => {
       })
     })
 
-    it('returns created entities with provided params', async () => {
+    it('returns created entities with provided props', async () => {
       const { sut } = await makeSut()
-      const params1 = { name: 'any_name1' }
-      const params2 = { name: 'any_name2' }
+      const props1 = { name: 'any_name1' }
+      const props2 = { name: 'any_name2' }
 
-      const result = await sut.createFixtures([params1, params2])
+      const result = await sut.createFixtures([props1, props2])
 
       expect(result).toEqual([{
         email: expect.any(String),

@@ -91,7 +91,11 @@ export class AmqplibAdapter implements MessageBroker {
     }
 
     try {
-      const sent = this.channel.sendToQueue(queue.name, Buffer.from(JSON.stringify(adaptedEvent)), { persistent: true })
+      const sent = this.channel.sendToQueue(
+        queue.name,
+        Buffer.from(JSON.stringify(adaptedEvent)),
+        { persistent: true }
+      )
 
       if (!sent) {
         return left(ServerError.create('error on publishing to queue'))
