@@ -44,3 +44,12 @@
 [x] verify SutTypes members order (must be equal to props, doubles, etc)
 [x] adjust text message of UseCaseStubs in controller tests, it must be "any_message"
 [x] break lines on schema definitions (required)
+[x] change "this.validateParams" to "this.validateProps"?
+[ ] verify applyOnRight, remove last "return"
+[ ] add createdAt, updatedAt and active to entities/aggregates
+[ ] give a better name to Props and (Entity/Aggregate)Props (should (Entity/Aggregate)Props be named Props?)
+[x] fix paramsFake -> propsFake
+[ ] create userMapper (toDomain, toPersistence)
+[ ] change "create, read, update, delete" to "save, find, delete"
+[ ] create default methods inside repositories
+[x] rename value-objects with entity radical

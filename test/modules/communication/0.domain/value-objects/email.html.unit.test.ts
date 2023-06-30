@@ -1,26 +1,26 @@
 import { NotHtmlError } from '@/common/0.domain/errors/not-html-error'
 
-import { Html } from '@/communication/0.domain/value-objects/html'
+import { EmailHtml } from '@/communication/0.domain/value-objects/email.html'
 
 type SutTypes = {
-  sut: typeof Html
+  sut: typeof EmailHtml
 }
 
 const makeSut = (): SutTypes => {
-  const sut = Html
+  const sut = EmailHtml
 
   return { sut }
 }
 
-describe('Html', () => {
+describe('EmailHtml', () => {
   describe('success', () => {
-    it('returns Html when input is valid', () => {
+    it('returns EmailHtml when input is valid', () => {
       const { sut } = makeSut()
       const input = '<html>any_text</html>'
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(Html)
+      expect(result.value).toBeInstanceOf(EmailHtml)
     })
   })
 

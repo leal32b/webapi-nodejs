@@ -5,7 +5,7 @@ import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { Password } from '@/identity/0.domain/value-objects/password'
+import { UserPassword } from '@/identity/0.domain/value-objects/user.password'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 import { type ChangePasswordData, ChangePasswordUseCase } from '@/identity/1.application/use-cases/change-password-use-case'
 
@@ -125,9 +125,9 @@ describe('SignInUseCase', () => {
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns Left with Error when Password.create fails', async () => {
+    it('returns Left with Error when UserPassword.create fails', async () => {
       const { sut, errorFake, changePasswordDataFake } = makeSut()
-      vi.spyOn(Password, 'create').mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(UserPassword, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(changePasswordDataFake)
 

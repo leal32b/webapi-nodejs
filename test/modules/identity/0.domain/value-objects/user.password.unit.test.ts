@@ -1,27 +1,27 @@
 import { EmptyError } from '@/common/0.domain/errors/empty-error'
 import { NullError } from '@/common/0.domain/errors/null-error'
 
-import { Token } from '@/identity/0.domain/value-objects/token'
+import { UserPassword } from '@/identity/0.domain/value-objects/user.password'
 
 type SutTypes = {
-  sut: typeof Token
+  sut: typeof UserPassword
 }
 
 const makeSut = (): SutTypes => {
-  const sut = Token
+  const sut = UserPassword
 
   return { sut }
 }
 
-describe('Token', () => {
+describe('UserPassword', () => {
   describe('success', () => {
-    it('returns Token when input is valid', () => {
+    it('returns UserPassword when input is valid', () => {
       const { sut } = makeSut()
-      const input = 'any_Token'
+      const input = 'any_password'
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(Token)
+      expect(result.value).toBeInstanceOf(UserPassword)
     })
   })
 

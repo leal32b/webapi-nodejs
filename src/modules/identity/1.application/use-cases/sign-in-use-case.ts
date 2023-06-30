@@ -7,7 +7,7 @@ import { InvalidPasswordError } from '@/common/1.application/errors/invalid-pass
 import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 
 import { type UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { Token } from '@/identity/0.domain/value-objects/token'
+import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 
 type Props = {
@@ -63,7 +63,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
     }))
   }
 
-  private async createAccessToken (id: string): Promise<Either<DomainError[], Token>> {
+  private async createAccessToken (id: string): Promise<Either<DomainError[], UserToken>> {
     const { encrypter } = this.props
 
     const accessTokenOrError = await encrypter.encrypt({
@@ -79,7 +79,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
     }
 
     const accessToken = accessTokenOrError.value
-    const tokenOrError = Token.create(accessToken)
+    const tokenOrError = UserToken.create(accessToken)
 
     return tokenOrError.applyOnRight(token => token)
   }
@@ -118,7 +118,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
     return right(userAggregate)
   }
 
-  private async updateUserAggregate (userAggregate: UserAggregate, token: Token): Promise<Either<DomainError[], void>> {
+  private async updateUserAggregate (userAggregate: UserAggregate, token: UserToken): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
     userAggregate.setToken(token)

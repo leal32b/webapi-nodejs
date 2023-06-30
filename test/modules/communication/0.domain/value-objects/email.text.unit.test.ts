@@ -1,26 +1,26 @@
 import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
 
-import { Text } from '@/communication/0.domain/value-objects/text'
+import { EmailText } from '@/communication/0.domain/value-objects/email.text'
 
 type SutTypes = {
-  sut: typeof Text
+  sut: typeof EmailText
 }
 
 const makeSut = (): SutTypes => {
-  const sut = Text
+  const sut = EmailText
 
   return { sut }
 }
 
-describe('Text', () => {
+describe('EmailText', () => {
   describe('success', () => {
-    it('returns Text when input is valid', () => {
+    it('returns EmailText when input is valid', () => {
       const { sut } = makeSut()
       const input = 'any_text'
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(Text)
+      expect(result.value).toBeInstanceOf(EmailText)
     })
   })
 

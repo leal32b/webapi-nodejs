@@ -5,14 +5,14 @@ import { EmailValidator } from '@/common/0.domain/validators/email-validator'
 import { MaxLengthValidator } from '@/common/0.domain/validators/max-length-validator'
 import { MinLengthValidator } from '@/common/0.domain/validators/min-length-validator'
 
-export class To extends ValueObject<string | string[]> {
-  static create (input: string | string[]): Either<DomainError[], To> {
+export class EmailTo extends ValueObject<string | string[]> {
+  static create (input: string | string[]): Either<DomainError[], EmailTo> {
     const validOrError = this.validate(input, [
       MinLengthValidator.create({ minLength: 12 }),
       MaxLengthValidator.create({ maxLength: 64 }),
       EmailValidator.create()
     ])
 
-    return validOrError.applyOnRight(() => new To(input))
+    return validOrError.applyOnRight(() => new EmailTo(input))
   }
 }

@@ -4,7 +4,7 @@ import { UseCase } from '@/common/1.application/base/use-case'
 import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 
 import { type UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 
 type Props = {
@@ -33,7 +33,7 @@ export class ConfirmEmailUseCase extends UseCase<Props, ConfirmEmailData, Confir
     }
 
     const userAggregate = userAggregateOrError.value
-    const emailConfirmedOrError = EmailConfirmed.create(true)
+    const emailConfirmedOrError = UserEmailConfirmed.create(true)
 
     if (emailConfirmedOrError.isLeft()) {
       return left(emailConfirmedOrError.value)
@@ -64,7 +64,7 @@ export class ConfirmEmailUseCase extends UseCase<Props, ConfirmEmailData, Confir
     return right(userAggregate)
   }
 
-  private async updateUserAggregate (userAggregate: UserAggregate, emailConfirmed: EmailConfirmed): Promise<Either<DomainError[], void>> {
+  private async updateUserAggregate (userAggregate: UserAggregate, emailConfirmed: UserEmailConfirmed): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
     userAggregate.setEmailConfirmed(emailConfirmed)

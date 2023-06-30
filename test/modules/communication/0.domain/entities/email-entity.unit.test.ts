@@ -1,11 +1,11 @@
 import { DomainError } from '@/common/0.domain/base/domain-error'
 
 import { EmailEntity, type EmailEntityProps } from '@/communication/0.domain/entities/email-entity'
-import { From } from '@/communication/0.domain/value-objects/from'
-import { Html } from '@/communication/0.domain/value-objects/html'
-import { Subject } from '@/communication/0.domain/value-objects/subject'
-import { Text } from '@/communication/0.domain/value-objects/text'
-import { To } from '@/communication/0.domain/value-objects/to'
+import { EmailFrom } from '@/communication/0.domain/value-objects/email.from'
+import { EmailHtml } from '@/communication/0.domain/value-objects/email.html'
+import { EmailSubject } from '@/communication/0.domain/value-objects/email.subject'
+import { EmailText } from '@/communication/0.domain/value-objects/email.text'
+import { EmailTo } from '@/communication/0.domain/value-objects/email.to'
 
 const makePropsFake = (): EmailEntityProps => ({
   from: 'sender@mail.com',
@@ -55,7 +55,7 @@ describe('EmailEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as EmailEntity).from).toBeInstanceOf(From)
+      expect((result.value as EmailEntity).from).toBeInstanceOf(EmailFrom)
     })
 
     it('gets html', () => {
@@ -64,7 +64,7 @@ describe('EmailEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as EmailEntity).html).toBeInstanceOf(Html)
+      expect((result.value as EmailEntity).html).toBeInstanceOf(EmailHtml)
     })
 
     it('gets subject', () => {
@@ -72,7 +72,7 @@ describe('EmailEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as EmailEntity).subject).toBeInstanceOf(Subject)
+      expect((result.value as EmailEntity).subject).toBeInstanceOf(EmailSubject)
     })
 
     it('gets text', () => {
@@ -80,7 +80,7 @@ describe('EmailEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as EmailEntity).text).toBeInstanceOf(Text)
+      expect((result.value as EmailEntity).text).toBeInstanceOf(EmailText)
     })
 
     it('gets to', () => {
@@ -88,7 +88,7 @@ describe('EmailEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as EmailEntity).to).toBeInstanceOf(To)
+      expect((result.value as EmailEntity).to).toBeInstanceOf(EmailTo)
     })
   })
 
@@ -112,7 +112,7 @@ describe('EmailEntity', () => {
       const result = sut.create({ ...propsFake, from, subject })
 
       expect((result.value as DomainError[]).map(error => error.props.field)).toEqual(
-        expect.arrayContaining(['From', 'Subject'])
+        expect.arrayContaining(['EmailFrom', 'EmailSubject'])
       )
     })
   })

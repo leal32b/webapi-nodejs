@@ -1,18 +1,18 @@
 import { NullError } from '@/common/0.domain/errors/null-error'
 
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
 
 type SutTypes = {
-  sut: typeof EmailConfirmed
+  sut: typeof UserEmailConfirmed
 }
 
 const makeSut = (): SutTypes => {
-  const sut = EmailConfirmed
+  const sut = UserEmailConfirmed
 
   return { sut }
 }
 
-describe('EmailConfirmed', () => {
+describe('UserEmailConfirmed', () => {
   describe('success', () => {
     it('returns EmailConfirmed when input is valid', () => {
       const { sut } = makeSut()
@@ -20,7 +20,7 @@ describe('EmailConfirmed', () => {
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(EmailConfirmed)
+      expect(result.value).toBeInstanceOf(UserEmailConfirmed)
     })
   })
 

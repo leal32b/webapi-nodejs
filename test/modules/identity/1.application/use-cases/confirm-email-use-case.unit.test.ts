@@ -3,7 +3,7 @@ import { left, right } from '@/common/0.domain/utils/either'
 import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 import { type ConfirmEmailData, ConfirmEmailUseCase } from '@/identity/1.application/use-cases/confirm-email-use-case'
 
@@ -93,7 +93,7 @@ describe('ConfirmEmailUseCase', () => {
 
     it('returns Left with Error when EmailConfirmed.create fails', async () => {
       const { sut, confirmEmailDataFake, errorFake } = makeSut()
-      vi.spyOn(EmailConfirmed, 'create').mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(UserEmailConfirmed, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(confirmEmailDataFake)
 

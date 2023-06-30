@@ -6,7 +6,7 @@ import { InvalidPasswordError } from '@/common/1.application/errors/invalid-pass
 import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { Token } from '@/identity/0.domain/value-objects/token'
+import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 import { type SignInData, SignInUseCase } from '@/identity/1.application/use-cases/sign-in-use-case'
 
@@ -154,9 +154,9 @@ describe('SignInUseCase', () => {
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns Left with Error when Token.create fails', async () => {
+    it('returns Left with Error when UserToken.create fails', async () => {
       const { sut, errorFake, signInDataFake } = makeSut()
-      vi.spyOn(Token, 'create').mockReturnValueOnce(left([errorFake]))
+      vi.spyOn(UserToken, 'create').mockReturnValueOnce(left([errorFake]))
 
       const result = await sut.execute(signInDataFake)
 

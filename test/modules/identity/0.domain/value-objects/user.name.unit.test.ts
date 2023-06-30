@@ -1,27 +1,27 @@
 import { MaxLengthError } from '@/common/0.domain/errors/max-length-error'
 import { MinLengthError } from '@/common/0.domain/errors/min-length-error'
 
-import { Subject } from '@/communication/0.domain/value-objects/subject'
+import { UserName } from '@/identity/0.domain/value-objects/user.name'
 
 type SutTypes = {
-  sut: typeof Subject
+  sut: typeof UserName
 }
 
 const makeSut = (): SutTypes => {
-  const sut = Subject
+  const sut = UserName
 
   return { sut }
 }
 
-describe('Subject', () => {
+describe('UserName', () => {
   describe('success', () => {
-    it('returns Subject when input is valid', () => {
+    it('returns UserName when input is valid', () => {
       const { sut } = makeSut()
-      const input = 'any_subject'
+      const input = 'any_name'
 
       const result = sut.create(input)
 
-      expect(result.value).toBeInstanceOf(Subject)
+      expect(result.value).toBeInstanceOf(UserName)
     })
   })
 
@@ -37,7 +37,7 @@ describe('Subject', () => {
 
     it('returns MaxLengthError when input.length is higher than maxLength', () => {
       const { sut } = makeSut()
-      const input = 'input_that_exceeds_subject_max_length_of_sixty_four_characters___'
+      const input = 'input_that_exceeds_name_max_length_of_thirty_two_characters'
 
       const result = sut.create(input)
 

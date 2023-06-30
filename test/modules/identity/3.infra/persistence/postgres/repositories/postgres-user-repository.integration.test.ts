@@ -4,7 +4,7 @@ import { persistence } from '@/common/4.main/container'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
 import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user-repository'
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker-mock'
@@ -158,7 +158,7 @@ describe('UserPostgresRepository', () => {
     describe('update', () => {
       it('returns Right on update success', async () => {
         const { sut, userAggregateFake } = makeSut()
-        const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
+        const emailConfirmed = UserEmailConfirmed.create(true).value as UserEmailConfirmed
         userAggregateFake.setEmailConfirmed(emailConfirmed)
 
         const result = await sut.update(userAggregateFake)

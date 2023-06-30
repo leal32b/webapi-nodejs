@@ -3,20 +3,20 @@ import { Entity } from '@/common/0.domain/base/entity'
 import { type Either } from '@/common/0.domain/utils/either'
 import { type Identifier } from '@/common/0.domain/utils/identifier'
 
-import { Email } from '@/identity/0.domain/value-objects/email'
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
-import { Locale } from '@/identity/0.domain/value-objects/locale'
-import { Name } from '@/identity/0.domain/value-objects/name'
-import { Password } from '@/identity/0.domain/value-objects/password'
-import { Token } from '@/identity/0.domain/value-objects/token'
+import { UserEmail } from '@/identity/0.domain/value-objects/user.email'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
+import { UserLocale } from '@/identity/0.domain/value-objects/user.locale'
+import { UserName } from '@/identity/0.domain/value-objects/user.name'
+import { UserPassword } from '@/identity/0.domain/value-objects/user.password'
+import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 
 type Props = {
-  email: Email
-  emailConfirmed: EmailConfirmed
-  locale: Locale
-  name: Name
-  password: Password
-  token: Token
+  email: UserEmail
+  emailConfirmed: UserEmailConfirmed
+  locale: UserLocale
+  name: UserName
+  password: UserPassword
+  token: UserToken
 }
 
 export type UserEntityProps = {
@@ -34,22 +34,22 @@ export class UserEntity extends Entity<Props> {
     const { email, locale, name, password, token, id, emailConfirmed } = props
 
     const validPropsOrError = this.validateProps<Props>({
-      email: Email.create(email),
-      emailConfirmed: EmailConfirmed.create(emailConfirmed || false),
-      locale: Locale.create(locale),
-      name: Name.create(name),
-      password: Password.create(password),
-      token: Token.create(token)
+      email: UserEmail.create(email),
+      emailConfirmed: UserEmailConfirmed.create(emailConfirmed || false),
+      locale: UserLocale.create(locale),
+      name: UserName.create(name),
+      password: UserPassword.create(password),
+      token: UserToken.create(token)
     })
 
     return validPropsOrError.applyOnRight(props => new UserEntity(props, id))
   }
 
-  public get email (): Email {
+  public get email (): UserEmail {
     return this.props.email
   }
 
-  public get emailConfirmed (): EmailConfirmed {
+  public get emailConfirmed (): UserEmailConfirmed {
     return this.props.emailConfirmed
   }
 
@@ -57,31 +57,31 @@ export class UserEntity extends Entity<Props> {
     return this.props.id
   }
 
-  public get locale (): Locale {
+  public get locale (): UserLocale {
     return this.props.locale
   }
 
-  public get name (): Name {
+  public get name (): UserName {
     return this.props.name
   }
 
-  public get password (): Password {
+  public get password (): UserPassword {
     return this.props.password
   }
 
-  public get token (): Token {
+  public get token (): UserToken {
     return this.props.token
   }
 
-  public set emailConfirmed (value: EmailConfirmed) {
+  public set emailConfirmed (value: UserEmailConfirmed) {
     this.props.emailConfirmed = value
   }
 
-  public set password (value: Password) {
+  public set password (value: UserPassword) {
     this.props.password = value
   }
 
-  public set token (value: Token) {
+  public set token (value: UserToken) {
     this.props.token = value
   }
 }

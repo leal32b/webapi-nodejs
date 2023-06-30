@@ -2,11 +2,11 @@ import { DomainError } from '@/common/0.domain/base/domain-error'
 import { Identifier } from '@/common/0.domain/utils/identifier'
 
 import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
-import { Email } from '@/identity/0.domain/value-objects/email'
-import { EmailConfirmed } from '@/identity/0.domain/value-objects/email-confirmed'
-import { Name } from '@/identity/0.domain/value-objects/name'
-import { Password } from '@/identity/0.domain/value-objects/password'
-import { Token } from '@/identity/0.domain/value-objects/token'
+import { UserEmail } from '@/identity/0.domain/value-objects/user.email'
+import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
+import { UserName } from '@/identity/0.domain/value-objects/user.name'
+import { UserPassword } from '@/identity/0.domain/value-objects/user.password'
+import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 
 const makePropsFake = (): UserEntityProps => ({
   email: 'any@mail.com',
@@ -60,7 +60,7 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).email).toBeInstanceOf(Email)
+      expect((result.value as UserEntity).email).toBeInstanceOf(UserEmail)
     })
 
     it('gets emailConfirmed', () => {
@@ -68,7 +68,7 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).emailConfirmed).toBeInstanceOf(EmailConfirmed)
+      expect((result.value as UserEntity).emailConfirmed).toBeInstanceOf(UserEmailConfirmed)
     })
 
     it('gets id', () => {
@@ -84,7 +84,7 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).name).toBeInstanceOf(Name)
+      expect((result.value as UserEntity).name).toBeInstanceOf(UserName)
     })
 
     it('gets password', () => {
@@ -92,7 +92,7 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).password).toBeInstanceOf(Password)
+      expect((result.value as UserEntity).password).toBeInstanceOf(UserPassword)
     })
 
     it('gets token', () => {
@@ -100,12 +100,12 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).token).toBeInstanceOf(Token)
+      expect((result.value as UserEntity).token).toBeInstanceOf(UserToken)
     })
 
     it('sets emailConfirmed', () => {
       const { sut, propsFake } = makeSut()
-      const emailConfirmed = EmailConfirmed.create(true).value as EmailConfirmed
+      const emailConfirmed = UserEmailConfirmed.create(true).value as UserEmailConfirmed
 
       const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
@@ -116,7 +116,7 @@ describe('UserEntity', () => {
 
     it('sets password', () => {
       const { sut, propsFake } = makeSut()
-      const password = Password.create('any_password').value as Token
+      const password = UserPassword.create('any_password').value as UserToken
 
       const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
@@ -127,7 +127,7 @@ describe('UserEntity', () => {
 
     it('sets token', () => {
       const { sut, propsFake } = makeSut()
-      const token = Token.create('any_token').value as Token
+      const token = UserToken.create('any_token').value as UserToken
 
       const result = sut.create(propsFake)
       const userEntity = result.value as UserEntity
@@ -157,7 +157,7 @@ describe('UserEntity', () => {
       const result = sut.create({ ...propsFake, email, name })
 
       expect((result.value as DomainError[]).map(error => error.props.field)).toEqual(
-        expect.arrayContaining(['Email', 'Name'])
+        expect.arrayContaining(['UserEmail', 'UserName'])
       )
     })
   })

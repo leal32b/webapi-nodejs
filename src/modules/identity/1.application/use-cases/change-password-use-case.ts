@@ -6,7 +6,7 @@ import { NotFoundError } from '@/common/1.application/errors/not-found-error'
 import { PasswordMismatchError } from '@/common/1.application/errors/password-mismatch-error'
 
 import { type UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { Password } from '@/identity/0.domain/value-objects/password'
+import { UserPassword } from '@/identity/0.domain/value-objects/user.password'
 import { type UserRepository } from '@/identity/1.application/repositories/user-repository'
 
 type Props = {
@@ -59,7 +59,7 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     }))
   }
 
-  private async hashPassword (password: string): Promise<Either<DomainError[], Password>> {
+  private async hashPassword (password: string): Promise<Either<DomainError[], UserPassword>> {
     const { hasher } = this.props
 
     const hashedPasswordOrError = await hasher.hash(password)
@@ -69,7 +69,7 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     }
 
     const hashedPassword = hashedPasswordOrError.value
-    const passwordOrError = Password.create(hashedPassword)
+    const passwordOrError = UserPassword.create(hashedPassword)
 
     return passwordOrError.applyOnRight(password => password)
   }
@@ -101,7 +101,7 @@ export class ChangePasswordUseCase extends UseCase<Props, ChangePasswordData, Ch
     return right(userAggregate)
   }
 
-  private async updateUserAggregate (userAggregate: UserAggregate, password: Password): Promise<Either<DomainError[], void>> {
+  private async updateUserAggregate (userAggregate: UserAggregate, password: UserPassword): Promise<Either<DomainError[], void>> {
     const { userRepository } = this.props
 
     userAggregate.setPassword(password)
