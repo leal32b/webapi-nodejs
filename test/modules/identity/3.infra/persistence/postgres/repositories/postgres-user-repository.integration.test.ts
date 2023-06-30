@@ -62,7 +62,7 @@ describe('UserPostgresRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it.only('calls messageBroker.publishToTopic with correct params', async () => {
+      it('calls messageBroker.publishToTopic with correct params', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 

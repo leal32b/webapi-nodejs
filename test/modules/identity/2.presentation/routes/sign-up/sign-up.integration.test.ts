@@ -35,7 +35,7 @@ describe('SignUpRoute', () => {
   })
 
   describe('success', () => {
-    it.only('returns 200 with an email on success', async () => {
+    it('returns 200 with an email on success', async () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
