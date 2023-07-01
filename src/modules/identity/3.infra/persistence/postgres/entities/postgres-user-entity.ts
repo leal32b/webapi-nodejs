@@ -22,4 +22,13 @@ export class PostgresUserEntity {
 
   @Column({ type: 'text' })
     token: string
+
+  @Column({ type: 'timestamp' })
+    createdAt: Date
+
+  @Column({ type: 'timestamp' })
+    updatedAt: Date
+
+  @Column({ type: 'boolean' })
+    active: boolean
 }

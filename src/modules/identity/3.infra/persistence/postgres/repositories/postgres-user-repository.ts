@@ -23,27 +23,16 @@ export class PostgresUserRepository implements UserRepository {
 
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const repository = await persistence.postgres.client.getRepository('users')
-
-      const postgresUser = repository.create({
-        email: email.value,
-        emailConfirmed: emailConfirmed.value,
-        id: id.value,
-        locale: locale.value,
-        name: name.value,
-        password: password.value,
-        token: token.value
-      })
-
-      await persistence.postgres.client.manager.save(postgresUser)
+      const user = this.toPersistence(userAggregate)
+      await persistence.postgres.client.manager.save(repository.create(user))
 
       this.props.messageBroker.publishToTopic(userCreatedTopic, ['userCreated', '#'], UserCreatedEvent.create({
-        aggregateId: id.value,
+        aggregateId: user.id,
         payload: {
-          email: email.value,
-          locale: locale.value,
-          token: token.value
+          email: user.email,
+          locale: user.locale,
+          token: user.token
         }
       }))
 
@@ -61,24 +50,7 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user.id,
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -92,24 +64,7 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user.id,
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -160,7 +115,7 @@ export class PostgresUserRepository implements UserRepository {
         token: token.value
       })
 
-      const result = await persistence.postgres.client.manager.update('users', { id: id.value }, postgresUser)
+      const result = await persistence.postgres.client.manager.update('users', { id }, postgresUser)
 
       return right(result)
     } catch (error) {
@@ -174,5 +129,37 @@ export class PostgresUserRepository implements UserRepository {
     const user = await repository.findOneBy(filter)
 
     return user
+  }
+
+  private toDomain (user: Record<string, any>): UserAggregate {
+    const userEntity = UserEntity.create({
+      email: user.email,
+      emailConfirmed: user.emailConfirmed,
+      id: user.id,
+      locale: user.locale,
+      name: user.name,
+      password: user.password,
+      token: user.token
+    })
+    const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
+
+    return userAggregate.value as UserAggregate
+  }
+
+  private toPersistence (userAggregate: UserAggregate): Record<string, any> {
+    const { active, createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
+
+    return {
+      active,
+      createdAt,
+      email: email.value,
+      emailConfirmed: emailConfirmed.value,
+      id,
+      locale: locale.value,
+      name: name.value,
+      password: password.value,
+      token: token.value,
+      updatedAt
+    }
   }
 }

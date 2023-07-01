@@ -8,6 +8,7 @@ import { makeValueObjectStub } from '~/common/_doubles/stubs/value-object-stub'
 
 type Props = {
   valueObject: ValueObject<any>
+  invalidValueObject?: ValueObject<any>
 }
 
 type SutTypes = {

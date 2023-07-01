@@ -48,7 +48,7 @@ export class SignInUseCase extends UseCase<Props, SignInData, SignInResultDTO> {
       return left(passwordValidOrError.value)
     }
 
-    const tokenOrError = await this.createAccessToken(id.value)
+    const tokenOrError = await this.createAccessToken(id)
 
     if (tokenOrError.isLeft()) {
       return left(tokenOrError.value)

@@ -3,25 +3,13 @@ import { type PersistenceFixture } from '@/common/3.infra/persistence/persistenc
 import { persistence } from '@/common/4.main/container'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
+import { type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
 import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
 import { MongodbUserRepository } from '@/identity/3.infra/persistence/mongodb/repositories/mongodb-user-repository'
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker-mock'
+import { makeUserAggregateFake } from '~/identity/_doubles/user-aggregate-fake'
 import { MongodbUserFixture } from '~/identity/_fixtures/mongodb/mongodb-user-fixture'
-
-const makeUserAggregateFake = (): UserAggregate => {
-  return UserAggregate.create(
-    UserEntity.create({
-      email: 'any@mail.com',
-      id: '000000000000000000000001',
-      locale: 'en',
-      name: 'any_name',
-      password: 'hashed_password',
-      token: 'any_token'
-    }).value as UserEntity
-  ).value as UserAggregate
-}
 
 type SutTypes = {
   userFixture: PersistenceFixture<UserEntityProps>
@@ -73,7 +61,7 @@ describe('UserMongodbRepository', () => {
           ['userCreated', '#'],
           {
             props: {
-              aggregateId: '000000000000000000000001',
+              aggregateId: userAggregateFake.aggregateRoot.id,
               createdAt: expect.any(Date),
               payload: {
                 email: 'any@mail.com',
@@ -112,7 +100,7 @@ describe('UserMongodbRepository', () => {
     describe('readById', () => {
       it('returns Right with null on readById if user does not exist', async () => {
         const { sut } = makeSut()
-        const id = 'any_id2'
+        const id = '999999999999999999999999'
 
         const result = await sut.readById(id)
 

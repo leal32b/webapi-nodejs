@@ -9,14 +9,17 @@ class FixtureFake extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {
     return new FixtureFake({
       collectionName: 'users',
-      createDefault: (): any => ({
+      createDefault: (): MongodbUserEntity => ({
+        active: true,
+        createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,
         id: faker.string.alphanumeric(12),
         locale: 'en',
         name: faker.person.firstName(),
         password: faker.string.alphanumeric(12),
-        token: faker.string.alphanumeric(12)
+        token: faker.string.alphanumeric(12),
+        updatedAt: new Date()
       })
     })
   }
@@ -49,13 +52,16 @@ describe('MongodbFixture', () => {
       const result = await sut.createRandomFixture()
 
       expect(result).toEqual({
+        active: true,
+        createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
         locale: 'en',
         name: expect.any(String),
         password: expect.any(String),
-        token: expect.any(String)
+        token: expect.any(String),
+        updatedAt: expect.any(Date)
       })
     })
 
@@ -66,40 +72,49 @@ describe('MongodbFixture', () => {
       const result = await sut.createFixture(props)
 
       expect(result).toEqual({
+        active: true,
+        createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
         locale: 'en',
         name: 'any_name',
         password: expect.any(String),
-        token: expect.any(String)
+        token: expect.any(String),
+        updatedAt: expect.any(Date)
       })
     })
 
     it('returns created entities with provided props', async () => {
       const { sut } = await makeSut()
-      const props1 = { name: 'any_name1' }
-      const props2 = { name: 'any_name2' }
+      const props1 = { name: 'any_name_1' }
+      const props2 = { name: 'any_name_2' }
 
       const result = await sut.createFixtures([props1, props2])
 
       expect(result).toEqual([{
+        active: true,
+        createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
         locale: 'en',
-        name: 'any_name1',
+        name: 'any_name_1',
         password: expect.any(String),
-        token: expect.any(String)
+        token: expect.any(String),
+        updatedAt: expect.any(Date)
       },
       {
+        active: true,
+        createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
         id: expect.any(String),
         locale: 'en',
-        name: 'any_name2',
+        name: 'any_name_2',
         password: expect.any(String),
-        token: expect.any(String)
+        token: expect.any(String),
+        updatedAt: expect.any(Date)
       }])
     })
 

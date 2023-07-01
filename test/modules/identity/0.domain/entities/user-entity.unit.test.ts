@@ -1,5 +1,4 @@
 import { DomainError } from '@/common/0.domain/base/domain-error'
-import { Identifier } from '@/common/0.domain/utils/identifier'
 
 import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
 import { UserEmail } from '@/identity/0.domain/value-objects/user.email'
@@ -10,7 +9,6 @@ import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 
 const makePropsFake = (): UserEntityProps => ({
   email: 'any@mail.com',
-  id: 'any_id',
   locale: 'en',
   name: 'any_name',
   password: 'password',
@@ -76,7 +74,7 @@ describe('UserEntity', () => {
 
       const result = sut.create(propsFake)
 
-      expect((result.value as UserEntity).id).toBeInstanceOf(Identifier)
+      expect(typeof (result.value as UserEntity).id).toBe('string')
     })
 
     it('gets name', () => {

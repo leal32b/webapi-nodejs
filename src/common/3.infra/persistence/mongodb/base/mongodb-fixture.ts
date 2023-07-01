@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 import { type IntegerGreaterThanZero } from '@/common/0.domain/types/integer-greater-than-zero'
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
 import { persistence } from '@/common/4.main/container'
@@ -29,7 +31,10 @@ export abstract class MongodbFixture<EntityType> implements PersistenceFixture<E
   private adaptId (entity: any): EntityType {
     const { id, ...entityWithoutId } = entity
 
-    return { ...entityWithoutId, _id: id }
+    return {
+      ...entityWithoutId,
+      _id: new ObjectId(id)
+    }
   }
 
   private async createMongodbFixture (): Promise<EntityType>

@@ -25,26 +25,16 @@ export class MongodbUserRepository implements UserRepository {
 
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const userCollection = await persistence.mongodb.client.getCollection('users')
-
-      const _id = new ObjectId(id.value)
-      await userCollection.insertOne({
-        _id,
-        email: email.value,
-        emailConfirmed: emailConfirmed.value,
-        locale: locale.value,
-        name: name.value,
-        password: password.value,
-        token: token.value
-      })
+      const user = this.toPersistence(userAggregate)
+      await userCollection.insertOne(user)
 
       this.props.messageBroker.publishToTopic(userCreatedTopic, ['userCreated', '#'], UserCreatedEvent.create({
-        aggregateId: id.value,
+        aggregateId: user._id.toString(),
         payload: {
-          email: email.value,
-          locale: locale.value,
-          token: token.value
+          email: user.email,
+          locale: user.locale,
+          token: user.token
         }
       }))
 
@@ -62,24 +52,7 @@ export class MongodbUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user._id.toString(),
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -87,30 +60,13 @@ export class MongodbUserRepository implements UserRepository {
 
   async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
     try {
-      const user = await this.readByFilter({ _id: id })
+      const user = await this.readByFilter({ _id: new ObjectId(id) })
 
       if (!user) {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user._id.toString(),
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -124,24 +80,7 @@ export class MongodbUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user._id.toString(),
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -152,7 +91,7 @@ export class MongodbUserRepository implements UserRepository {
       const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const userCollection = await persistence.mongodb.client.getCollection('users')
 
-      const result = await userCollection.updateOne({ _id: id }, {
+      const result = await userCollection.updateOne({ _id: new ObjectId(id) }, {
         $set: {
           email: email.value,
           emailConfirmed: emailConfirmed.value,
@@ -175,5 +114,37 @@ export class MongodbUserRepository implements UserRepository {
     const user = await userCollection.findOne(filter)
 
     return user
+  }
+
+  private toDomain (user: Record<string, any>): UserAggregate {
+    const userEntity = UserEntity.create({
+      email: user.email,
+      emailConfirmed: user.emailConfirmed,
+      id: user._id.toString(),
+      locale: user.locale,
+      name: user.name,
+      password: user.password,
+      token: user.token
+    })
+    const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
+
+    return userAggregate.value as UserAggregate
+  }
+
+  private toPersistence (userAggregate: UserAggregate): Record<string, any> {
+    const { active, createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
+
+    return {
+      _id: new ObjectId(id),
+      active,
+      createdAt,
+      email: email.value,
+      emailConfirmed: emailConfirmed.value,
+      locale: locale.value,
+      name: name.value,
+      password: password.value,
+      token: token.value,
+      updatedAt
+    }
   }
 }

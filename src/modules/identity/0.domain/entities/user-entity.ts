@@ -1,7 +1,6 @@
 import { type DomainError } from '@/common/0.domain/base/domain-error'
-import { Entity } from '@/common/0.domain/base/entity'
-import { type Either } from '@/common/0.domain/utils/either'
-import { type Identifier } from '@/common/0.domain/utils/identifier'
+import { type BasePropsType, Entity } from '@/common/0.domain/base/entity'
+import { left, type Either, right } from '@/common/0.domain/utils/either'
 
 import { UserEmail } from '@/identity/0.domain/value-objects/user.email'
 import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed'
@@ -12,37 +11,49 @@ import { UserToken } from '@/identity/0.domain/value-objects/user.token'
 
 type Props = {
   email: UserEmail
-  emailConfirmed: UserEmailConfirmed
   locale: UserLocale
   name: UserName
   password: UserPassword
   token: UserToken
+  emailConfirmed?: UserEmailConfirmed
 }
 
-export type UserEntityProps = {
+export type UserEntityProps = BasePropsType & {
   email: string
   locale: string
   name: string
   password: string
   token: string
   emailConfirmed?: boolean
-  id?: string
 }
 
 export class UserEntity extends Entity<Props> {
   public static create (props: UserEntityProps): Either<DomainError[], UserEntity> {
-    const { email, locale, name, password, token, id, emailConfirmed } = props
+    const { email, locale, name, password, token, emailConfirmed } = props
+    const { active, createdAt, id, updatedAt } = props
 
     const validPropsOrError = this.validateProps<Props>({
       email: UserEmail.create(email),
-      emailConfirmed: UserEmailConfirmed.create(emailConfirmed || false),
+      emailConfirmed: UserEmailConfirmed.create(emailConfirmed ?? false),
       locale: UserLocale.create(locale),
       name: UserName.create(name),
       password: UserPassword.create(password),
       token: UserToken.create(token)
     })
 
-    return validPropsOrError.applyOnRight(props => new UserEntity(props, id))
+    if (validPropsOrError.isLeft()) {
+      return left(validPropsOrError.value)
+    }
+
+    const validProps = {
+      ...validPropsOrError.value,
+      active,
+      createdAt,
+      id,
+      updatedAt
+    }
+
+    return right(new UserEntity(validProps))
   }
 
   public get email (): UserEmail {
@@ -53,12 +64,8 @@ export class UserEntity extends Entity<Props> {
     return this.props.emailConfirmed
   }
 
-  public get id (): Identifier {
+  public get id (): string {
     return this.props.id
-  }
-
-  public get locale (): UserLocale {
-    return this.props.locale
   }
 
   public get name (): UserName {

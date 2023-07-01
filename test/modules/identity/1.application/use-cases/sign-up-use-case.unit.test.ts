@@ -115,7 +115,6 @@ describe('SignUpUseCase', () => {
         right(UserAggregate.create(
           UserEntity.create({
             ...makeSignUpDataFake(),
-            id: 'any_id',
             token: 'any_token'
           }).value as UserEntity
         ).value as UserAggregate)

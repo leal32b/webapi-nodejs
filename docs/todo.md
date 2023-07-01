@@ -53,3 +53,4 @@
 [ ] change "create, read, update, delete" to "save, find, delete"
 [ ] create default methods inside repositories
 [x] rename value-objects with entity radical
+[ ] implement error return in UserAggregate

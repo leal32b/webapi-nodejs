@@ -1,24 +1,35 @@
 import { type DomainError } from '@/common/0.domain/base/domain-error'
-import { type ValueObject } from '@/common/0.domain/base/value-object'
 import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { Identifier } from '@/common/0.domain/utils/identifier'
 
-type Props = Record<string, Either<DomainError[], ValueObject<any>>>
+type PropsOrErrors<PropsType> = { [K in keyof PropsType]: Either<DomainError[], PropsType[K]> }
+
+export type BasePropsType = {
+  active?: boolean
+  createdAt?: Date
+  id?: string
+  updatedAt?: Date
+}
 
 export abstract class Entity<PropsType> {
-  protected readonly _props: PropsType & { id: Identifier }
+  protected readonly _props: BasePropsType & PropsType
 
-  protected constructor (props: PropsType, id?: string) {
+  protected constructor (props: BasePropsType & PropsType) {
     this._props = {
       ...props,
-      id: Identifier.create({ id })
+      ...(!props.id && {
+        active: true,
+        createdAt: new Date(),
+        id: Identifier.create().value,
+        updatedAt: new Date()
+      })
     }
   }
 
-  public static validateProps <PropsType>(props: Props): Either<DomainError[], PropsType> {
+  public static validateProps <PropsType>(props: PropsOrErrors<PropsType>): Either<DomainError[], PropsType> {
     const errors = Object
       .values(props)
-      .map(prop => prop.isLeft() ? prop.value : [])
+      .map(prop => (prop as any).isLeft() ? (prop as any).value : [])
       .reduce((acc, curVal) => acc.concat(curVal))
 
     if (errors.length > 0) {
@@ -28,7 +39,7 @@ export abstract class Entity<PropsType> {
     const validatedProps = Object.fromEntries(
       Object
         .entries(props)
-        .map(([prop, result]) => [prop, result.value])
+        .map(([prop, result]) => [prop, (result as any).value])
     )
 
     return right(validatedProps as PropsType)

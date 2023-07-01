@@ -76,7 +76,7 @@ describe('SignInUseCase', () => {
       expect(encrypter.encrypt).toHaveBeenCalledWith({
         payload: {
           auth: ['user'],
-          id: 'any_id'
+          id: expect.any(String)
         },
         type: 'access'
       })
