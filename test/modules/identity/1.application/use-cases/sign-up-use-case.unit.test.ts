@@ -117,7 +117,7 @@ describe('SignUpUseCase', () => {
             ...makeSignUpDataFake(),
             token: 'any_token'
           }).value as UserEntity
-        ).value as UserAggregate)
+        ))
       )
 
       const result = await sut.execute({ ...signUpDataFake })
@@ -155,7 +155,7 @@ describe('SignUpUseCase', () => {
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
-    it('returns Left with Error when UserAggregate.create fails', async () => {
+    it('returns Left with Error when UserEntity.create fails', async () => {
       const { sut, signUpDataFake } = makeSut()
 
       const result = await sut.execute({ ...signUpDataFake, email: 'invalid_email' })

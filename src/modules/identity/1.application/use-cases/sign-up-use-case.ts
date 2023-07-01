@@ -80,13 +80,7 @@ export class SignUpUseCase extends UseCase<Props, SignUpData, SignUpResultDTO> {
     }
 
     const userEntity = userEntityOrError.value
-    const userAggregateOrError = UserAggregate.create(userEntity)
-
-    if (userAggregateOrError.isLeft()) {
-      return left(userAggregateOrError.value)
-    }
-
-    const userAggregate = userAggregateOrError.value
+    const userAggregate = UserAggregate.create(userEntity)
     const createdUserOrError = await userRepository.create(userAggregate)
 
     return createdUserOrError.applyOnRight(() => userAggregate)

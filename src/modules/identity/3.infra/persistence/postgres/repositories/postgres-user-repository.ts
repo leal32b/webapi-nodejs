@@ -78,24 +78,7 @@ export class PostgresUserRepository implements UserRepository {
         return right(null)
       }
 
-      const userEntityOrError = UserEntity.create({
-        email: user.email,
-        emailConfirmed: user.emailConfirmed,
-        id: user.id,
-        locale: user.locale,
-        name: user.name,
-        password: user.password,
-        token: user.token
-      })
-
-      if (userEntityOrError.isLeft()) {
-        return left(userEntityOrError.value)
-      }
-
-      const userEntity = userEntityOrError.value
-      const userAggregateOrError = UserAggregate.create(userEntity)
-
-      return userAggregateOrError.applyOnRight(userAggregate => userAggregate)
+      return right(this.toDomain(user))
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
@@ -143,7 +126,7 @@ export class PostgresUserRepository implements UserRepository {
     })
     const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
 
-    return userAggregate.value as UserAggregate
+    return userAggregate
   }
 
   private toPersistence (userAggregate: UserAggregate): Record<string, any> {

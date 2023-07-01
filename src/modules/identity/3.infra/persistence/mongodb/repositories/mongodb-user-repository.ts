@@ -128,7 +128,7 @@ export class MongodbUserRepository implements UserRepository {
     })
     const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
 
-    return userAggregate.value as UserAggregate
+    return userAggregate
   }
 
   private toPersistence (userAggregate: UserAggregate): Record<string, any> {

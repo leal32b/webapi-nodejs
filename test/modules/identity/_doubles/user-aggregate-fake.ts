@@ -1,12 +1,7 @@
 import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { UserEntity } from '@/identity/0.domain/entities/user-entity'
+
+import { makeUserEntityFake } from '~/identity/_doubles/user-entity-fake'
 
 export const makeUserAggregateFake = (): UserAggregate => UserAggregate.create(
-  UserEntity.create({
-    email: 'any@mail.com',
-    locale: 'en',
-    name: 'any_name',
-    password: 'hashed_password',
-    token: 'any_token'
-  }).value as UserEntity
-).value as any
+  makeUserEntityFake()
+)

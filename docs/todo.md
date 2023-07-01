@@ -54,3 +54,4 @@
 [ ] create default methods inside repositories
 [x] rename value-objects with entity radical
 [ ] implement error return in UserAggregate
+[ ] create mechanism to update updatedAt of entities
