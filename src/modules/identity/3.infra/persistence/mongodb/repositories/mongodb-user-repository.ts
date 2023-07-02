@@ -111,7 +111,6 @@ export class MongodbUserRepository implements UserRepository {
 
   private toDomain (user: Record<string, any>): UserAggregate {
     const userEntity = UserEntity.create({
-      active: user.active,
       createdAt: user.createdAt,
       email: user.email,
       emailConfirmed: user.emailConfirmed,
@@ -128,11 +127,10 @@ export class MongodbUserRepository implements UserRepository {
   }
 
   private toPersistence (userAggregate: UserAggregate): Record<string, any> {
-    const { active, createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
+    const { createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
 
     return {
       _id: new ObjectId(id),
-      active,
       createdAt,
       email: email.value,
       emailConfirmed: emailConfirmed.value,

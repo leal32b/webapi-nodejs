@@ -106,7 +106,6 @@ export class PostgresUserRepository implements UserRepository {
 
   private toDomain (user: Record<string, any>): UserAggregate {
     const userEntity = UserEntity.create({
-      active: user.active,
       createdAt: user.createdAt,
       email: user.email,
       emailConfirmed: user.emailConfirmed,
@@ -123,10 +122,9 @@ export class PostgresUserRepository implements UserRepository {
   }
 
   private toPersistence (userAggregate: UserAggregate): Record<string, any> {
-    const { active, createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
+    const { createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
 
     return {
-      active,
       createdAt,
       email: email.value,
       emailConfirmed: emailConfirmed.value,

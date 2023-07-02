@@ -1,5 +1,4 @@
 export class MongodbUserEntity {
-  active: boolean
   createdAt: Date
   email: string
   emailConfirmed: boolean

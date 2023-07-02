@@ -28,7 +28,4 @@ export class PostgresUserEntity {
 
   @Column({ type: 'timestamp' })
     updatedAt: Date
-
-  @Column({ type: 'boolean' })
-    active: boolean
 }

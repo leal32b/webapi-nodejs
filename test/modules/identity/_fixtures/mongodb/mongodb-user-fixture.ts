@@ -9,7 +9,6 @@ export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
     return new MongodbUserFixture({
       collectionName: 'users',
       createDefault: (): MongodbUserEntity => ({
-        active: true,
         createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,

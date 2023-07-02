@@ -8,7 +8,6 @@ export class PostgresUserFixture extends PostgresFixture<PostgresUserEntity> {
   static create (): PostgresFixture<PostgresUserEntity> {
     return new PostgresUserFixture({
       createDefault: (): PostgresUserEntity => ({
-        active: true,
         createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,

@@ -30,7 +30,7 @@ export type UserEntityProps = BasePropsType & {
 export class UserEntity extends Entity<Props> {
   public static create (props: UserEntityProps): Either<DomainError[], UserEntity> {
     const { email, locale, name, password, token, emailConfirmed } = props
-    const { active, createdAt, id, updatedAt } = props
+    const { createdAt, id, updatedAt } = props
 
     const validPropsOrError = this.validateProps<Props>({
       email: UserEmail.create(email),
@@ -47,7 +47,6 @@ export class UserEntity extends Entity<Props> {
 
     const validProps = {
       ...validPropsOrError.value,
-      active,
       createdAt,
       id,
       updatedAt

@@ -5,7 +5,6 @@ import { Identifier } from '@/common/0.domain/utils/identifier'
 type PropsOrErrors<PropsType> = { [K in keyof PropsType]: Either<DomainError[], PropsType[K]> }
 
 export type BasePropsType = {
-  active?: boolean
   createdAt?: Date
   id?: string
   updatedAt?: Date
@@ -18,7 +17,6 @@ export abstract class Entity<PropsType> {
     this._props = {
       ...props,
       ...(!props.id && {
-        active: true,
         createdAt: new Date(),
         id: Identifier.create().value,
         updatedAt: new Date()

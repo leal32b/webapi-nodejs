@@ -9,7 +9,6 @@ class FakeFixture extends PostgresFixture<PostgresUserEntity> {
   static create (): PostgresFixture<PostgresUserEntity> {
     return new FakeFixture({
       createDefault: (): PostgresUserEntity => ({
-        active: true,
         createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,
@@ -52,7 +51,6 @@ describe('PostgresFixture', () => {
       const result = await sut.createRandomFixture()
 
       expect(result).toEqual({
-        active: true,
         createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
@@ -72,7 +70,6 @@ describe('PostgresFixture', () => {
       const result = await sut.createFixture(props)
 
       expect(result).toEqual({
-        active: true,
         createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
@@ -93,7 +90,6 @@ describe('PostgresFixture', () => {
       const result = await sut.createFixtures([props1, props2])
 
       expect(result).toEqual([{
-        active: true,
         createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
@@ -105,7 +101,6 @@ describe('PostgresFixture', () => {
         updatedAt: expect.any(Date)
       },
       {
-        active: true,
         createdAt: expect.any(Date),
         email: expect.any(String),
         emailConfirmed: false,
