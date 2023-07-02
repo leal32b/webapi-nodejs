@@ -88,18 +88,11 @@ export class MongodbUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const userCollection = await persistence.mongodb.client.getCollection('users')
+      const user = this.toPersistence(userAggregate)
 
-      const result = await userCollection.updateOne({ _id: new ObjectId(id) }, {
-        $set: {
-          email: email.value,
-          emailConfirmed: emailConfirmed.value,
-          locale: locale.value,
-          name: name.value,
-          password: password.value,
-          token: token.value
-        }
+      const result = await userCollection.updateOne({ _id: new ObjectId(user.id) }, {
+        $set: user
       })
 
       return right(result)
@@ -118,13 +111,16 @@ export class MongodbUserRepository implements UserRepository {
 
   private toDomain (user: Record<string, any>): UserAggregate {
     const userEntity = UserEntity.create({
+      active: user.active,
+      createdAt: user.createdAt,
       email: user.email,
       emailConfirmed: user.emailConfirmed,
       id: user._id.toString(),
       locale: user.locale,
       name: user.name,
       password: user.password,
-      token: user.token
+      token: user.token,
+      updatedAt: user.updatedAt
     })
     const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
 

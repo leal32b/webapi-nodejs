@@ -86,19 +86,9 @@ export class PostgresUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const { email, emailConfirmed, id, locale, name, password, token } = userAggregate.aggregateRoot
       const repository = await persistence.postgres.client.getRepository('users')
-
-      const postgresUser = repository.create({
-        email: email.value,
-        emailConfirmed: emailConfirmed.value,
-        locale: locale.value,
-        name: name.value,
-        password: password.value,
-        token: token.value
-      })
-
-      const result = await persistence.postgres.client.manager.update('users', { id }, postgresUser)
+      const user = this.toPersistence(userAggregate)
+      const result = await persistence.postgres.client.manager.update('users', { id: user.id }, repository.create(user))
 
       return right(result)
     } catch (error) {
@@ -116,13 +106,16 @@ export class PostgresUserRepository implements UserRepository {
 
   private toDomain (user: Record<string, any>): UserAggregate {
     const userEntity = UserEntity.create({
+      active: user.active,
+      createdAt: user.createdAt,
       email: user.email,
       emailConfirmed: user.emailConfirmed,
       id: user.id,
       locale: user.locale,
       name: user.name,
       password: user.password,
-      token: user.token
+      token: user.token,
+      updatedAt: user.updatedAt
     })
     const userAggregate = UserAggregate.create(userEntity.value as UserEntity)
 

@@ -48,4 +48,8 @@ export abstract class Entity<PropsType> {
   public get props (): typeof this._props {
     return this._props
   }
+
+  protected updated (): void {
+    this._props.updatedAt = new Date()
+  }
 }

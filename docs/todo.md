@@ -49,9 +49,10 @@
 [ ] add createdAt, updatedAt and active to entities/aggregates
 [ ] give a better name to Props and (Entity/Aggregate)Props (should (Entity/Aggregate)Props be named Props?)
 [x] fix paramsFake -> propsFake
-[ ] create userMapper (toDomain, toPersistence)
+[x] create userMapper (toDomain, toPersistence)
 [ ] change "create, read, update, delete" to "save, find, delete"
-[ ] create default methods inside repositories
+[x] create default methods inside repositories
 [x] rename value-objects with entity radical
 [ ] implement error return in UserAggregate
-[ ] create mechanism to update updatedAt of entities
+[x] create mechanism to update updatedAt of entities
+[ ] write tests for UserEntity updatedAt updates

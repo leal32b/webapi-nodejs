@@ -82,13 +82,16 @@ export class UserEntity extends Entity<Props> {
 
   public set emailConfirmed (value: UserEmailConfirmed) {
     this.props.emailConfirmed = value
+    this.updated()
   }
 
   public set password (value: UserPassword) {
     this.props.password = value
+    this.updated()
   }
 
   public set token (value: UserToken) {
     this.props.token = value
+    this.updated()
   }
 }

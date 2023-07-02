@@ -1,5 +1,6 @@
 import request from 'supertest'
 
+import { Identifier } from '@/common/0.domain/utils/identifier'
 import { TokenType } from '@/common/1.application/cryptography/encrypter'
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
 import { type WebApp } from '@/common/3.infra/webapp/web-app'
@@ -57,7 +58,7 @@ describe('ChangePasswordRoute', () => {
   describe('success', () => {
     it('returns 200 with correct message on success', async () => {
       const { userFixture, webApp, accessTokenFake } = await makeSut()
-      const id = 'any_id'
+      const id = Identifier.create().value
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
       await userFixture.createFixture({ id, password: hashedPassword })
@@ -66,9 +67,9 @@ describe('ChangePasswordRoute', () => {
         .post('/api/identity/change-password')
         .set('Authorization', accessTokenFake)
         .send({
-          id: 'any_id',
-          password: 'any_password',
-          passwordRetype: 'any_password'
+          id,
+          password: 'new_password',
+          passwordRetype: 'new_password'
         })
 
       expect(statusCode).toBe(200)
