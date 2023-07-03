@@ -5,7 +5,7 @@ import { confirmEmailRequestSchema } from '@/identity/2.presentation/routes/conf
 
 export const confirmEmailRoute = (controller: ConfirmEmailController): Route => ({
   controller,
-  path: '/confirm-email/:token',
+  path: '/user/confirm-email/:token',
   schema: confirmEmailRequestSchema,
   type: RouteType.PATCH
 })

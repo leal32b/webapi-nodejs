@@ -64,7 +64,7 @@ describe('ChangePasswordRoute', () => {
       await userFixture.createFixture({ id, password: hashedPassword })
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/change-password')
+        .post('/api/identity/user/change-password')
         .set('Authorization', accessTokenFake)
         .send({
           id,
@@ -84,7 +84,7 @@ describe('ChangePasswordRoute', () => {
       const { webApp } = await makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/change-password')
+        .post('/api/identity/user/change-password')
         .send({
           id: 'any_id',
           password: 'any_password',
@@ -104,7 +104,7 @@ describe('ChangePasswordRoute', () => {
       const accessToken = 'invalid_token'
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/change-password')
+        .post('/api/identity/user/change-password')
         .set('Authorization', accessToken)
         .send({
           id: 'any_id',
@@ -124,7 +124,7 @@ describe('ChangePasswordRoute', () => {
       const { webApp, accessTokenFake } = await makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/change-password')
+        .post('/api/identity/user/change-password')
         .set('Authorization', accessTokenFake)
         .send()
 
@@ -144,7 +144,7 @@ describe('ChangePasswordRoute', () => {
       const { webApp, accessTokenFake } = await makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/change-password')
+        .post('/api/identity/user/change-password')
         .set('Authorization', accessTokenFake)
         .send({
           id: 'any_id',

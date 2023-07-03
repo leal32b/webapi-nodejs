@@ -8,10 +8,10 @@ import { signUpPath } from '@/identity/2.presentation/routes/sign-up/sign-up-pat
 import { signUpRequestSchema, signUpResponseSchema } from '@/identity/2.presentation/routes/sign-up/sign-up-schemas'
 
 export const identityPaths = {
-  '/identity/change-password': changePasswordPath,
-  '/identity/confirm-email/{token}': confirmEmailPath,
-  '/identity/sign-in': signInPath,
-  '/identity/sign-up': signUpPath
+  '/identity/user/change-password': changePasswordPath,
+  '/identity/user/confirm-email/{token}': confirmEmailPath,
+  '/identity/user/sign-in': signInPath,
+  '/identity/user/sign-up': signUpPath
 }
 
 export const identitySchemas = {

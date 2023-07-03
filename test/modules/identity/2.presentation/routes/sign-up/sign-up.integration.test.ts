@@ -39,7 +39,7 @@ describe('SignUpRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-up')
+        .post('/api/identity/user/sign-up')
         .send({
           email: 'any@mail.com',
           locale: 'en',
@@ -61,7 +61,7 @@ describe('SignUpRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-up')
+        .post('/api/identity/user/sign-up')
         .send()
 
       expect(statusCode).toBe(422)
@@ -80,7 +80,7 @@ describe('SignUpRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-up')
+        .post('/api/identity/user/sign-up')
         .send({
           email: 'any@mail.com',
           locale: 'en',
@@ -104,7 +104,7 @@ describe('SignUpRoute', () => {
       await userFixture.createFixture({ email })
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-up')
+        .post('/api/identity/user/sign-up')
         .send({
           email: 'any2@mail.com',
           locale: 'en',

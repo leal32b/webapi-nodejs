@@ -44,7 +44,7 @@ describe('SignInRoute', () => {
       userFixture.createFixture({})
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-in')
+        .post('/api/identity/user/sign-in')
         .send({
           email: 'any@mail.com',
           password: 'any_password'
@@ -63,7 +63,7 @@ describe('SignInRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-in')
+        .post('/api/identity/user/sign-in')
         .send()
 
       expect(statusCode).toBe(422)
@@ -82,7 +82,7 @@ describe('SignInRoute', () => {
       const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-in')
+        .post('/api/identity/user/sign-in')
         .send({
           email: 'not_in_base@mail.com',
           password: 'any_password'
@@ -104,7 +104,7 @@ describe('SignInRoute', () => {
       await userFixture.createFixture({ email })
 
       const { body, statusCode } = await request(webApp.app)
-        .post('/api/identity/sign-in')
+        .post('/api/identity/user/sign-in')
         .send({
           email: 'any2@mail.com',
           password: 'invalid_password'

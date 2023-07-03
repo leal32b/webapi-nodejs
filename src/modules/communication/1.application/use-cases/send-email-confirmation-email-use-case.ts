@@ -34,7 +34,7 @@ export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailC
     const { locale, recipientEmail, token } = sendEmailConfirmationEmailData
 
     const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), {
-      link: `${getVar('SERVER_BASE_URL')}/identity/confirm-email/${token}`,
+      link: `${getVar('SERVER_BASE_URL')}/identity/user/confirm-email/${token}`,
       lng: locale
     })
 

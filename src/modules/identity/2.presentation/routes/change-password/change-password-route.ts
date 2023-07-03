@@ -6,7 +6,7 @@ import { changePasswordRequestSchema } from '@/identity/2.presentation/routes/ch
 export const changePasswordRoute = (controller: ChangePasswordController): Route => ({
   auth: ['user'],
   controller,
-  path: '/change-password',
+  path: '/user/change-password',
   schema: changePasswordRequestSchema,
   type: RouteType.POST
 })

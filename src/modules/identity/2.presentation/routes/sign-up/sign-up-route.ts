@@ -5,7 +5,7 @@ import { signUpRequestSchema } from '@/identity/2.presentation/routes/sign-up/si
 
 export const signUpRoute = (controller: SignUpController): Route => ({
   controller,
-  path: '/sign-up',
+  path: '/user/sign-up',
   schema: signUpRequestSchema,
   type: RouteType.POST
 })

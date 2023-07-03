@@ -44,7 +44,7 @@ describe('ChangePasswordRoute', () => {
       })
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/user/confirm-email/${token}`)
         .send()
 
       expect(statusCode).toBe(200)
@@ -60,7 +60,7 @@ describe('ChangePasswordRoute', () => {
       const token = 'invalid_token'
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/user/confirm-email/${token}`)
         .send({})
 
       expect(statusCode).toBe(422)
@@ -80,7 +80,7 @@ describe('ChangePasswordRoute', () => {
       const token = 'x.y.z'
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/confirm-email/${token}`)
+        .patch(`/api/identity/user/confirm-email/${token}`)
         .send()
 
       expect(statusCode).toBe(400)
