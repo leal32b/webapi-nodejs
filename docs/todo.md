@@ -46,7 +46,7 @@
 [x] break lines on schema definitions (required)
 [x] change "this.validateParams" to "this.validateProps"?
 [ ] verify applyOnRight, remove last "return"
-[ ] add createdAt, updatedAt and active to entities/aggregates
+[x] add createdAt, updatedAt and active to entities/aggregates
 [ ] give a better name to Props and (Entity/Aggregate)Props (should (Entity/Aggregate)Props be named Props?)
 [x] fix paramsFake -> propsFake
 [x] create userMapper (toDomain, toPersistence)
