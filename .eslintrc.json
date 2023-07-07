@@ -56,16 +56,15 @@
     "files": ["test/**"],
     "rules": { "max-lines-per-function": "off" }
   }, {
-    "files": ["src/**/*-entity.ts", "src/**/migrations/*.ts"],
+    "files": ["src/**/*.entity.ts", "src/**/migrations/*.ts"],
     "rules": { "@typescript-eslint/member-ordering": "off" }
   }, {
-    "files": ["src/**/*-schema*.ts", "src/**/*-path.ts", "src/**/*-api-specification.ts", "src/**/make-swagger.ts", "src/**/*-test.ts", "src/**/*-default.ts"],      
+    "files": ["src/**/*.schema*.ts", "src/**/*.path.ts", "src/**/*-api-specification.ts", "src/**/make-swagger.ts", "src/**/*.data-source.ts"],      
     "rules": { "sort-keys": "off" }
   }],
   "ignorePatterns": [
     "coverage",
-    "data-mongodb",
-    "data-postgres",
+    "docker-volumes",
     "dist",
     "docs",
     "node_modules",

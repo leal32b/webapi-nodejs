@@ -3,8 +3,8 @@ import { Entity } from '@/common/0.domain/base/entity'
 import { ValueObject } from '@/common/0.domain/base/value-object'
 import { type Either, left } from '@/common/0.domain/utils/either'
 
-import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
-import { makeValueObjectStub } from '~/common/_doubles/stubs/value-object-stub'
+import { makeErrorFake } from '~/common/_doubles/fakes/error.fake'
+import { makeValueObjectStub } from '~/common/_doubles/stubs/value-object.stub'
 
 type Props = {
   valueObject: ValueObject<any>

@@ -3,8 +3,8 @@ import { type Validator } from '@/common/0.domain/base/validator'
 import { ValueObject } from '@/common/0.domain/base/value-object'
 import { left } from '@/common/0.domain/utils/either'
 
-import { makeErrorFake } from '~/common/_doubles/fakes/error-fake'
-import { makeValidatorStub } from '~/common/_doubles/stubs/validator-stub'
+import { makeErrorFake } from '~/common/_doubles/fakes/error.fake'
+import { makeValidatorStub } from '~/common/_doubles/stubs/validator.stub'
 
 type SutTypes = {
   errorFake: DomainError

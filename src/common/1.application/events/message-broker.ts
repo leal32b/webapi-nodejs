@@ -1,7 +1,7 @@
 import { type DomainError } from '@/common/0.domain/base/domain-error'
 import { type Either } from '@/common/0.domain/utils/either'
 import { type Event } from '@/common/1.application/base/event'
-import { type ServerError } from '@/common/2.presentation/errors/server-error'
+import { type ServerError } from '@/common/2.presentation/errors/server.error'
 
 export type Topic = {
   name: string

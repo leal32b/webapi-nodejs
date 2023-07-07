@@ -1,11 +1,11 @@
 import request from 'supertest'
 
-import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence-fixture'
+import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence.fixture'
 import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, cryptography, persistence } from '@/common/4.main/container'
 import { setupWebApp } from '@/common/4.main/setup/webapp'
 
-import { type UserEntityProps } from '@/identity/0.domain/entities/user-entity'
+import { type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
 
 import { userFixtures } from '~/identity/_fixtures/user-fixtures'
 

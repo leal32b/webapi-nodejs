@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 
-import { UserAggregate } from '@/identity/0.domain/aggregates/user-aggregate'
-import { UserEntity } from '@/identity/0.domain/entities/user-entity'
+import { UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
+import { UserEntity } from '@/identity/0.domain/entities/user.entity'
 
 export class MongodbUserMapper {
   public static toDomain (user: Record<string, any>): UserAggregate {

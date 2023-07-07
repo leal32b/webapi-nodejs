@@ -1,5 +1,5 @@
 import { type ApiDocumenter } from '@/common/2.presentation/documentation/api-documenter'
-import { SwaggerAdapter } from '@/common/3.infra/documentation/swagger/swagger-adapter'
+import { SwaggerAdapter } from '@/common/3.infra/documentation/swagger/swagger.adapter'
 import { apiDocumentationParams } from '@/common/4.main/container/documentation/api-documentation-params'
 
 export const makeSwagger: ApiDocumenter = SwaggerAdapter.create({
