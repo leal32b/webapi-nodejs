@@ -8,7 +8,7 @@ import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregat
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 import { userCreatedTopic } from '@/identity/1.application/events/topics/user-created.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
-import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/user.mapper'
+import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-user.mapper'
 
 type Props = {
   messageBroker: MessageBroker

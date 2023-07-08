@@ -10,7 +10,7 @@ import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregat
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 import { userCreatedTopic } from '@/identity/1.application/events/topics/user-created.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
-import { MongodbUserMapper } from '@/identity/3.infra/persistence/mappers/user.mapper'
+import { MongodbUserMapper } from '@/identity/3.infra/persistence/mongodb/mappers/mongodb-user.mapper'
 
 type Props = {
   messageBroker: MessageBroker

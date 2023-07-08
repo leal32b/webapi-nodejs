@@ -20,18 +20,16 @@ export class PostgresUserMapper {
   }
 
   public static toPersistence (userAggregate: UserAggregate): Record<string, any> {
-    const { createdAt, email, emailConfirmed, id, locale, name, password, token, updatedAt } = userAggregate.aggregateRoot
-
     return {
-      createdAt,
-      email: email.value,
-      emailConfirmed: emailConfirmed.value,
-      id,
-      locale: locale.value,
-      name: name.value,
-      password: password.value,
-      token: token.value,
-      updatedAt
+      createdAt: userAggregate.aggregateRoot.createdAt,
+      email: userAggregate.aggregateRoot.email.value,
+      emailConfirmed: userAggregate.aggregateRoot.emailConfirmed.value,
+      id: userAggregate.aggregateRoot.id,
+      locale: userAggregate.aggregateRoot.locale.value,
+      name: userAggregate.aggregateRoot.name.value,
+      password: userAggregate.aggregateRoot.password.value,
+      token: userAggregate.aggregateRoot.token.value,
+      updatedAt: userAggregate.aggregateRoot.updatedAt
     }
   }
 }
