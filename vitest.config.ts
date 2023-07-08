@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     root: '.',
     globals: true,
-    include: ['test/**/*{integration,unit}.test.ts'],
+    include: ['test/**/*.{integration,unit}-test.ts'],
     exclude: ['test/**/_doubles/**'],
     globalSetup: 'vitest.setup.ts',
     threads: false,
