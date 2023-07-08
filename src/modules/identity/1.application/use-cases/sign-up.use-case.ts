@@ -81,9 +81,9 @@ export class SignUpUseCase extends UseCase<Props, SignUpData, SignUpResultDTO> {
 
     const userEntity = userEntityOrError.value
     const userAggregate = UserAggregate.create(userEntity)
-    const createdUserOrError = await userRepository.create(userAggregate)
+    const createdOrError = await userRepository.create(userAggregate)
 
-    return createdUserOrError.applyOnRight(() => userAggregate)
+    return createdOrError.applyOnRight(() => userAggregate)
   }
 
   private async initialValidation (signUpData: SignUpData): Promise<Either<DomainError[], void>> {

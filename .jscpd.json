@@ -2,6 +2,7 @@
   "pattern": "src/**/*.ts",
   "ignore": [
     "**/*.fixture.ts",
+    "**/*.mapper.ts",
     "**/*.repository.ts",
     "**/*.schema.ts"
   ],

@@ -56,3 +56,4 @@
 [ ] implement error return in UserAggregate
 [x] create mechanism to update updatedAt of entities
 [ ] write tests for UserEntity updatedAt updates
+[ ] adjust result names, ex: `userAggregateByEmailOrError` to `userAggregateOrError`

@@ -99,7 +99,7 @@ describe('SignUpUseCase', () => {
   })
 
   describe('failure', () => {
-    it('returns Left with Error when UserRepository fails', async () => {
+    it('returns Left with Error when UserRepository.readByEmail fails', async () => {
       const { sut, userRepository, errorFake, signUpDataFake } = makeSut()
       vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
 
@@ -114,13 +114,13 @@ describe('SignUpUseCase', () => {
       vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(
         right(UserAggregate.create(
           UserEntity.create({
-            ...makeSignUpDataFake(),
+            ...signUpDataFake,
             token: 'any_token'
           }).value as UserEntity
         ))
       )
 
-      const result = await sut.execute({ ...signUpDataFake })
+      const result = await sut.execute(signUpDataFake)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(EmailTakenError)
