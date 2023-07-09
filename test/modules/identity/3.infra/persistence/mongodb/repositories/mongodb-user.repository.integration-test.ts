@@ -9,7 +9,7 @@ import { MongodbUserRepository } from '@/identity/3.infra/persistence/mongodb/re
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker.mock'
 import { makeUserAggregateFake } from '~/identity/_doubles/fakes/user-aggregate.fake'
-import { MongodbUserFixture } from '~/identity/_fixtures/mongodb/mongodb-user-fixture'
+import { MongodbUserFixture } from '~/identity/_fixtures/mongodb/mongodb-user.fixture'
 
 type SutTypes = {
   userFixture: PersistenceFixture<UserEntityProps>
@@ -50,7 +50,7 @@ describe('UserMongodbRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it('calls messageBroker.publishToTopic with correct params', async () => {
+      it('calls messageBroker.publishToTopic with correct params and returns Right with on create', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 

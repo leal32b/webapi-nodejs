@@ -9,7 +9,7 @@ import { setupWebApp } from '@/common/4.main/setup/webapp'
 
 import { type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
 
-import { userFixtures } from '~/identity/_fixtures/user-fixtures'
+import { identityFixtures } from '~/identity/_fixtures/identity-fixtures'
 
 const makeAccessTokenFake = async (): Promise<string> => {
   const token = await cryptography.encrypter.encrypt({
@@ -31,7 +31,7 @@ type SutTypes = {
 
 const makeSut = async (): Promise<SutTypes> => {
   const collaborators = {
-    userFixture: userFixtures.userFixture,
+    userFixture: identityFixtures.userFixture,
     webApp: app.webApp
   }
   const doubles = {

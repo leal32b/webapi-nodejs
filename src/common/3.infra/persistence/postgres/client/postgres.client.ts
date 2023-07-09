@@ -18,6 +18,8 @@ export class PostgresClient implements PersistenceClient {
   }
 
   public async clearDatabase (): Promise<Either<Error, void>> {
+    const { logger } = this.props
+
     const isTest = getVar('NODE_ENV') === 'test'
 
     if (!isTest) {
@@ -29,6 +31,7 @@ export class PostgresClient implements PersistenceClient {
 
       for await (const entity of entities) {
         await this.props.dataSource.getRepository(entity.name).clear()
+        logger.info('persistence', `${entity.name} cleared`)
       }
 
       return right()

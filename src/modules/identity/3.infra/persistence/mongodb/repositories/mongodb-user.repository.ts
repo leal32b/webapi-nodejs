@@ -25,7 +25,7 @@ export class MongodbUserRepository implements UserRepository {
 
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const userCollection = await persistence.mongodb.client.getCollection('users')
+      const userCollection = await persistence.mongodb.client.getCollection('user')
       const user = MongodbUserMapper.toPersistence(userAggregate)
       await userCollection.insertOne(user)
 
@@ -88,7 +88,7 @@ export class MongodbUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const userCollection = await persistence.mongodb.client.getCollection('users')
+      const userCollection = await persistence.mongodb.client.getCollection('user')
       const user = MongodbUserMapper.toPersistence(userAggregate)
 
       const result = await userCollection.updateOne({ _id: new ObjectId(user.id) }, {
@@ -102,7 +102,7 @@ export class MongodbUserRepository implements UserRepository {
   }
 
   private async readByFilter (filter: Record<string, any>): Promise<any> {
-    const userCollection = await persistence.mongodb.client.getCollection('users')
+    const userCollection = await persistence.mongodb.client.getCollection('user')
 
     const user = await userCollection.findOne(filter)
 

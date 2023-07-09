@@ -19,7 +19,7 @@ class FakeFixture extends PostgresFixture<PostgresUserEntity> {
         token: faker.string.alphanumeric(12),
         updatedAt: new Date()
       }),
-      repositoryName: 'users'
+      repositoryName: 'user'
     })
   }
 }

@@ -8,7 +8,7 @@ import { type MongodbUserEntity } from '@/identity/3.infra/persistence/mongodb/e
 class FixtureFake extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {
     return new FixtureFake({
-      collectionName: 'users',
+      collectionName: 'user',
       createDefault: (): MongodbUserEntity => ({
         createdAt: new Date(),
         email: faker.internet.email(),

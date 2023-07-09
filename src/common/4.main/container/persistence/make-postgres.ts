@@ -6,6 +6,7 @@ import { type Postgres } from '@/common/4.main/container/container.type'
 import { events } from '@/common/4.main/container/events'
 import { logging } from '@/common/4.main/container/logging'
 
+import { PostgresGroupRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-group.repository'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user.repository'
 
 const dataSource = getVar('NODE_ENV') === 'test' ? postgresTestDataSource : postgresDefaultDataSource
@@ -16,6 +17,7 @@ export const makePostgres: Postgres = {
     logger: logging.logger
   }),
   repositories: {
+    groupRepository: PostgresGroupRepository.create(),
     userRepository: PostgresUserRepository.create({ messageBroker: events.messageBroker })
   }
 }

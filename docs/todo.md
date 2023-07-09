@@ -57,3 +57,11 @@
 [x] create mechanism to update updatedAt of entities
 [ ] write tests for UserEntity updatedAt updates
 [ ] adjust result names, ex: `userAggregateByEmailOrError` to `userAggregateOrError`
+[ ] create a folder to group routes of the same type
+[ ] adjust paths, routes that create resource show return status code 201?
+[ ] create default field for entities: `deleted_at`
+[ ] change postgres userRepository name from 'users' to 'user'
+[ ] adjust repositories dependencies between modules and common (make<Persistence> and controllerFactories)
+[ ] separate postgres and mongo persistence creations (ex: fixtures) to it's own files
+[ ] protect createGroup route after implementing permission
+[ ] add tests for unique columns of postgres repositories

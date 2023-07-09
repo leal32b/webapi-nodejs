@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm'
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class PostgresUserEntity {
   @PrimaryColumn({ type: 'text' })
     id: string

@@ -9,7 +9,7 @@ import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker.mock'
 import { makeUserAggregateFake } from '~/identity/_doubles/fakes/user-aggregate.fake'
-import { PostgresUserFixture } from '~/identity/_fixtures/postgres/postgres-user-fixture'
+import { PostgresUserFixture } from '~/identity/_fixtures/postgres/postgres-user.fixture'
 
 type SutTypes = {
   userFixture: PersistenceFixture<UserEntityProps>
@@ -50,7 +50,7 @@ describe('UserPostgresRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it('calls messageBroker.publishToTopic with correct params', async () => {
+      it('calls messageBroker.publishToTopic with correct params and returns Right with null on create', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 

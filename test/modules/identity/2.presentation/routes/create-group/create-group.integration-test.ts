@@ -5,18 +5,18 @@ import { type WebApp } from '@/common/3.infra/webapp/web-app'
 import { app, persistence } from '@/common/4.main/container'
 import { setupWebApp } from '@/common/4.main/setup/webapp'
 
-import { type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
+import { type GroupEntityProps } from '@/identity/0.domain/entities/group.entity'
 
 import { identityFixtures } from '~/identity/_fixtures/identity-fixtures'
 
 type SutTypes = {
-  userFixture: PersistenceFixture<UserEntityProps>
+  groupFixture: PersistenceFixture<GroupEntityProps>
   webApp: WebApp
 }
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    userFixture: identityFixtures.userFixture,
+    groupFixture: identityFixtures.groupFixture,
     webApp: app.webApp
   }
   setupWebApp(app.webApp)
@@ -24,7 +24,7 @@ const makeSut = (): SutTypes => {
   return { ...collaborators }
 }
 
-describe('ChangePasswordRoute', () => {
+describe('CreateGroupRoute', () => {
   beforeAll(async () => {
     await persistence.actual.client.connect()
   })
@@ -35,60 +35,56 @@ describe('ChangePasswordRoute', () => {
   })
 
   describe('success', () => {
-    it('returns 200 with correct message on success on success', async () => {
-      const { userFixture, webApp } = await makeSut()
-      const token = 'a.b.c'
-      await userFixture.createFixture({
-        emailConfirmed: false,
-        token
-      })
+    it('returns 200 with an name on success', async () => {
+      const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/user/confirm-email/${token}`)
-        .send()
+        .post('/api/identity/group')
+        .send({ name: 'any_name' })
 
       expect(statusCode).toBe(200)
       expect(body).toEqual({
-        message: 'email confirmed successfully'
+        message: 'group created successfully',
+        name: 'any_name'
       })
     })
   })
 
   describe('failure', () => {
     it('returns 422 with schema error message when schema is invalid', async () => {
-      const { webApp } = await makeSut()
-      const token = 'invalid_token'
+      const { webApp } = makeSut()
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/user/confirm-email/${token}`)
-        .send({})
+        .post('/api/identity/group')
+        .send()
 
       expect(statusCode).toBe(422)
       expect(body).toEqual({
         error: {
-          instancePath: '/token',
-          keyword: 'pattern',
-          message: 'must match pattern "^[\\w-]+\\.[\\w-]+\\.[\\w-]+$"',
-          params: { pattern: '^[\\w-]+\\.[\\w-]+\\.[\\w-]+$' },
-          schemaPath: '#/properties/token/pattern'
+          instancePath: '',
+          keyword: 'required',
+          message: "must have required property 'name'",
+          params: { missingProperty: 'name' },
+          schemaPath: '#/required'
         }
       })
     })
 
-    it('returns 400 with not found error message when token is not found', async () => {
-      const { webApp } = await makeSut()
-      const token = 'x.y.z'
+    it('returns 400 with name already in use error message when name is already in use', async () => {
+      const { groupFixture, webApp } = makeSut()
+      const name = 'any_name2'
+      await groupFixture.createFixture({ name })
 
       const { body, statusCode } = await request(webApp.app)
-        .patch(`/api/identity/user/confirm-email/${token}`)
-        .send()
+        .post('/api/identity/group')
+        .send({ name: 'any_name2' })
 
       expect(statusCode).toBe(400)
       expect(body).toEqual({
         error: {
-          field: 'token',
-          input: 'x.y.z',
-          message: "token 'x.y.z' not found"
+          field: 'name',
+          input: 'any_name2',
+          message: 'name already in use'
         }
       })
     })

@@ -5,6 +5,7 @@ import { invalidPasswordSchema } from '@/common/2.presentation/documentation/sch
 import { invalidSchemaSchema } from '@/common/2.presentation/documentation/schemas/invalid-schema.schema'
 import { invalidTokenSchema } from '@/common/2.presentation/documentation/schemas/invalid-token.schema'
 import { missingTokenSchema } from '@/common/2.presentation/documentation/schemas/missing-token.schema'
+import { nameTakenSchema } from '@/common/2.presentation/documentation/schemas/name-taken.schema'
 import { notFoundSchema } from '@/common/2.presentation/documentation/schemas/not-found.schema'
 import { passwordMismatchSchema } from '@/common/2.presentation/documentation/schemas/password-mismatch.schema'
 
@@ -25,6 +26,7 @@ export const apiDocumentationParams: ApiDocumentationParams = {
     invalidSchemaSchema,
     invalidTokenSchema,
     missingTokenSchema,
+    nameTakenSchema,
     notFoundSchema,
     passwordMismatchSchema,
     ...identitySchemas

@@ -6,6 +6,7 @@ import { type Mongodb } from '@/common/4.main/container/container.type'
 import { events } from '@/common/4.main/container/events'
 import { logging } from '@/common/4.main/container/logging'
 
+import { MongodbGroupRepository } from '@/identity/3.infra/persistence/mongodb/repositories/mongodb-group.repository'
 import { MongodbUserRepository } from '@/identity/3.infra/persistence/mongodb/repositories/mongodb-user.repository'
 
 const dataSource = getVar('NODE_ENV') === 'test' ? mongodbTestDataSource : mongodbDefaultDataSource
@@ -16,6 +17,7 @@ export const makeMongodb: Mongodb = {
     logger: logging.logger
   }),
   repositories: {
+    groupRepository: MongodbGroupRepository.create(),
     userRepository: MongodbUserRepository.create({ messageBroker: events.messageBroker })
   }
 }

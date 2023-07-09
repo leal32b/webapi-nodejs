@@ -7,7 +7,7 @@ import { type MongodbUserEntity } from '@/identity/3.infra/persistence/mongodb/e
 export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
   static create (): MongodbFixture<MongodbUserEntity> {
     return new MongodbUserFixture({
-      collectionName: 'users',
+      collectionName: 'user',
       createDefault: (): MongodbUserEntity => ({
         createdAt: new Date(),
         email: faker.internet.email(),

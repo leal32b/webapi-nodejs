@@ -23,7 +23,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const repository = await persistence.postgres.client.getRepository('users')
+      const repository = await persistence.postgres.client.getRepository('user')
       const user = PostgresUserMapper.toPersistence(userAggregate)
       await persistence.postgres.client.manager.save(repository.create(user))
 
@@ -86,9 +86,9 @@ export class PostgresUserRepository implements UserRepository {
 
   async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
     try {
-      const repository = await persistence.postgres.client.getRepository('users')
+      const repository = await persistence.postgres.client.getRepository('user')
       const user = PostgresUserMapper.toPersistence(userAggregate)
-      const result = await persistence.postgres.client.manager.update('users', { id: user.id }, repository.create(user))
+      const result = await persistence.postgres.client.manager.update('user', { id: user.id }, repository.create(user))
 
       return right(result)
     } catch (error) {
@@ -97,7 +97,7 @@ export class PostgresUserRepository implements UserRepository {
   }
 
   private async readByFilter (filter: Record<string, any>): Promise<any> {
-    const repository = await persistence.postgres.client.getRepository('users')
+    const repository = await persistence.postgres.client.getRepository('user')
 
     const user = await repository.findOneBy(filter)
 

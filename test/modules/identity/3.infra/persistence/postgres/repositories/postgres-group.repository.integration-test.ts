@@ -1,0 +1,101 @@
+import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence.fixture'
+import { persistence } from '@/common/4.main/container'
+
+import { GroupEntity, type GroupEntityProps } from '@/identity/0.domain/entities/group.entity'
+import { PostgresGroupRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-group.repository'
+
+import { makeGroupEntityFake } from '~/identity/_doubles/fakes/group-entity.fake'
+import { PostgresGroupFixture } from '~/identity/_fixtures/postgres/postgres-group.fixture'
+
+type SutTypes = {
+  groupFixture: PersistenceFixture<GroupEntityProps>
+  groupEntityFake: GroupEntity
+  sut: PostgresGroupRepository
+}
+
+const makeSut = (): SutTypes => {
+  const collaborators = {
+    groupFixture: PostgresGroupFixture.create()
+  }
+  const doubles = {
+    groupEntityFake: makeGroupEntityFake()
+  }
+  const sut = PostgresGroupRepository.create()
+
+  return {
+    ...collaborators,
+    ...doubles,
+    sut
+  }
+}
+
+describe('GroupMongodbRepository', () => {
+  beforeAll(async () => {
+    await persistence.postgres.client.connect()
+  })
+
+  afterAll(async () => {
+    await persistence.postgres.client.clearDatabase()
+    await persistence.postgres.client.close()
+  })
+
+  describe('success', () => {
+    describe('create', () => {
+      it('returns Right with null on create', async () => {
+        const { sut, groupEntityFake } = makeSut()
+
+        const result = await sut.create(groupEntityFake)
+
+        expect(result.isRight()).toBe(true)
+      })
+    })
+
+    describe('readByName', () => {
+      it('returns Right with null on readByName if group does not exist', async () => {
+        const { sut } = makeSut()
+        const name = 'any_name2'
+
+        const result = await sut.readByName(name)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBe(null)
+      })
+
+      it('returns Right with GroupEntity on readByName', async () => {
+        const { sut, groupFixture } = makeSut()
+        const name = 'any_name2'
+        await groupFixture.createFixture({ name })
+
+        const result = await sut.readByName(name)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBeInstanceOf(GroupEntity)
+      })
+    })
+  })
+
+  describe('failure', () => {
+    describe('create', () => {
+      it('returns Left when create throws', async () => {
+        const { sut, groupEntityFake } = makeSut()
+        vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+        const result = await sut.create(groupEntityFake)
+
+        expect(result.isLeft()).toBe(true)
+      })
+    })
+
+    describe('readByName', () => {
+      it('returns Left when readByName throws', async () => {
+        const { sut } = makeSut()
+        const name = 'any_name'
+        vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+        const result = await sut.readByName(name)
+
+        expect(result.isLeft()).toBe(true)
+      })
+    })
+  })
+})

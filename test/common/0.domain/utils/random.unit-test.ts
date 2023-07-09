@@ -23,7 +23,7 @@ describe('Random', () => {
     it('returns a random number with options applied when it is provided', () => {
       const sut = Random.create({
         options: {
-          incrementer: 0,
+          incrementor: 0,
           modulus: 64,
           multiplier: 13
         },
