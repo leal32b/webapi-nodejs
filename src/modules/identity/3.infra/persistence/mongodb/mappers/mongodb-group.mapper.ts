@@ -3,12 +3,12 @@ import { ObjectId } from 'mongodb'
 import { GroupEntity } from '@/identity/0.domain/entities/group.entity'
 
 export class MongodbGroupMapper {
-  public static toDomain (user: Record<string, any>): GroupEntity {
+  public static toDomain (group: Record<string, any>): GroupEntity {
     const groupEntity = GroupEntity.create({
-      createdAt: user.createdAt,
-      id: user._id.toString(),
-      name: user.name,
-      updatedAt: user.updatedAt
+      createdAt: group.createdAt,
+      id: group._id.toString(),
+      name: group.name,
+      updatedAt: group.updatedAt
     })
 
     return groupEntity.value as GroupEntity
