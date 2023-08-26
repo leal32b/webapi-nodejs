@@ -1,14 +1,14 @@
 import { UserSendEmailConfirmationHandler } from '@/communication/1.application/handlers/user-send-email-confirmation.handler'
-import { type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email.use-case'
+import { type SendEmailConfirmationUseCase } from '@/communication/1.application/use-cases/send-email-confirmation.use-case'
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 
-const makeSendEmailConfirmationEmailUseCaseStub = (): SendEmailConfirmationEmailUseCase => ({
+const makeSendEmailConfirmationUseCaseStub = (): SendEmailConfirmationUseCase => ({
   execute: vi.fn()
 } as any)
 
 type SutTypes = {
   userCreatedEventFake: UserCreatedEvent
-  sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
+  sendEmailConfirmationUseCase: SendEmailConfirmationUseCase
   sut: UserSendEmailConfirmationHandler
 }
 
@@ -25,7 +25,7 @@ const makeSut = (): SutTypes => {
     })
   }
   const props = {
-    sendEmailConfirmationEmailUseCase: makeSendEmailConfirmationEmailUseCaseStub()
+    sendEmailConfirmationUseCase: makeSendEmailConfirmationUseCaseStub()
   }
   const sut = UserSendEmailConfirmationHandler.create(props)
 
@@ -38,9 +38,9 @@ const makeSut = (): SutTypes => {
 
 describe('UserSendEmailConfirmationHandler', () => {
   describe('success', () => {
-    it('executes SendEmailConfirmationEmailUseCase', async () => {
-      const { sut, sendEmailConfirmationEmailUseCase, userCreatedEventFake } = makeSut()
-      const executeSpy = vi.spyOn(sendEmailConfirmationEmailUseCase, 'execute')
+    it('executes SendEmailConfirmationUseCase', async () => {
+      const { sut, sendEmailConfirmationUseCase, userCreatedEventFake } = makeSut()
+      const executeSpy = vi.spyOn(sendEmailConfirmationUseCase, 'execute')
 
       await sut.handle(userCreatedEventFake)
 

@@ -65,3 +65,4 @@
 [ ] separate postgres and mongo persistence creations (ex: fixtures) to it's own files
 [ ] protect createGroup route after implementing permission
 [ ] add tests for unique columns of postgres repositories
+[x] change sendEmailConfirmationEmailUseCase to sendEmailConfirmationUseCase

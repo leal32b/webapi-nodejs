@@ -14,22 +14,22 @@ type Props = {
   templateCompiler: TemplateCompiler
 }
 
-export type SendEmailConfirmationEmailData = {
+export type SendEmailConfirmationData = {
   locale: string
   recipientEmail: string
   token: string
 }
 
-export type SendEmailConfirmationEmailResultDTO = {
+export type SendEmailConfirmationResultDTO = {
   message: string
 }
 
-export class SendEmailConfirmationEmailUseCase extends UseCase<Props, SendEmailConfirmationEmailData, SendEmailConfirmationEmailResultDTO> {
-  public static create (props: Props): SendEmailConfirmationEmailUseCase {
-    return new SendEmailConfirmationEmailUseCase(props)
+export class SendEmailConfirmationUseCase extends UseCase<Props, SendEmailConfirmationData, SendEmailConfirmationResultDTO> {
+  public static create (props: Props): SendEmailConfirmationUseCase {
+    return new SendEmailConfirmationUseCase(props)
   }
 
-  public async execute (sendEmailConfirmationEmailData: SendEmailConfirmationEmailData): Promise<Either<DomainError[], SendEmailConfirmationEmailResultDTO>> {
+  public async execute (sendEmailConfirmationEmailData: SendEmailConfirmationData): Promise<Either<DomainError[], SendEmailConfirmationResultDTO>> {
     const { emailSender, templateCompiler } = this.props
     const { locale, recipientEmail, token } = sendEmailConfirmationEmailData
 

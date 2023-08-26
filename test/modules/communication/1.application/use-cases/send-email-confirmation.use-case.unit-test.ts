@@ -4,11 +4,11 @@ import { type TemplateCompiler } from '@/common/1.application/compilation/templa
 
 import { EmailEntity } from '@/communication/0.domain/entities/email.entity'
 import { type EmailSender } from '@/communication/1.application/email/email-sender'
-import { type SendEmailConfirmationEmailData, SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email.use-case'
+import { type SendEmailConfirmationData, SendEmailConfirmationUseCase } from '@/communication/1.application/use-cases/send-email-confirmation.use-case'
 
 import { makeErrorFake } from '~/common/_doubles/fakes/error.fake'
 
-const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationEmailData => ({
+const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationData => ({
   locale: 'en',
   recipientEmail: 'recipient@mail.com',
   token: 'any_token'
@@ -25,10 +25,10 @@ const makeTemplateCompilerStub = (): TemplateCompiler => ({
 
 type SutTypes = {
   errorFake: DomainError
-  sendEmailConfirmationEmailDataFake: SendEmailConfirmationEmailData
+  sendEmailConfirmationEmailDataFake: SendEmailConfirmationData
   emailSender: EmailSender
   templateCompiler: TemplateCompiler
-  sut: SendEmailConfirmationEmailUseCase
+  sut: SendEmailConfirmationUseCase
 }
 
 const makeSut = (): SutTypes => {
@@ -41,7 +41,7 @@ const makeSut = (): SutTypes => {
     templateCompiler: makeTemplateCompilerStub()
   }
 
-  const sut = SendEmailConfirmationEmailUseCase.create(props)
+  const sut = SendEmailConfirmationUseCase.create(props)
 
   return {
     ...doubles,
