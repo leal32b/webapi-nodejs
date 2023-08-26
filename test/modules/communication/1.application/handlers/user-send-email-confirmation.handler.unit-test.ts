@@ -1,4 +1,4 @@
-import { UserCreatedHandler } from '@/communication/1.application/handlers/user-created.handler'
+import { UserSendEmailConfirmationHandler } from '@/communication/1.application/handlers/user-send-email-confirmation.handler'
 import { type SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email.use-case'
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 
@@ -9,7 +9,7 @@ const makeSendEmailConfirmationEmailUseCaseStub = (): SendEmailConfirmationEmail
 type SutTypes = {
   userCreatedEventFake: UserCreatedEvent
   sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
-  sut: UserCreatedHandler
+  sut: UserSendEmailConfirmationHandler
 }
 
 const makeSut = (): SutTypes => {
@@ -27,7 +27,7 @@ const makeSut = (): SutTypes => {
   const props = {
     sendEmailConfirmationEmailUseCase: makeSendEmailConfirmationEmailUseCaseStub()
   }
-  const sut = UserCreatedHandler.create(props)
+  const sut = UserSendEmailConfirmationHandler.create(props)
 
   return {
     ...doubles,
@@ -36,7 +36,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('UserCreatedHandler', () => {
+describe('UserSendEmailConfirmationHandler', () => {
   describe('success', () => {
     it('executes SendEmailConfirmationEmailUseCase', async () => {
       const { sut, sendEmailConfirmationEmailUseCase, userCreatedEventFake } = makeSut()

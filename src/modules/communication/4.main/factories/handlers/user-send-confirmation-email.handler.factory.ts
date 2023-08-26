@@ -1,10 +1,10 @@
 import { type HandlerFn } from '@/common/1.application/events/message-broker'
 import { communication, compilation } from '@/common/4.main/container'
 
-import { UserCreatedHandler } from '@/communication/1.application/handlers/user-created.handler'
+import { UserSendEmailConfirmationHandler } from '@/communication/1.application/handlers/user-send-email-confirmation.handler'
 import { SendEmailConfirmationEmailUseCase } from '@/communication/1.application/use-cases/send-email-confirmation-email.use-case'
 
-export const userCreatedHandlerFactory = (): HandlerFn => {
+export const userSendEmailConfirmationHandlerFactory = (): HandlerFn => {
   const { emailSender } = communication
   const { templateCompiler } = compilation
   const sendEmailConfirmationEmailUseCase = SendEmailConfirmationEmailUseCase.create({
@@ -12,7 +12,7 @@ export const userCreatedHandlerFactory = (): HandlerFn => {
     templateCompiler
   })
 
-  const userCreatedHandler = UserCreatedHandler.create({ sendEmailConfirmationEmailUseCase })
+  const userSendEmailConfirmationHandler = UserSendEmailConfirmationHandler.create({ sendEmailConfirmationEmailUseCase })
 
-  return userCreatedHandler.handle.bind(userCreatedHandler)
+  return userSendEmailConfirmationHandler.handle.bind(userSendEmailConfirmationHandler)
 }

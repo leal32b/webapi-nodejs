@@ -9,9 +9,9 @@ type Props = {
   sendEmailConfirmationEmailUseCase: SendEmailConfirmationEmailUseCase
 }
 
-export class UserCreatedHandler extends Handler<Props> {
-  public static create (props: Props): UserCreatedHandler {
-    return new UserCreatedHandler(props)
+export class UserSendEmailConfirmationHandler extends Handler<Props> {
+  public static create (props: Props): UserSendEmailConfirmationHandler {
+    return new UserSendEmailConfirmationHandler(props)
   }
 
   public async handle (event: UserCreatedEvent): Promise<Either<DomainError[], SendEmailConfirmationEmailResultDTO>> {
