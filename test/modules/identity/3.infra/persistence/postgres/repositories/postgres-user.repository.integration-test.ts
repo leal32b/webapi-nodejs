@@ -57,7 +57,7 @@ describe('UserPostgresRepository', () => {
         const result = await sut.create(userAggregateFake)
 
         expect(publishToTopicSpy).toHaveBeenCalledWith(
-          { name: 'userCreatedTopic' },
+          { name: 'userEventsTopic' },
           ['userCreated', '#'],
           {
             props: {

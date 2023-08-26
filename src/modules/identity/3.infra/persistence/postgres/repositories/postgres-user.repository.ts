@@ -6,7 +6,7 @@ import { persistence } from '@/common/4.main/container'
 
 import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
-import { userCreatedTopic } from '@/identity/1.application/events/topics/user-created.topic'
+import { userEventsTopic } from '@/identity/1.application/events/topics/user-events.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
 import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-user.mapper'
 
@@ -27,7 +27,7 @@ export class PostgresUserRepository implements UserRepository {
       const user = PostgresUserMapper.toPersistence(userAggregate)
       await persistence.postgres.client.manager.save(repository.create(user))
 
-      this.props.messageBroker.publishToTopic(userCreatedTopic, ['userCreated', '#'], UserCreatedEvent.create({
+      this.props.messageBroker.publishToTopic(userEventsTopic, ['userCreated', '#'], UserCreatedEvent.create({
         aggregateId: user.id,
         payload: {
           email: user.email,

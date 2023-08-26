@@ -8,7 +8,7 @@ import { persistence } from '@/common/4.main/container'
 
 import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
-import { userCreatedTopic } from '@/identity/1.application/events/topics/user-created.topic'
+import { userEventsTopic } from '@/identity/1.application/events/topics/user-events.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
 import { MongodbUserMapper } from '@/identity/3.infra/persistence/mongodb/mappers/mongodb-user.mapper'
 
@@ -29,7 +29,7 @@ export class MongodbUserRepository implements UserRepository {
       const user = MongodbUserMapper.toPersistence(userAggregate)
       await userCollection.insertOne(user)
 
-      this.props.messageBroker.publishToTopic(userCreatedTopic, ['userCreated', '#'], UserCreatedEvent.create({
+      this.props.messageBroker.publishToTopic(userEventsTopic, ['userCreated', '#'], UserCreatedEvent.create({
         aggregateId: user._id.toString(),
         payload: {
           email: user.email,
