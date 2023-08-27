@@ -1,0 +1,38 @@
+@startuml Component Diagram
+  !include common/base.puml
+  !define DIAGRAM Component Diagram | Webapi-nodejs
+  !define CREATED 2023-08-27
+  !define UPDATED 2023-08-27
+
+  title DIAGRAM
+
+  Person(user, "User", "User of the webapp system")
+  System_Ext(webapp, "Webapp", "Client-side web application")
+  System_Ext(emailSystem, "E-mail System", "External e-mail system")
+
+  System_Boundary(system, "Webapi-nodejs System") {
+    Container_Boundary(webapi, "API Application") {
+      Component(identityModule, "identityModule", "Typescript", "Manages groups, users and authentication")
+      Component(communicationModule, "communicationModule", "Typescript", "Handles messaging between systems")
+    }
+
+    ContainerDb(persistence, "persistence", "mongodb", "Application persistence", $sprite="mongodb")
+    ContainerQueue(userEventsTopic, "userEventsTopic", "rabbitmq", "User related events", $sprite="rabbitmq")
+    ContainerQueue(userSetGroupQueue, "userSetGroupQueue", "rabbitmq", "To set default group to new users", $sprite="rabbitmq")
+    ContainerQueue(userSendEmailConfirmationQueue, "userSendEmailConfirmationQueue", "rabbitmq", "To send e-mail confirmation to new users", $sprite="rabbitmq")
+  }
+
+  Rel(user, webapp, "Uses", "https/json")
+  Rel(webapp, identityModule, "Consumes", "https/json")
+  Rel(identityModule, persistence, "Reads from \nand wirtes to", "TCP/IP", $tags="async" )
+  Rel(identityModule, userEventsTopic, "Emmits events to", "amqp", $tags="async")
+  Rel(identityModule, userSetGroupQueue, "Handles events from", "amqp", $tags="async")
+  Rel(communicationModule, userSendEmailConfirmationQueue, "Handles events from", "amqp", $tags="async")
+  Rel(communicationModule, emailSystem, "Sends e-mails using", "smtp", $tags="async")
+  Rel(userSetGroupQueue, userEventsTopic, "Subscribes to", "amqp", $tags="async")
+  Rel(userSendEmailConfirmationQueue, userEventsTopic, "Subscribes to", "amqp", $tags="async")
+
+  footer DIAGRAM (created at CREATED, updated at UPDATED)
+
+  SHOW_LEGEND()
+@enduml
