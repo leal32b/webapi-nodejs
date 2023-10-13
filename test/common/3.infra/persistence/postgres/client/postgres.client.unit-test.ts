@@ -6,16 +6,18 @@ import { logging } from '@/common/4.main/container/logging'
 
 const makeDataSourceMock = (): DataSource => ({
   destroy: vi.fn(),
-  entityMetadatas: [
-    { name: 'any_entity_name' }
-  ],
+  entityMetadatas: [{
+    name: 'any_entity_name',
+    tableName: 'any_table_name'
+  }],
   getRepository: vi.fn(() => ({
     clear: vi.fn()
   })),
   initialize: vi.fn(),
   manager: { save: vi.fn() },
   name: 'any_data_source',
-  options: { database: 'any_database' }
+  options: { database: 'any_database' },
+  query: vi.fn()
 }) as any
 
 type SutTypes = {
@@ -75,6 +77,7 @@ describe('PostgresClient', () => {
       const { sut } = makeSut()
 
       const result = await sut.clearDatabase()
+      console.log('result >>>', JSON.stringify(result))
 
       expect(result.isRight()).toBe(true)
     })
@@ -107,7 +110,7 @@ describe('PostgresClient', () => {
 
     it('returns Left with Error when clearDatabase throws', async () => {
       const { sut, dataSource } = makeSut()
-      vi.spyOn(dataSource, 'getRepository').mockImplementationOnce((vi.fn() as any))
+      vi.spyOn(dataSource, 'query').mockRejectedValueOnce(new Error())
 
       const result = await sut.clearDatabase()
 

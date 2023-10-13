@@ -27,11 +27,11 @@ export class PostgresClient implements PersistenceClient {
     }
 
     try {
-      const entities = this.props.dataSource.entityMetadatas
+      const tableNames = this.props.dataSource.entityMetadatas.map(entity => entity.tableName)
 
-      for await (const entity of entities) {
-        await this.props.dataSource.getRepository(entity.name).clear()
-        logger.info('persistence', `${entity.name} cleared`)
+      for await (const tableName of tableNames) {
+        await this.props.dataSource.query(`TRUNCATE "${tableName}" CASCADE`)
+        logger.info('persistence', `${tableName} cleared`)
       }
 
       return right()
