@@ -29,9 +29,9 @@ export class SendEmailConfirmationUseCase extends UseCase<Props, SendEmailConfir
     return new SendEmailConfirmationUseCase(props)
   }
 
-  public async execute (sendEmailConfirmationEmailData: SendEmailConfirmationData): Promise<Either<DomainError[], SendEmailConfirmationResultDTO>> {
+  public async execute (sendEmailConfirmationData: SendEmailConfirmationData): Promise<Either<DomainError[], SendEmailConfirmationResultDTO>> {
     const { emailSender, templateCompiler } = this.props
-    const { locale, recipientEmail, token } = sendEmailConfirmationEmailData
+    const { locale, recipientEmail, token } = sendEmailConfirmationData
 
     const htmlOrError = templateCompiler.compile(path.join(__dirname, '../templates/email-confirmation'), {
       link: `${getVar('SERVER_BASE_URL')}/identity/user/confirm-email/${token}`,

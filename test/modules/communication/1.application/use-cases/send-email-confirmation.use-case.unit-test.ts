@@ -8,7 +8,7 @@ import { type SendEmailConfirmationData, SendEmailConfirmationUseCase } from '@/
 
 import { makeErrorFake } from '~/common/_doubles/fakes/error.fake'
 
-const makeSendEmailConfirmationEmailDataFake = (): SendEmailConfirmationData => ({
+const makeSendEmailConfirmationDataFake = (): SendEmailConfirmationData => ({
   locale: 'en',
   recipientEmail: 'recipient@mail.com',
   token: 'any_token'
@@ -25,7 +25,7 @@ const makeTemplateCompilerStub = (): TemplateCompiler => ({
 
 type SutTypes = {
   errorFake: DomainError
-  sendEmailConfirmationEmailDataFake: SendEmailConfirmationData
+  sendEmailConfirmationDataFake: SendEmailConfirmationData
   emailSender: EmailSender
   templateCompiler: TemplateCompiler
   sut: SendEmailConfirmationUseCase
@@ -34,7 +34,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const doubles = {
     errorFake: makeErrorFake(),
-    sendEmailConfirmationEmailDataFake: makeSendEmailConfirmationEmailDataFake()
+    sendEmailConfirmationDataFake: makeSendEmailConfirmationDataFake()
   }
   const props = {
     emailSender: makeEmailSenderStub(),
@@ -50,12 +50,12 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('SendEmailConfirmationEmailUseCase', () => {
+describe('SendEmailConfirmationUseCase', () => {
   describe('success', () => {
     it('calls TemplateCompiler.compile with correct params', async () => {
-      const { sut, templateCompiler, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, templateCompiler, sendEmailConfirmationDataFake } = makeSut()
 
-      await sut.execute(sendEmailConfirmationEmailDataFake)
+      await sut.execute(sendEmailConfirmationDataFake)
 
       expect(templateCompiler.compile).toHaveBeenCalledWith(expect.stringContaining('templates/email-confirmation'), {
         link: expect.stringContaining('any_token'),
@@ -64,17 +64,17 @@ describe('SendEmailConfirmationEmailUseCase', () => {
     })
 
     it('calls EmailSender.send with correct params', async () => {
-      const { sut, emailSender, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, emailSender, sendEmailConfirmationDataFake } = makeSut()
 
-      await sut.execute(sendEmailConfirmationEmailDataFake)
+      await sut.execute(sendEmailConfirmationDataFake)
 
       expect(emailSender.send).toHaveBeenCalledWith(expect.any(EmailEntity))
     })
 
     it('returns Right with message when execute succeeds', async () => {
-      const { sut, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, sendEmailConfirmationDataFake } = makeSut()
 
-      const result = await sut.execute(sendEmailConfirmationEmailDataFake)
+      const result = await sut.execute(sendEmailConfirmationDataFake)
 
       expect(result.isRight()).toBe(true)
       expect(result.value).toEqual({
@@ -85,20 +85,20 @@ describe('SendEmailConfirmationEmailUseCase', () => {
 
   describe('failure', () => {
     it('returns Left with Error when TemplateCompiler.compile fails', async () => {
-      const { sut, templateCompiler, errorFake, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, templateCompiler, errorFake, sendEmailConfirmationDataFake } = makeSut()
       vi.spyOn(templateCompiler, 'compile').mockReturnValueOnce(left(errorFake))
 
-      const result = await sut.execute(sendEmailConfirmationEmailDataFake)
+      const result = await sut.execute(sendEmailConfirmationDataFake)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
     })
 
     it('returns Left with Error when EmailEntity.create fails', async () => {
-      const { sut, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, sendEmailConfirmationDataFake } = makeSut()
 
       const result = await sut.execute({
-        ...sendEmailConfirmationEmailDataFake,
+        ...sendEmailConfirmationDataFake,
         recipientEmail: 'invalid_email'
       })
 
@@ -107,10 +107,10 @@ describe('SendEmailConfirmationEmailUseCase', () => {
     })
 
     it('returns Left with Error when EmailSender.send fails', async () => {
-      const { sut, emailSender, errorFake, sendEmailConfirmationEmailDataFake } = makeSut()
+      const { sut, emailSender, errorFake, sendEmailConfirmationDataFake } = makeSut()
       vi.spyOn(emailSender, 'send').mockResolvedValueOnce(left(errorFake))
 
-      const result = await sut.execute(sendEmailConfirmationEmailDataFake)
+      const result = await sut.execute(sendEmailConfirmationDataFake)
 
       expect(result.isLeft()).toBe(true)
       expect(result.value[0]).toBeInstanceOf(DomainError)
