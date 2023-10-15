@@ -50,9 +50,8 @@ describe('ChangePasswordRoute', () => {
     await persistence.actual.client.connect()
   })
 
-  afterAll(async () => {
-    await persistence.actual.client.clearDatabase()
-    await persistence.actual.client.close()
+  afterEach(async () => {
+    await persistence.postgres.client.clearDatabase()
   })
 
   describe('success', () => {

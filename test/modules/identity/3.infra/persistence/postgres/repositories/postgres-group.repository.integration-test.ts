@@ -38,10 +38,6 @@ describe('GroupMongodbRepository', () => {
     await persistence.postgres.client.clearDatabase()
   })
 
-  afterAll(async () => {
-    await persistence.postgres.client.close()
-  })
-
   describe('success', () => {
     describe('create', () => {
       it('returns Right with null on create', async () => {

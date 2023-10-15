@@ -39,9 +39,8 @@ describe('PostgresFixture', () => {
     await persistence.postgres.client.connect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await persistence.postgres.client.clearDatabase()
-    await persistence.postgres.client.close()
   })
 
   describe('success', () => {

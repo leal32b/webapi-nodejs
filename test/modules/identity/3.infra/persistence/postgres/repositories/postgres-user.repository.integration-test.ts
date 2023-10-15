@@ -63,10 +63,6 @@ describe('UserPostgresRepository', () => {
     await persistence.postgres.client.clearDatabase()
   })
 
-  afterAll(async () => {
-    await persistence.postgres.client.close()
-  })
-
   describe('success', () => {
     describe('create', () => {
       it('calls messageBroker.publishToTopic with correct params and returns Right with null on create', async () => {
