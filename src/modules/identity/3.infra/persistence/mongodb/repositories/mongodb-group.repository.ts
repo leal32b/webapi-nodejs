@@ -38,6 +38,21 @@ export class MongodbGroupRepository implements GroupRepository {
     }
   }
 
+  // TODO: adjust
+  async readManyByNames (name: string[]): Promise<Either<DomainError[], GroupEntity[]>> {
+    try {
+      const group = await this.readByFilter({ name })
+
+      if (!group) {
+        return right(null)
+      }
+
+      return right([MongodbGroupMapper.toDomain(group)])
+    } catch (error) {
+      return left([ServerError.create(error.message, error.stack)])
+    }
+  }
+
   private async readByFilter (filter: Record<string, any>): Promise<any> {
     const userCollection = await persistence.mongodb.client.getCollection('group')
 
