@@ -8,10 +8,17 @@ import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregat
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 import { userEventsTopic } from '@/identity/1.application/events/topics/user-events.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
+import { PostgresGroupMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-group.mapper'
 import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-user.mapper'
 
 type Props = {
   messageBroker: MessageBroker
+}
+
+type Filter = {
+  email?: string
+  id?: string
+  token?: string
 }
 
 export class PostgresUserRepository implements UserRepository {
@@ -21,11 +28,13 @@ export class PostgresUserRepository implements UserRepository {
     return new PostgresUserRepository(props)
   }
 
-  async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
+  public async create (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const repository = await persistence.postgres.client.getRepository('user')
+      const userRepository = await persistence.postgres.client.getRepository('user')
       const user = PostgresUserMapper.toPersistence(userAggregate)
-      await persistence.postgres.client.manager.save(repository.create(user))
+
+      await userRepository.save(user)
+      await this.updateUserGroups(userAggregate)
 
       this.props.messageBroker.publishToTopic(userEventsTopic, ['userCreated', '#'], UserCreatedEvent.create({
         aggregateId: user.id,
@@ -42,65 +51,89 @@ export class PostgresUserRepository implements UserRepository {
     }
   }
 
-  async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
-    try {
-      const user = await this.readByFilter({ email })
+  public async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
+    const userAggregate = await this.read({ email })
 
-      if (!user) {
-        return right(null)
-      }
-
-      return right(PostgresUserMapper.toDomain(user))
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
+    return userAggregate
   }
 
-  async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
-    try {
-      const user = await this.readByFilter({ id })
+  public async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
+    const userAggregate = await this.read({ id })
 
-      if (!user) {
-        return right(null)
-      }
-
-      return right(PostgresUserMapper.toDomain(user))
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
+    return userAggregate
   }
 
-  async readByToken (token: string): Promise<Either<DomainError[], UserAggregate>> {
-    try {
-      const user = await this.readByFilter({ token })
+  public async readByToken (token: string): Promise<Either<DomainError[], UserAggregate>> {
+    const userAggregate = await this.read({ token })
 
-      if (!user) {
-        return right(null)
-      }
-
-      return right(PostgresUserMapper.toDomain(user))
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
+    return userAggregate
   }
 
-  async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
+  public async update (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const repository = await persistence.postgres.client.getRepository('user')
+      const userRepository = await persistence.postgres.client.getRepository('user')
       const user = PostgresUserMapper.toPersistence(userAggregate)
-      const result = await persistence.postgres.client.manager.update('user', { id: user.id }, repository.create(user))
 
-      return right(result)
+      await userRepository.update({ id: user.id }, user)
+      await this.updateUserGroups(userAggregate)
+
+      return right()
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
   }
 
-  private async readByFilter (filter: Record<string, any>): Promise<any> {
-    const repository = await persistence.postgres.client.getRepository('user')
+  private async read (filter: Filter): Promise<Either<DomainError[], UserAggregate>> {
+    try {
+      const userRepository = await persistence.postgres.client.getRepository('user')
+      const userGroupRepository = await persistence.postgres.client.getRepository('user_group')
+      const user = await userRepository.findOneBy(filter)
 
-    const user = await repository.findOneBy(filter)
+      if (!user) {
+        return right(null)
+      }
 
-    return user
+      const domainUser = PostgresUserMapper.toDomain(user)
+      const userGroups = await userGroupRepository.find({
+        relations: ['group'],
+        where: {
+          userId: user.id
+        }
+      })
+
+      if (userGroups.length) {
+        domainUser.setGroups(userGroups.map(userGroup => PostgresGroupMapper.toDomain(userGroup.group)))
+      }
+
+      return right(domainUser)
+    } catch (error) {
+      return left([ServerError.create(error.message, error.stack)])
+    }
+  }
+
+  private async updateUserGroups (userAggregate: UserAggregate): Promise<void> {
+    const userGroupRepository = await persistence.postgres.client.getRepository('user_group')
+    const userGroups = await userGroupRepository.find({
+      relations: ['group'],
+      where: {
+        userId: userAggregate.aggregateRoot.id
+      }
+    })
+    const domainUserGroups = userGroups.map(userGroup => PostgresGroupMapper.toDomain(userGroup.group))
+    const groupsToInsert = userAggregate.groups.filter(item => !domainUserGroups.includes(item))
+    const groupsToDelete = domainUserGroups.filter(item => !userAggregate.groups.includes(item))
+
+    await userGroupRepository.save(groupsToInsert.map(userGroup => ({
+      groupId: userGroup.props.id,
+      userId: userAggregate.aggregateRoot.id
+    })))
+
+    if (!groupsToDelete.length) {
+      return
+    }
+
+    await userGroupRepository.delete(groupsToDelete.map(userGroup => ({
+      groupId: userGroup.props.id
+    })))
   }
 }

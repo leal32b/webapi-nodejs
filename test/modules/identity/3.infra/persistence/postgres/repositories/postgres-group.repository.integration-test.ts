@@ -34,8 +34,11 @@ describe('GroupMongodbRepository', () => {
     await persistence.postgres.client.connect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await persistence.postgres.client.clearDatabase()
+  })
+
+  afterAll(async () => {
     await persistence.postgres.client.close()
   })
 
@@ -53,7 +56,7 @@ describe('GroupMongodbRepository', () => {
     describe('readByName', () => {
       it('returns Right with null on readByName if group does not exist', async () => {
         const { sut } = makeSut()
-        const name = 'any_name2'
+        const name = 'any_name'
 
         const result = await sut.readByName(name)
 
@@ -63,13 +66,36 @@ describe('GroupMongodbRepository', () => {
 
       it('returns Right with GroupEntity on readByName', async () => {
         const { sut, groupFixture } = makeSut()
-        const name = 'any_name2'
-        await groupFixture.createFixture({ name })
+        const { name } = await groupFixture.createFixture({})
 
         const result = await sut.readByName(name)
 
         expect(result.isRight()).toBe(true)
         expect(result.value).toBeInstanceOf(GroupEntity)
+      })
+    })
+
+    describe('readManyByNames', () => {
+      it('returns Right with null on readManyByName if groups do not exist', async () => {
+        const { sut } = makeSut()
+        const names = ['any_name']
+
+        const result = await sut.readManyByNames(names)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBe(null)
+      })
+
+      it('returns Right with an array of GroupEntity on readManyByNames', async () => {
+        const { sut, groupFixture } = makeSut()
+        const groups = await groupFixture.createRandomFixtures(2)
+        const names = groups.map(group => group.name)
+
+        const result = await sut.readManyByNames(names)
+
+        expect(result.isRight()).toBe(true)
+        expect((result.value as GroupEntity[])
+          .every(item => item instanceof GroupEntity)).toBe(true)
       })
     })
   })

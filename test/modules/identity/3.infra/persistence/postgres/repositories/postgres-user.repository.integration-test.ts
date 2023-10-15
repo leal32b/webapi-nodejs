@@ -3,16 +3,29 @@ import { type PersistenceFixture } from '@/common/3.infra/persistence/persistenc
 import { persistence } from '@/common/4.main/container'
 
 import { UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
-import { type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
+import { GroupEntity, type GroupEntityProps } from '@/identity/0.domain/entities/group.entity'
+import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
 import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed.value-object'
+import { PostgresGroupMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-group.mapper'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user.repository'
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker.mock'
+import { makeGroupEntityFake } from '~/identity/_doubles/fakes/group-entity.fake'
 import { makeUserAggregateFake } from '~/identity/_doubles/fakes/user-aggregate.fake'
+import { PostgresGroupFixture } from '~/identity/_fixtures/postgres/postgres-group.fixture'
+import { PostgresUserGroupFixture } from '~/identity/_fixtures/postgres/postgres-user-group.fixture'
 import { PostgresUserFixture } from '~/identity/_fixtures/postgres/postgres-user.fixture'
 
+type UserGroupEntityProps = {
+  groupId: string
+  userId: string
+}
+
 type SutTypes = {
+  groupFixture: PersistenceFixture<GroupEntityProps>
   userFixture: PersistenceFixture<UserEntityProps>
+  userGroupFixture: PersistenceFixture<UserGroupEntityProps>
+  groupEntityFake: GroupEntity
   userAggregateFake: UserAggregate
   messageBroker: MessageBroker
   sut: PostgresUserRepository
@@ -20,9 +33,12 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const collaborators = {
-    userFixture: PostgresUserFixture.create()
+    groupFixture: PostgresGroupFixture.create(),
+    userFixture: PostgresUserFixture.create(),
+    userGroupFixture: PostgresUserGroupFixture.create()
   }
   const doubles = {
+    groupEntityFake: makeGroupEntityFake(),
     userAggregateFake: makeUserAggregateFake()
   }
   const props = {
@@ -43,8 +59,11 @@ describe('UserPostgresRepository', () => {
     await persistence.postgres.client.connect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await persistence.postgres.client.clearDatabase()
+  })
+
+  afterAll(async () => {
     await persistence.postgres.client.close()
   })
 
@@ -72,12 +91,22 @@ describe('UserPostgresRepository', () => {
           })
         expect(result.isRight()).toBe(true)
       })
+
+      it('returns Right on create success', async () => {
+        const { sut, groupFixture, groupEntityFake, userAggregateFake } = makeSut()
+        await groupFixture.createFixture(PostgresGroupMapper.toPersistence(groupEntityFake))
+        userAggregateFake.setGroups([groupEntityFake])
+
+        const result = await sut.create(userAggregateFake)
+
+        expect(result.isRight()).toBe(true)
+      })
     })
 
     describe('readByEmail', () => {
       it('returns Right with null on readByEmail if user does not exist', async () => {
         const { sut } = makeSut()
-        const email = 'any2@mail.com'
+        const email = 'not_in_base@mail.com'
 
         const result = await sut.readByEmail(email)
 
@@ -87,8 +116,19 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readByEmail success', async () => {
         const { sut, userFixture } = makeSut()
-        const email = 'any2@mail.com'
-        await userFixture.createFixture({ email })
+        const { email } = await userFixture.createFixture({})
+
+        const result = await sut.readByEmail(email)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBeInstanceOf(UserAggregate)
+      })
+
+      it('returns Right with UserAggregate and groups on readByEmail success', async () => {
+        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { id: groupId } = await groupFixture.createFixture({})
+        const { id: userId, email } = await userFixture.createFixture({})
+        await userGroupFixture.createFixture({ groupId, userId })
 
         const result = await sut.readByEmail(email)
 
@@ -100,7 +140,7 @@ describe('UserPostgresRepository', () => {
     describe('readById', () => {
       it('returns Right with null on readById if user does not exist', async () => {
         const { sut } = makeSut()
-        const id = 'any_id_2'
+        const id = 'any_id'
 
         const result = await sut.readById(id)
 
@@ -110,10 +150,21 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readById success', async () => {
         const { sut, userFixture } = makeSut()
-        const id = 'any_id_2'
-        await userFixture.createFixture({ id })
+        const { id } = await userFixture.createFixture({})
 
         const result = await sut.readById(id)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBeInstanceOf(UserAggregate)
+      })
+
+      it('returns Right with UserAggregate and groups on readById success', async () => {
+        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { id: groupId } = await groupFixture.createFixture({})
+        const { id: userId } = await userFixture.createFixture({})
+        await userGroupFixture.createFixture({ groupId, userId })
+
+        const result = await sut.readById(userId)
 
         expect(result.isRight()).toBe(true)
         expect(result.value).toBeInstanceOf(UserAggregate)
@@ -133,8 +184,19 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readByToken success', async () => {
         const { sut, userFixture } = makeSut()
-        const token = 'in_base_token'
-        await userFixture.createFixture({ token })
+        const { token } = await userFixture.createFixture({})
+
+        const result = await sut.readByToken(token)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBeInstanceOf(UserAggregate)
+      })
+
+      it('returns Right with UserAggregate and groups on readByToken success', async () => {
+        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { id: groupId } = await groupFixture.createFixture({})
+        const { id: userId, token } = await userFixture.createFixture({})
+        await userGroupFixture.createFixture({ groupId, userId })
 
         const result = await sut.readByToken(token)
 
@@ -150,6 +212,36 @@ describe('UserPostgresRepository', () => {
         userAggregateFake.setEmailConfirmed(emailConfirmed)
 
         const result = await sut.update(userAggregateFake)
+
+        expect(result.isRight()).toBe(true)
+      })
+
+      it('returns Right on update adding groups', async () => {
+        const { sut, groupFixture, userFixture } = makeSut()
+        const group = await groupFixture.createFixture({})
+        const user = await userFixture.createFixture({})
+        const userEntity = UserEntity.create(user).value as UserEntity
+        const groupEntity = GroupEntity.create(group).value as GroupEntity
+        const userAggregate = UserAggregate.create(userEntity)
+        userAggregate.setGroups([groupEntity])
+
+        const result = await sut.update(userAggregate)
+
+        expect(result.isRight()).toBe(true)
+      })
+
+      it('returns Right on update removing groups', async () => {
+        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const group = await groupFixture.createFixture({})
+        const user = await userFixture.createFixture({})
+        await userGroupFixture.createFixture({
+          groupId: group.id,
+          userId: user.id
+        })
+        const userEntity = UserEntity.create(user).value as UserEntity
+        const userAggregate = UserAggregate.create(userEntity)
+
+        const result = await sut.update(userAggregate)
 
         expect(result.isRight()).toBe(true)
       })
