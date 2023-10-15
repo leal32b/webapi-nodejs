@@ -18,8 +18,6 @@ export class PostgresClient implements PersistenceClient {
   }
 
   public async clearDatabase (): Promise<Either<Error, void>> {
-    const { logger } = this.props
-
     const isTest = getVar('NODE_ENV') === 'test'
 
     if (!isTest) {
@@ -31,7 +29,6 @@ export class PostgresClient implements PersistenceClient {
 
       for await (const tableName of tableNames) {
         await this.props.dataSource.query(`TRUNCATE "${tableName}" CASCADE`)
-        logger.info('persistence', `${tableName} cleared`)
       }
 
       return right()
