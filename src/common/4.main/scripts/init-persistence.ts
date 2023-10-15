@@ -14,13 +14,13 @@ const initPersistence = async (): Promise<void> => {
 
   const { groupRepository, userRepository } = persistence.actual.repositories
 
-  // Group
+  // group
   const userGroupEntity = GroupEntity.create({ name: 'user' }).value as GroupEntity
   const masterGroupEntity = GroupEntity.create({ name: 'master' }).value as GroupEntity
   await groupRepository.create(userGroupEntity)
   await groupRepository.create(masterGroupEntity)
 
-  // User
+  // user
   const masterName = getVar('MASTER_USER')
   const masterPassword = getVar('MASTER_PASSWORD')
   const masterHashedPassword = (await cryptography.hasher.hash(masterPassword)).value as string
@@ -34,6 +34,7 @@ const initPersistence = async (): Promise<void> => {
   const masterUserAggregate = UserAggregate.create(masterUserEntity)
   const userEmailConfirmed = UserEmailConfirmed.create(true).value as UserEmailConfirmed
   masterUserAggregate.setEmailConfirmed(userEmailConfirmed)
+  masterUserAggregate.setGroups([masterGroupEntity])
   await userRepository.create(masterUserAggregate)
 }
 

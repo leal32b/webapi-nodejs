@@ -30,7 +30,7 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
     "migration:generate": "npm run typeorm -- migration:generate -d src/common/3.infra/persistence/postgres/data-sources/postgres-default.data-source.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/common/3.infra/persistence/postgres/data-sources/postgres-default.data-source.ts",
-    "script:init-persistence": "ts-node -r tsconfig-paths/register src/common/4.main/scripts/init-perisitence.ts",
+    "script:init-persistence": "ts-node -r tsconfig-paths/register src/common/4.main/scripts/init-persistence.ts",
     "eslint": "eslint '{src,test}/**' --fix",
     "jscpd": "jscpd",
     "test": "vitest",
