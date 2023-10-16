@@ -50,7 +50,7 @@ describe('UserMongodbRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it('calls messageBroker.publishToTopic with correct params and returns Right with on create', async () => {
+      it('calls messageBroker.publishToTopic with correct params', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 
@@ -72,12 +72,20 @@ describe('UserMongodbRepository', () => {
           })
         expect(result.isRight()).toBe(true)
       })
+
+      it('returns Right on create success', async () => {
+        const { sut, userAggregateFake } = makeSut()
+
+        const result = await sut.create(userAggregateFake)
+
+        expect(result.isRight()).toBe(true)
+      })
     })
 
     describe('readByEmail', () => {
       it('returns Right with null on readByEmail if user does not exist', async () => {
         const { sut } = makeSut()
-        const email = 'any2@mail.com'
+        const email = 'not_in_base@mail.com'
 
         const result = await sut.readByEmail(email)
 

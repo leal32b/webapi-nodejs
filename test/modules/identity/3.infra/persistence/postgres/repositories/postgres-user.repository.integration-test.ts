@@ -65,11 +65,11 @@ describe('UserPostgresRepository', () => {
 
   describe('success', () => {
     describe('create', () => {
-      it('calls messageBroker.publishToTopic with correct params and returns Right with null on create', async () => {
+      it('calls messageBroker.publishToTopic with correct params', async () => {
         const { sut, messageBroker, userAggregateFake } = makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 
-        const result = await sut.create(userAggregateFake)
+        await sut.create(userAggregateFake)
 
         expect(publishToTopicSpy).toHaveBeenCalledWith(
           { name: 'userEventsTopic' },
@@ -85,7 +85,6 @@ describe('UserPostgresRepository', () => {
               }
             }
           })
-        expect(result.isRight()).toBe(true)
       })
 
       it('returns Right on create success', async () => {
@@ -136,7 +135,7 @@ describe('UserPostgresRepository', () => {
     describe('readById', () => {
       it('returns Right with null on readById if user does not exist', async () => {
         const { sut } = makeSut()
-        const id = 'any_id'
+        const id = 'not_in_base_id'
 
         const result = await sut.readById(id)
 
