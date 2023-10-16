@@ -12,20 +12,42 @@ type Props<ReturnType> = {
 export abstract class MongodbFixture<EntityType> implements PersistenceFixture<EntityType> {
   protected constructor (private readonly props: Props<EntityType>) {}
 
-  public async createFixture (entity: Partial<EntityType>): Promise<EntityType> {
-    return await this.createMongodbFixture(entity)
-  }
+  public async createFixture (entity?: Partial<EntityType>): Promise<EntityType>
+  public async createFixture (entities: Array<Partial<EntityType>>): Promise<EntityType[]>
+  public async createFixture <NumberType extends number>(amount: IntegerGreaterThanZeroType<NumberType>): Promise<EntityType[]>
+  public async createFixture <NumberType extends number>(entityOrEntitiesOrAmount: Partial<EntityType> | Array<Partial<EntityType>> | IntegerGreaterThanZeroType<NumberType>): Promise<EntityType | EntityType[] | EntityType[]> {
+    const { createDefault, collectionName } = this.props
+    const collection = await persistence.mongodb.client.getCollection(collectionName)
 
-  public async createFixtures (entities: Array<Partial<EntityType>>): Promise<EntityType[]> {
-    return await this.createMongodbFixture(entities)
-  }
+    if (typeof entityOrEntitiesOrAmount === 'number') {
+      const entities: EntityType[] = []
 
-  public async createRandomFixture (): Promise<EntityType> {
-    return await this.createMongodbFixture()
-  }
+      for (let i = 0; i < entityOrEntitiesOrAmount; i++) {
+        entities.push(createDefault())
+      }
 
-  public async createRandomFixtures <NumberType extends number>(amount: IntegerGreaterThanZeroType<NumberType>): Promise<EntityType[]> {
-    return await this.createMongodbFixture(amount)
+      await collection.insertMany(entities.map(entity => this.adaptId(entity)))
+
+      return entities
+    }
+
+    if (!entityOrEntitiesOrAmount || !Array.isArray(entityOrEntitiesOrAmount)) {
+      const entity = {
+        ...createDefault(),
+        ...entityOrEntitiesOrAmount
+      }
+      await collection.insertOne(this.adaptId(entity))
+
+      return entity
+    }
+
+    const entities = entityOrEntitiesOrAmount.map(entity => ({
+      ...createDefault(),
+      ...entity
+    }))
+    await collection.insertMany(entities.map(entity => this.adaptId(entity)))
+
+    return entities
   }
 
   private adaptId (entity: any): EntityType {
@@ -35,38 +57,5 @@ export abstract class MongodbFixture<EntityType> implements PersistenceFixture<E
       ...entityWithoutId,
       _id: new ObjectId(id)
     }
-  }
-
-  private async createMongodbFixture (): Promise<EntityType>
-  private async createMongodbFixture (entity: Partial<EntityType>): Promise<EntityType>
-  private async createMongodbFixture (entities: Array<Partial<EntityType>>): Promise<EntityType[]>
-  private async createMongodbFixture <NumberType extends number>(amount: IntegerGreaterThanZeroType<NumberType>): Promise<EntityType[]>
-  private async createMongodbFixture <NumberType extends number>(amountOrEntityOrEntities?: IntegerGreaterThanZeroType<NumberType> | Partial<EntityType> | Array<Partial<EntityType>>): Promise<EntityType | EntityType[]> {
-    const { createDefault, collectionName } = this.props
-    const collection = await persistence.mongodb.client.getCollection(collectionName)
-
-    if (typeof amountOrEntityOrEntities === 'number') {
-      const entities: EntityType[] = []
-
-      for (let i = 0; i < amountOrEntityOrEntities; i++) {
-        entities.push(createDefault())
-      }
-
-      await collection.insertMany(entities.map(entity => this.adaptId(entity)))
-
-      return entities
-    }
-
-    if (!Array.isArray(amountOrEntityOrEntities)) {
-      const entity = { ...createDefault(), ...amountOrEntityOrEntities }
-      await collection.insertOne(this.adaptId(entity))
-
-      return entity
-    }
-
-    const entities = amountOrEntityOrEntities.map(entity => ({ ...createDefault(), ...entity }))
-    await collection.insertMany(entities.map(entity => this.adaptId(entity)))
-
-    return entities
   }
 }

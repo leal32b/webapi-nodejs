@@ -47,7 +47,7 @@ describe('PostgresFixture', () => {
     it('returns created entity when no props are provided', async () => {
       const { sut } = await makeSut()
 
-      const result = await sut.createRandomFixture()
+      const result = await sut.createFixture()
 
       expect(result).toEqual({
         createdAt: expect.any(Date),
@@ -86,7 +86,7 @@ describe('PostgresFixture', () => {
       const props1 = { name: 'any_name_1' }
       const props2 = { name: 'any_name_2' }
 
-      const result = await sut.createFixtures([props1, props2])
+      const result = await sut.createFixture([props1, props2])
 
       expect(result).toEqual([{
         createdAt: expect.any(Date),
@@ -116,7 +116,7 @@ describe('PostgresFixture', () => {
       const { sut } = await makeSut()
       const amount = 3
 
-      const result = await sut.createRandomFixtures(amount)
+      const result = await sut.createFixture(amount)
 
       expect(result.length).toBe(3)
     })
