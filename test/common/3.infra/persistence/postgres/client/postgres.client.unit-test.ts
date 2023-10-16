@@ -41,7 +41,7 @@ const makeSut = (): SutTypes => {
 
 describe('PostgresClient', () => {
   describe('success', () => {
-    it('connects to dataSource', async () => {
+    it('returns Right on connect', async () => {
       const { sut } = makeSut()
 
       const result = await sut.connect()
@@ -49,7 +49,7 @@ describe('PostgresClient', () => {
       expect(result.isRight()).toBe(true)
     })
 
-    it('closes connection to dataSource', async () => {
+    it('returns Right on close', async () => {
       const { sut } = makeSut()
 
       const result = await sut.close()
@@ -77,7 +77,6 @@ describe('PostgresClient', () => {
       const { sut } = makeSut()
 
       const result = await sut.clearDatabase()
-      console.log('result >>>', JSON.stringify(result))
 
       expect(result.isRight()).toBe(true)
     })

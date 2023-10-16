@@ -18,6 +18,8 @@ export class PostgresClient implements PersistenceClient {
   }
 
   public async clearDatabase (): Promise<Either<Error, void>> {
+    const { dataSource } = this.props
+
     const isTest = getVar('NODE_ENV') === 'test'
 
     if (!isTest) {
@@ -25,10 +27,10 @@ export class PostgresClient implements PersistenceClient {
     }
 
     try {
-      const tableNames = this.props.dataSource.entityMetadatas.map(entity => entity.tableName)
+      const tableNames = dataSource.entityMetadatas.map(entity => entity.tableName)
 
       for await (const tableName of tableNames) {
-        await this.props.dataSource.query(`TRUNCATE "${tableName}" CASCADE`)
+        await dataSource.query(`TRUNCATE "${tableName}" CASCADE`)
       }
 
       return right()
@@ -38,10 +40,10 @@ export class PostgresClient implements PersistenceClient {
   }
 
   public async close (): Promise<Either<Error, void>> {
-    const { logger } = this.props
+    const { dataSource, logger } = this.props
 
     try {
-      await this.props.dataSource.destroy()
+      await dataSource.destroy()
 
       logger.info('persistence', 'dataSource disconnected')
 
@@ -54,14 +56,14 @@ export class PostgresClient implements PersistenceClient {
   }
 
   public async connect (): Promise<Either<Error, void>> {
-    const { logger } = this.props
+    const { dataSource, logger } = this.props
 
     try {
-      await this.props.dataSource.initialize()
-      const dataSource = this.props.dataSource.name
-      const database = this.props.dataSource.options.database as string
+      await dataSource.initialize()
+      const dataSourceName = dataSource.name
+      const database = dataSource.options.database as string
 
-      logger.info('persistence', `dataSource connected: [${dataSource}] ${database}`)
+      logger.info('persistence', `dataSource connected: [${dataSourceName}] ${database}`)
 
       return right()
     } catch (error) {
