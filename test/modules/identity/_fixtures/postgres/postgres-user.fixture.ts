@@ -15,7 +15,7 @@ export class PostgresUserFixture extends PostgresFixture<PostgresUserEntity> {
         locale: 'en',
         name: faker.person.firstName(),
         password: `$argon2id$v=19$m=4096,t=3,p=1$${faker.string.alphanumeric(16)}$${faker.string.alphanumeric(32)}`,
-        token: faker.string.alphanumeric(12),
+        token: `${faker.string.alphanumeric(4)}.${faker.string.alphanumeric(4)}.${faker.string.alphanumeric(4)}`,
         updatedAt: new Date()
       }),
       repositoryName: 'user'
