@@ -112,7 +112,7 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readByEmail success', async () => {
         const { sut, userFixture } = makeSut()
-        const { email } = await userFixture.createFixture({})
+        const { email } = await userFixture.createFixture()
 
         const result = await sut.readByEmail(email)
 
@@ -122,8 +122,8 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate and groups on readByEmail success', async () => {
         const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
-        const { id: groupId } = await groupFixture.createFixture({})
-        const { id: userId, email } = await userFixture.createFixture({})
+        const { id: groupId } = await groupFixture.createFixture()
+        const { id: userId, email } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
 
         const result = await sut.readByEmail(email)
@@ -146,7 +146,7 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readById success', async () => {
         const { sut, userFixture } = makeSut()
-        const { id } = await userFixture.createFixture({})
+        const { id } = await userFixture.createFixture()
 
         const result = await sut.readById(id)
 
@@ -156,8 +156,8 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate and groups on readById success', async () => {
         const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
-        const { id: groupId } = await groupFixture.createFixture({})
-        const { id: userId } = await userFixture.createFixture({})
+        const { id: groupId } = await groupFixture.createFixture()
+        const { id: userId } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
 
         const result = await sut.readById(userId)
@@ -180,7 +180,7 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate on readByToken success', async () => {
         const { sut, userFixture } = makeSut()
-        const { token } = await userFixture.createFixture({})
+        const { token } = await userFixture.createFixture()
 
         const result = await sut.readByToken(token)
 
@@ -190,8 +190,8 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right with UserAggregate and groups on readByToken success', async () => {
         const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
-        const { id: groupId } = await groupFixture.createFixture({})
-        const { id: userId, token } = await userFixture.createFixture({})
+        const { id: groupId } = await groupFixture.createFixture()
+        const { id: userId, token } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
 
         const result = await sut.readByToken(token)
@@ -214,8 +214,8 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right on update adding groups', async () => {
         const { sut, groupFixture, userFixture } = makeSut()
-        const group = await groupFixture.createFixture({})
-        const user = await userFixture.createFixture({})
+        const group = await groupFixture.createFixture()
+        const user = await userFixture.createFixture()
         const userEntity = UserEntity.create(user).value as UserEntity
         const groupEntity = GroupEntity.create(group).value as GroupEntity
         const userAggregate = UserAggregate.create(userEntity)
@@ -228,8 +228,8 @@ describe('UserPostgresRepository', () => {
 
       it('returns Right on update removing groups', async () => {
         const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
-        const group = await groupFixture.createFixture({})
-        const user = await userFixture.createFixture({})
+        const group = await groupFixture.createFixture()
+        const user = await userFixture.createFixture()
         await userGroupFixture.createFixture({
           groupId: group.id,
           userId: user.id

@@ -62,7 +62,7 @@ describe('GroupMongodbRepository', () => {
 
       it('returns Right with GroupEntity on readByName', async () => {
         const { sut, groupFixture } = makeSut()
-        const { name } = await groupFixture.createFixture({})
+        const { name } = await groupFixture.createFixture()
 
         const result = await sut.readByName(name)
 
@@ -84,7 +84,7 @@ describe('GroupMongodbRepository', () => {
 
       it('returns Right with an array of GroupEntity on readManyByNames', async () => {
         const { sut, groupFixture } = makeSut()
-        const groups = await groupFixture.createRandomFixtures(2)
+        const groups = await groupFixture.createFixture(2)
         const names = groups.map(group => group.name)
 
         const result = await sut.readManyByNames(names)

@@ -63,8 +63,7 @@ describe('GroupMongodbRepository', () => {
 
       it('returns Right with GroupEntity on readByName', async () => {
         const { sut, groupFixture } = makeSut()
-        const name = 'any_name'
-        await groupFixture.createFixture({ name })
+        const { name } = await groupFixture.createFixture()
 
         const result = await sut.readByName(name)
 

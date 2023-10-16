@@ -87,8 +87,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns Right with UserAggregate on readByEmail', async () => {
         const { sut, userFixture } = makeSut()
-        const email = 'any2@mail.com'
-        await userFixture.createFixture({ email })
+        const { email } = await userFixture.createFixture()
 
         const result = await sut.readByEmail(email)
 
@@ -110,8 +109,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns UserAggregate on readById', async () => {
         const { sut, userFixture } = makeSut()
-        const id = '000000000000000000000001'
-        await userFixture.createFixture({ id })
+        const { id } = await userFixture.createFixture()
 
         const result = await sut.readById(id)
 
@@ -133,8 +131,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns Right with UserAggregate on readByToken success', async () => {
         const { sut, userFixture } = makeSut()
-        const token = 'in_base_token'
-        await userFixture.createFixture({ token })
+        const { token } = await userFixture.createFixture()
 
         const result = await sut.readByToken(token)
 

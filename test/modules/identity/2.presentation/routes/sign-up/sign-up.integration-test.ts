@@ -99,13 +99,12 @@ describe('SignUpRoute', () => {
 
     it('returns 400 with email already in use error message when email is already in use', async () => {
       const { userFixture, webApp } = makeSut()
-      const email = 'any2@mail.com'
-      await userFixture.createFixture({ email })
+      const { email } = await userFixture.createFixture()
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/user/sign-up')
         .send({
-          email: 'any2@mail.com',
+          email,
           locale: 'en',
           name: 'any_name',
           password: 'any_password',
@@ -116,7 +115,7 @@ describe('SignUpRoute', () => {
       expect(body).toEqual({
         error: {
           field: 'email',
-          input: 'any2@mail.com',
+          input: email,
           message: 'email already in use'
         }
       })

@@ -36,10 +36,8 @@ describe('ChangePasswordRoute', () => {
   describe('success', () => {
     it('returns 200 with correct message on success', async () => {
       const { userFixture, webApp } = await makeSut()
-      const token = 'a.b.c'
-      await userFixture.createFixture({
-        emailConfirmed: false,
-        token
+      const { token } = await userFixture.createFixture({
+        emailConfirmed: false
       })
 
       const { body, statusCode } = await request(webApp.app)

@@ -36,17 +36,15 @@ describe('SignInRoute', () => {
   describe('success', () => {
     it('returns 200 with an accessToken on success', async () => {
       const { userFixture, webApp } = makeSut()
-      const email = 'any@mail.com'
       const password = 'any_password'
       const hashedPassword = (await cryptography.hasher.hash(password)).value as string
-      await userFixture.createFixture({ email, password: hashedPassword })
-      userFixture.createFixture({})
+      const { email } = await userFixture.createFixture({ password: hashedPassword })
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/user/sign-in')
         .send({
-          email: 'any@mail.com',
-          password: 'any_password'
+          email,
+          password
         })
 
       expect(statusCode).toBe(200)
@@ -99,14 +97,14 @@ describe('SignInRoute', () => {
 
     it('returns 401 with invalid password error message when when password is invalid', async () => {
       const { userFixture, webApp } = makeSut()
-      const email = 'any2@mail.com'
-      await userFixture.createFixture({ email })
+      const password = 'invalid_password'
+      const { email } = await userFixture.createFixture()
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/user/sign-in')
         .send({
-          email: 'any2@mail.com',
-          password: 'invalid_password'
+          email,
+          password
         })
 
       expect(statusCode).toBe(401)

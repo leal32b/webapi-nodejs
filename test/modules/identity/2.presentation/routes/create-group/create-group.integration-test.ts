@@ -71,18 +71,17 @@ describe('CreateGroupRoute', () => {
 
     it('returns 400 with name already in use error message when name is already in use', async () => {
       const { groupFixture, webApp } = makeSut()
-      const name = 'any_name2'
-      await groupFixture.createFixture({ name })
+      const { name } = await groupFixture.createFixture()
 
       const { body, statusCode } = await request(webApp.app)
         .post('/api/identity/group')
-        .send({ name: 'any_name2' })
+        .send({ name })
 
       expect(statusCode).toBe(400)
       expect(body).toEqual({
         error: {
           field: 'name',
-          input: 'any_name2',
+          input: name,
           message: 'name already in use'
         }
       })
