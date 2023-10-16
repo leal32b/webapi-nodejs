@@ -1,6 +1,6 @@
-import { MongoClient, type Collection } from 'mongodb'
+import { type Connection, createConnection, type Collection } from 'mongoose'
 
-import { type Either, left, right } from '@/common/0.domain/utils/either'
+import { right, type Either, left } from '@/common/0.domain/utils/either'
 import { getVar } from '@/common/0.domain/utils/var'
 import { type Logger } from '@/common/1.application/logging/logger'
 import { type PersistenceClient } from '@/common/3.infra/persistence/persistence.client'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export class MongodbClient implements PersistenceClient {
-  private mongoClient: MongoClient
+  private mongodbClient: Connection
 
   private constructor (private readonly props: Props) {}
 
@@ -33,8 +33,7 @@ export class MongodbClient implements PersistenceClient {
     }
 
     try {
-      const { database } = this.props.dataSource
-      await this.mongoClient.db(database).dropDatabase()
+      await this.mongodbClient.dropDatabase()
 
       return right()
     } catch (error) {
@@ -46,7 +45,7 @@ export class MongodbClient implements PersistenceClient {
     const { logger } = this.props
 
     try {
-      await this.mongoClient.close()
+      await this.mongodbClient.close()
 
       logger.info('persistence', 'dataSource disconnected')
 
@@ -60,18 +59,17 @@ export class MongodbClient implements PersistenceClient {
 
   public async connect (): Promise<Either<Error, void>> {
     const { dataSource, logger } = this.props
-    const { connectionString } = dataSource
 
     try {
-      this.mongoClient = await MongoClient.connect(connectionString)
+      this.mongodbClient = createConnection(dataSource.connectionString, { dbName: dataSource.database })
 
-      if (!this.mongoClient) {
+      if (!this.mongodbClient) {
         throw new Error('mongodb connection error')
       }
 
-      const { name: dataSource, database } = this.props.dataSource
+      const { name: dataSourceName, database } = this.props.dataSource
 
-      logger.info('persistence', `dataSource connected: [${dataSource}] ${database}`)
+      logger.info('persistence', `dataSource connected: [${dataSourceName}] ${database}`)
 
       return right()
     } catch (error) {
@@ -82,8 +80,6 @@ export class MongodbClient implements PersistenceClient {
   }
 
   public async getCollection (name: string): Promise<Collection> {
-    const { database } = this.props.dataSource
-
-    return this.mongoClient.db(database).collection(name)
+    return this.mongodbClient.collection(name)
   }
 }

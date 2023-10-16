@@ -1,21 +1,14 @@
-import { Collection } from 'mongodb'
-
 import { type Logger } from '@/common/1.application/logging/logger'
 import { MongodbClient, type MongodbDataSource } from '@/common/3.infra/persistence/mongodb/client/mongodb.client'
 
 import { makeLoggerMock } from '~/common/_doubles/mocks/logger.mock'
 
-vi.mock('mongodb', () => ({
-  Collection: vi.fn(),
-  MongoClient: {
-    connect: vi.fn(() => ({
-      close: vi.fn(),
-      db: vi.fn(() => ({
-        collection: vi.fn(() => new Collection()),
-        dropDatabase: vi.fn()
-      }))
-    }))
-  }
+vi.mock('mongoose', () => ({
+  createConnection: vi.fn(() => ({
+    close: vi.fn(),
+    collection: vi.fn(() => ({})),
+    dropDatabase: vi.fn()
+  }))
 }))
 
 type SutTypes = {
@@ -45,6 +38,22 @@ const makeSut = async (): Promise<SutTypes> => {
 
 describe('MongodbAdapter', () => {
   describe('success', () => {
+    it('returns Right on connect', async () => {
+      const { sut } = await makeSut()
+
+      const result = await sut.connect()
+
+      expect(result.isRight()).toBe(true)
+    })
+
+    it('returns Right on close', async () => {
+      const { sut } = await makeSut()
+
+      const result = await sut.close()
+
+      expect(result.isRight()).toBe(true)
+    })
+
     it('gets collection', async () => {
       const { sut } = await makeSut()
 
@@ -60,27 +69,17 @@ describe('MongodbAdapter', () => {
 
       expect(result.isRight()).toBe(true)
     })
-
-    it('returns Right on close', async () => {
-      const { sut } = await makeSut()
-
-      const result = await sut.close()
-
-      expect(result.isRight()).toBe(true)
-    })
   })
 
   describe('failure', () => {
     beforeAll(() => {
       vi.resetAllMocks()
-      vi.doMock('mongodb', () => ({
-        Collection: vi.fn(),
-        MongoClient: {
-          connect: vi.fn(() => ({
-            close: vi.fn(() => { throw new Error() }),
-            dropDatabase: vi.fn(() => { throw new Error() })
-          }))
-        }
+      vi.doMock('mongoose', () => ({
+        createConnection: vi.fn(() => ({
+          close: vi.fn(() => { throw new Error() }),
+          collection: vi.fn(() => ({})),
+          dropDatabase: vi.fn(() => { throw new Error() })
+        }))
       }))
     })
 
