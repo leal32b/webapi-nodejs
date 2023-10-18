@@ -11,6 +11,12 @@ vi.mock('mongoose', () => ({
   }))
 }))
 
+const makeDataSourceFake = (): MongodbDataSource => ({
+  connectionString: 'any_connection_string',
+  database: 'any_database',
+  name: 'any_name'
+})
+
 type SutTypes = {
   dataSource: MongodbDataSource
   logger: Logger
@@ -18,13 +24,8 @@ type SutTypes = {
 }
 
 const makeSut = async (): Promise<SutTypes> => {
-  const dataSource: MongodbDataSource = {
-    connectionString: 'any_connection_string',
-    database: 'any_database',
-    name: 'any_name'
-  }
   const props = {
-    dataSource,
+    dataSource: makeDataSourceFake(),
     logger: makeLoggerMock()
   }
   const sut = MongodbClient.create(props)
@@ -81,10 +82,6 @@ describe('MongodbAdapter', () => {
           dropDatabase: vi.fn(() => { throw new Error() })
         }))
       }))
-    })
-
-    afterEach(() => {
-      vi.unstubAllEnvs()
     })
 
     it('returns Left with Error on clearDatabase when not in test environment', async () => {

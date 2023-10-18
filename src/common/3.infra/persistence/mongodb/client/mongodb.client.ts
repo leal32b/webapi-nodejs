@@ -1,4 +1,4 @@
-import { type Connection, createConnection, type Collection } from 'mongoose'
+import { type Connection, type Collection, createConnection } from 'mongoose'
 
 import { right, type Either, left } from '@/common/0.domain/utils/either'
 import { getVar } from '@/common/0.domain/utils/var'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export class MongodbClient implements PersistenceClient {
-  private mongodbClient: Connection
+  private connection: Connection
 
   private constructor (private readonly props: Props) {}
 
@@ -33,7 +33,7 @@ export class MongodbClient implements PersistenceClient {
     }
 
     try {
-      await this.mongodbClient.dropDatabase()
+      await this.connection.dropDatabase()
 
       return right()
     } catch (error) {
@@ -45,7 +45,7 @@ export class MongodbClient implements PersistenceClient {
     const { logger } = this.props
 
     try {
-      await this.mongodbClient.close()
+      await this.connection.close()
 
       logger.info('persistence', 'dataSource disconnected')
 
@@ -61,9 +61,9 @@ export class MongodbClient implements PersistenceClient {
     const { dataSource, logger } = this.props
 
     try {
-      this.mongodbClient = createConnection(dataSource.connectionString, { dbName: dataSource.database })
+      this.connection = createConnection(dataSource.connectionString, { dbName: dataSource.database })
 
-      if (!this.mongodbClient) {
+      if (!this.connection) {
         throw new Error('mongodb connection error')
       }
 
@@ -80,6 +80,6 @@ export class MongodbClient implements PersistenceClient {
   }
 
   public async getCollection (name: string): Promise<Collection> {
-    return this.mongodbClient.collection(name)
+    return this.connection.collection(name)
   }
 }

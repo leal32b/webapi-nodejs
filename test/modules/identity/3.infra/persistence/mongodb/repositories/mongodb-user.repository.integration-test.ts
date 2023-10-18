@@ -43,9 +43,8 @@ describe('UserMongodbRepository', () => {
     await persistence.mongodb.client.connect()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await persistence.mongodb.client.clearDatabase()
-    await persistence.mongodb.client.close()
   })
 
   describe('success', () => {
