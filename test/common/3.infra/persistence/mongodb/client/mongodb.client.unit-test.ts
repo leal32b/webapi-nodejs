@@ -75,13 +75,10 @@ describe('MongodbAdapter', () => {
   describe('failure', () => {
     beforeAll(() => {
       vi.resetAllMocks()
-      vi.doMock('mongoose', () => ({
-        createConnection: vi.fn(() => ({
-          close: vi.fn(() => { throw new Error() }),
-          collection: vi.fn(() => ({})),
-          dropDatabase: vi.fn(() => { throw new Error() })
-        }))
-      }))
+    })
+
+    afterEach(() => {
+      vi.unstubAllEnvs()
     })
 
     it('returns Left with Error on clearDatabase when not in test environment', async () => {
@@ -113,18 +110,9 @@ describe('MongodbAdapter', () => {
     })
 
     it('returns Left with Error when connect throws', async () => {
-      const { logger } = await makeSut()
-      const dataSource = {
-        connectionString: 'invalid_connectionString',
-        database: 'any_database',
-        name: 'any_name'
-      }
-      const mongodbClient = MongodbClient.create({
-        dataSource,
-        logger
-      })
+      const { sut } = await makeSut()
 
-      const result = await mongodbClient.connect()
+      const result = await sut.connect()
 
       expect(result.isLeft()).toBe(true)
       expect(result.value).toBeInstanceOf(Error)
