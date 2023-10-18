@@ -119,5 +119,17 @@ describe('GroupMongodbRepository', () => {
         expect(result.isLeft()).toBe(true)
       })
     })
+
+    describe('readManyByNames', () => {
+      it('returns Left when readManyByNames throws', async () => {
+        const { sut } = makeSut()
+        const names = ['any_name']
+        vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
+
+        const result = await sut.readManyByNames(names)
+
+        expect(result.isLeft()).toBe(true)
+      })
+    })
   })
 })
