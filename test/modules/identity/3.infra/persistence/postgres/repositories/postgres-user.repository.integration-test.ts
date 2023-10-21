@@ -6,6 +6,7 @@ import { UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
 import { GroupEntity, type GroupEntityProps } from '@/identity/0.domain/entities/group.entity'
 import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
 import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed.value-object'
+import { type PostgresUserGroupEntity } from '@/identity/3.infra/persistence/postgres/entities/postgres-user-group.entity'
 import { PostgresGroupMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-group.mapper'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user.repository'
 
@@ -16,15 +17,10 @@ import { PostgresGroupFixture } from '~/identity/_fixtures/postgres/postgres-gro
 import { PostgresUserGroupFixture } from '~/identity/_fixtures/postgres/postgres-user-group.fixture'
 import { PostgresUserFixture } from '~/identity/_fixtures/postgres/postgres-user.fixture'
 
-type UserGroupEntityProps = {
-  groupId: string
-  userId: string
-}
-
 type SutTypes = {
   groupFixture: PersistenceFixture<GroupEntityProps>
   userFixture: PersistenceFixture<UserEntityProps>
-  userGroupFixture: PersistenceFixture<UserGroupEntityProps>
+  userGroupFixture: PersistenceFixture<PostgresUserGroupEntity>
   groupEntityFake: GroupEntity
   userAggregateFake: UserAggregate
   messageBroker: MessageBroker
