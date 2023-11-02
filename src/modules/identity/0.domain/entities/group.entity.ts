@@ -35,6 +35,10 @@ export class GroupEntity extends Entity<Props> {
     return right(new GroupEntity(validProps))
   }
 
+  public get id (): string {
+    return this.props.id
+  }
+
   public get name (): GroupName {
     return this.props.name
   }

@@ -70,6 +70,30 @@ describe('GroupMongodbRepository', () => {
         expect(result.value).toBeInstanceOf(GroupEntity)
       })
     })
+
+    describe('readManyByNames', () => {
+      it('returns Right with null on readManyByName if groups do not exist', async () => {
+        const { sut } = makeSut()
+        const names = ['any_name']
+
+        const result = await sut.readManyByNames(names)
+
+        expect(result.isRight()).toBe(true)
+        expect(result.value).toBe(null)
+      })
+
+      it('returns Right with an array of GroupEntity on readManyByNames', async () => {
+        const { sut, groupFixture } = makeSut()
+        const groups = await groupFixture.createFixture(2)
+        const names = groups.map(group => group.name)
+
+        const result = await sut.readManyByNames(names)
+
+        expect(result.isRight()).toBe(true)
+        expect((result.value as GroupEntity[])
+          .every(item => item instanceof GroupEntity)).toBe(true)
+      })
+    })
   })
 
   describe('failure', () => {
