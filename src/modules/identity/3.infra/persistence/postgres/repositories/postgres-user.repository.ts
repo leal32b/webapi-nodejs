@@ -11,14 +11,14 @@ import { type UserRepository } from '@/identity/1.application/repositories/user.
 import { PostgresGroupMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-group.mapper'
 import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-user.mapper'
 
-type Props = {
-  messageBroker: MessageBroker
-}
-
 type Filter = {
   email?: string
   id?: string
   token?: string
+}
+
+type Props = {
+  messageBroker: MessageBroker
 }
 
 export class PostgresUserRepository implements UserRepository {

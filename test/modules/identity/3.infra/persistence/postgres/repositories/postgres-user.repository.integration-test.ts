@@ -1,3 +1,5 @@
+import { type Repository } from 'typeorm'
+
 import { type MessageBroker } from '@/common/1.application/events/message-broker'
 import { type PersistenceFixture } from '@/common/3.infra/persistence/persistence.fixture'
 import { persistence } from '@/common/4.main/container'
@@ -5,9 +7,9 @@ import { persistence } from '@/common/4.main/container'
 import { UserAggregate } from '@/identity/0.domain/aggregates/user.aggregate'
 import { GroupEntity, type GroupEntityProps } from '@/identity/0.domain/entities/group.entity'
 import { UserEntity, type UserEntityProps } from '@/identity/0.domain/entities/user.entity'
-import { UserEmailConfirmed } from '@/identity/0.domain/value-objects/user.email-confirmed.value-object'
+import { UserToken } from '@/identity/0.domain/value-objects/user.token.value-object'
 import { type PostgresUserGroupEntity } from '@/identity/3.infra/persistence/postgres/entities/postgres-user-group.entity'
-import { PostgresGroupMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-group.mapper'
+import { PostgresUserMapper } from '@/identity/3.infra/persistence/postgres/mappers/postgres-user.mapper'
 import { PostgresUserRepository } from '@/identity/3.infra/persistence/postgres/repositories/postgres-user.repository'
 
 import { makeMessageBrokerMock } from '~/common/_doubles/mocks/message-broker.mock'
@@ -21,17 +23,21 @@ type SutTypes = {
   groupFixture: PersistenceFixture<GroupEntityProps>
   userFixture: PersistenceFixture<UserEntityProps>
   userGroupFixture: PersistenceFixture<PostgresUserGroupEntity>
+  userGroupRepository: Repository<any>
+  userRepository: Repository<any>
   groupEntityFake: GroupEntity
   userAggregateFake: UserAggregate
   messageBroker: MessageBroker
   sut: PostgresUserRepository
 }
 
-const makeSut = (): SutTypes => {
+const makeSut = async (): Promise<SutTypes> => {
   const collaborators = {
     groupFixture: PostgresGroupFixture.create(),
     userFixture: PostgresUserFixture.create(),
-    userGroupFixture: PostgresUserGroupFixture.create()
+    userGroupFixture: PostgresUserGroupFixture.create(),
+    userGroupRepository: await persistence.postgres.client.getRepository('user_group'),
+    userRepository: await persistence.postgres.client.getRepository('user')
   }
   const doubles = {
     groupEntityFake: makeGroupEntityFake(),
@@ -62,7 +68,7 @@ describe('UserPostgresRepository', () => {
   describe('success', () => {
     describe('create', () => {
       it('calls messageBroker.publishToTopic with correct params', async () => {
-        const { sut, messageBroker, userAggregateFake } = makeSut()
+        const { sut, messageBroker, userAggregateFake } = await makeSut()
         const publishToTopicSpy = vi.spyOn(messageBroker, 'publishToTopic')
 
         await sut.create(userAggregateFake)
@@ -83,20 +89,23 @@ describe('UserPostgresRepository', () => {
           })
       })
 
-      it('returns Right on create success', async () => {
-        const { sut, groupFixture, groupEntityFake, userAggregateFake } = makeSut()
-        await groupFixture.createFixture(PostgresGroupMapper.toPersistence(groupEntityFake))
-        userAggregateFake.setGroups([groupEntityFake])
+      it('saves data and returns Right on create success', async () => {
+        const { sut, userAggregateFake, userRepository } = await makeSut()
+        const id = userAggregateFake.aggregateRoot.id
 
         const result = await sut.create(userAggregateFake)
 
         expect(result.isRight()).toBe(true)
+        const savedData = await userRepository
+          .findOne({ where: { id } })
+          .then(user => PostgresUserMapper.toDomain(user))
+        expect(savedData).toEqual(userAggregateFake)
       })
     })
 
     describe('readByEmail', () => {
       it('returns Right with null on readByEmail if user does not exist', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const email = 'not_in_base@mail.com'
 
         const result = await sut.readByEmail(email)
@@ -106,7 +115,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate on readByEmail success', async () => {
-        const { sut, userFixture } = makeSut()
+        const { sut, userFixture } = await makeSut()
         const { email } = await userFixture.createFixture()
 
         const result = await sut.readByEmail(email)
@@ -116,7 +125,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate and groups on readByEmail success', async () => {
-        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { sut, groupFixture, userFixture, userGroupFixture } = await makeSut()
         const { id: groupId } = await groupFixture.createFixture()
         const { id: userId, email } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
@@ -125,12 +134,13 @@ describe('UserPostgresRepository', () => {
 
         expect(result.isRight()).toBe(true)
         expect(result.value).toBeInstanceOf(UserAggregate)
+        expect((result.value as UserAggregate).groups[0].id).toEqual(groupId)
       })
     })
 
     describe('readById', () => {
       it('returns Right with null on readById if user does not exist', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const id = 'not_in_base_id'
 
         const result = await sut.readById(id)
@@ -140,7 +150,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate on readById success', async () => {
-        const { sut, userFixture } = makeSut()
+        const { sut, userFixture } = await makeSut()
         const { id } = await userFixture.createFixture()
 
         const result = await sut.readById(id)
@@ -150,7 +160,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate and groups on readById success', async () => {
-        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { sut, groupFixture, userFixture, userGroupFixture } = await makeSut()
         const { id: groupId } = await groupFixture.createFixture()
         const { id: userId } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
@@ -159,12 +169,13 @@ describe('UserPostgresRepository', () => {
 
         expect(result.isRight()).toBe(true)
         expect(result.value).toBeInstanceOf(UserAggregate)
+        expect((result.value as UserAggregate).groups[0].id).toEqual(groupId)
       })
     })
 
     describe('readByToken', () => {
       it('returns Right with null on readByToken when no user with token is found', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const token = 'not_in_base_token'
 
         const result = await sut.readByToken(token)
@@ -174,7 +185,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate on readByToken success', async () => {
-        const { sut, userFixture } = makeSut()
+        const { sut, userFixture } = await makeSut()
         const { token } = await userFixture.createFixture()
 
         const result = await sut.readByToken(token)
@@ -184,7 +195,7 @@ describe('UserPostgresRepository', () => {
       })
 
       it('returns Right with UserAggregate and groups on readByToken success', async () => {
-        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+        const { sut, groupFixture, userFixture, userGroupFixture } = await makeSut()
         const { id: groupId } = await groupFixture.createFixture()
         const { id: userId, token } = await userFixture.createFixture()
         await userGroupFixture.createFixture({ groupId, userId })
@@ -193,22 +204,28 @@ describe('UserPostgresRepository', () => {
 
         expect(result.isRight()).toBe(true)
         expect(result.value).toBeInstanceOf(UserAggregate)
+        expect((result.value as UserAggregate).groups[0].id).toEqual(groupId)
       })
     })
 
     describe('update', () => {
-      it('returns Right on update success', async () => {
-        const { sut, userAggregateFake } = makeSut()
-        const emailConfirmed = UserEmailConfirmed.create(true).value as UserEmailConfirmed
-        userAggregateFake.setEmailConfirmed(emailConfirmed)
+      it('updates data and returns Right on update success', async () => {
+        const { sut, userAggregateFake, userFixture, userRepository } = await makeSut()
+        const { id } = userAggregateFake.aggregateRoot
+        const token = 'new_token'
+        await userFixture.createFixture({ id })
+        userAggregateFake.setToken(UserToken.create(token).value as UserToken)
 
         const result = await sut.update(userAggregateFake)
 
         expect(result.isRight()).toBe(true)
+        const savedData = await userRepository.findOne({ where: { id } })
+        expect(savedData.id).toEqual(id)
+        expect(savedData.token).toEqual(token)
       })
 
-      it('returns Right on update adding groups', async () => {
-        const { sut, groupFixture, userFixture } = makeSut()
+      it('updates data and returns Right on update adding groups', async () => {
+        const { sut, groupFixture, userFixture, userGroupRepository } = await makeSut()
         const group = await groupFixture.createFixture()
         const user = await userFixture.createFixture()
         const userEntity = UserEntity.create(user).value as UserEntity
@@ -219,10 +236,17 @@ describe('UserPostgresRepository', () => {
         const result = await sut.update(userAggregate)
 
         expect(result.isRight()).toBe(true)
+        const savedData = await userGroupRepository.findOne({
+          where: {
+            groupId: group.id,
+            userId: user.id
+          }
+        })
+        expect(savedData).not.toBe(null)
       })
 
-      it('returns Right on update removing groups', async () => {
-        const { sut, groupFixture, userFixture, userGroupFixture } = makeSut()
+      it('updates data and returns Right on update removing groups', async () => {
+        const { sut, groupFixture, userFixture, userGroupFixture, userGroupRepository } = await makeSut()
         const group = await groupFixture.createFixture()
         const user = await userFixture.createFixture()
         await userGroupFixture.createFixture({
@@ -235,6 +259,13 @@ describe('UserPostgresRepository', () => {
         const result = await sut.update(userAggregate)
 
         expect(result.isRight()).toBe(true)
+        const savedData = await userGroupRepository.findOne({
+          where: {
+            groupId: group.id,
+            userId: user.id
+          }
+        })
+        expect(savedData).toBe(null)
       })
     })
   })
@@ -242,7 +273,7 @@ describe('UserPostgresRepository', () => {
   describe('failure', () => {
     describe('create', () => {
       it('returns Left when create throws', async () => {
-        const { sut, userAggregateFake } = makeSut()
+        const { sut, userAggregateFake } = await makeSut()
         vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
         const result = await sut.create(userAggregateFake)
@@ -253,7 +284,7 @@ describe('UserPostgresRepository', () => {
 
     describe('readByEmail', () => {
       it('returns Left when readByEmail throws', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const email = 'any@mail.com'
         vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
@@ -265,7 +296,7 @@ describe('UserPostgresRepository', () => {
 
     describe('readById', () => {
       it('returns Left when readById throws', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const id = 'any_id'
         vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
@@ -277,7 +308,7 @@ describe('UserPostgresRepository', () => {
 
     describe('readByToken', () => {
       it('returns Left when readByToken throws', async () => {
-        const { sut } = makeSut()
+        const { sut } = await makeSut()
         const token = 'any_token'
         vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
@@ -289,7 +320,7 @@ describe('UserPostgresRepository', () => {
 
     describe('update', () => {
       it('returns Left on update when it throws', async () => {
-        const { sut, userAggregateFake } = makeSut()
+        const { sut, userAggregateFake } = await makeSut()
         vi.spyOn(persistence.postgres.client, 'getRepository').mockRejectedValueOnce(new Error())
 
         const result = await sut.update(userAggregateFake)
