@@ -15,7 +15,6 @@ import { MongodbGroupMapper } from '@/identity/3.infra/persistence/mongodb/mappe
 import { MongodbUserMapper } from '@/identity/3.infra/persistence/mongodb/mappers/mongodb-user.mapper'
 
 type Filter = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   _id?: ObjectId
   email?: string
   token?: string

@@ -75,4 +75,4 @@
 [x] identity module factories, add folder for controller factories
 [ ] add mechanism to ensure that persistence is saving data on integration tests
 [x] change `PERSISTENCE` to `DATABASE` on dataSources
-[ ] remove `// eslint...` line rules
+[x] remove `// eslint...` line rules

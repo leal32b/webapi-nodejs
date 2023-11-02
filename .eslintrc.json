@@ -62,7 +62,7 @@
     "files": ["src/**/*.schema*.ts", "src/**/*.path.ts", "src/**/*-api-specification.ts", "src/**/make-swagger.ts", "src/**/*.data-source.ts"],      
     "rules": { "sort-keys": "off" }
   }, {
-    "files": ["src/**/mongodb*.entity.ts"],      
+    "files": ["src/**/mongodb*.{entity,repository}.ts"],      
     "rules": {
       "@typescript-eslint/naming-convention": ["error",
         { "selector": ["variable"], "format": ["camelCase", "PascalCase", "UPPER_CASE"], "leadingUnderscore": "allow" }
