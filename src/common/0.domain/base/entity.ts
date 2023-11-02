@@ -1,36 +1,53 @@
 import { type DomainError } from '@/common/0.domain/base/domain-error'
-import { type ValueObject } from '@/common/0.domain/base/value-object'
 import { type Either, left, right } from '@/common/0.domain/utils/either'
 import { Identifier } from '@/common/0.domain/utils/identifier'
 
-type Params = Record<string, Either<DomainError[], ValueObject<any>>>
+type PropsOrErrors<PropsType> = { [K in keyof PropsType]: Either<DomainError[], PropsType[K]> }
+
+export type BasePropsType = {
+  createdAt?: Date
+  id?: string
+  updatedAt?: Date
+}
 
 export abstract class Entity<PropsType> {
-  protected readonly props: PropsType & { id: Identifier }
+  protected readonly _props: BasePropsType & PropsType
 
-  protected constructor (props: PropsType, id?: string) {
-    this.props = {
+  protected constructor (props: BasePropsType & PropsType) {
+    this._props = {
       ...props,
-      id: Identifier.create({ id })
+      ...(!props.id && {
+        createdAt: new Date(),
+        id: Identifier.create().value,
+        updatedAt: new Date()
+      })
     }
   }
 
-  public static validateParams <ParamsType>(params: Params): Either<DomainError[], ParamsType> {
+  public static validateProps <PropsType>(props: PropsOrErrors<PropsType>): Either<DomainError[], PropsType> {
     const errors = Object
-      .values(params)
-      .map(param => param.isLeft() ? param.value : [])
+      .values(props)
+      .map(prop => (prop as any).isLeft() ? (prop as any).value : [])
       .reduce((acc, curVal) => acc.concat(curVal))
 
     if (errors.length > 0) {
       return left(errors)
     }
 
-    const validatedParams = Object.fromEntries(
+    const validatedProps = Object.fromEntries(
       Object
-        .entries(params)
-        .map(([param, result]) => [param, result.value])
+        .entries(props)
+        .map(([prop, result]) => [prop, (result as any).value])
     )
 
-    return right(validatedParams as ParamsType)
+    return right(validatedProps as PropsType)
+  }
+
+  public get props (): typeof this._props {
+    return this._props
+  }
+
+  protected updated (): void {
+    this._props.updatedAt = new Date()
   }
 }

@@ -1,27 +1,5 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  },
-  "cSpell.words": [
-    "amqp",
-    "cimg",
-    "codeclimate",
-    "codecov",
-    "conventionalcommits",
-    "dbeaver",
-    "Encrypter",
-    "esbuild",
-    "Fastify",
-    "lcov",
-    "lintstaged",
-    "Metadatas",
-    "Middlewares",
-    "openapi",
-    "Pino",
-    "Rabbitmq",
-    "standardjs",
-    "typeorm",
-    "unstub",
-    "webapi"
-  ]
+  }
 }

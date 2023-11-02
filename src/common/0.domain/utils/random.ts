@@ -1,5 +1,5 @@
 type Options = {
-  incrementer: number
+  incrementor: number
   modulus: number
   multiplier: number
 }
@@ -10,7 +10,7 @@ type PropsType = {
 }
 
 const defaultOptions = {
-  incrementer: 2971215073,
+  incrementor: 2971215073,
   modulus: 2282047327510,
   multiplier: 456409465503
 }
@@ -21,7 +21,7 @@ export class Random {
 
   private constructor (props?: PropsType) {
     this.props = Object.assign(defaultOptions, props?.options)
-    this._seed = props?.seed || Date.now()
+    this._seed = props?.seed || Date.now() + performance.now()
   }
 
   public static create (props?: PropsType): Random {
@@ -29,9 +29,9 @@ export class Random {
   }
 
   public nextInt (): number {
-    const { incrementer, modulus, multiplier } = this.props
+    const { incrementor, modulus, multiplier } = this.props
 
-    this._seed = (this._seed * multiplier + incrementer) % modulus
+    this._seed = (this._seed * multiplier + incrementor) % modulus
 
     return this._seed
   }

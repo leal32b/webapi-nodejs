@@ -1,6 +1,12 @@
 @startuml Base
   !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-  !include theme.puml
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+  
+  ' Colors
+  !$color_fg = "#4"
+
+  ' Theme
+  !include dark.puml
 
   ' Logos
   !define  LOGOS https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/logos
@@ -12,5 +18,5 @@
   SHOW_PERSON_OUTLINE()
 
   ' Tags
-  AddRelTag("async", $lineStyle = DashedLine())
+  AddRelTag("async", $color_fg, $color_fg, DashedLine())
 @enduml

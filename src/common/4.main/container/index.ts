@@ -12,7 +12,7 @@ import {
   type Persistence,
   type Validation,
   type Localization
-} from '@/common/4.main/container/container-types'
+} from '@/common/4.main/container/container.type'
 import { makeArgon } from '@/common/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/common/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/common/4.main/container/documentation/make-swagger'

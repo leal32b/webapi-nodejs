@@ -1,0 +1,181 @@
+{
+  "Test": {
+    "scope": "javascript, typescript",
+    "prefix": "test",
+    "body": [
+      "type SutTypes = {",
+      "  sut: ${1:ComponentName}",
+      "}",
+      "",
+      "const makeSut = (): SutTypes => {",
+      "  const props = {}",
+      "",
+      "  const sut = ${1:ComponentName}.create(props)",
+      "",
+      "  return {",
+      "    ...props,",
+      "    sut",
+      "  }",
+      "}",
+      "",
+      "describe('${1:ComponentName}', () => {",
+      "  describe('success', () => {",
+      "    it('${2:description...}', async () => {",
+      "      const { sut } = makeSut()",
+      "",
+      "      await sut.execute()",
+      "",
+      "      expect(1).toBe(1)",
+      "    })",
+      "  })",
+      "",
+      "  describe('failure', () => {",
+      "    it('description...', () => {",
+      "      expect(1).toBe(1)",
+      "    })",
+      "  })",
+      "})",
+      ""
+    ]
+  },
+
+  "Describe": {
+    "scope": "javascript, typescript",
+    "prefix": "desc",
+    "body": ["describe('${1:desc}', () => {", "  ${2}", "})"]
+  },
+
+  "It": {
+    "scope": "javascript, typescript",
+    "prefix": "it",
+    "body": ["it('${1:desc}', async () => {", "  ${2}", "})"]
+  },
+
+  "Stub": {
+    "scope": "javascript, typescript",
+    "prefix": "makeStub",
+    "body": [
+      "export const make${1:Class}Stub = (): ${1:Class} => {",
+      "  class ${1:Class}Stub implements ${1:Interface} {",
+      "    async ${2:execute} (${3:input}: ${4:Type}): Promise<${5:Type}> {",
+      "      return ${6:Value}",
+      "    }",
+      "  }",
+      "",
+      "  return new ${1:Class}Stub()",
+      "}",
+      ""
+    ]
+  },
+
+  "use_case": {
+    "scope": "javascript, typescript, javascriptreact, typescriptreact",
+    "prefix": "usecase",
+    "body": [
+			"import { type DomainError } from '@/common/0.domain/base/domain-error'",
+			"import { right, type Either } from '@/common/0.domain/utils/either'",
+			"import { UseCase } from '@/common/1.application/base/use-case'",
+      "",
+      "type Props = {",
+      "  injection: any",
+      "}",
+      "",
+      "export type ${1:Name}Data = {",
+      "  key: any",
+      "}",
+      "",
+      "export type ${1}ResultDTO = {",
+      "  message: string",
+      "}",
+      "",
+      "export class ${1}UseCase extends UseCase<Props, ${1}Data, ${1}ResultDTO> {",
+      "  public static create (props: Props): ${1}UseCase {",
+      "    return new ${1}UseCase(props)",
+      "  }",
+      "",
+      "  async execute (${1/(.)/${1:/downcase}/}Data: ${1}Data): Promise<Either<DomainError[], ${1}ResultDTO>> {",
+      "    return right()",
+      "  }",
+      "}"
+    ]
+  },
+
+  "controller": {
+    "scope": "javascript, typescript, javascriptreact, typescriptreact",
+    "prefix": "controller",
+    "body": [
+      "import { type AppRequest, type AppResponse, Controller } from '@/common/2.presentation/base/controller'",
+      "import { ServerError } from '@/common/2.presentation/errors/server.error'",
+      "import { clientError } from '@/common/2.presentation/factories/client-error.factory'",
+      "import { serverError } from '@/common/2.presentation/factories/server-error.factory'",
+      "import { success } from '@/common/2.presentation/factories/success.factory'",
+      "",
+      "type Props = {",
+      "  ${1/(.)/${1:/downcase}/}UseCase: ${1:Name}UseCase",
+      "}",
+      "",
+      "export class ${1}Controller extends Controller<Props> {",
+      "  public static create (props: Props): ${1}Controller {",
+      "    return new ${1}Controller(props)",
+      "  }",
+      "",
+      "  public async handle (request: AppRequest<${1}Data>): Promise<AppResponse<${1}ResultDTO>> {",
+      "    const { payload: ${1/(.)/${1:/downcase}/}Data } = request",
+      "",
+      "    const ${1/(.)/${1:/downcase}/}ResultDtoOrError = await this.props.${1/(.)/${1:/downcase}/}UseCase.execute(${1/(.)/${1:/downcase}/}Data)",
+      "",
+      "    if (${1/(.)/${1:/downcase}/}ResultDtoOrError.isLeft()) {",
+      "      const error = ${1/(.)/${1:/downcase}/}ResultDtoOrError.value",
+      "",
+      "      return error[0] instanceof ServerError",
+      "        ? serverError.internalServerError(error)",
+      "        : clientError.badRequest(error)",
+      "    }",
+      "",
+      "    const ${1/(.)/${1:/downcase}/}ResultDTO = ${1/(.)/${1:/downcase}/}ResultDtoOrError.value",
+      "",
+      "    return success.ok(${1/(.)/${1:/downcase}/}ResultDTO)",
+      "  }",
+      "}",
+    ]
+  },
+
+  "route": {
+    "scope": "javascript, typescript, javascriptreact, typescriptreact",
+    "prefix": "route",
+    "body": [
+      "export const ${1:RouteName}Route = (controller: ${1:RouteName}Controller): Route => ({",
+      "  controller,",
+      "  path: '/${2:path-name}',",
+      "  schema: ${1:RouteName}RequestSchema,",
+      "  type: RouteType.POST",
+      "})",
+    ]
+  },
+
+  "entity": {
+    "scope": "javascript, typescript, javascriptreact, typescriptreact",
+    "prefix": "entity",
+    "body": [
+      "type Props = {",
+      "  example: any",
+      "}",
+      "",
+      "export class ${1:EntityName}Entity extends Entity<Props> {",
+      "  public static create (props: Props): Either<DomainError[], ${1:EntityName}Entity> {",
+      "    const { example } = props",
+      "",
+      "    const validatedPropsOrError = this.validateParams<Props>({",
+      "      example: Example.create(example)",
+      "    })",
+      "",
+      "    return validatedPropsOrError.applyOnRight(validatedProps => new ${1:EntityName}Entity(validatedProps))",
+      "  }",
+      "",
+      "  public get example (): Example {",
+      "    return this.props.example",
+      "  }",
+      "}"
+    ]
+  }
+}

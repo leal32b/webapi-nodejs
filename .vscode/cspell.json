@@ -1,0 +1,39 @@
+{
+  "version": "0.2",
+  "ignorePaths": [
+    ".git/objects",
+    ".vscode-insiders",
+    ".vscode",
+    "node_modules",
+    "package-lock.json",
+    "package.json",
+    "vscode-extension"
+  ],
+  "overrides": [{
+    "filename": "**/pt_BR.json",
+    "language": "en, pt_BR"
+  }],
+  "words": [
+    "amqp",
+    "cimg",
+    "codeclimate",
+    "codecov",
+    "conventionalcommits",
+    "dbeaver",
+    "Encrypter",
+    "esbuild",
+    "Fastify",
+    "hasher",
+    "lcov",
+    "lintstaged",
+    "Metadatas",
+    "Middlewares",
+    "openapi",
+    "Pino",
+    "Rabbitmq",
+    "standardjs",
+    "typeorm",
+    "unstub",
+    "webapi"
+  ]
+}

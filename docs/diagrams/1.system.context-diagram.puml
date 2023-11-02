@@ -1,0 +1,22 @@
+@startuml Context Diagram
+  !include common/base.puml
+  !define DIAGRAM Context Diagram | Webapi-nodejs
+  !define CREATED 2023-06-04
+  !define UPDATED 2023-08-27
+
+  title DIAGRAM
+
+  Person(user, "User", "User of the webapp system")
+  System_Ext(webapp, "Webapp", "Client-side web application")
+  System_Ext(emailSystem, "E-mail System", "External e-mail system")
+
+  System(system, "Webapi-nodejs System", "Server-side web application")
+
+  Rel(user, webapp, "Uses")
+  Rel(webapp, system, "Consumes")
+  Rel(system, emailSystem, "Sends e-mails using", $tags="async")
+
+  footer DIAGRAM (created at CREATED, updated at UPDATED)
+  
+  SHOW_LEGEND()
+@enduml

@@ -1,7 +1,7 @@
 import { type Either } from '@/common/0.domain/utils/either'
 import { type Middleware } from '@/common/1.application/middleware/middleware'
 import { type Controller } from '@/common/2.presentation/base/controller'
-import { type ServerError } from '@/common/2.presentation/errors/server-error'
+import { type ServerError } from '@/common/2.presentation/errors/server.error'
 
 export enum RouteType {
   PATCH = 'patch',

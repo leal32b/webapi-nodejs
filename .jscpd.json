@@ -1,9 +1,10 @@
 {
   "pattern": "src/**/*.ts",
   "ignore": [
-    "**/*-fixture.ts",
-    "**/*-repository.ts",
-    "**/*-schema.ts"
+    "**/*.fixture.ts",
+    "**/*.mapper.ts",
+    "**/*.repository.ts",
+    "**/*.schema.ts"
   ],
   "threshold": 2
 }
