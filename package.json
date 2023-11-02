@@ -2,8 +2,8 @@
   "name": "webapi-nodejs",
   "version": "1.0.0",
   "engines": {
-    "node": "^16.15.1",
-    "npm": "^8.11.0"
+    "node": "^18.16.1",
+    "npm": "^9.5.1"
   },
   "description": "Nodejs Webapi template",
   "main": "dist/common/4.main/server.js",
