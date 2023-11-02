@@ -13,7 +13,7 @@ class FixtureFake extends MongodbFixture<MongodbUserEntity> {
         createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,
-        id: faker.string.alphanumeric(12),
+        id: faker.string.hexadecimal({ length: 24 }).slice(2),
         locale: 'en',
         name: faker.person.firstName(),
         password: faker.string.alphanumeric(12),

@@ -10,7 +10,7 @@ export class MongodbGroupFixture extends MongodbFixture<MongodbGroupEntity> {
       collectionName: 'group',
       createDefault: (): MongodbGroupEntity => ({
         createdAt: new Date(),
-        id: faker.string.alphanumeric(12),
+        id: faker.string.hexadecimal({ length: 24 }).slice(2),
         name: faker.person.firstName(),
         updatedAt: new Date()
       })

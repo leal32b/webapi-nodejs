@@ -118,7 +118,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns Right with UserAggregate and groups on readByEmail success', async () => {
         const { sut, groupFixture, userFixture } = await makeSut()
-        const id = '0123456789ab'
+        const id = '0123456789ab0123456789ab'
         const group = await groupFixture.createFixture({ users: [new ObjectId(id)] })
         const { email } = await userFixture.createFixture({
           groups: [new ObjectId(group.id)],
@@ -156,7 +156,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns Right with UserAggregate and groups on readById success', async () => {
         const { sut, groupFixture, userFixture } = await makeSut()
-        const id = '0123456789ab'
+        const id = '0123456789ab0123456789ab'
         const group = await groupFixture.createFixture({ users: [new ObjectId(id)] })
         await userFixture.createFixture({
           groups: [new ObjectId(group.id)],
@@ -194,7 +194,7 @@ describe('UserMongodbRepository', () => {
 
       it('returns Right with UserAggregate and groups on readByToken success', async () => {
         const { sut, groupFixture, userFixture } = await makeSut()
-        const id = '0123456789ab'
+        const id = '0123456789ab0123456789ab'
         const group = await groupFixture.createFixture({ users: [new ObjectId(id)] })
         const { token } = await userFixture.createFixture({
           groups: [new ObjectId(group.id)],

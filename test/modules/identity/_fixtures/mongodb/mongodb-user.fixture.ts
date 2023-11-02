@@ -13,7 +13,7 @@ export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
         email: faker.internet.email(),
         emailConfirmed: false,
         groups: [],
-        id: faker.string.alphanumeric(12),
+        id: faker.string.hexadecimal({ length: 24 }).slice(2),
         locale: 'en',
         name: faker.person.firstName(),
         password: `$argon2id$v=19$m=4096,t=3,p=1$${faker.string.alphanumeric(16)}$${faker.string.alphanumeric(32)}`,
