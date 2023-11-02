@@ -4,7 +4,7 @@ import { type MongodbDataSource } from '@/common/3.infra/persistence/mongodb/cli
 
 const HOST = getVar('MONGODB_HOST')
 const PORT = getVar('MONGODB_PORT')
-const PERSISTENCE = getVar('MONGODB_DATABASE')
+const DATABASE = getVar('MONGODB_DATABASE')
 const USERNAME = getVar('MONGODB_USERNAME')
 const PASSWORD = getVar('MONGODB_PASSWORD')
 const CONNECTION_STRING = getVar('NODE_ENV') === 'development'
@@ -13,6 +13,6 @@ const CONNECTION_STRING = getVar('NODE_ENV') === 'development'
 
 export const mongodbDefaultDataSource: MongodbDataSource = {
   name: 'default',
-  database: PERSISTENCE,
+  database: DATABASE,
   connectionString: CONNECTION_STRING
 }
