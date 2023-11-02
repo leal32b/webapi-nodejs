@@ -12,6 +12,7 @@ export class MongodbUserFixture extends MongodbFixture<MongodbUserEntity> {
         createdAt: new Date(),
         email: faker.internet.email(),
         emailConfirmed: false,
+        groups: [],
         id: faker.string.alphanumeric(12),
         locale: 'en',
         name: faker.person.firstName(),

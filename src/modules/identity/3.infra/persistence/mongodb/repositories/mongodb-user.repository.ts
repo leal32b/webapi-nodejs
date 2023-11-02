@@ -10,7 +10,16 @@ import { type UserAggregate } from '@/identity/0.domain/aggregates/user.aggregat
 import { UserCreatedEvent } from '@/identity/0.domain/events/user-created.event'
 import { userEventsTopic } from '@/identity/1.application/events/topics/user-events.topic'
 import { type UserRepository } from '@/identity/1.application/repositories/user.repository'
+import { MongodbUserModel } from '@/identity/3.infra/persistence/mongodb/entities/mongodb-user.entity'
+import { MongodbGroupMapper } from '@/identity/3.infra/persistence/mongodb/mappers/mongodb-group.mapper'
 import { MongodbUserMapper } from '@/identity/3.infra/persistence/mongodb/mappers/mongodb-user.mapper'
+
+type Filter = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  _id?: ObjectId
+  email?: string
+  token?: string
+}
 
 type Props = {
   messageBroker: MessageBroker
@@ -27,7 +36,7 @@ export class MongodbUserRepository implements UserRepository {
     try {
       const userCollection = await persistence.mongodb.client.getCollection('user')
       const user = MongodbUserMapper.toPersistence(userAggregate)
-      await userCollection.insertOne(user)
+      await userCollection.insertOne(new MongodbUserModel(user))
 
       this.props.messageBroker.publishToTopic(userEventsTopic, ['userCreated', '#'], UserCreatedEvent.create({
         aggregateId: user._id.toString(),
@@ -45,67 +54,71 @@ export class MongodbUserRepository implements UserRepository {
   }
 
   async readByEmail (email: string): Promise<Either<DomainError[], UserAggregate>> {
-    try {
-      const user = await this.readByFilter({ email })
+    const userAggregate = await this.read({ email })
 
-      if (!user) {
-        return right(null)
-      }
-
-      return right(MongodbUserMapper.toDomain(user))
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
+    return userAggregate
   }
 
   async readById (id: string): Promise<Either<DomainError[], UserAggregate>> {
-    try {
-      const user = await this.readByFilter({ _id: new ObjectId(id) })
+    const userAggregate = await this.read({ _id: new ObjectId(id) })
 
-      if (!user) {
-        return right(null)
-      }
-
-      return right(MongodbUserMapper.toDomain(user))
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
+    return userAggregate
   }
 
   async readByToken (token: string): Promise<Either<DomainError[], UserAggregate>> {
+    const userAggregate = await this.read({ token })
+
+    return userAggregate
+  }
+
+  async update (userAggregate: UserAggregate): Promise<Either<DomainError[], void>> {
     try {
-      const user = await this.readByFilter({ token })
+      const userCollection = await persistence.mongodb.client.getCollection('user')
+      const user = MongodbUserMapper.toPersistence(userAggregate)
+      const groups = userAggregate.groups.map(group => new ObjectId(group.id))
+
+      await userCollection.updateOne({
+        _id: user._id
+      }, {
+        $set: {
+          ...user,
+          groups
+        }
+      })
+
+      return right()
+    } catch (error) {
+      return left([ServerError.create(error.message, error.stack)])
+    }
+  }
+
+  private async read (filter: Filter): Promise<Either<DomainError[], UserAggregate>> {
+    try {
+      const userCollection = await persistence.mongodb.client.getCollection('user')
+      const groupCollection = await persistence.mongodb.client.getCollection('group')
+      const user = await userCollection.findOne(filter)
 
       if (!user) {
         return right(null)
       }
 
-      return right(MongodbUserMapper.toDomain(user))
+      const domainUser = MongodbUserMapper.toDomain(user)
+      const userGroupIds = user.groups?.map(group => new ObjectId(group))
+      const userGroups = await groupCollection
+        .find({
+          _id: {
+            $in: userGroupIds
+          }
+        })
+        .toArray()
+
+      if (userGroups.length) {
+        domainUser.setGroups(userGroups.map(userGroup => MongodbGroupMapper.toDomain(userGroup)))
+      }
+
+      return right(domainUser)
     } catch (error) {
       return left([ServerError.create(error.message, error.stack)])
     }
-  }
-
-  async update (userAggregate: UserAggregate): Promise<Either<DomainError[], any>> {
-    try {
-      const userCollection = await persistence.mongodb.client.getCollection('user')
-      const user = MongodbUserMapper.toPersistence(userAggregate)
-
-      const result = await userCollection.updateOne({ _id: new ObjectId(user.id) }, {
-        $set: user
-      })
-
-      return right(result)
-    } catch (error) {
-      return left([ServerError.create(error.message, error.stack)])
-    }
-  }
-
-  private async readByFilter (filter: Record<string, any>): Promise<any> {
-    const userCollection = await persistence.mongodb.client.getCollection('user')
-
-    const user = await userCollection.findOne(filter)
-
-    return user
   }
 }
