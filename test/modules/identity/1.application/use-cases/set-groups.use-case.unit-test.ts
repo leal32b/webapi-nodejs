@@ -12,8 +12,8 @@ import { makeGroupRepositoryStub } from '~/identity/_doubles/stubs/group-reposit
 import { makeUserRepositoryStub } from '~/identity/_doubles/stubs/user-repository.stub'
 
 const makeSetGroupsDataFake = (): SetGroupsData => ({
-  email: 'any@mail.com',
-  groups: ['any_group']
+  groups: ['any_group'],
+  id: 'any_id'
 })
 
 type SutTypes = {
@@ -35,7 +35,7 @@ const makeSut = (): SutTypes => {
   }
 
   const sut = SetGroupsUseCase.create(props)
-  vi.spyOn(props.userRepository, 'readByEmail').mockResolvedValue(right(makeUserAggregateFake()))
+  vi.spyOn(props.userRepository, 'readById').mockResolvedValue(right(makeUserAggregateFake()))
 
   return {
     ...doubles,
@@ -46,12 +46,12 @@ const makeSut = (): SutTypes => {
 
 describe('SetGroupsUseCase', () => {
   describe('success', () => {
-    it('calls UserRepository.readByEmail with correct params', async () => {
+    it('calls UserRepository.readById with correct params', async () => {
       const { sut, setGroupsDataFake, userRepository } = makeSut()
 
       await sut.execute(setGroupsDataFake)
 
-      expect(userRepository.readByEmail).toHaveBeenCalledWith('any@mail.com')
+      expect(userRepository.readById).toHaveBeenCalledWith('any_id')
     })
 
     it('calls GroupRepository.readManyByNames with correct params', async () => {
@@ -72,9 +72,9 @@ describe('SetGroupsUseCase', () => {
   })
 
   describe('failure', () => {
-    it('returns Left with Error when UserRepository.readByEmail fails', async () => {
+    it('returns Left with Error when UserRepository.readById fails', async () => {
       const { sut, errorFake, setGroupsDataFake, userRepository } = makeSut()
-      vi.spyOn(userRepository, 'readByEmail').mockResolvedValueOnce(left([errorFake]))
+      vi.spyOn(userRepository, 'readById').mockResolvedValueOnce(left([errorFake]))
 
       const result = await sut.execute(setGroupsDataFake)
 

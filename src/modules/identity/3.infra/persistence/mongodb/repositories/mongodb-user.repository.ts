@@ -41,6 +41,7 @@ export class MongodbUserRepository implements UserRepository {
         aggregateId: user._id.toString(),
         payload: {
           email: user.email,
+          id: user._id.toString(),
           locale: user.locale,
           token: user.token
         }

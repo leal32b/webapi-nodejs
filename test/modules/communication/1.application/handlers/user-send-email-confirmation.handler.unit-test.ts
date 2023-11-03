@@ -19,6 +19,7 @@ const makeSut = (): SutTypes => {
       createdAt: new Date(),
       payload: {
         email: 'any@mail.com',
+        id: 'any_id',
         locale: 'any_locale',
         token: 'any_token'
       }

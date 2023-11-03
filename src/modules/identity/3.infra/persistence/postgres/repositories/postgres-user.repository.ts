@@ -40,6 +40,7 @@ export class PostgresUserRepository implements UserRepository {
         aggregateId: user.id,
         payload: {
           email: user.email,
+          id: user.id,
           locale: user.locale,
           token: user.token
         }

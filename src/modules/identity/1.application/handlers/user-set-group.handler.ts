@@ -16,11 +16,11 @@ export class UserSetGroupsHandler extends Handler<Props> {
 
   public async handle (event: UserCreatedEvent): Promise<Either<DomainError[], SetGroupsResultDTO>> {
     const { setGroupsUseCase } = this.props
-    const { email } = event.payload
+    const { id } = event.payload
 
     const result = await setGroupsUseCase.execute({
-      email,
-      groups: ['user']
+      groups: ['user'],
+      id
     })
 
     return result

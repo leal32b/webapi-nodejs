@@ -11,8 +11,8 @@ type Props = {
 }
 
 export type SetGroupsData = {
-  email: string
   groups: string[]
+  id: string
 }
 
 export type SetGroupsResultDTO = {
@@ -26,9 +26,9 @@ export class SetGroupsUseCase extends UseCase<Props, SetGroupsData, SetGroupsRes
 
   async execute (setGroupsData: SetGroupsData): Promise<Either<DomainError[], SetGroupsResultDTO>> {
     const { groupRepository, userRepository } = this.props
-    const { email, groups: groupNames } = setGroupsData
+    const { id, groups: groupNames } = setGroupsData
 
-    const userAggregateOrError = await userRepository.readByEmail(email)
+    const userAggregateOrError = await userRepository.readById(id)
 
     if (userAggregateOrError.isLeft()) {
       return left(userAggregateOrError.value)
