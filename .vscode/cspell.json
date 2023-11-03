@@ -9,10 +9,12 @@
     "package.json",
     "vscode-extension"
   ],
-  "overrides": [{
-    "filename": "**/pt_BR.json",
-    "language": "en, pt_BR"
-  }],
+  "overrides": [
+    {
+      "filename": "**/pt_BR.json",
+      "language": "en, pt_BR"
+    }
+  ],
   "words": [
     "amqp",
     "cimg",
@@ -34,6 +36,7 @@
     "standardjs",
     "typeorm",
     "unstub",
+    "VHOST",
     "webapi"
   ]
 }
