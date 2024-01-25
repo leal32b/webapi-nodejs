@@ -13,11 +13,13 @@ export default defineConfig({
     logHeapUsage: false,
     passWithNoTests: true,
     coverage: {
+      all: true,
       include: ['src/**/*.ts'],
       exclude: [
         'src/**/4.main/**', 
         'src/**/data-sources/**', 
-        'src/**/persistence/**/{entities,migration}/**'
+        'src/**/persistence/**/{entities,migrations}/**',
+        'src/**/*.queue.ts',
       ],
       provider: 'istanbul',
       reporter: ['text-summary', 'html', 'lcov'],
