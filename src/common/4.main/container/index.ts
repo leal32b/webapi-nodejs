@@ -17,7 +17,6 @@ import { makeArgon } from '@/common/4.main/container/cryptography/make-argon'
 import { makeJsonwebtoken } from '@/common/4.main/container/cryptography/make-jsonwebtoken'
 import { makeSwagger } from '@/common/4.main/container/documentation/make-swagger'
 import { makeI18next } from '@/common/4.main/container/localization/make-i18next'
-import { makeMongodb } from '@/common/4.main/container/persistence/make-mongodb'
 import { makePostgres } from '@/common/4.main/container/persistence/make-postgres'
 import { makeAjv } from '@/common/4.main/container/validation/make-ajv'
 import { makeExpress } from '@/common/4.main/container/webapp/make-express'
@@ -48,7 +47,6 @@ export const localization: Localization = {
 }
 
 const persistenceChoices = {
-  mongodb: makeMongodb,
   postgres: makePostgres
 }
 

@@ -1,16 +1,5 @@
 version: '3'
 services:
-  mongodb:
-    container_name: mongodb-container
-    image: mongo:4.4
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-    volumes:
-      - ./docker-volumes/mongodb:/data/db
-    ports:
-      - ${MONGODB_PORT}:${MONGODB_PORT}
-
   postgres:
     container_name: postgres-container
     image: postgres:14.5
@@ -44,7 +33,6 @@ services:
     command: bash -c "npm ci --omit=dev && npm run debug"
     env_file: .env
     environment:
-      - MONGODB_HOST=mongodb
       - POSTGRES_HOST=postgres
       - RABBITMQ_HOST=rabbitmq
     volumes:

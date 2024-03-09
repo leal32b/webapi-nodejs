@@ -7,7 +7,6 @@ export default defineConfig({
     globals: true,
     include: ['test/**/*.{integration,unit}-test.ts'],
     exclude: ['test/**/_doubles/**'],
-    globalSetup: 'vitest.setup.ts',
     pool: 'vmThreads',
     watch: false,
     silent: true,
