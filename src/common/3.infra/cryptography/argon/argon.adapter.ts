@@ -25,10 +25,10 @@ export class ArgonAdapter implements Hasher {
     }
   }
 
-  public async hash (value: string): Promise<Either<DomainError, string | Buffer>> {
+  public async hash (value: string): Promise<Either<DomainError, string >> {
     try {
       const { salt } = this.props
-      const hash = await argon2id.hash(value, { saltLength: salt })
+      const hash = await argon2id.hash(value, { hashLength: salt })
 
       return right(hash)
     } catch (error) {

@@ -44,7 +44,7 @@ describe('ArgonAdapter', () => {
 
       await sut.hash(value)
 
-      expect(hashSpy).toHaveBeenCalledWith('any_value', { saltLength: salt })
+      expect(hashSpy).toHaveBeenCalledWith('any_value', { hashLength: salt })
     })
 
     it('returns Right with hash on hash when it succeeds', async () => {
