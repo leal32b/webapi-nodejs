@@ -58,7 +58,6 @@ npm run migration:run
 <a rel="Swagger" href="https://swagger.io"><img src="./docs/logos/swagger.svg" height="32"/></a>
 <a rel="Docker" href="https://www.docker.com"><img src="./docs/logos/docker.svg" height="32"/></a>
 <a rel="PostgreSQL" href="https://www.postgresql.org"><img src="./docs/logos/postgresql.svg" height="32"/></a>
-<a rel="MongoDB" href="https://www.mongodb.com"><img src="./docs/logos/mongodb.svg" height="32"/></a>
 <a rel="Rabbitmq" href="https://www.rabbitmq.com"><img src="./docs/logos/rabbitmq.svg" height="32"/></a>
 <a rel="Mailtrap" href="https://mailtrap.io"><img src="./docs/logos/mailtrap.svg" height="32"/></a>
 <a rel="CircleCI" href="https://circleci.com"><img src="./docs/logos/circleci.svg" height="32"/></a>

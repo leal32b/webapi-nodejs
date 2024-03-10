@@ -19,6 +19,7 @@ const makeSut = (): SutTypes => {
       createdAt: new Date(),
       payload: {
         email: 'any@mail.com',
+        id: 'any_id',
         locale: 'any_locale',
         token: 'any_token'
       }
@@ -45,10 +46,8 @@ describe('UserSetGroupsHandler', () => {
       await sut.handle(userCreatedEventFake)
 
       expect(executeSpy).toHaveBeenCalledWith({
-        email: 'any@mail.com',
-        groups: [
-          'user'
-        ]
+        groups: ['user'],
+        id: 'any_id'
       })
     })
   })

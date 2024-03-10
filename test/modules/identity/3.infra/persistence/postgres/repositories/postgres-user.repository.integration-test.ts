@@ -82,6 +82,7 @@ describe('UserPostgresRepository', () => {
               createdAt: expect.any(Date),
               payload: {
                 email: 'any@mail.com',
+                id: expect.any(String),
                 locale: 'en',
                 token: 'any_token'
               }

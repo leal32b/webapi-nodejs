@@ -29,7 +29,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('GroupMongodbRepository', () => {
+describe('GroupPostgresRepository', () => {
   beforeAll(async () => {
     await persistence.postgres.client.connect()
   })

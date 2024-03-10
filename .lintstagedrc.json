@@ -1,6 +1,6 @@
 {
   "*.ts": [
-    "npx eslint --fix", 
-    "npx vitest related"
+    "eslint --fix", 
+    "vitest related"
   ]
 }
